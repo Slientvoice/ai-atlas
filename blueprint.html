@@ -1,0 +1,3020 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM 系统蓝图</title>
+<style>
+  :root {
+    --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
+    --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
+    --hairline: #e3e1d8; --seal: #b0392e; --seal-soft: rgba(176,57,46,0.07);
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4;
+    --grid: rgba(28,27,24,0.05);
+    --shadow: 0 10px 32px rgba(28,27,24,0.10);
+    --serif: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", serif;
+    --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #131311; --surface: #1e1d1a; --surface-2: #262521;
+      --ink: #f2f0e8; --ink-2: #b5b2a6; --ink-3: #85827a;
+      --hairline: #2e2d28; --seal: #e0705e; --seal-soft: rgba(224,112,94,0.10);
+      --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181;
+      --grid: rgba(255,255,255,0.045);
+      --shadow: 0 10px 32px rgba(0,0,0,0.45);
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #131311; --surface: #1e1d1a; --surface-2: #262521;
+    --ink: #f2f0e8; --ink-2: #b5b2a6; --ink-3: #85827a;
+    --hairline: #2e2d28; --seal: #e0705e; --seal-soft: rgba(224,112,94,0.10);
+    --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181;
+    --grid: rgba(255,255,255,0.045);
+    --shadow: 0 10px 32px rgba(0,0,0,0.45);
+  }
+  :root[data-theme="light"] {
+    --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
+    --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
+    --hairline: #e3e1d8; --seal: #b0392e; --seal-soft: rgba(176,57,46,0.07);
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4;
+    --grid: rgba(28,27,24,0.05);
+    --shadow: 0 10px 32px rgba(28,27,24,0.10);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--page); color: var(--ink); font-family: var(--sans); line-height: 1.75; font-size: 15.5px; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+  a { color: inherit; }
+
+  header.top { border-bottom: 1px solid var(--hairline); padding: 56px 0 34px;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; color: var(--ink-3); }
+  h1 { font-family: var(--serif); font-size: clamp(32px, 6vw, 50px); margin: 10px 0 6px; line-height: 1.15; }
+  .sub { color: var(--ink-2); max-width: 44em; }
+  .top-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .top-links a { text-decoration: none; font-size: 13px; color: var(--ink-2); background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 5px 15px; }
+  .top-links a:hover, .top-links a:focus-visible { border-color: var(--ink-2); outline: none; }
+
+  /* 总装配图 */
+  .assembly { margin: 34px 0 6px; display: grid; gap: 0; }
+  .as-card { display: block; text-decoration: none; background: var(--surface); border: 1.5px solid var(--pc);
+    border-radius: 12px; padding: 13px 18px; transition: box-shadow .15s ease; }
+  .as-card:hover, .as-card:focus-visible { box-shadow: var(--shadow); outline: none; }
+  .as-card .t { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .as-card .rn { font-family: var(--mono); font-weight: 700; color: var(--pc); font-size: 13px; letter-spacing: 0.08em; }
+  .as-card b { font-family: var(--serif); font-size: 17.5px; }
+  .as-card span.d { font-size: 13px; color: var(--ink-2); }
+  .as-wire { text-align: center; font-family: var(--mono); font-size: 11px; color: var(--ink-3); padding: 3px 0; }
+  .as-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .as-row { grid-template-columns: 1fr; } }
+
+  /* legend */
+  .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 22px 0; }
+  .lg { background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px; padding: 13px 16px; font-size: 13.5px; color: var(--ink-2); }
+  .lg b { color: var(--ink); display: block; margin-bottom: 3px; }
+  .lg code { font-family: var(--mono); font-size: 12px; color: var(--ink); }
+
+  /* planes */
+  section.plane { padding: 46px 0 8px; }
+  .pl-head { border-left: 4px solid var(--pc); padding-left: 16px; margin-bottom: 6px; }
+  .pl-head .rn { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--pc); letter-spacing: 0.1em; }
+  h2 { font-family: var(--serif); font-size: clamp(24px, 3.6vw, 31px); margin: 2px 0; line-height: 1.25; }
+  .pl-q { color: var(--ink-2); font-size: 14.5px; max-width: 44em; margin: 4px 0 0; }
+  .pl-tools { margin: 14px 0 4px; }
+  .pl-tools button { font: inherit; font-size: 12.5px; color: var(--ink-2); background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 14px; cursor: pointer; }
+  .pl-tools button:hover, .pl-tools button:focus-visible { border-color: var(--ink-2); outline: none; }
+
+  /* modules */
+  details.mod { background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; margin: 0; overflow: hidden; }
+  details.mod[open] { border-color: var(--pc); }
+  details.mod summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 12px;
+    padding: 13px 18px; flex-wrap: wrap; }
+  details.mod summary::-webkit-details-marker { display: none; }
+  details.mod summary:focus-visible { outline: 2px solid var(--pc); outline-offset: -2px; }
+  .m-name { font-family: var(--serif); font-weight: 700; font-size: 17.5px; }
+  .m-en { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.05em; }
+  .m-shape { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); white-space: nowrap; }
+  .m-caret { font-size: 11px; color: var(--pc); transition: transform .15s ease; }
+  details[open] .m-caret { transform: rotate(90deg); }
+  .m-body { padding: 2px 18px 18px; border-top: 1px dashed var(--hairline); }
+  .m-body p { margin: 10px 0; max-width: 46em; }
+  .m-body p.dim, .m-body li { color: var(--ink-2); font-size: 14px; }
+  .m-body ul { margin: 8px 0; padding-left: 20px; max-width: 46em; }
+  .m-body li { margin: 4px 0; }
+
+  .fx { display: block; font-family: var(--mono); font-size: 14px; background: var(--surface-2); border-radius: 8px;
+    padding: 10px 14px; margin: 12px 0; overflow-x: auto; white-space: pre;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 22px 22px; }
+  details.dv { border-left: 2px solid var(--hairline); margin: 10px 0; padding-left: 12px; }
+  details.dv summary { cursor: pointer; font-size: 13.5px; color: var(--ink-2); list-style: none; }
+  details.dv summary::-webkit-details-marker { display: none; }
+  details.dv summary::before { content: "▸ "; color: var(--pc); }
+  details.dv[open] summary::before { content: "▾ "; }
+  details.dv p { font-size: 14px; }
+
+  .forks { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 10px; }
+  .forks .flab { font-size: 12px; color: var(--ink-3); align-self: center; letter-spacing: 0.06em; }
+  .fk { font: inherit; font-size: 13px; cursor: pointer; color: var(--ink-2); background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 13px; }
+  .fk:hover, .fk:focus-visible { border-color: var(--pc); outline: none; }
+  .fk.on { color: var(--ink); border-color: var(--pc); box-shadow: inset 0 0 0 1px var(--pc); font-weight: 600; }
+  .fkb { display: none; background: var(--surface-2); border-radius: 8px; padding: 10px 14px; font-size: 14px; color: var(--ink-2); max-width: 46em; }
+  .fkb.on { display: block; }
+  .fkb b { color: var(--ink); }
+
+  .who { font-size: 13px; color: var(--ink-3); margin-top: 10px; }
+  .who b { color: var(--ink-2); font-weight: 600; }
+  .digref { font-size: 13px; color: var(--ink-3); margin-top: 6px; }
+
+  /* 实验室 */
+  .viz-cap { font-size: 12px; color: var(--ink-3); margin-top: 8px; line-height: 1.6; }
+  .demo-tag { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); border: 1px dashed var(--ink-3);
+    border-radius: 4px; padding: 0 6px; margin-left: 8px; vertical-align: 2px; font-weight: 400; }
+  .lab { border: 1.5px solid var(--pc); border-radius: 12px; padding: 16px 18px; margin: 18px 0;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px; }
+  .lab-head { font-family: var(--serif); font-weight: 700; font-size: 16.5px; margin-bottom: 4px; }
+  .lab-lab { display: block; font-size: 12.5px; font-weight: 700; color: var(--ink-2); letter-spacing: 0.05em; margin: 16px 0 6px; }
+  .lab textarea { width: 100%; min-height: 130px; resize: vertical; font: inherit; font-size: 13.5px; line-height: 1.7;
+    color: var(--ink); background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 10px 12px; }
+  .lab textarea:focus-visible, .lab input[type="text"]:focus-visible { outline: 2px solid var(--pc); outline-offset: 1px; }
+  .lab-ctrls { display: flex; flex-wrap: wrap; gap: 10px 26px; margin: 10px 0; }
+  .lab-ctrls label { font-size: 13px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; }
+  .lab-ctrls output { font-family: var(--mono); font-size: 12.5px; color: var(--ink); min-width: 2.2em; text-align: right; }
+  .lab input[type="range"] { accent-color: var(--pc); width: 150px; }
+  .lab-chunks { display: flex; flex-wrap: wrap; gap: 6px; }
+  .lab-chunk { font-size: 12px; color: var(--ink-2); background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 6px; padding: 3px 9px; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lab-chunk b { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); margin-right: 5px; }
+  .lab-q { display: flex; flex-direction: column; gap: 8px; }
+  .lab-q input { font: inherit; font-size: 14.5px; color: var(--ink); background: var(--surface);
+    border: 1.5px solid var(--hairline); border-radius: 8px; padding: 9px 12px; width: 100%; }
+  .lab-presets { display: flex; flex-wrap: wrap; gap: 7px; }
+  .lab-presets button { font: inherit; font-size: 12.5px; cursor: pointer; color: var(--ink-2);
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 13px; }
+  .lab-presets button:hover, .lab-presets button:focus-visible { border-color: var(--pc); outline: none; }
+  .lab-res-row { display: grid; grid-template-columns: 3.4em 1fr 4em; gap: 10px; align-items: center;
+    font-size: 13px; padding: 6px 8px; border-radius: 7px; margin: 3px 0; color: var(--ink-2); }
+  .lab-res-row.hit { background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--pc); color: var(--ink); }
+  .lab-res-row .rn2 { font-family: var(--mono); font-size: 11.5px; }
+  .lab-res-row .prev { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lab-res-row .bar { position: relative; height: 6px; background: var(--surface-2); border-radius: 3px; grid-column: 2; }
+  .lab-res-row .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--pc); border-radius: 3px; }
+  .lab-res-row .sc { font-family: var(--mono); font-size: 11.5px; text-align: right; }
+  .lab-2d { margin: 14px 0 4px; }
+  .lab-2d canvas { width: 100%; display: block; background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; }
+  .lab-prompt { font-family: var(--mono); font-size: 12px; line-height: 1.65; background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 8px; padding: 10px 13px; margin: 0;
+    white-space: pre-wrap; word-break: break-all; max-height: 220px; overflow-y: auto; color: var(--ink-2); }
+  .lab-budget { font-size: 12px; color: var(--ink-3); margin-top: 6px; display: flex; align-items: center; gap: 10px; }
+  .lab-budget .bar { flex: 1; height: 7px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+  .lab-budget .bar i { display: block; height: 100%; background: var(--pc); border-radius: 4px; }
+  .lab-honest { border-left: 3px solid var(--ink-3); background: var(--surface); border-radius: 0 8px 8px 0;
+    padding: 10px 14px; margin-top: 14px; font-size: 13px; color: var(--ink-2); }
+  .lab-ctrls .fk { align-self: center; }
+  .lab-ctrls input[type="checkbox"] { accent-color: var(--pc); width: 15px; height: 15px; }
+  .moe-grid { display: grid; gap: 3px; overflow-x: auto; margin-top: 4px; padding-bottom: 4px; }
+  .moe-grid .mh { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); text-align: center; align-self: end; }
+  .moe-grid .mt { font-size: 13px; color: var(--ink); padding-right: 8px; text-align: right; white-space: nowrap; align-self: center; }
+  .moe-cell { position: relative; height: 24px; border-radius: 5px; background: var(--surface-2); min-width: 22px; }
+  .moe-cell i { position: absolute; inset: 0; border-radius: 5px; background: var(--pc); }
+  .moe-cell.sel { box-shadow: inset 0 0 0 2px var(--pc); }
+  .moe-load-row { display: grid; grid-template-columns: 3em 1fr 3.4em; gap: 10px; align-items: center;
+    font-size: 12px; color: var(--ink-2); margin: 3px 0; }
+  .moe-load-row .rn2 { font-family: var(--mono); font-size: 11px; }
+  .moe-load-row .bar { height: 7px; background: var(--surface-2); border-radius: 4px; position: relative; }
+  .moe-load-row .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--pc); border-radius: 4px; }
+  .moe-load-row .ct { font-family: var(--mono); font-size: 11px; text-align: right; }
+  .rl-q { font-family: var(--serif); font-size: 15.5px; font-weight: 700; margin: 4px 0 10px; }
+  .rl-guess { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin: 0 0 8px; min-height: 1.2em; }
+  .rl-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 620px) { .rl-pair { grid-template-columns: 1fr; } }
+  .rl-ans { font: inherit; font-size: 13.5px; line-height: 1.7; text-align: left; cursor: pointer; color: var(--ink);
+    background: var(--surface); border: 1.5px solid var(--hairline); border-radius: 10px; padding: 12px 14px; }
+  .rl-ans:hover, .rl-ans:focus-visible { border-color: var(--pc); outline: none; }
+  .rl-ans:disabled { cursor: default; opacity: 0.55; }
+  .rl-wrow { display: grid; grid-template-columns: 5.4em 1fr 3.6em; gap: 10px; align-items: center;
+    font-size: 12.5px; color: var(--ink-2); margin: 4px 0; }
+  .rl-wrow .wbar { position: relative; height: 8px; background: var(--surface-2); border-radius: 4px; }
+  .rl-wrow .wbar::before { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--ink-3); opacity: 0.5; }
+  .rl-wrow .wbar i { position: absolute; top: 0; bottom: 0; border-radius: 4px; background: var(--pc); }
+  .rl-wrow .wbar i.neg { background: var(--ink-3); }
+  .rl-wrow .wv { font-family: var(--mono); font-size: 11px; text-align: right; }
+  .rl-test .rl-tcard { border: 1px solid var(--hairline); border-radius: 10px; padding: 10px 14px; margin: 8px 0;
+    font-size: 13.5px; color: var(--ink-2); background: var(--surface); }
+  .rl-test .rl-tscore { font-family: var(--mono); font-size: 11.5px; color: var(--ink); margin-top: 4px; }
+  .rl-verdict { font-size: 13.5px; margin-top: 8px; }
+  /* 注意力热力图 */
+  .att-grid { display: grid; gap: 2px; overflow-x: auto; padding-bottom: 4px; }
+  .att-grid .ah { font-family: var(--mono); font-size: 11px; color: var(--ink-2); text-align: center; align-self: end; }
+  .att-grid .av { font-family: var(--mono); font-size: 11px; color: var(--ink-2); padding-right: 6px; text-align: right; align-self: center; cursor: pointer; }
+  .att-grid .av:hover, .att-grid .av.on { color: var(--ink); font-weight: 700; }
+  .att-c { position: relative; aspect-ratio: 1; min-width: 20px; border-radius: 4px; background: var(--surface-2); }
+  .att-c i { position: absolute; inset: 0; border-radius: 4px; background: var(--pc); }
+  .att-c.masked { background: repeating-linear-gradient(45deg, var(--surface-2), var(--surface-2) 3px, var(--hairline) 3px, var(--hairline) 4px); }
+  .att-focus { font-size: 16px; line-height: 2; margin-top: 8px; }
+  .att-focus span { border-radius: 4px; padding: 1px 2px; }
+  /* 屋顶线计算器 */
+  .rf-chips { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; margin: 6px 0; }
+  .rf-chips .flab2 { font-size: 12px; color: var(--ink-3); margin-right: 2px; }
+  .rf-read { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin: 12px 0; }
+  .rf-item { background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 8px 12px; }
+  .rf-item .k { font-size: 11.5px; color: var(--ink-3); }
+  .rf-item .v { font-family: var(--mono); font-size: 14px; color: var(--ink); }
+  .rf-item .v .warn { color: var(--pc); font-weight: 700; }
+  /* 扩散实验室 */
+  .df-row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 6px; }
+  .df-cell { flex: 1; min-width: 180px; }
+  .df-cell canvas { width: 100%; max-width: 240px; display: block; border-radius: 8px; border: 1px solid var(--hairline); image-rendering: pixelated; background: var(--surface-2); }
+  .df-cell .viz-cap { margin-top: 5px; }
+  /* 迷你训练场 */
+  .tp-stats { display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: var(--mono); font-size: 12px; color: var(--ink-2); margin: 10px 0 6px; }
+  .tp-stats b { color: var(--ink); font-weight: 700; }
+  .tp-samples { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; }
+  .tp-sample { background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 8px 12px; font-size: 13px; }
+  .tp-sample .st { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); display: block; margin-bottom: 2px; }
+  .tp-sample .tx { color: var(--ink-2); word-break: break-all; }
+  .tp-sample.latest { border-color: var(--pc); }
+  .tp-sample.latest .tx { color: var(--ink); }
+  .bpe-t { border-radius: 4px; padding: 0 1px; }
+  .sd-row { display: grid; grid-template-columns: 3.6em 1fr 9.5em; gap: 10px; align-items: center; font-size: 12.5px; color: var(--ink-2); margin: 5px 0; }
+  .sd-bars { display: flex; flex-direction: column; gap: 2px; }
+  .sd-b { height: 5px; border-radius: 3px; background: var(--surface-2); position: relative; }
+  .sd-b i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; }
+  .sd-b.bp i { background: var(--ink-3); }
+  .sd-b.bq i { background: var(--pc); opacity: 0.4; }
+  .sd-b.bo i { background: var(--pc); }
+  .sd-nums { font-family: var(--mono); font-size: 10px; color: var(--ink-3); white-space: nowrap; }
+  .sp-row { display: grid; grid-template-columns: 3.2em 1fr 4.2em; gap: 10px; align-items: center; font-size: 13px; margin: 4px 0; color: var(--ink); }
+  .sp-row .bar { height: 8px; background: var(--surface-2); border-radius: 4px; position: relative; }
+  .sp-row .bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--pc); }
+  .sp-row.cut { color: var(--ink-3); text-decoration: line-through; }
+  .sp-row.cut .bar i { background: var(--ink-3); opacity: 0.35; }
+  .sp-row .pv { font-family: var(--mono); font-size: 11px; text-align: right; text-decoration: none; }
+  .race-row { display: grid; grid-template-columns: 8.5em 1fr 5.5em; gap: 10px; align-items: center; font-size: 13px; margin: 6px 0; }
+  .race-row .bar { height: 12px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
+  .race-row .bar i { display: block; height: 100%; background: var(--pc); border-radius: 6px; width: 0; }
+  .race-row .tv { font-family: var(--mono); font-size: 11.5px; text-align: right; color: var(--ink-2); }
+  .mem-row { display: grid; grid-template-columns: 7.5em 1fr 9em; gap: 10px; align-items: center; font-size: 13px; margin: 5px 0; }
+  .mem-row button { font: inherit; font-size: 12px; cursor: pointer; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 7px; padding: 4px 8px; text-align: left; }
+  .mem-row button:hover, .mem-row button:focus-visible { border-color: var(--pc); outline: none; }
+  .mem-row .bar { height: 9px; background: var(--surface-2); border-radius: 5px; overflow: hidden; }
+  .mem-row .bar i { display: block; height: 100%; width: 0; background: var(--pc); border-radius: 5px; }
+  .mem-row .mv { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
+  .net-cells { display: flex; gap: 14px; flex-wrap: wrap; margin: 10px 0; }
+  .net-node { flex: 1; min-width: 220px; border: 1.5px dashed var(--hairline); border-radius: 10px; padding: 10px; }
+  .net-node .nn { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); margin-bottom: 6px; }
+  .net-gpus { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .net-gpu { background: var(--surface); border: 1px solid var(--pc); border-radius: 7px; padding: 5px 4px;
+    font-family: var(--mono); font-size: 10px; text-align: center; color: var(--ink-2); line-height: 1.5; }
+  .net-comm { font-size: 13px; color: var(--ink); background: var(--surface); border-left: 3px solid var(--pc);
+    border-radius: 0 8px 8px 0; padding: 8px 12px; margin-top: 8px; }
+  .ag-log { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; min-height: 60px; }
+  .ag-e { font-size: 13px; padding: 7px 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--hairline); }
+  .ag-e b { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; color: var(--ink-3); margin-right: 8px; }
+  .ag-e.act { border-color: var(--pc); }
+  .ag-e.gate { border-color: var(--seal); background: var(--seal-soft); }
+  .ag-e.gate b { color: var(--seal); }
+  .emb-board { position: relative; height: 320px; background: var(--surface-2); border-radius: 10px; overflow: hidden;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 26px 26px; }
+  .emb-w { position: absolute; transform: translate(-50%, -50%); font-size: 13.5px; cursor: pointer;
+    background: var(--surface); border: 1.5px solid var(--hairline); border-radius: 999px; padding: 2px 11px; }
+  .emb-w:hover, .emb-w:focus-visible { border-color: var(--pc); outline: none; }
+  .emb-w.sel { border-color: var(--pc); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pc) 30%, transparent); font-weight: 700; }
+  .emb-w.nb { border-color: var(--pc); border-style: dashed; }
+  .emb-x { position: absolute; transform: translate(-50%, -50%); font-size: 18px; color: var(--ink); font-weight: 700; pointer-events: none; }
+
+  .seal-note { border-left: 3px solid var(--seal); background: var(--seal-soft); border-radius: 0 8px 8px 0;
+    padding: 10px 14px; margin: 14px 0 4px; max-width: 46em; }
+  .seal-note .sh { color: var(--seal); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
+  .seal-note p { margin: 2px 0 0; font-size: 13.5px; }
+  .seal-note .ref { color: var(--ink-3); font-size: 12px; }
+
+  .wire { text-align: left; padding: 2px 0 2px 30px; position: relative; height: 34px; display: flex; align-items: center; }
+  .wire::before { content: ""; position: absolute; left: 17px; top: 0; bottom: 0; width: 2px; background: var(--pc); opacity: 0.5; }
+  .wire span { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+
+  footer { border-top: 1px solid var(--hairline); margin-top: 56px; padding: 24px 0 56px; color: var(--ink-3); font-size: 13px; }
+  footer .sn { color: var(--seal); }
+  @media (prefers-reduced-motion: reduce) { .m-caret, .as-card { transition: none; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.15 · 工程蓝图</div>
+    <h1>LLM 系统蓝图</h1>
+    <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室；页尾有「已知未覆盖清单」标明蓝图边界。</p>
+    <div class="top-links">
+      <a href="progress.html" target="_blank" rel="noopener">🚦 进度看板 ↗</a>
+      <a href="index-map.html" target="_blank" rel="noopener">索引地图 · 28 节点目录 ↗</a>
+      <a href="thread.html" target="_blank" rel="noopener">叙事版 · 一句话的旅程（入门）↗</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 总装配图 -->
+  <div class="assembly" aria-label="四平面总装配图">
+    <a class="as-card" href="#pl1" style="--pc:var(--p1)">
+      <div class="t"><span class="rn">Ⅰ</span><b>训练管线</b><span class="d">权重如何炼成：语料 → 预训练 → 后训练 → 冻结发布</span></div>
+    </a>
+    <div class="as-wire">│ 产出：一个权重文件（数百 GB 的数字） ▼</div>
+    <a class="as-card" href="#pl2" style="--pc:var(--p2)">
+      <div class="t"><span class="rn">Ⅱ</span><b>模型本体</b><span class="d">冻结后的造物本身：Embedding → N × Block（Norm/Attention/FFN/MoE 含 🔬）→ LM Head　※ 本平面最深</span></div>
+    </a>
+    <div class="as-wire">│ 被加载进显存、被调用 ▼</div>
+    <div class="as-row">
+      <a class="as-card" href="#pl3" style="--pc:var(--p3)">
+        <div class="t"><span class="rn">Ⅲ</span><b>推理服务</b><span class="d">Prefill/Decode · KV 缓存 · 采样 · 量化 · 吞吐</span></div>
+      </a>
+      <a class="as-card" href="#pl4" style="--pc:var(--p4)">
+        <div class="t"><span class="rn">Ⅳ</span><b>系统组装</b><span class="d">上下文拼装 · RAG（含 🔬 实验室）· Agent · 护栏（朱批最密）</span></div>
+      </a>
+    </div>
+    <div class="as-wire">│ 同一地基上的另一族造物 ▼</div>
+    <a class="as-card" href="#pl5" style="--pc:var(--p5)">
+      <div class="t"><span class="rn">Ⅴ</span><b>多模态</b><span class="d">看见与生成图像 / 视频 / 声音：VLM · 扩散模型 · 潜空间 · 条件引导 · 视频 · 语音克隆　※ v0.7 新开工</span></div>
+    </a>
+    <div class="as-wire">│ 以上全部平面运行其上 ▼</div>
+    <a class="as-card" href="#pl0" style="--pc:var(--p0)">
+      <div class="t"><span class="rn">0</span><b>物理基座</b><span class="d">为什么是 GPU · 存储层级与内存墙 · 屋顶线模型 · 数字格式 · 互联与集群　※ 地基，编号 0</span></div>
+    </a>
+  </div>
+
+  <div class="legend">
+    <div class="lg"><b>形状记号（贯穿全页）</b>
+      <code>B</code> 批大小 · <code>T</code> 序列长度 · <code>d</code> 隐藏维度 · <code>h</code> 注意力头数 · <code>d_h</code> 每头维度 · <code>V</code> 词表大小 · <code>N</code> 层数
+    </div>
+    <div class="lg"><b>数字例的锚定机型</b>
+      全页数字例默认取 <b>Llama-3-8B</b>（开源可查证）：<code>N=32, d=4096, h_q=32, h_kv=8, d_h=128, V≈128k</code>。别家模型数值不同、结构同构。
+    </div>
+    <div class="lg"><b>分叉 chips</b>
+      每个模块列出该处真实存在的技术路线，<b>✓ 标主流</b>；点击切换查看各路线的机理与权衡。平面颜色与索引地图层色对应；<span style="color:var(--seal)">朱红仍专属合规</span>。
+    </div>
+  </div>
+
+  <!-- ================= PLANE I ================= -->
+  <section class="plane" id="pl1" style="--pc:var(--p1)">
+    <div class="pl-head"><span class="rn">PLANE Ⅰ</span><h2>训练管线 · 权重如何炼成</h2>
+      <p class="pl-q">这一平面回答：那几十亿个数字是怎么来的。它只发生一次（外加若干次后训练），产物是冻结的权重文件——之后的一切（Ⅱ Ⅲ Ⅳ）都只是使用它。</p></div>
+    <div class="pl-tools"><button data-plane="pl1">全部展开 / 收起</button></div>
+
+    <details class="mod" id="mod-corpus">
+      <summary><span class="m-caret">▶</span><span class="m-name">语料池与配比</span><span class="m-en">CORPUS · DATA MIX · 🔬 LAB</span><span class="m-shape">原始文本 ~10¹³ token 级</span></summary>
+      <div class="m-body">
+        <p>预训练的输入是数以十万亿计的 token：网络爬取（占大头）、书籍、论文、代码、多语文本。<b>配比是产品决策</b>：代码占比抬推理能力，多语占比决定语种表现——模型的能力版图在开跑前就由配方锁定了。Llama-3 训练量约 15T token，作为量感参照：一个人一生的阅读量约 10 亿 token 上下，差四个数量级。</p>
+        <ul><li>高质量语料（书、论文、代码）稀缺且最先耗尽——这是「合成数据」路线兴起的直接原因。</li>
+        <li>数据配比各家保密，属于核心资产；公开的多是总量与来源类别。</li></ul>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 配方即能力<span class="demo-tag">G2 级</span></div>
+          <p class="dim" style="margin:4px 0 0">算力预算固定 = 语料总量固定：拖动四类语料的占比（自动归一化到 100%），看模型的能力画像跟着变形。<b>抬高一项必然压低其他</b>——预训练的第一个残酷事实。</p>
+          <div class="lab-ctrls" style="flex-direction:column;align-items:flex-start;gap:6px">
+            <label>网页 <output id="cx-w-o">—</output> <input type="range" id="cx-w" min="0" max="100" value="60"></label>
+            <label>书籍论文 <output id="cx-b-o">—</output> <input type="range" id="cx-b" min="0" max="100" value="20"></label>
+            <label>代码 <output id="cx-c-o">—</output> <input type="range" id="cx-c" min="0" max="100" value="12"></label>
+            <label>多语文本 <output id="cx-m-o">—</output> <input type="range" id="cx-m" min="0" max="100" value="8"></label>
+          </div>
+          <label class="lab-lab">能力画像（实时）</label>
+          <div id="cx-rows"></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>能力权重为教学构造（真实的「配比 → 能力」映射是各家最核心的商业机密，只能事后观察）；但两件事是行业公认的真现象：代码语料提升推理能力、配比是零和取舍。试试把代码拉满——推理涨了，文风塌了。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>著作权（NYT v. OpenAI 案系）、公开个人信息的处理边界（PIPL 27 条）、欧盟 TDM 例外与 opt-out——全部埋在这一格。<span class="ref">详见索引地图 L1「数据采集」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>原始文本 ▼</span></div>
+
+    <details class="mod" id="mod-clean">
+      <summary><span class="m-caret">▶</span><span class="m-name">清洗 · 去重 · 过滤</span><span class="m-en">CLEANING PIPELINE · 🔬 LAB</span><span class="m-shape">TB 原始 → 高质量 token 流</span></summary>
+      <div class="m-body">
+        <p>工业级流水线：正文提取（去导航去广告）→ 去重（URL 级 + MinHash 近似去重，重复文本会让模型死记硬背并浪费算力）→ 质量过滤 → 安全过滤 → PII 检测移除。</p>
+        <div class="forks"><span class="flab">分叉 · 质量过滤怎么做</span>
+          <button class="fk" data-v="a">规则启发式</button>
+          <button class="fk on" data-v="b">模型打分 ✓</button>
+        </div>
+        <div class="fkb" data-v="a">按符号密度、长度、语言 ID、黑名单域名等硬规则筛。便宜、可解释，但误杀多样性（方言、少数表达易被错杀）。早期管线的主体。</div>
+        <div class="fkb on" data-v="b">训练一个小分类器给每篇文档打「质量分」（常以教科书/百科风格为正样本），按分数取舍或加权采样。现代管线主流，与规则法叠加使用。<b>过滤器的品味 = 模型的品味</b>，这一步已经在塑造价值观。</div>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 净水厂：四道闸真规则<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">14 条原始「网页」过四道闸，每道闸都是<b>真规则</b>（精确去重、质量启发式、敏感词表、个人信息正则）。开关任意组合，看谁被拦、为什么——也看谁被<b>误伤</b>。</p>
+          <div class="lab-ctrls">
+            <label><input type="checkbox" id="cl-dup" checked> 去重</label>
+            <label><input type="checkbox" id="cl-q" checked> 质量过滤</label>
+            <label><input type="checkbox" id="cl-tox" checked> 安全过滤</label>
+            <label><input type="checkbox" id="cl-pii" checked> 去个人信息</label>
+          </div>
+          <div class="lab-chunks" id="cl-docs" style="flex-direction:column;align-items:stretch;gap:4px"></div>
+          <div class="tp-stats"><span>入池 <b>14</b> 条</span><span>存活 <b id="cl-n">—</b> 条</span><span id="cl-warn" style="color:var(--seal)"></span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>四道闸的规则都是真实算法家族的教学版：精确匹配去重（工业用 MinHash 近似去重）、长度/符号密度启发式（工业用打分模型）、词表匹配（工业分类器+词表并用）、正则匹配手机号/证件号（工业同款思路）。样本刻意埋了一个陷阱：一条方言短句会被质量闸误杀——<b>过滤器的品味决定谁的声音被留下</b>，这不是 bug，是这一站最重要的伦理事实。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>《生成式AI暂行办法》第 7 条数据来源合法性 + TC260 对语料抽检合格率的量化指标，义务落点即此处。<span class="ref">索引地图 L1「清洗与过滤」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>干净文本 ▼</span></div>
+
+    <details class="mod" id="mod-bpe">
+      <summary><span class="m-caret">▶</span><span class="m-name">分词器训练</span><span class="m-en">TOKENIZER TRAINING · 🔬 LAB</span><span class="m-shape">语料统计 → 词表 V ≈ 32k–256k</span></summary>
+      <div class="m-body">
+        <p>在模型训练<b>之前</b>，先从语料统计出一部「切词法典」。它一旦定稿终身不改——模型看世界的颗粒度就此固定。词表大小 V 是第一个超参权衡：V 大 → 单 token 携带信息多、序列变短省算力，但 Embedding/LM Head 参数变大、稀有 token 训不充分。</p>
+        <div class="forks"><span class="flab">分叉 · 算法</span>
+          <button class="fk on" data-v="a">字节级 BPE ✓</button>
+          <button class="fk" data-v="b">SentencePiece/Unigram</button>
+          <button class="fk" data-v="c">纯字符/字节级</button>
+        </div>
+        <div class="fkb on" data-v="a">Byte-Pair Encoding：从单字节起步，反复合并语料中最高频的相邻对，合并表即词表。任何字符串都可编码（未知词退化为字节），无 OOV 问题。GPT 系、Llama-3（tiktoken 风格，V=128k）均用。</div>
+        <div class="fkb" data-v="b">Unigram 语言模型法：先给一个大候选词表，迭代删除对似然损害最小的词。SentencePiece 实现，早期 Llama/T5 使用。与 BPE 效果接近，路线之争已基本收敛于字节级 BPE。</div>
+        <div class="fkb" data-v="c">不学合并、直接按字符或字节切：序列被拉长数倍、算力代价大，仅研究性架构使用。反向说明了为什么需要「子词」这个中间粒度。</div>
+        <p class="dim">中文注记：同样内容中文通常比英文更费 token（词表以英文为主时尤甚）——计费与上下文长度的隐性不平等，法务审 API 合同时可留意。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · BPE 现场训练<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">真 BPE 算法在本地跑：每按一次「合并」，语料中<b>最高频的相邻对</b>就被焊成一个新词元。看词表从单字进化出「合同」「违约金」，看序列被压短——分词器的一生。</p>
+          <label class="lab-lab" for="bpe-doc">① 语料（重复越多的词长得越快，可换成你的文本）</label>
+          <textarea id="bpe-doc" spellcheck="false" style="min-height:70px">甲方委托乙方提供翻译服务。乙方应当按期交付，甲方应当按期付款。一方违约的，违约方应向守约方支付违约金；违约金为合同总额的百分之十。任一方均可解除本合同，解除本合同应提前三十日通知对方。合同解除后，违约金条款仍然有效。</textarea>
+          <div class="lab-ctrls">
+            <button type="button" class="fk" id="bpe-one">合并一步</button>
+            <button type="button" class="fk" id="bpe-auto">自动合并 ×30</button>
+            <button type="button" class="fk" id="bpe-reset">↺ 重置</button>
+          </div>
+          <div class="tp-stats">
+            <span>已合并 <b id="bpe-n">0</b> 轮</span>
+            <span>词表 <b id="bpe-v">—</b></span>
+            <span>序列长度 <b id="bpe-len">—</b></span>
+            <span>压缩率 <b id="bpe-cr">—</b></span>
+          </div>
+          <label class="lab-lab">② 合并史（最新在上）</label>
+          <div id="bpe-log" style="font-family:var(--mono);font-size:12px;color:var(--ink-2);max-height:120px;overflow-y:auto"></div>
+          <label class="lab-lab">③ 语料当前切分（同一底色 = 同一个多字词元）</label>
+          <div id="bpe-view" style="font-size:15px;line-height:2.1;word-break:break-all"></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>合并规则是真 BPE（Byte-Pair Encoding 的字符级版本）；工业实现的差异在于字节级起步、正则预切分与数万轮合并的规模——机制同构。观察两件事：压缩率随合并上升（这就是「大词表省 token」的由来）；只在语料里出现一次的词永远合不出来（低频词被切碎的宿命，也是生僻词更费钱的原因）。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>token id 流 ▼ 打包成 [B, T]（如 T=8192，全局批以百万 token 计）</span></div>
+
+    <details class="mod" open id="mod-train">
+      <summary><span class="m-caret">▶</span><span class="m-name">预训练循环</span><span class="m-en">PRE-TRAINING LOOP · 🔬 LAB</span><span class="m-shape">[B,T] → loss（标量）→ 梯度 → 权重</span></summary>
+      <div class="m-body">
+        <p>整个平面的心脏，一个四拍循环，重复数百万步：</p>
+        <code class="fx">前向:  logits = Model(tokens[B,T])          # 每个位置预测下一 token 的分布
+损失:  L = −log p(真实下一token)             # 交叉熵，对全批取平均
+反向:  ∂L/∂θ                               # 每个参数对本次错误的「责任份额」
+更新:  θ ← θ − lr · AdamW(∂L/∂θ)            # 沿责任方向微调所有参数</code>
+        <p>损失曲线是唯一的仪表盘：它随 数据 × 参数 × 算力 按幂律可预测地下降（Scaling Laws），这是「大力出奇迹」的数学依据。Chinchilla 法则给出配比经验：算力最优时训练 token 数 ≈ 参数量 × 20。</p>
+        <details class="dv"><summary>展开：工程细节（学习率调度 / 显存账 / 容灾）</summary>
+          <p>· 学习率不恒定：先 warmup 爬升再余弦衰减；梯度裁剪防爆炸。<br>
+          · 显存经验法则：混合精度训练每参数约 16 字节（权重 2 + 梯度 2 + fp32 主副本 4 + Adam 动量 4 + 方差 4）——8B 模型仅训练态就 ≈128GB，必须多卡并行（详见索引地图 L0「集群与并行」）。<br>
+          · 一跑数月，硬件天天坏：按小时存 checkpoint，坏了回滚续跑。中途发现数据配比错了？不可逆，只能认。</p>
+        </details>
+        <div class="forks"><span class="flab">分叉 · 训练目标</span>
+          <button class="fk on" data-v="a">自回归（下一词）✓</button>
+          <button class="fk" data-v="b">掩码填空</button>
+          <button class="fk" data-v="c">多 token 预测</button>
+        </div>
+        <div class="fkb on" data-v="a">只预测「下一个 token」。生成天然顺手，GPT 系确立、当今几乎唯一主流。简单到令人不安——全部智能都从这一个游戏里涌现。</div>
+        <div class="fkb" data-v="b">随机遮住句中若干词让模型填空（BERT 时代，2018–2021 主流）。理解任务强但不会生成，已退出大模型主战场——一次完整的路线兴衰，值得作为案例研究。</div>
+        <div class="fkb" data-v="c">一次预测未来多个 token（DeepSeek-V3 采用 MTP）：训练信号更密、还能给推理加速当草稿。前沿改良，非主流默认。</div>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 迷你训练场：亲眼看一个模型学会说话<span class="demo-tag">G3 级 · 全站之巅</span></div>
+          <p class="dim" style="margin:4px 0 0">一个带注意力层的迷你语言模型，此刻在你的 CPU 上<b>真实训练</b>：前向 → 交叉熵 → 反向传播 → Adam 更新，四拍与大模型一字不差。看损失从「纯瞎猜」的理论起点掉下来，看它的生成从乱码变成「合同腔」——大模型的一生，压缩成一分钟。</p>
+
+          <label class="lab-lab" for="tp-doc">① 训练语料（可整段替换——它学什么像什么）</label>
+          <textarea id="tp-doc" spellcheck="false" style="min-height:90px">服务合作合同。第一条 合作内容 甲方委托乙方提供影视翻译与配音服务。第二条 费用与结算 服务费按集结算，甲方应于收到结算单后十五个工作日内付款；逾期付款的，按日支付滞纳金。第三条 知识产权 翻译成果的知识产权归甲方所有，乙方不得将甲方素材用于训练人工智能模型。第四条 保密义务 双方对商业秘密负有保密义务，保密期至合同终止后三年。第五条 合同的解除 任一方均可提前三十日书面通知解除本合同；因重大违约致合同目的不能实现的，守约方可立即解除。第六条 违约责任 违约方应承担赔偿责任，违约金为合同总额的百分之十。第七条 争议解决 争议应先行协商，协商不成的提交甲方所在地人民法院诉讼解决。双方应当遵守本合同的全部约定。</textarea>
+
+          <div class="lab-ctrls">
+            <button type="button" class="fk" id="tp-run">▶ 开始训练</button>
+            <button type="button" class="fk" id="tp-reset">↺ 重置（换语料后按此）</button>
+          </div>
+          <div class="tp-stats">
+            <span>步数 <b id="tp-step">0</b></span>
+            <span>损失 <b id="tp-loss">—</b></span>
+            <span>瞎猜基线 ln(V) = <b id="tp-base">—</b></span>
+            <span>参数量 <b id="tp-np">—</b></span>
+            <span>速度 <b id="tp-sps">—</b> 步/秒</span>
+          </div>
+          <div class="lab-2d"><canvas id="tp-cv" height="150"></canvas>
+            <div class="viz-cap">② 损失曲线（实时）：虚线 = 均匀瞎猜的理论起点 ln(词表大小)。掉得越低，它对「下一个字」猜得越准。</div></div>
+
+          <label class="lab-lab">③ 它此刻会说什么（每 300 步自动取样，温度 0.8）</label>
+          <div class="tp-samples" id="tp-samples"></div>
+
+          <div class="lab-honest"><b>诚实标注（R5）：</b>训练是真的：嵌入 + 单头因果注意力 + 前馈层 + 残差，手写反向传播与 Adam，全在本页 JS 里可查。与真大模型的差距被如实保留：≈3 万参数 vs 数千亿（差 7 个数量级）、几 KB 语料 vs 数十万亿 token、省略了 LayerNorm 与多头等工程件。所以它最终只能学会「字频与搭配」，生成合同腔的胡话——<b>这不是失败，这就是小模型 + 小数据的真实上限</b>，也正是 Scaling Laws 曲线最左端的样子。把语料换成诗词再训一次，体会「配方即性格」。</div>
+        </div>
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>EU AI Act 的 GPAI 义务挂在此格：训练数据摘要披露、版权政策；训练算力超 10^25 FLOPs 触发系统性风险附加义务——算力账本本身成为法律证据。<span class="ref">索引地图 L2「预训练」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>基座模型（只会接着写，不会对话）▼</span></div>
+
+    <details class="mod" id="mod-sft">
+      <summary><span class="m-caret">▶</span><span class="m-name">监督微调 SFT</span><span class="m-en">SUPERVISED FINE-TUNING · 🔬 LAB</span><span class="m-shape">万条级示范 → 对话格式</span></summary>
+      <div class="m-body">
+        <p>用「指令 → 理想回答」的人写示范继续训练。技术上与预训练同一个循环，仅两处不同：数据小而精（万条级），且损失只在<b>回答段</b>计算（把指令部分 mask 掉——模型学「答」，不学「问」）。这一步之后它才从续写机变成助手。</p>
+        <div class="forks"><span class="flab">分叉 · 改多少参数</span>
+          <button class="fk on" data-v="a">全参微调</button>
+          <button class="fk" data-v="b">LoRA ✓（下游主流）</button>
+        </div>
+        <div class="fkb on" data-v="a">所有参数一起动。效果上限最高，但显存代价 = 重新预训练级别，且产物是又一整份权重。厂商自己做后训练用它。</div>
+        <div class="fkb" data-v="b">冻结原权重 W，只学一个低秩补丁 ΔW = B·A（秩 r≈8–64）。可训练参数常 &lt;1%，单卡可跑；补丁可插拔、可叠加、可分发（几十 MB）。企业定制的事实标准。<b>法务注记：</b>「微调后的模型」很多时候其实是「原模型 + 一个小补丁」——权属与责任条款应当区分这两件东西。</div>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 损失掩码：只学「答」不学「问」<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">SFT 与预训练同一个循环，唯一的机关在这：一条训练样本里，<b>哪些字参与计算损失</b>。亮色 = 计损（模型要学着说的），灰色 = 掩掉（只作上下文）。关掉掩码看看会发生什么。</p>
+          <div class="lab-ctrls"><label><input type="checkbox" id="sf-mask" checked> 掩掉指令部分（loss mask）</label>
+            <span style="font-family:var(--mono);font-size:12px">计损字数 <b id="sf-n">—</b> / 41</span></div>
+          <div id="sf-view" style="font-size:15px;line-height:2.1;word-break:break-all"></div>
+          <div class="viz-cap" id="sf-note"></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>掩码机制的展示完全忠实（这就是 SFT 数据的真实构造方式）；样本为教学构造。不掩码的后果是真的：模型会花一半学习额度去模仿<b>用户的提问风格</b>——训出一个爱反问的助手。一个字段级的小开关，决定产品性格的一半。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>会对话的模型 ▼</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">偏好优化</span><span class="m-en">PREFERENCE OPTIMIZATION · 🔬 LAB</span><span class="m-shape">偏好对（A优于B）→ 价值观入参</span></summary>
+      <div class="m-body">
+        <p>SFT 教会格式，这一步教会「分寸」。原料统一是<b>偏好对</b>：同一提问的两个回答，人类标注哪个更好。分歧在于怎么把偏好变成梯度：</p>
+        <div class="forks"><span class="flab">分叉 · 优化路线</span>
+          <button class="fk on" data-v="a">RLHF（RM+PPO）✓ 经典</button>
+          <button class="fk" data-v="b">DPO ✓ 开源常用</button>
+          <button class="fk" data-v="c">GRPO（推理模型）</button>
+        </div>
+        <div class="fkb on" data-v="a">两段式：先用偏好对训练一个「奖励模型」（学会人类品味的打分器），再用强化学习（PPO）让主模型在打分器上刷高分。ChatGPT 立身之法。缺点：贵、不稳、会被「钻空子」——模型学会讨好打分器而非真正变好（reward hacking，AI 谄媚的技术根源）。</div>
+        <div class="fkb" data-v="b">Direct Preference Optimization：数学上证明可以跳过奖励模型，把偏好对直接写进一个闭式损失函数。一段式、稳定、便宜，开源社区主流。代价是失去了可复用的独立打分器。</div>
+        <div class="fkb" data-v="c">组相对策略优化：对同一题采样一组回答、按组内相对好坏给信号，配合「可自动判分的任务」（数学/代码）使用——DeepSeek-R1 推理能力的训练方法。前沿：把「人类偏好」换成了「可验证的对错」。</div>
+
+        <div class="lab" id="mod-rlhf-lab">
+          <div class="lab-head">🔬 实验室 · 亲手训练一个打分器<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">RLHF 第一步的真算法（Bradley–Terry 偏好学习）在你浏览器本地运行：你当八轮标注员，一个迷你奖励模型实时从你的选择里学出「品味」——最后我们考验它有没有被你教坏。</p>
+
+          <label class="lab-lab">① 标注台 · 哪个回答更好？（<span id="rl-round">第 1 / 8 对</span>）</label>
+          <div class="rl-q" id="rl-q"></div>
+          <div class="rl-guess" id="rl-guess"></div>
+          <div class="rl-pair">
+            <button type="button" class="rl-ans" id="rl-a"></button>
+            <button type="button" class="rl-ans" id="rl-b"></button>
+          </div>
+          <div class="lab-ctrls" style="margin-top:12px"><span style="font-size:12.5px;color:var(--ink-2)" id="rl-acc">打分器猜中率：—（第 4 对起开始预判）</span><button type="button" class="fk" id="rl-reset">↺ 重新开始</button></div>
+
+          <label class="lab-lab">② 打分器实时学到的「品味向量」（右=偏好，左=嫌弃）</label>
+          <div id="rl-w"></div>
+
+          <label class="lab-lab">③ 考验 · 它会不会被「空洞奉承」骗到（标注满 5 对解锁）</label>
+          <div class="rl-test" id="rl-test"></div>
+
+          <div class="lab-honest"><b>诚实标注（R5）：</b>「从成对偏好中学出打分函数」用的是真算法（Bradley–Terry 模型 + 逻辑回归更新，RLHF 奖励模型的数学骨架）；但真实奖励模型是读完整回答文本的数十亿参数网络，这里把每个回答简化成六个可解释维度（信息密度/简洁/结构化/礼貌客套/奉承讨好/谨慎免责），好让你<b>看见</b>品味的形成。③ 的考验演示的就是 reward hacking：如果你的选择让「礼貌」「奉承」维度权重过高，一句零信息的彩虹屁就能骗到高分——谄媚模型不是 bug，是标注品味的镜子。换一批标注员，就是换一面镜子。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>「模型应当持有什么价值观」在此写进损失函数——《生成式AI暂行办法》第 4 条的技术落点，法律离算法最近的一格。上面实验室里你的八次点击，就是这个法定要求在微观处的样子。<span class="ref">索引地图 L3「RLHF」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>对齐后的模型 ▼</span></div>
+
+    <details class="mod" id="mod-eval">
+      <summary><span class="m-caret">▶</span><span class="m-name">评估 · 红队 · 冻结发布</span><span class="m-en">EVAL · RED TEAM · RELEASE · 🔬 LAB</span><span class="m-shape">→ 权重文件（safetensors，数百 GB）</span></summary>
+      <div class="m-body">
+        <p>上线前三关：基准跑分（MMLU 等标准题库——注意「污染」问题：题目混进训练数据会虚高分数）、安全评估（拒答边界抽检）、红队（专家花式越狱，发现漏洞回炉）。全部通过后权重冻结，写入文件。此后模型本身不再学习——你与它的每次对话都不会改变这些数字（「它记住我了」是Ⅳ平面的工程幻觉）。</p>
+        <details class="dv"><summary>扩建 · 评估科学：为什么 benchmark 数字要打折看（v0.9）</summary>
+          <p><b>基准的三大陷阱：</b>① 污染——题目或其变体泄入训练集，分数测的是「背过」而非「会做」；② Goodhart 定律——一旦榜单成为目标，刷榜技巧就与真实好用脱钩（针对性微调可专门抬分）；③ 饱和——顶级模型分数挤在天花板附近，区分度失效，榜单只好不断换新题。<br>
+          <b>LLM 当判官（LLM-as-judge）：</b>用强模型给模型输出打分——便宜、可规模化，已是行业标配；但判官自身有系统性偏差：偏爱与自己风格相近的回答、偏爱更长的回答、受选项位置影响——「判官的判官」是未解的套娃问题。<br>
+          <b>实务启示（写给法务）：</b>读任何「模型跑分」宣传先问三件事：题集多老、是否可能被污染、谁判的分。采购与备案材料中引用评测结果时，注明评测集与评测方是基本卫生。</p>
+        </details>
+        <p class="dim">发布分叉（开权重 / 闭源 API）的法律含义差异巨大，已在索引地图 L4「开源 vs 闭源」详述，此处不重复。</p>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 污染检测器<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">「跑分虚高」的头号病因是题目泄进了训练集。检测方法之一是<b>长字串重合</b>——真算法在本地跑：左边贴「训练语料」、右边贴「考题」，实时找 8 字以上的连续重合。</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div><label class="lab-lab" for="ev-corp">训练语料（可编辑）</label>
+              <textarea id="ev-corp" spellcheck="false" style="min-height:80px;width:100%;font:inherit;font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--hairline);border-radius:8px;padding:8px 10px">今天我们学习合同法基础。问题：保密义务的期限一般如何约定？答案是由双方自行约定，常见为合同终止后二至五年。另外一些无关的语料内容填充在这里。</textarea></div>
+            <div><label class="lab-lab" for="ev-test">考题（可编辑）</label>
+              <textarea id="ev-test" spellcheck="false" style="min-height:80px;width:100%;font:inherit;font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--hairline);border-radius:8px;padding:8px 10px">问题：保密义务的期限一般如何约定？请作答。</textarea></div>
+          </div>
+          <div class="viz-cap" id="ev-hit" style="margin-top:8px"></div>
+          <div class="lab-ctrls" style="margin-top:10px"><label>再看分数虚高的算术：泄题比例 <output id="ev-c-o">30%</output> <input type="range" id="ev-c" min="0" max="100" value="30"></label>
+            <span style="font-family:var(--mono);font-size:12.5px">真实能力 60 分 → 表观 <b id="ev-s">—</b> 分</span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>8 字连串重合检测为实算（工业界的污染检测正是此类 n-gram/子串重合法，GPT-4 技术报告即用近似方法）；「表观分 = 真实 + 泄题比例 ×（满分 − 真实）」为理想化算术（假设背过必对）。法务实用结论：看到宣传跑分，先问三件事——题集多老、可曾泄入语料、谁判的分（本模块上方「评估科学」扩建段有完整版）。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>TC260 题库抽检与拒答率指标、EU AI Act 系统性风险模型的对抗测试义务——红队报告直接构成备案与合规材料。<span class="ref">索引地图 L3「安全对齐与红队」</span></p></div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= PLANE II ================= -->
+  <section class="plane" id="pl2" style="--pc:var(--p2)">
+    <div class="pl-head"><span class="rn">PLANE Ⅱ</span><h2>模型本体 · 冻结后的造物</h2>
+      <p class="pl-q">这一平面回答：那个权重文件展开是什么结构。一次前向传播自上而下走完全部模块；训练与推理走的是同一套结构，区别只在走完之后算不算梯度。本平面为全图最深。</p></div>
+    <div class="pl-tools"><button data-plane="pl2">全部展开 / 收起</button></div>
+
+    <details class="mod" id="mod-tok">
+      <summary><span class="m-caret">▶</span><span class="m-name">分词（运行时）</span><span class="m-en">TOKENIZE · 🔬 LAB</span><span class="m-shape">text → ids [T]</span></summary>
+      <div class="m-body">
+        <p>用Ⅰ平面定稿的法典查表切分：字符串 → 整数序列。确定性操作、无参数、可逆。模型全程只见整数——「它不识字」是字面意思。分词的诸多怪癖（数字算术差、字母题翻车）见索引地图 L2「分词」，可用 Tiktokenizer 实证。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 迷你分词器<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">一个真实的「最长匹配」分词器：词表里有的词整块切出，没有的退化成单字（字节回退的教学版）。输入任何句子，看它被过账。</p>
+          <label class="lab-lab" for="tk-q">① 输入</label>
+          <div class="lab-q"><input type="text" id="tk-q" value="甲方应当按合同支付违约金给乙方" spellcheck="false"></div>
+          <div class="lab-chunks" id="tk-out" style="margin-top:10px"></div>
+          <div class="tp-stats"><span>字符数 <b id="tk-c">—</b></span><span>token 数 <b id="tk-t">—</b></span><span>压缩率 <b id="tk-r">—</b></span><span style="color:var(--ink-3)">计费按右边那个数</span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>切分算法（贪心最长匹配 + 单字回退）是真实算法家族的一员；词表为手工构造的 24 词教学版（真实词表由 Ⅰ 平面的 BPE 训练产出、数万条起）。自查：输入「人工智能模型」整块命中；输入生僻词或英文——碎成单字/单字符，token 数暴涨，这就是「生僻内容更贵」的机制。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>ids [T] ▼</span></div>
+
+    <details class="mod" id="mod-embed">
+      <summary><span class="m-caret">▶</span><span class="m-name">Embedding 查表</span><span class="m-en">TOKEN EMBEDDING · 🔬 LAB</span><span class="m-shape">[T] → [T, d]　权重 [V×d]</span></summary>
+      <div class="m-body">
+        <p>一张 V×d 的大表：每个 token id 换取一行长度 d 的向量（8B 例：d=4096，此表约 5.3 亿参数）。从此每个 token 都是 d 维空间中的一个点，语义关系体现为几何关系。这些向量本身是预训练<b>学出来的</b>，不是人工设定的。</p>
+        <p class="dim">工程注记：小模型常让这张表与末端 LM Head 共享参数（weight tying），一表两用省参数。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 语义地图：距离与方向<span class="demo-tag">G2 级</span></div>
+          <p class="dim" style="margin:4px 0 0">点击任何词，按真实坐标距离找出它的三个近邻（虚线圈）——「意思相近 = 距离相近」。再按下面的按钮，看语义空间最著名的戏法。</p>
+          <div class="emb-board" id="emb-board"></div>
+          <div class="lab-ctrls" style="margin-top:10px">
+            <button type="button" class="fk" id="emb-magic">✨ 演示：国王 − 男 + 女 = ?</button>
+            <span id="emb-out" style="font-size:13px;color:var(--ink-2)"></span>
+          </div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>本图坐标为<b>人工构造的教学布局</b>（真实嵌入是从数据里学出来的数千维空间，此处二维手绘）；但两件事忠实于真实：近邻由坐标距离<b>实算</b>（不是预设答案），向量算术「国王−男+女」按真实向量加减<b>实算</b>后找最近词。真实空间里这个戏法同样成立——去 Embedding Projector 亲手验证（索引地图 L2「向量嵌入」有直达链接）。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>[T, d] ▼ 但注意力天生不知道词序——需要下一格</span></div>
+
+    <details class="mod" id="mod-rope">
+      <summary><span class="m-caret">▶</span><span class="m-name">位置信息</span><span class="m-en">POSITIONAL ENCODING · 🔬 LAB</span><span class="m-shape">[T, d] → [T, d]（注入位置）</span></summary>
+      <div class="m-body">
+        <p>注意力对输入是「无序集合」——不加位置信息，「狗咬人」与「人咬狗」不可区分。怎么注入位置，是一个真实的路线分叉，且直接牵动「上下文能开多长」：</p>
+        <div class="forks"><span class="flab">分叉</span>
+          <button class="fk on" data-v="a">RoPE ✓</button>
+          <button class="fk" data-v="b">ALiBi</button>
+          <button class="fk" data-v="c">学习式绝对位置</button>
+        </div>
+        <div class="fkb on" data-v="a">旋转位置编码：把 Q、K 向量按维度两两配对，每对视作平面上一点、按「位置 × 各对不同的角速度」旋转。妙处：两个被旋转向量的点积只依赖<b>相对位置差</b>——相对性自然涌现。当今几乎所有开源主流（Llama、Qwen、DeepSeek）标配；长上下文外推的各种改造（NTK 缩放、YaRN）都在改它的角速度表。</div>
+        <div class="fkb" data-v="b">不转向量，直接在注意力打分上按距离加线性罚分：离得越远、分越低。极简、外推性好，但表达力弱些（BLOOM、MPT 用过）。与 RoPE 之争已收敛于 RoPE。</div>
+        <div class="fkb" data-v="c">给每个绝对位置学一个向量加到词向量上（GPT-2 时代）。训练时见过多长就只会多长，外推为零——被淘汰的主因。</div>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · RoPE：相对性如何涌现<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">RoPE 的妙处一图看穿：向量按「位置 × 角速度」旋转后，两个向量的点积<b>只取决于位置差</b>。拖 ① 整体平移——点积纹丝不动；拖 ② 改变间距——点积才变。</p>
+          <div class="lab-ctrls">
+            <label>① 词元 A 的位置 m = <output id="rp-m-o">3</output> <input type="range" id="rp-m" min="0" max="24" value="3"></label>
+            <label>② 间距 g = <output id="rp-g-o">4</output> <input type="range" id="rp-g" min="0" max="16" value="4"></label>
+          </div>
+          <div class="lab-2d"><canvas id="rp-cv" height="200"></canvas>
+            <div class="viz-cap">左：两个被旋转的向量（实线 = A @位置m，虚线 = B @位置m+g）。右：点积随「间距」的曲线，● = 当前间距。点积 = cos(g·θ)，真公式实算。</div></div>
+          <div class="tp-stats"><span>当前点积 <b id="rp-dot">—</b></span><span>只随 g 变，与 m 无关 → 相对位置涌现</span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>真实 RoPE 把 d 维向量按维度两两配对、每对不同角速度旋转；此处取<b>其中一对维度</b>（单一角速度 θ=0.35）演示核心机理——多对叠加即真实版本，数学同构。长上下文外推的各种改造（NTK/YaRN）改的就是各对的角速度表。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>[T, d] ▼ 进入主体：同构 Block 堆叠 ×N（8B: N=32；70B: N=80）</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">Block 总装 × N</span><span class="m-en">TRANSFORMER BLOCK · 🔬 LAB</span><span class="m-shape">[T, d] → [T, d]（每层同构）</span></summary>
+      <div class="m-body">
+        <p>全模型 = 同一种积木摞 N 层。理解一层就理解了全部。一层内部两个子单元，各配一次归一化和一条残差连接：</p>
+        <code class="fx">x ── Norm ─ Attention ──(+)── Norm ─ FFN ──(+)──▶ 下一层
+│                       ↑ │                ↑
+└───────── 残差 ─────────┘ └───── 残差 ─────┘</code>
+        <p><b>残差流</b>是关键意象：一条贯穿全部 N 层的「传送带」（宽度 d），每个子单元只是从带上<b>读取</b>信息、加工后<b>加回</b>带上——而不是整体变换。这保证了梯度能穿透几十层（深度网络可训练的前提），也是可解释性研究读写模型「思想」的界面。</p>
+        <div class="forks"><span class="flab">分叉 · Norm 放哪</span>
+          <button class="fk on" data-v="a">Pre-norm ✓</button>
+          <button class="fk" data-v="b">Post-norm（2017 原版）</button>
+        </div>
+        <div class="fkb on" data-v="a">归一化放在子单元<b>之前</b>（如上图）：残差通道全程无阻，深层训练稳定。GPT-2 起成为绝对主流。</div>
+        <div class="fkb" data-v="b">归一化放在残差相加<b>之后</b>（Transformer 原始论文的画法）：理论表达力略强但深层易训崩，需精细 warmup。读 2017 原论文时注意此差异，别按原图理解现代模型。</div>
+        <p class="dim">附：归一化本身的分叉——LayerNorm（原版，减均值除标准差）→ RMSNorm ✓（只除均方根，省去减均值，更便宜、效果相当，Llama 系标配）。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 残差流：信息为什么能穿过 32 层<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">同一个信号向量，走 32 层随机变换：一条路<b>有残差</b>（每层只往传送带上「加一点」），一条路<b>没有</b>（每层整体变换）。曲线 = 各层输出与原始信号的相似度，实时计算。</p>
+          <div class="lab-ctrls"><button type="button" class="fk" id="bk-run">▶ 走 32 层（重掷随机变换）</button></div>
+          <div class="lab-2d"><canvas id="bk-cv" height="170"></canvas>
+            <div class="viz-cap">实线 = 有残差（x ← x + 0.1·f(x)），虚线 = 无残差（x ← f(x)）。纵轴：与第 0 层信号的余弦相似度。</div></div>
+          <div class="viz-cap" id="bk-verdict"></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>迭代与相似度为实算；f 为固定随机线性变换（真实模型的 f 是训练出来的注意力与 FFN）。现象本身是深度学习的真定理级经验：<b>无残差时原始信息几层内被搅碎，有残差时穿透几十层仍在</b>——这就是 2015 年残差连接让「深」网络成为可能的原因，也是「残差流 = 贯穿全程的传送带」这个意象的数学根据。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>Block 内部第一个子单元 ▼</span></div>
+
+    <details class="mod" open id="mod-attn">
+      <summary><span class="m-caret">▶</span><span class="m-name">注意力</span><span class="m-en">ATTENTION · 🔬 LAB</span><span class="m-shape">[B,T,d] → [B,T,d]　中间量 [B,h,T,T]</span></summary>
+      <div class="m-body">
+        <p>整摞模型中<b>唯一让 token 之间交换信息</b>的地方（其余模块都是每个位置各算各的）。每个位置对此前所有位置计算相关度，按权重汇聚信息。核心式：</p>
+        <code class="fx">Attention(Q, K, V) = softmax( Q·Kᵀ / √d_k ) · V</code>
+        <details class="dv"><summary>展开：Q / K / V 从哪来、mask 怎么加、多头是什么</summary>
+          <p>· 同一输入 X 乘三个<b>学出来的</b>投影矩阵：Q=XW_Q（我在找什么）、K=XW_K（我能提供什么）、V=XW_V（真要取走的内容）。Q·Kᵀ 两两打分，除以 √d_k 防数值过大，softmax 归一成权重后对 V 加权求和。<br>
+          · 因果掩码：给「未来位置」的打分强行置 −∞（softmax 后即 0）——生成式模型不许偷看后文，训练与推理同款规则。<br>
+          · 多头：把 d 拆成 h 份（8B: h=32，每头 d_h=128），各头在自己的子空间独立做上式、各学各的关系类型（指代、语法、位置…），结果拼接后过输出投影 W_O。</p>
+        </details>
+        <div class="forks"><span class="flab">分叉 · KV 头配置</span>
+          <button class="fk" data-v="a">MHA</button>
+          <button class="fk on" data-v="b">GQA ✓</button>
+          <button class="fk" data-v="c">MQA</button>
+          <button class="fk" data-v="d">MLA（前沿）</button>
+        </div>
+        <div class="fkb" data-v="a">Multi-Head：每个 Q 头配独享的 K、V 头（h_kv = h_q = 32）。表达力满配，但推理时 KV 缓存最肥（Ⅲ平面详算）。原版设计，大模型已少用。</div>
+        <div class="fkb on" data-v="b">Grouped-Query：多组 Q 头共享少量 KV 头（8B: h_q=32, h_kv=8，即 4 个 Q 头共用一套 KV）。KV 缓存直接 ÷4，质量几乎不掉。Llama-3、Qwen 等当今标配——架构决策被推理成本倒逼的典型案例。</div>
+        <div class="fkb" data-v="c">Multi-Query：极端版，全部 Q 头共用 1 套 KV（h_kv=1）。缓存最省、质量有可感损失，被 GQA 取代为主流折中。</div>
+        <div class="fkb" data-v="d">Multi-head Latent Attention：不存 K、V 本身，存一个低秩压缩「潜向量」，用时再展开——缓存比 GQA 再小数倍。DeepSeek-V2/V3 的招牌创新，前沿方向。</div>
+        <p class="dim">⚠ 复杂度 O(T²)：打分矩阵 [B,h,T,T] 随长度平方增长——「长上下文为什么贵」的数学根源。工程补丁 FlashAttention 不改数学，只改显存访问顺序（不再落盘整个 T×T 矩阵），是「同一公式、不同工程」的好例子。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 亲眼看 softmax(QKᵀ/√d)V<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">上面那条核心公式此刻在你浏览器里逐项计算：输入一句话，看 T×T 注意力矩阵长什么样、因果掩码怎么挡住未来、去掉 √d 缩放后 softmax 如何饱和。</p>
+
+          <label class="lab-lab" for="att-q">① 输入（取前 10 字，每字一词元）</label>
+          <div class="lab-q">
+            <input type="text" id="att-q" value="河边的银行不办存款业务" spellcheck="false">
+            <div class="lab-presets">
+              <button data-q="河边的银行不办存款业务">歧义句</button>
+              <button data-q="甲方应向乙方支付违约金">合同句</button>
+            </div>
+          </div>
+
+          <div class="lab-ctrls">
+            <span class="rf-chips"><span class="flab2">② 注意力头</span>
+              <button type="button" class="fk on" data-h="0" id="att-h0">头 1</button>
+              <button type="button" class="fk" data-h="1" id="att-h1">头 2</button>
+              <button type="button" class="fk" data-h="2" id="att-h2">相似度头</button></span>
+            <label><input type="checkbox" id="att-mask" checked> 因果掩码</label>
+            <label><input type="checkbox" id="att-scale" checked> ÷√d 缩放</label>
+          </div>
+
+          <label class="lab-lab">③ 注意力矩阵（行 = 谁在看，列 = 看谁；色深 = softmax 权重）</label>
+          <div class="att-grid" id="att-grid"></div>
+          <div class="viz-cap">斜纹格 = 被因果掩码禁看的「未来」。点击左侧行标签，在下方句子里看该词元的注意力分布。</div>
+          <div class="att-focus" id="att-focus"></div>
+
+          <div class="lab-honest"><b>诚实标注（R5）：</b>softmax、÷√d、因果掩码、多头并行的数学与真实模型完全一致、逐项实时计算；但 Q/K 投影矩阵是固定随机的（真实模型的头是训练出来、各司其职的——语法头、指代头……去 Transformer Explainer 看真头）。两个自查实验：关掉「÷√d 缩放」看权重坍缩到一格（softmax 饱和——公式里 √d 存在的理由）；「相似度头」不做投影、纯按向量相似度分配注意力——投影矩阵的价值恰是让模型能学出「不同于相似度」的关注方式。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>残差相加 → 第二个子单元 ▼</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">前馈网络 FFN</span><span class="m-en">FEED-FORWARD · SwiGLU · 🔬 LAB</span><span class="m-shape">[T,d] → [T,~3.5d] → [T,d]</span></summary>
+      <div class="m-body">
+        <p>每个位置<b>独立</b>过一个小型两段变换：升维（8B: 4096→14336）→ 非线性门控 → 降回。不看别的位置——注意力负责「交流」，FFN 负责「消化」。参数大头在此：全模型约三分之二的参数是 FFN。</p>
+        <code class="fx">SwiGLU(x) = ( SiLU(x·W_gate) ⊙ x·W_up ) · W_down    # ⊙ 逐元素相乘（门控）</code>
+        <div class="forks"><span class="flab">分叉 · 激活函数演化</span>
+          <button class="fk" data-v="a">ReLU（初代）</button>
+          <button class="fk" data-v="b">GELU（GPT-2/3）</button>
+          <button class="fk on" data-v="c">SwiGLU ✓</button>
+        </div>
+        <div class="fkb" data-v="a">max(0,x)，简单粗暴。两矩阵结构：升维→ReLU→降维。2017 原版。</div>
+        <div class="fkb" data-v="b">ReLU 的平滑版，负区不再硬归零。GPT-2/3、BERT 时代主流。</div>
+        <div class="fkb on" data-v="c">三矩阵门控结构（如上式）：一路算内容、一路算「放行多少」的门。经验性胜出（论文原话近乎「我们也不知道为什么更好」），Llama 起成为开源标配——深度学习「炼丹」气质的诚实样本。</div>
+        <p class="dim">可解释性研究观点（标注：研究假说而非定论）：事实性知识主要存储于 FFN 权重中，注意力负责搬运——「知识在哪」这个法律上会被追问的问题，技术上的答案目前只有指向，没有定位。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 激活函数与门控<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">三代激活函数的真曲线并排画出；拖动输入 x，看三家各放行多少。下方是 SwiGLU 门控的体感：内容与门各自独立，<b>门说了算</b>。</p>
+          <div class="lab-ctrls"><label>输入 x = <output id="ff-x-o">1.0</output> <input type="range" id="ff-x" min="-40" max="40" value="10"></label></div>
+          <div class="lab-2d"><canvas id="ff-cv" height="170"></canvas>
+            <div class="viz-cap">实线 SiLU（SwiGLU 所用）· 虚线 GELU · 点线 ReLU；● = 当前 x。负区的差异是三代演化的全部剧情：硬归零 → 平滑 → 平滑且可轻微反悔。</div></div>
+          <div class="lab-ctrls" style="margin-top:8px">
+            <label>门 gate = <output id="ff-g-o">1.0</output> <input type="range" id="ff-g" min="-30" max="30" value="10"></label>
+            <label>内容 up = <output id="ff-u-o">2.0</output> <input type="range" id="ff-u" min="-30" max="30" value="20"></label>
+            <span style="font-family:var(--mono);font-size:12.5px">SiLU(gate)×up = <b id="ff-out">—</b></span>
+          </div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>三条曲线与门控算式均为真函数实算（ReLU=max(0,x)；SiLU=x·σ(x)；GELU 用标准近似式）。教学点：把「门」拖到负值——内容再大，输出也被掐灭；这就是「一路算内容、一路算放行多少」的字面演示，也是 SwiGLU 三矩阵结构存在的理由。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>FFN 的规模化分叉 ▼</span></div>
+
+    <details class="mod" id="mod-moe">
+      <summary><span class="m-caret">▶</span><span class="m-name">MoE：把 FFN 复数化</span><span class="m-en">MIXTURE OF EXPERTS · 🔬 LAB</span><span class="m-shape">router: [T,d] → top-k of E 个专家</span></summary>
+      <div class="m-body">
+        <p>Dense 与 MoE 的分岔点<b>精确地</b>在这：MoE 不动注意力，只把每层那<b>一个</b> FFN 换成 E 个并联「专家」+ 一个路由器。每个 token 到来，路由器（本身是个小线性层）打分选 top-k 个专家处理，其余专家沉睡——参数总量巨大、单 token 激活量小。</p>
+        <ul>
+          <li>Mixtral-8×7B：每层 8 专家选 2，总参 ~47B、激活 ~13B。</li>
+          <li>DeepSeek-V3：每层 256 个路由专家选 8 + 1 个常驻共享专家，总参 671B、激活 ~37B——新闻里「参数量/激活量」两个数字的出处。</li>
+        </ul>
+        <p class="dim">训练难点：路由器天然偏爱少数专家（马太效应），需加负载均衡辅助损失强行摊匀；推理难点：专家要分布到多卡，通信设计复杂。「省算力」的代价是工程复杂度——没有免费午餐。</p>
+        <div class="forks"><span class="flab">分叉</span>
+          <button class="fk" data-v="a">Dense（简单可靠）</button>
+          <button class="fk on" data-v="b">MoE ✓（大规模主流）</button>
+        </div>
+        <div class="fkb" data-v="a">一个 FFN 全 token 通过。训练稳、部署简单，中小模型与追求可靠性的场景仍是默认。</div>
+        <div class="fkb on" data-v="b">头部大模型基本已 MoE 化（DeepSeek、Mixtral 公开；GPT-4 据业界广泛报道）。「同等算力买更多参数」在 Scaling Laws 下是理性选择。</div>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 路由器分诊台<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">一个真实的 softmax 路由器在你浏览器本地运行：输入一句话，看每个词元被分给哪些专家、专家的忙闲如何失衡、均衡机制如何救场。</p>
+
+          <label class="lab-lab" for="moe-q">① 输入一句话（按字近似词元，取前 14 个）</label>
+          <div class="lab-q">
+            <input type="text" id="moe-q" value="合同解除后已产生的费用应当照常结算" spellcheck="false">
+            <div class="lab-presets">
+              <button data-q="合同解除后已产生的费用应当照常结算">法律句</button>
+              <button data-q="今天天气很好我们去公园散步吧">生活句</button>
+              <button data-q="路由器把每个词元分给不同的专家">技术句</button>
+            </div>
+          </div>
+
+          <div class="lab-ctrls">
+            <label>② 每词元激活 top-k <output id="moe-k-o">2</output> / 8 个专家 <input type="range" id="moe-k" min="1" max="4" value="2"></label>
+            <label><input type="checkbox" id="moe-bal"> ④ 均衡偏置（DeepSeek 式）</label>
+            <button type="button" class="fk" id="moe-seed">↻ 重掷专家</button>
+          </div>
+
+          <label class="lab-lab">③ 分诊实况</label>
+          <div id="moe-grid" class="moe-grid"></div>
+          <div class="viz-cap">行 = 词元，列 = 专家 E1–E8；色深 = 路由器输出的真实 softmax 概率，描边 = top-k 中选。</div>
+
+          <label class="lab-lab">⑤ 专家负载与均衡度</label>
+          <div id="moe-load"></div>
+          <div class="lab-budget"><span>负载均衡辅助损失（Switch 公式 E·Σf·P，完全均匀时 ≈ 1.00，越大越偏科）</span><span id="moe-aux" style="font-family:var(--mono);color:var(--ink)">—</span></div>
+
+          <div class="lab-honest"><b>诚实标注（R5）：</b>softmax 路由、top-k 激活、负载统计、均衡偏置都是真算法；但真实 MoE 的专家是训练学出来的，且路由发生在<b>每一层内部</b>、作用于隐藏向量而非文字表面——这里的专家是固定随机向量、词元按字近似，机制同构、参数玩具化。勾选 ④ 演示的是 DeepSeek-V3 公开采用的「免辅助损失均衡」思路：给过载专家的门票减分、闲置专家加分，只动准入不动梯度——对照勾选前后 ⑤ 的负载条与均衡度数值即见效果。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>走完 N 层 → 末端 ▼</span></div>
+
+    <details class="mod" id="mod-lmh">
+      <summary><span class="m-caret">▶</span><span class="m-name">LM Head 与 logits</span><span class="m-en">LM HEAD · LOGITS · 🔬 LAB</span><span class="m-shape">[T,d] → [T,V]；取末位 → [V]</span></summary>
+      <div class="m-body">
+        <p>末端一个 [d×V] 投影，把每个位置的最终向量翻译回词表空间：<b>每个候选 token 一个分数</b>（logits）。生成时只取最后一个位置的 [V] 分数向量——这 12.8 万个数就是模型对「下一个词」的全部意见，尚未定夺。<b>定夺是Ⅲ平面采样器的事</b>：模型本体到此为止，它输出的是分布，不是决定。</p>
+        <p class="dim">这个「分布/决定」的切分线在法律分析上有用：同一个模型本体 + 不同采样策略 = 不同风险画像（见Ⅲ「采样」）。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · softmax 的零和世界<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">logits 变概率的最后一步有个常被忽视的性质：<b>概率总和恒等于 1</b>。拖动「生效」的分数——只动它一个，全体重新洗牌。</p>
+          <div class="lab-ctrls"><label>「生效」的 logit = <output id="lm-l-o">3.2</output> <input type="range" id="lm-l" min="-30" max="80" value="32"></label></div>
+          <div id="lm-rows"></div>
+          <div class="tp-stats"><span>Σ 概率 <b id="lm-sum">—</b>（永远）</span><span>分布熵 <b id="lm-ent">—</b> bit（越小越笃定）</span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>softmax 与熵为实算；候选分数为教学构造。两个教学点：① 抬高一个词必然压低<b>所有</b>其他词——对齐训练里「教它多说 A」暗含「教它少说一切非 A」，副作用的数学来源；② 熵是「模型有多犹豫」的量化——熵接近 0 时模型其实在背书，接近 log₂V 时它在瞎蒙，幻觉常发生在中间地带却口气笃定。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>本体讲完——两个望向本体之外与之内的附加模块 ▼</span></div>
+
+    <details class="mod" id="mod-ssm">
+      <summary><span class="m-caret">▶</span><span class="m-name">架构地平线：非 Transformer</span><span class="m-en">BEYOND TRANSFORMER · SSM · 🔬 LAB</span><span class="m-shape">O(T²) 全回看 → O(1) 状态递推</span></summary>
+      <div class="m-body">
+        <p>Transformer 不是终点——注意力那张 O(T²) 的账单（越长越贵、KV 缓存吃显存）一直在催生替代路线。最有力的挑战者是<b>状态空间模型</b>（SSM，代表作 Mamba）：不再「每个字回看全文」，而是维护一个<b>固定大小的状态</b>逐字递推——像人的工作记忆，而不是每说一个词都重读全文。生成时每步 O(1)、无 KV 缓存膨胀。</p>
+        <p class="dim">代价：精确回忆远处细节的能力偏弱（状态是有损压缩）。现实折中是<b>混合架构</b>：多数层用 SSM、少数层保留注意力——多家实验室已有产品化尝试。另一条更远的线：扩散语言模型（整段并行去噪而非逐字生成，Ⅴ 平面思想搬回文本），潜在的速度革命，尚在早期商用探索。</p>
+        <div class="forks"><span class="flab">分叉</span>
+          <button class="fk on" data-v="a">Transformer ✓ 现王座</button>
+          <button class="fk" data-v="b">Mamba / SSM</button>
+          <button class="fk" data-v="c">混合架构</button>
+          <button class="fk" data-v="d">扩散 LM（前沿）</button>
+        </div>
+        <div class="fkb on" data-v="a">生态、工具链、人才、硬件优化全部围绕它——架构优势之外还有「在位者优势」。短期难被撼动。</div>
+        <div class="fkb" data-v="b">线性复杂度、常数显存。长文档、端侧、流式场景吸引力大；精确检索类任务是短板。</div>
+        <div class="fkb" data-v="c">「注意力负责精确回忆，SSM 负责便宜地记大概」——工程理性的产物，可能是中期主流形态。</div>
+        <div class="fkb" data-v="d">把「逐字串行」这个根设定整个推翻。若成，Ⅲ 平面半数模块要重写——登记于此，防蓝图与行业脱钩。</div>
+        <p class="dim">对本站的意义：若架构更替，这张蓝图需要改的只有 Ⅱ 平面 Block 内部——分平面结构的抗震价值在此。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 两种记忆的对照<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">站在第 16 个词的位置回忆第 m 个词：注意力可以<b>直接回看任何位置</b>（等权可达）；SSM 只有一个不断被覆写的状态，旧信息按衰减率一层层淡出。条形 = 各历史位置在「当前记忆」里的占比，实算。</p>
+          <div class="lab-ctrls">
+            <label>想回忆的位置 m = <output id="sm-m-o">4</output> <input type="range" id="sm-m" min="1" max="15" value="4"></label>
+            <label>SSM 衰减率 a = <output id="sm-a-o">0.80</output> <input type="range" id="sm-a" min="50" max="98" value="80"></label>
+          </div>
+          <div class="race-row"><span>注意力的可达度</span><div class="bar"><i id="sm-att"></i></div><span class="tv" id="sm-att-t">—</span></div>
+          <div class="race-row"><span>SSM 状态中的残余</span><div class="bar"><i id="sm-ssm"></i></div><span class="tv" id="sm-ssm-t">—</span></div>
+          <div class="viz-cap" id="sm-verdict"></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>SSM 残余按 a^(16−m) 实算（教学版单通道；真实 SSM 是多通道选择性状态，Mamba 的「选择性」让 a 随内容变化——但指数淡出的宿命同构）。注意力「等权可达」也是理想化（真注意力按相关性分配）。核心对照是真的：<b>精确回忆远处细节，注意力是天赋，SSM 是逆天</b>——也因此混合架构成了现实折中。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>造物完工，但我们真的懂它吗 ▼</span></div>
+
+    <details class="mod" id="mod-interp">
+      <summary><span class="m-caret">▶</span><span class="m-name">可解释性：打开黑箱</span><span class="m-en">INTERPRETABILITY · 🔬 LAB</span><span class="m-shape">权重与激活 → 可命名的机制</span></summary>
+      <div class="m-body">
+        <p>「模型为什么这么说」——法律上必被追问，技术上刚刚起步。研究的三条进路，由浅入深：<b>探针</b>（往残差流里插「读数器」，检测某概念此刻是否被想到）；<b>特征分解</b>（用稀疏自编码器把混叠的激活拆成一个个可命名的「特征」——Anthropic 公开过放大「金门大桥」特征让模型言必称大桥的著名演示）；<b>回路</b>（把某个小机制的完整算法逐权重解剖，如「归纳头」——已被完全读懂的少数样本）。</p>
+        <p class="dim">诚实的现状：能解剖局部、不能解释整体；「能力为何涌现」大多未知；思维链写的理由与真实计算路径可能不一致（接 Ⅲ「推理模型」）。这一格的内容会以年为单位快速演化。</p>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 亲手训练一个探针<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">可解释性第一课的真算法：给 20 个词的内部向量各贴一个标签（法律 / 生活），训练一个<b>线性探针</b>（逻辑回归）从向量里「读出」这个概念——然后拿它没见过的词考它。</p>
+          <div class="lab-ctrls"><button type="button" class="fk" id="ip-train">▶ 训练探针（200 步）</button>
+            <span style="font-family:var(--mono);font-size:12.5px">训练集准确率 <b id="ip-acc">—</b></span></div>
+          <label class="lab-lab" for="ip-q">考它一个它没学过的词</label>
+          <div class="lab-q"><input type="text" id="ip-q" value="仲裁" spellcheck="false" maxlength="6"></div>
+          <div class="viz-cap" id="ip-out" style="min-height:1.5em;margin-top:8px"></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>探针本体（逻辑回归 + 梯度更新）是可解释性研究的真工具；被探测的「内部向量」用本站通用的字符特征哈希代替真 LLM 激活——所以它读到的是<b>字面特征</b>而非语义概念，泛化能力有限（考它「离婚」试试，可能翻车）。真研究里探针读的是真激活、常能可靠读出「真假」「情绪」等概念——但探针读得出，不等于模型「因此」输出：<b>相关可测，因果难证</b>——这正是朱批里「解释权天花板」的实验版脚注。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>「算法解释权」的技术天花板：对具体某次输出，目前诚实的回答常是「无人确切知道」——法律文书里慎写「模型因为 X 所以 Y」的因果断言；EU AI Act 对高风险系统的可解释要求与技术现实之间的落差，既是抗辩空间也是合规风险。</p></div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= PLANE III ================= -->
+  <section class="plane" id="pl3" style="--pc:var(--p3)">
+    <div class="pl-head"><span class="rn">PLANE Ⅲ</span><h2>推理服务 · 把造物跑起来</h2>
+      <p class="pl-q">这一平面回答：一次 API 调用背后，Ⅱ 的结构是如何被高效运行的。所有工程都围绕一个矛盾：生成是逐 token 串行的，而 GPU 喜欢并行。</p></div>
+    <div class="pl-tools"><button data-plane="pl3">全部展开 / 收起</button></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">Prefill 与 Decode 两阶段</span><span class="m-en">PREFILL / DECODE</span><span class="m-shape">prefill: [T] 并行 · decode: [1] × 循环</span></summary>
+      <div class="m-body">
+        <p>一次请求天然分两段，性格迥异：</p>
+        <ul>
+          <li><b>Prefill</b>：把整段提示词一次性并行过全部 N 层（打满算力，<b>算力瓶颈</b>），同时为每层存下全部位置的 K、V——这就是首字延迟（TTFT）的主要来源。</li>
+          <li><b>Decode</b>：此后每生成一个 token，只前向<b>这一个</b>新位置（T=1），但要读取此前全部缓存——计算量很小、搬运量巨大（<b>显存带宽瓶颈</b>）。吐字速度（TPS）由带宽决定。</li>
+        </ul>
+        <p class="dim">「AI 回答前顿一下、然后匀速吐字」的完整技术解释即此。两个瓶颈不同，也解释了为什么推理优化是独立于训练的一门工程。</p>
+      </div>
+    </details>
+    <div class="wire"><span>decode 依赖的核心数据结构 ▼</span></div>
+
+    <details class="mod" open>
+      <summary><span class="m-caret">▶</span><span class="m-name">KV 缓存</span><span class="m-en">KV CACHE</span><span class="m-shape">2 · N · h_kv · d_h · T · 字节数</span></summary>
+      <div class="m-body">
+        <p>Decode 时每个新 token 都要对「此前所有位置」做注意力——若每次重算所有位置的 K、V，成本随长度平方爆炸。解法：算过一次就存显存里。代价是一笔精确可算的显存账：</p>
+        <code class="fx">每 token 缓存 = 2 (K和V) × N层 × h_kv × d_h × 精度字节
+Llama-3-8B @fp16: 2 × 32 × 8 × 128 × 2 B = 128 KB/token
+→ 8K 上下文 ≈ 1 GB／每条并发请求</code>
+        <p>Ⅱ 平面 GQA 的红利在此兑现：h_kv 从 32 减到 8，这笔账直接 ÷4。<b>架构选择（Ⅱ）与服务成本（Ⅲ）通过这条公式咬合</b>——跨平面读图的第一个样本。</p>
+        <p class="dim">工程注记：PagedAttention（vLLM）把缓存按「页」管理如操作系统虚拟内存，消灭碎片，是开源推理引擎的核心创新。「无限长的记忆」在物理上不成立，根源即这笔账。</p>
+      </div>
+    </details>
+    <div class="wire"><span>模型给出 logits[V] → 谁来拍板 ▼</span></div>
+
+    <details class="mod" id="mod-sample">
+      <summary><span class="m-caret">▶</span><span class="m-name">采样</span><span class="m-en">SAMPLING · 🔬 LAB</span><span class="m-shape">logits[V] → 1 个 token id</span></summary>
+      <div class="m-body">
+        <p>模型只给分布，采样器负责掷骰子。三步流水：温度缩放 → 截断 → 抽签：</p>
+        <code class="fx">p_i ∝ exp( logit_i / τ )     # τ&lt;1 分布变尖(保守)  τ&gt;1 变平(奔放)
+top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，圈内抽签</code>
+        <div class="forks"><span class="flab">分叉 · 策略</span>
+          <button class="fk" data-v="a">贪心</button>
+          <button class="fk on" data-v="b">温度 + top-p ✓</button>
+          <button class="fk" data-v="c">结构化约束</button>
+        </div>
+        <div class="fkb" data-v="a">永远选最高分。听起来最「准」，实际会陷入复读循环、文风僵死——概率最高的路径不等于整体最好的文本。仅适合有唯一答案的任务。</div>
+        <div class="fkb" data-v="b">工业默认（τ≈0.7、p≈0.9 量级）。<b>随机性是特性不是缺陷</b>：创造力与「同一问题两次答案不同」同源于这次掷骰子。</div>
+        <div class="fkb" data-v="c">按语法硬约束每步的候选集（如 JSON 模式：当前位置只允许合法 JSON 字符）。输出格式可保证、内容真实性不保证——「格式对了」与「说得对」是两回事，审工具输出时勿混。</div>
+        <p class="dim">法务视角：温度是<b>部署方</b>手里的旋钮。同一模型，τ=0 的检索问答与 τ=1.2 的创意写作，风险画像完全不同——尽调时「温度设多少」是个真问题。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 采样漏斗<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">场景：模型刚算完「本合同自签订之日起___」的下一词分数。真算式在本地跑：拖温度看分布变形，拖 top-p 看尾巴被剪，然后亲手抽签 100 次。</p>
+          <div class="lab-ctrls">
+            <label>① 温度 τ <output id="sp-t-o">0.8</output> <input type="range" id="sp-t" min="10" max="200" value="80"></label>
+            <label>② top-p <output id="sp-p-o">0.90</output> <input type="range" id="sp-p" min="10" max="100" value="90"></label>
+            <button type="button" class="fk" id="sp-run">🎲 抽签 100 次</button>
+          </div>
+          <div id="sp-rows"></div>
+          <div id="sp-draw" style="font-size:13px;color:var(--ink-2);margin-top:8px;min-height:1.4em"></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>温度缩放 p∝exp(logit/τ) 与 top-p 截断是逐项实算；候选词分数为教学构造（真分数需真模型）。三个自查：τ→0.1 时分布坍成一根柱（趋近贪心）；τ=2 时「苹果」「下雨」也有了存在感（奔放的代价）；top-p 收紧时被剪掉的词画删除线——它们本轮<b>绝无可能</b>被说出，这就是「概率清零」的字面意思。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>横向优化之一：把数字变小 ▼</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">量化</span><span class="m-en">QUANTIZATION</span><span class="m-shape">fp16 → int8 → int4（权重&缓存）</span></summary>
+      <div class="m-body">
+        <p>把每个参数用更少比特存：显存与带宽同步减半再减半——而 decode 是带宽瓶颈（见上），所以量化常常「又省又快」。可后训练完成（GPTQ、AWQ 等，量化时无需重训），KV 缓存同样可量化。</p>
+        <div class="forks"><span class="flab">分叉 · 精度档位</span>
+          <button class="fk" data-v="a">FP16/BF16 原生</button>
+          <button class="fk on" data-v="b">INT8 ✓ 稳妥</button>
+          <button class="fk" data-v="c">INT4 极限</button>
+        </div>
+        <div class="fkb" data-v="a">训练态精度直接服务。质量基准线，显存最贵（8B 模型权重约 16 GB）。</div>
+        <div class="fkb" data-v="b">减半到约 8 GB，质量损失通常难以察觉。生产环境常见默认。</div>
+        <div class="fkb" data-v="c">再减半（约 4 GB，消费级显卡可跑 8B）。质量开始看任务掉：闲聊无感、数学与代码先崩。「量化悬崖」位置因模型而异，需实测。</div>
+        <p class="dim">法务注记：开源模型被第三方量化再分发是常态——「你评估过的模型」与「实际部署的模型」可能不是同一份数字，合同里值得钉死版本与精度。</p>
+      </div>
+    </details>
+    <div class="wire"><span>横向优化之二：把并行喂饱 ▼</span></div>
+
+    <details class="mod" id="mod-spec">
+      <summary><span class="m-caret">▶</span><span class="m-name">吞吐工程</span><span class="m-en">BATCHING · SPECULATIVE · 🔬 LAB</span><span class="m-shape">多请求混编 · 草稿并行验收</span></summary>
+      <div class="m-body">
+        <p>单条请求的 decode 只用到 GPU 一小部分算力，服务侧的功课是把空闲填满：</p>
+        <div class="forks"><span class="flab">分叉 · 手段</span>
+          <button class="fk on" data-v="a">连续批处理 ✓</button>
+          <button class="fk" data-v="b">投机解码</button>
+        </div>
+        <div class="fkb on" data-v="a">Continuous batching：不同用户请求的 decode 步在同一批里混编，谁完成谁退出、新请求随时插队——GPU 始终满载。vLLM 等推理引擎的立身之本，也是 API 单价能持续下降的主要工程原因。</div>
+        <div class="fkb" data-v="b">Speculative decoding：让一个小「草稿模型」先猜 k 个 token，大模型<b>一次并行前向</b>验收（对的收下、错的从分歧处重来）。数学上可证与大模型逐字生成<b>分布完全一致</b>——不是近似，是免费加速。串行难题被「先猜后验」绕开的漂亮案例。</div>
+        <p class="dim">另有服务日志、限流、内容审计等运维层——法律上的「日志留存」义务落点在服务框架，见索引地图 L4「API 服务」。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 投机解码：免费午餐的数学证明<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">投机解码的全部价值在一句话：无论草稿模型多烂，接受/拒绝规则保证最终输出<b>与大模型逐字生成的分布完全一致</b>。别信我，跑 2000 次自己看。</p>
+          <div class="lab-ctrls"><label>① 草稿模型的水平：与大模型 <output id="sd-s-o">五成</output>相似 <input type="range" id="sd-s" min="0" max="100" value="50"></label>
+            <button type="button" class="fk" id="sd-run">▶ 抽 2000 次</button></div>
+          <label class="lab-lab">② 每个候选词的三条频率（下一词预测「本合同自签订之日起___」）</label>
+          <div id="sd-rows"></div>
+          <div class="tp-stats">
+            <span>实测接受率 <b id="sd-acc">—</b></span>
+            <span>理论接受率 Σmin(p,q) = <b id="sd-th">—</b></span>
+            <span>输出与目标分布最大偏差 <b id="sd-dev">—</b></span>
+          </div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>接受规则是精确实现：抽 x∼q，以 min(1, p(x)/q(x)) 接受；拒绝则从 norm(max(0, p−q)) 重抽——这正是论文里的规则，也是「分布等价」的来源。自查实验：把相似度拖到最左（草稿=胡猜），接受率暴跌（加速失效）但<b>输出仍死死贴住目标分布</b>——慢，但不错。分布本身为教学构造的玩具分布（真分布需真模型）。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>推理不只是「跑得快」——还可以「想得久」▼</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">推理模型与测试时算力</span><span class="m-en">REASONING · TEST-TIME COMPUTE</span><span class="m-shape">思考 token ×10–100 → 质量↑</span></summary>
+      <div class="m-body">
+        <p>2024–2025 的路线转折：让模型在作答前先生成大段<b>思维链</b>（可见或隐藏的中间推理 token）——自己列步骤、自查、回溯，然后才给答案。训练法接 Ⅰ 平面的 GRPO：用「可自动判分的任务」（数学、代码）做强化，模型自己学会了反思。效果是推理类任务的大幅跃升；代价是延迟与 token 消耗成倍到数十倍。</p>
+        <p>深层意义：这是<b>第二条 Scaling 曲线</b>——预训练把算力堆在「学」，这条路把算力堆在「想」。「思考预算」（thinking budget）从此成为产品旋钮：同一个模型，多想十倍就是另一个价、另一种能力。</p>
+        <div class="forks"><span class="flab">分叉 · 用算力换质量的方式</span>
+          <button class="fk" data-v="a">直答</button>
+          <button class="fk on" data-v="b">长思维链 ✓</button>
+          <button class="fk" data-v="c">并行采样 + 择优</button>
+        </div>
+        <div class="fkb" data-v="a">一遍前向直接出答案。便宜快速，简单任务的正解——「杀鸡不用牛刀」在计费上是真金白银。</div>
+        <div class="fkb on" data-v="b">o1 / DeepSeek-R1 / Claude 扩展思考路线：串行地想。注意思维链的<b>忠实性问题</b>：嘴上写的理由未必是真实的计算路径（接下方 Ⅱ「可解释性」）——把思维链当「心声证据」要打折。</div>
+        <div class="fkb" data-v="c">同一题并行采样 N 个答案，用多数投票或验证器挑最好——「人多力量大」的机器版，适合有客观对错的任务。</div>
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>计费透明：用户为看不见的隐藏思考 token 付费——披露与计量争议的新场景；思维链的留存与取证价值/风险；监管算力口径的观察点：现行阈值按训练算力计，测试时算力尚在框架之外（口径演化中）。</p></div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= PLANE IV ================= -->
+  <section class="plane" id="pl4" style="--pc:var(--p4)">
+    <div class="pl-head"><span class="rn">PLANE Ⅳ</span><h2>系统组装 · 从模型到产品</h2>
+      <p class="pl-q">这一平面回答：光有 Ⅲ 的 API 还不是产品。所有「智能系统」= 在模型外面写普通软件，把上下文喂对、把输出接住。本平面在索引地图 L5/L6 已有详述，此处给出工程视角的骨架与朱批。</p></div>
+    <div class="pl-tools"><button data-plane="pl4">全部展开 / 收起</button></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">上下文拼装</span><span class="m-en">CONTEXT ASSEMBLY</span><span class="m-shape">多源文本 → 一串 token [T]</span></summary>
+      <div class="m-body">
+        <p>模型每次前向只看见<b>一串 token</b>。你以为的「系统提示词 / 对话历史 / 检索资料 / 工具结果 / 用户输入」，在模型眼里是拼接成一条的同质序列——<b>数据与指令走同一条通道</b>。这句话是提示词注入的结构性根源：模型没有硬件级的「这段只是数据」标记，只有训练出来的习惯。</p>
+        <p class="dim">「记忆」也在这拼装：把历史摘要塞回上下文而已，权重从未改变（Ⅰ平面末格的呼应）。上下文工程（context engineering）已是一门显学。</p>
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>注入导致越权输出的责任分配，取决于「谁拼装了上下文」——这一格的架构图就是责任链图。<span class="ref">索引地图 L5「提示词工程」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>给上下文供料的两大来源 ▼</span></div>
+
+    <details class="mod" id="mod-rag">
+      <summary><span class="m-caret">▶</span><span class="m-name">RAG 供料线</span><span class="m-en">RETRIEVAL PIPELINE · 🔬 LAB</span><span class="m-shape">docs → chunks → 向量库 → top-k 段落</span></summary>
+      <div class="m-body">
+        <p>离线：切分 → 用<b>独立的嵌入模型</b>（与Ⅱ.Embedding 同原理、不同模型）算向量 → 入库。在线：问题同法算向量 → 近邻检索 →（可选重排序模型精排）→ 命中段落进入上下文拼装。工程参数（块大小、重叠、k 值、是否重排）逐个影响质量——「RAG 效果差」十有八九是这条供料线的参数病，不是模型病。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 真算法此刻在你的浏览器里跑<span class="demo-tag">R1 · G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">下面每个数字都是实时计算的：改语料、拖参数、换问题，看整条供料线的连锁反应。向量化用「字符特征哈希」——真实但前神经时代的算法，局限本身就是课程（见底部诚实标注）。</p>
+
+          <label class="lab-lab" for="rag-doc">① 语料入库（可整段换成你自己的文本）</label>
+          <textarea id="rag-doc" spellcheck="false">服务合作合同（示意文本，仅供演示）
+第一条 合作内容 甲方委托乙方提供影视翻译与配音服务，具体项目清单以附件一为准。
+第二条 费用与结算 服务费按集结算，单集人民币八千元；乙方应于每月末提交结算单，甲方收到后十五个工作日内付款。逾期付款的，每日按未付金额万分之五支付滞纳金。
+第三条 知识产权 翻译成果的全部知识产权归甲方所有；乙方保留其自有工具的权利。乙方不得将甲方素材用于训练人工智能模型。
+第四条 保密义务 双方对合作中知悉的商业秘密负有保密义务，保密期至合同终止后三年。
+第五条 合同的解除 任一方均可提前三十日以书面形式通知对方解除本合同；解除通知生效前已产生的费用应当照常结算。因一方重大违约导致合同目的不能实现的，守约方可立即解除。
+第六条 违约责任 一方违约给对方造成损失的，应承担赔偿责任；违约金为合同总额的百分之十。
+第七条 争议解决 因本合同产生的争议，双方应先行协商；协商不成的，提交甲方所在地人民法院诉讼解决。</textarea>
+
+          <div class="lab-ctrls">
+            <label>② 块大小 <output id="rag-cs-o">90</output> 字 <input type="range" id="rag-cs" min="40" max="300" step="10" value="90"></label>
+            <label>重叠 <output id="rag-ov-o">10</output> 字 <input type="range" id="rag-ov" min="0" max="60" step="5" value="10"></label>
+          </div>
+          <div class="lab-chunks" id="rag-chunks"></div>
+
+          <label class="lab-lab" for="rag-q">③ 查询（三个预置里，第三个是「语义鸿沟」试验）</label>
+          <div class="lab-q">
+            <input type="text" id="rag-q" value="解约条款是怎么约定的" spellcheck="false">
+            <div class="lab-presets">
+              <button data-q="解约条款是怎么约定的">解约条款</button>
+              <button data-q="违约金的比例是多少">违约金比例</button>
+              <button data-q="能不能提前终止合作">提前终止（鸿沟试验）</button>
+            </div>
+          </div>
+
+          <div class="lab-ctrls"><label>④ top-k 取 <output id="rag-k-o">2</output> 块 <input type="range" id="rag-k" min="1" max="5" value="2"></label></div>
+          <div id="rag-res" aria-live="polite"></div>
+
+          <label class="lab-lab">⑤ 向量空间实况（64 维真向量投影到 2D）</label>
+          <div class="lab-2d"><canvas id="rag-cv" height="230"></canvas>
+            <div class="viz-cap">● 语料块 · ★ 你的查询 · 描边 = top-k 命中。距离与上表分数同源。</div></div>
+
+          <label class="lab-lab">⑥ 提示词拼装 · 即将送入模型的最终输入</label>
+          <pre class="lab-prompt" id="rag-prompt"></pre>
+          <div class="lab-budget"><span>上下文占用（按 8k 窗口估）</span><div class="bar"><i id="rag-bud-i" style="width:4%"></i></div><span id="rag-bud-t">—</span></div>
+
+          <div class="lab-honest"><b>诚实标注（R5）：</b>本实验的向量化是字符级特征哈希——真算法、真距离，但只懂「字面重合」，不懂语义。所以第三个预置查询的结果很难看：「提前终止」一半靠「提前」二字蹭上解除条款、一半被保密条款里的「终止」带偏——这正是词面检索的病灶实录，也正是产业改用<b>神经嵌入模型</b>（Ⅱ 平面 Embedding 的近亲）的原因：让「提前终止」与「合同解除」在空间里天然靠近。工程链条本身（切分→向量→检索→拼装）与真实系统完全同构。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>知识库四险：库内个信与商密的处理合法性、越权检索、入库授权、生成侵权归责。上面实验室你亲手贴入语料的那一刻，「入库授权」问题就已发生——体感即此。<span class="ref">全案详见索引地图 L5「RAG」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>▼</span></div>
+
+    <details class="mod" id="mod-agent">
+      <summary><span class="m-caret">▶</span><span class="m-name">工具调用与 Agent 循环</span><span class="m-en">TOOL USE · AGENT LOOP · 🔬 LAB</span><span class="m-shape">提议 → 宿主执行 → 结果回填 → 循环</span></summary>
+      <div class="m-body">
+        <p>结构一句话说尽：模型输出「我想调用工具 X(参数Y)」的结构化文本 → <b>宿主程序</b>校验并执行 → 结果作为新上下文回填 → 再前向。循环到模型输出「完成」为止。模型全程只生产文本，<b>动手的永远是宿主</b>——harness 的权限清单即系统能力边界，也是责任分析的支点。MCP 等协议在标准化「工具如何声明与接入」。</p>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · Agent 沙盘：人工确认点在哪救场<span class="demo-tag">G2 级 · 剧本预写</span></div>
+          <p class="dim" style="margin:4px 0 0">两个任务剧本，逐步播放「观察 → 思考 → 行动」循环。第二个剧本会走到高危操作——届时<b>批准还是拒绝，由你点</b>。留意：无论你选哪个，日志都在记录。</p>
+          <div class="lab-ctrls">
+            <button type="button" class="fk on" id="ag-s1">剧本一 · 查合同（只读）</button>
+            <button type="button" class="fk" id="ag-s2">剧本二 · 清理文件（高危）</button>
+            <button type="button" class="fk" id="ag-next">下一步 →</button>
+          </div>
+          <div class="ag-log" id="ag-log"></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>剧本是预写的——真实 agent 的每步「思考」由模型实时生成，无法离线复刻（见黑名单原则：宁缺毋假）。但循环结构、工具调用协议、人工确认点、全程留痕的机制与真实 harness 完全一致——你正在用的 Claude Code 即活样本。法务要点就一句：<b>确认点设在哪、日志留多久，是合同里要写死的两件事。</b></div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>自主步数 × 工具权限 = 风险敞口；审计日志是未来纠纷的核心证据。<span class="ref">索引地图 L5「Agent 与 Harness」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>出口前最后一道 ▼</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">护栏与标识</span><span class="m-en">GUARDRAILS · LABELING</span><span class="m-shape">输入/输出双闸 + 显式/隐式标识</span></summary>
+      <div class="m-body">
+        <p>独立于大模型的确定性层：输入闸（注入检测、权限校验）、输出闸（内容分类器、PII 检测），以及法定标识（显式声明 + 隐式水印/元数据）。大模型是概率的，这一层要的是确定——<b>合规要求最终落地成代码的地方</b>。</p>
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>《AI生成合成内容标识办法》（2025-09-01 施行）双轨标识、备案材料中的审核机制说明、EU AI Act 第 50 条透明度——产品侧义务在索引地图 L6 全层铺开。</p></div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= PLANE V ================= -->
+  <section class="plane" id="pl5" style="--pc:var(--p5)">
+    <div class="pl-head"><span class="rn">PLANE Ⅴ</span><h2>多模态 · 另一族造物</h2>
+      <p class="pl-q">这一平面回答：机器如何「看见」，又如何「画出」与「说出」。文本 LLM 之外的第二大陆——视觉理解直接汇入 Ⅱ 平面的 token 序列，而图像/视频/语音的<b>生成</b>则是结构不同的另一族模型，常作为工具被 Ⅳ 平面的 Agent 调用。本平面 v0.7 新开工，暂为 G1 骨架；合规密度为全图之最。</p></div>
+    <div class="pl-tools"><button data-plane="pl5">全部展开 / 收起</button></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">视觉理解 VLM</span><span class="m-en">VISION-LANGUAGE MODEL</span><span class="m-shape">[H,W,3] → [N_patch, d]（图变词元）</span></summary>
+      <div class="m-body">
+        <p>让 LLM「看图」的通用解法：把图像切成小块（patch，常见 14×14 或 16×16 像素）→ 每块经<b>视觉编码器</b>（ViT——就是 Transformer 的看图版，Ⅱ 平面结构的直系亲属）变成向量 → 一个小「投影层」把视觉向量翻译进 LLM 的词元空间 → 与文字 token 拼成<b>同一条序列</b>送进 Ⅱ 平面。在模型眼里，一张图 ≈ 几百个「视觉词」。</p>
+        <ul>
+          <li>视觉编码器多源自 CLIP：在数亿「图-文对」上做对比学习，让图片与其描述在空间中对齐——Ⅱ 平面 Embedding「语义即距离」的跨模态版。</li>
+          <li>高分辨率 = 更多 patch = 上下文被图吃掉——「传图很贵」的技术根源。</li>
+        </ul>
+        <div class="forks"><span class="flab">分叉 · 接入方式</span>
+          <button class="fk on" data-v="a">外挂编码器 + 投影 ✓</button>
+          <button class="fk" data-v="b">原生早期融合</button>
+        </div>
+        <div class="fkb on" data-v="a">预训练好的 CLIP 类编码器 + 轻量投影层接上现成 LLM（LLaVA 路线），开源主流：便宜、模块化，但视觉与语言的理解深度受「翻译接口」限制。</div>
+        <div class="fkb" data-v="b">图文从预训练起就同炉共训（GPT-4o、Gemini 路线）：理解更深、可端到端优化，但训练成本与数据需求高一个量级——闭源头部的路线。</div>
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>图文对训练数据的版权与肖像问题在此埋下：Getty Images v. Stability AI 争的就是数亿图文对的授权。<span class="ref">呼应索引地图 L1「数据采集」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>理解已通——下面是生成 ▼</span></div>
+
+    <details class="mod" id="mod-diff">
+      <summary><span class="m-caret">▶</span><span class="m-name">扩散模型</span><span class="m-en">DIFFUSION · 🔬 LAB</span><span class="m-shape">纯噪声 → 逐步去噪 → 图像</span></summary>
+      <div class="m-body">
+        <p>图像生成的心脏，与 LLM 的「猜下一词」完全不同的游戏：<b>训练</b>时给真图逐步加噪直到面目全非，让网络学会「从带噪图预测所加的噪声」；<b>生成</b>时从纯噪声出发，反复「预测噪声并减掉一点」，几十步后图像从雾中浮现。</p>
+        <code class="fx">训练目标:  给定 x_t（第 t 档噪声图），预测 ε（所加噪声）
+采样:      x_{t−1} = x_t − σ_t · ε̂(x_t, t, 文字条件)      （示意简化）</code>
+        <p class="dim">训练时有上千档噪声强度；采样靠更聪明的求解器只需 20–50 步；再经蒸馏可压到 1–4 步——「实时出图」的来源。</p>
+        <div class="forks"><span class="flab">分叉 · 去噪网络的骨干</span>
+          <button class="fk" data-v="a">U-Net（初代）</button>
+          <button class="fk on" data-v="b">DiT ✓</button>
+          <button class="fk" data-v="c">自回归生图（回潮）</button>
+        </div>
+        <div class="fkb" data-v="a">卷积「漏斗-反漏斗」结构，Stable Diffusion 1.x/2.x 时代的骨干。图像先验强、但规模化天花板低。</div>
+        <div class="fkb on" data-v="b">Diffusion Transformer：用 Ⅱ 平面同款 Transformer 替换 U-Net，图像切块当 token 处理。SD3、Flux、Sora（据其技术报告）皆此路线——<b>Transformer 再下一城</b>，Scaling Laws 在图像域续写。</div>
+        <div class="fkb" data-v="c">把图像 token 化后按 LLM 方式逐个生成（GPT-4o 的图像生成据报道属此族）：与文本共用一套自回归机制，天然多模态统一，少数派但值得登记。</div>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 加噪与去噪的循环<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">前向加噪用的是真公式（x_t = √ᾱ·x₀ + √(1−ᾱ)·ε），反向去噪跑的是真采样循环。左图是当前状态，右图是「模型此刻猜的成品」——看它怎么从一团浆糊越猜越清晰。</p>
+
+          <div class="lab-ctrls">
+            <label>① 噪声档位 t <output id="df-t-o">0</output>% <input type="range" id="df-t" min="0" max="100" value="0"></label>
+            <label>② 去噪步数 <output id="df-s-o">20</output> <input type="range" id="df-s" min="4" max="50" value="20"></label>
+            <button type="button" class="fk" id="df-run">▶ 从纯噪声开始去噪</button>
+            <button type="button" class="fk" id="df-seed">↻ 重掷噪声</button>
+          </div>
+
+          <div class="df-row">
+            <div class="df-cell"><canvas id="df-xt" width="96" height="96"></canvas><div class="viz-cap">x_t · 当前状态（拖 ① 看前向加噪，按 ▶ 看反向去噪）</div></div>
+            <div class="df-cell"><canvas id="df-x0" width="96" height="96"></canvas><div class="viz-cap">x̂₀ · 去噪器此刻对成品的猜测——高噪声时是浆糊，逐步锐化</div></div>
+          </div>
+          <div class="viz-cap" id="df-status">就绪。</div>
+
+          <div class="lab-honest"><b>诚实标注（R5）：</b>加噪公式、余弦噪声日程、DDIM 式采样循环都是真算法；但真实扩散模型里「预测噪声」的是一个训练出来的大网络，这里由一个<b>知道答案的先知</b>代替（它掺入每步随机扰动以还原随机采样的手感）——所以本实验演示的是<b>去噪循环的机制</b>（步数越少越糙、x̂₀ 逐步收敛），而非「无中生画」的创造本身。想看真模型逐步去噪，各家在线生图工具开「显示中间步」即是。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>风格模仿与训练素材版权：Andersen v. Stability AI（艺术家集体诉讼）——「学风格算不算抄」的法律定性仍在演化中。</p></div>
+      </div>
+    </details>
+    <div class="wire"><span>在哪个空间里去噪？▼</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">潜空间与 VAE</span><span class="m-en">LATENT SPACE · VAE</span><span class="m-shape">[512,512,3] ⇄ [64,64,4]</span></summary>
+      <div class="m-body">
+        <p>直接在像素上扩散贵得离谱。解法：先用 VAE（一对压缩/解压网络）把 512×512×3 的图压进 64×64×4 的「潜空间」——信息浓缩约 48 倍——扩散全程在小空间里跑，最后一步才解码回像素。这就是 Stable Diffusion 名字里 「Stable」 得以平民化的工程根基（Latent Diffusion）。</p>
+        <p class="dim">屋顶线的账在此再收一次（PLANE 0）：搬运与计算的字节数暴降两个数量级——「压缩即省钱」跨模态成立。</p>
+        <div class="forks"><span class="flab">分叉</span>
+          <button class="fk" data-v="a">像素空间扩散</button>
+          <button class="fk on" data-v="b">潜空间扩散 ✓</button>
+        </div>
+        <div class="fkb" data-v="a">直接对像素去噪：质量上限高、成本极高，今多用于超分辨率等局部场景。</div>
+        <div class="fkb on" data-v="b">先压缩再扩散，消费级显卡跑得动文生图的原因。代价：VAE 压缩的失真上限（细小文字、手指——经典翻车点的技术根源之一）。</div>
+      </div>
+    </details>
+    <div class="wire"><span>文字怎么进来指挥？▼</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">条件与引导</span><span class="m-en">CONDITIONING · CFG</span><span class="m-shape">提示词 → 文本向量 → 注入每步去噪</span></summary>
+      <div class="m-body">
+        <p>提示词经文本编码器（CLIP/T5）变成向量，在<b>每一步去噪</b>时注入——相当于每步都问一遍「文字要什么」。听话程度另有旋钮：<b>CFG</b>（无分类器引导）同时算「有提示」与「无提示」两版预测，朝差值方向外推：</p>
+        <code class="fx">最终预测 = 无条件预测 + s · (条件预测 − 无条件预测)
+s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵硬（常用 5–8）</code>
+        <div class="forks"><span class="flab">分叉 · 注入方式</span>
+          <button class="fk" data-v="a">交叉注意力 ✓ 经典</button>
+          <button class="fk on" data-v="b">MMDiT（同序列互看）</button>
+        </div>
+        <div class="fkb" data-v="a">文字向量作为 K/V、图像块作为 Q 做注意力——「图的每一块去看该看的字」。SD1.x–SDXL 的方式。</div>
+        <div class="fkb on" data-v="b">文与图 token 拼进同一序列、双向互看（SD3/Flux）：提示词遵从度显著提升——「AI 不听话」很大程度是文本理解带宽问题，加宽了就好些。</div>
+        <p class="dim">采样器、步数、种子（seed）——同一提示词千人千图的全部随机性来源；固定种子即可复现，取证场景值得知道。</p>
+      </div>
+    </details>
+    <div class="wire"><span>把时间轴加进来 ▼</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">视频生成</span><span class="m-en">VIDEO GENERATION</span><span class="m-shape">时空块 [T,H,W] → 时空 DiT</span></summary>
+      <div class="m-body">
+        <p>把时间当第三维：视频切成「时空块」（spacetime patches——一小段时间 × 一小块画面），DiT 在整个时空序列上去噪。Sora、可灵、Veo 据各家技术报告均属此路线。难在<b>一致性</b>：人物不变脸、物体不穿模、物理不崩坏——模型对世界规律的理解上限直接暴露在这。</p>
+        <p class="dim">算力量感：秒级视频的 token 量以数十万计——PLANE 0 的带宽与显存账在此最为惨烈，「视频生成贵」不是定价策略是物理。</p>
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>深度伪造视频的标识义务（接 Ⅳ「护栏与标识」：《标识办法》显式+隐式双轨）、肖像权、以及选举等场景的专门规制——全图合规密度最高的一格。</p></div>
+      </div>
+    </details>
+    <div class="wire"><span>最后是声音 ▼</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">语音栈：TTS 与声音克隆</span><span class="m-en">TTS · VOICE CLONING</span><span class="m-shape">文本 + 3 秒音色样本 → 波形</span></summary>
+      <div class="m-body">
+        <p>现代主流把声音也 <b>token 化</b>：神经音频编解码器（codec）把波形压成离散 token → 用 LLM 式自回归生成音频 token → 解码回波形——「说话」变成了另一种「接着写」。<b>声音克隆</b>：从几秒参考音频提取「音色向量」作为生成条件，VALL-E（2023）起 3 秒样本即可逼真克隆，如今是消费级功能。</p>
+        <div class="forks"><span class="flab">分叉</span>
+          <button class="fk" data-v="a">传统管线</button>
+          <button class="fk on" data-v="b">音频 token 化 + LLM ✓</button>
+          <button class="fk" data-v="c">端到端语音对话</button>
+        </div>
+        <div class="fkb" data-v="a">文本 → 梅尔频谱 → 声码器还原波形，模块清晰、音色迁移弱。前大模型时代的成熟路线。</div>
+        <div class="fkb on" data-v="b">声音进 token 世界后，Ⅰ–Ⅲ 平面的全部机器（预训练、采样、KV 缓存）直接复用——「万物 token 化」的又一例证。</div>
+        <div class="fkb" data-v="c">语音进、语音出，不经文字中转（GPT-4o 式实时对话）：延迟从秒级降到数百毫秒，语气、笑声、打断成为可能——人机交互形态的分水岭。</div>
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>离你的业务最近的一格：《民法典》第 1023 条——自然人声音参照肖像权保护；全国首例 AI 生成声音人格权侵权案（北京互联网法院，2024，配音演员声音被 AI 化商用）；译制场景的 AI 换声授权链条——译制行业合同中常见的「AI 换声」条款，其技术对象正是本模块。</p></div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= PLANE 0 ================= -->
+  <section class="plane" id="pl0" style="--pc:var(--p0)">
+    <div class="pl-head"><span class="rn">PLANE 0</span><h2>物理基座 · 一切运行其上</h2>
+      <p class="pl-q">编号为 0，因为它不是流程的一站，而是托着 Ⅰ–Ⅳ 的地基。放在最后讲，是因为它的每个概念都在给前面四个平面「收账」——读完本平面，回头重读 Ⅰ 和 Ⅲ 会上一个台阶。本平面数字例锚定 NVIDIA H100（公开规格，量级取整）。</p></div>
+    <div class="pl-tools"><button data-plane="pl0">全部展开 / 收起</button></div>
+
+    <details class="mod" id="mod-gpu">
+      <summary><span class="m-caret">▶</span><span class="m-name">为什么是 GPU</span><span class="m-en">WHY GPU · 🔬 LAB</span><span class="m-shape">数千小核并行 · Tensor Core</span></summary>
+      <div class="m-body">
+        <p>LLM 的计算原子是<b>矩阵乘法</b>——Ⅱ 平面每个模块拆到底都是它。矩阵乘法的性格：数量海量、彼此独立、可以同时算。这正好长成 GPU 的形状：数千个简单核心齐步走（CPU 反之：少数复杂核心 + 分支预测，擅长「走一步看一步」的串行逻辑）。现代 AI 算力的主体更来自 <b>Tensor Core</b>：把「小块矩阵乘加」直接做成一条硬件指令，一拍完成一小块。</p>
+        <p class="dim">量感锚点（H100，量级取整）：BF16 算力约 10¹⁵ FLOPS。纸面推算：8B 模型 decode 一个 token 约需 2×80亿 ≈ 1.6×10¹⁰ FLOPs，理论上每秒可出数万 token——实际单请求只有百级。差出两个数量级的原因，是下一格的事。</p>
+        <div class="forks"><span class="flab">分叉 · 芯片路线</span>
+          <button class="fk on" data-v="a">GPU ✓</button>
+          <button class="fk" data-v="b">TPU / 专用 ASIC</button>
+          <button class="fk" data-v="c">CPU</button>
+        </div>
+        <div class="fkb on" data-v="a">通用并行处理器 + 成熟软件生态（CUDA 的护城河比芯片本身更深）。训练与推理的绝对主流。</div>
+        <div class="fkb" data-v="b">为矩阵乘法特化的专用芯片（Google TPU、各家推理加速器）：能效比更高、通用性和生态更窄。云厂商自用为主，推理侧竞争正酣。</div>
+        <div class="fkb" data-v="c">仅适合小模型或低频推理。价值在于反衬：同一个模型，CPU 上慢一到两个数量级——「AI 的一切都押在并行上」。</div>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 算珠墙竞速<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">同一批 4096 个乘加任务：8 个快核心的 CPU 对阵 1024 个慢核心的 GPU（本演示设 CPU 单核 = GPU 单核 8 倍速）。跑完并行赛，再跑「串行链条」——形势瞬间逆转。</p>
+          <div class="lab-ctrls">
+            <button type="button" class="fk" id="gr-par">▶ 并行任务竞速（4096 个独立任务）</button>
+            <button type="button" class="fk" id="gr-ser">▶ 串行链条竞速（512 步，环环相扣）</button>
+          </div>
+          <div class="race-row"><span>CPU · 8 核×8 倍速</span><div class="bar"><i id="gr-cpu"></i></div><span class="tv" id="gr-cpu-t">—</span></div>
+          <div class="race-row"><span>GPU · 1024 核×1 倍速</span><div class="bar"><i id="gr-gpu"></i></div><span class="tv" id="gr-gpu-t">—</span></div>
+          <div class="viz-cap" id="gr-verdict">选择一场比赛开始。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>核心数与速度比为教学设定（真实差距量级更悬殊），但结论的结构是真的：<b>可并行的活，核多者胜；环环相扣的活，单核快者胜</b>。矩阵乘法属于前者——「AI 把一切押注在并行上」的正反两面，各跑一遍便知。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>出口管制的画线就画在本模块的参数上：算力密度与互联带宽（对华「阉割版」芯片阉的主要是互联与带宽，而非核心数）——法律条文直接引用技术规格的罕见样本。<span class="ref">索引地图 L0「GPU 与显存」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>算得快，但数据在哪 ▼</span></div>
+
+    <details class="mod" id="mod-mem">
+      <summary><span class="m-caret">▶</span><span class="m-name">存储层级与内存墙</span><span class="m-en">MEMORY HIERARCHY · 🔬 LAB</span><span class="m-shape">SRAM → HBM → 主机内存 → 盘</span></summary>
+      <div class="m-body">
+        <p>核心事实：<b>数据从来不住在计算发生的地方</b>，要一级级搬过来。层级每往下一级，容量大十到千倍、速度慢约一个数量级（A100 量级例：片上 SRAM 约 19 TB/s 但只有 ~20MB；HBM 约 2 TB/s、几十 GB；主机内存百 GB/s 级；硬盘更慢）。</p>
+        <p>HBM（高带宽显存）是把 DRAM 芯片立体堆叠、经硅中介层千针直连处理器——「把仓库盖到工厂隔壁，再修一条千车道的路」。即便如此，<b>算力的增速长期高于带宽的增速</b>，芯片越来越多的时间花在等数据上：这就是「内存墙」。能耗账同样在搬运侧——从 HBM 搬一个字节的能耗，远高于对它做一次乘加。</p>
+        <p class="dim">收账（Ⅱ 平面伏笔）：FlashAttention 的全部秘密 = 精心安排计算顺序，让注意力的 T×T 中间矩阵始终待在 SRAM 里、不落 HBM。不改数学，只改「货物动线」。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 亲自等一次数据<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">芯片视角的时间：取一个数，要等多久？点击任一层级，按<b>真实相对时延</b>（对数压缩演出）体验等待——你会开始同情芯片。</p>
+          <div id="mem-rows"></div>
+          <div class="viz-cap" id="mem-note">相对时延为量级示意（周期数因架构而异）。演出经过对数压缩：若按线性真实比例，寄存器 0.03 秒对应的 SSD 取数要让你等约 <b>2.5 小时</b>。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>各层级「相对周期数」取业界通用量级（寄存器 1 / 片上 SRAM ~10 / HBM ~300 / 主机内存 ~3 千 / NVMe SSD ~30 万），精确数字因芯片而异。体感结论是真的：<b>算力在等数据，等待的量级差是「墙」</b>——也是能耗账的主体（搬运一字节 ≫ 算一次乘加）。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>两个速度，一个问题：谁先到极限 ▼</span></div>
+
+    <details class="mod" open id="mod-roof">
+      <summary><span class="m-caret">▶</span><span class="m-name">屋顶线模型</span><span class="m-en">ROOFLINE MODEL · 🔬 LAB</span><span class="m-shape">算术强度 = FLOPs / 每字节搬运</span></summary>
+      <div class="m-body">
+        <p>本平面的灵魂，一个问题定生死：<b>每从显存搬 1 字节，你能拿它算几次？</b>（这个比值叫算术强度。）机器自己也有一个平衡点 = 峰值算力 ÷ 带宽（H100 约 300 FLOPs/字节量级）。你的任务强度高于平衡点 → 卡算力（「平顶区」，芯片喂饱了）；低于 → 卡带宽（「斜坡区」，芯片在等数据）。</p>
+        <code class="fx">decode（单请求）: 每个权重字节搬来只用一次 ≈ 1 FLOP/B ≪ 300 → 深陷斜坡区
+   吐字上限 ≈ 带宽 ÷ 权重体积 = 3.35 TB/s ÷ 16 GB (8B@fp16) ≈ 200 token/s
+   ——上一模块「差两个数量级」之谜，至此结案
+
+prefill / 训练（大批量）: 同一块权重同时服务成百上千个 token
+   → 强度 ×百千倍 → 跃上平顶区，算力瓶颈</code>
+        <p>一把钥匙开全部锁——蓝图里散落的谜团在此收束：为什么<b>批处理</b>能暴涨吞吐（复用权重抬强度，Ⅲ）；为什么<b>量化</b>「又省又快」（字节减半，斜坡区直接提速一倍，Ⅲ）；为什么 <b>GQA/MLA</b> 值钱（KV 搬运量变小，Ⅱ→Ⅲ）；为什么<b>投机解码</b>是免费午餐（把逐字 decode 改造成并行验收 = 抬强度，Ⅲ）；为什么 Prefill 快 Decode 慢（一个平顶一个斜坡，Ⅲ）。</p>
+        <p class="dim">诚实标注：屋顶线是刻意简化的模型（未计通信、调度、算子差异），但作为白板级思维工具，从业者真的天天用它。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 屋顶线计算器<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">上面那笔账变成可以拨的算盘：选卡、选模型、选精度、拖批量，实时算出瓶颈在哪、吐字上限多少、多大批量才能喂饱算力。</p>
+
+          <div class="rf-chips"><span class="flab2">① 芯片</span>
+            <button type="button" class="fk on" data-g="0">H100</button>
+            <button type="button" class="fk" data-g="1">A100 80G</button>
+            <button type="button" class="fk" data-g="2">RTX 4090</button>
+            <span class="flab2" style="margin-left:12px">② 模型</span>
+            <button type="button" class="fk on" data-m="0">8B</button>
+            <button type="button" class="fk" data-m="1">70B</button>
+            <span class="flab2" style="margin-left:12px">③ 精度</span>
+            <button type="button" class="fk on" data-p="0">FP16</button>
+            <button type="button" class="fk" data-p="1">INT8</button>
+            <button type="button" class="fk" data-p="2">INT4</button>
+          </div>
+          <div class="lab-ctrls"><label>④ 同时服务的请求（批量）<output id="rf-b-o">1</output> <input type="range" id="rf-b" min="0" max="9" value="0"></label></div>
+
+          <div class="rf-read" id="rf-read"></div>
+          <div class="lab-2d"><canvas id="rf-cv" height="240"></canvas>
+            <div class="viz-cap">屋顶线（双对数）：斜坡 = 带宽上限，平顶 = 算力上限；● = 你当前配置的 decode 落点。落在斜坡上就是在等数据。</div></div>
+
+          <div class="lab-honest"><b>诚实标注（R5）：</b>峰值算力与带宽取厂商公开标称（量级取整），真实系统还要打效率折扣（业内 MFU 常在三到六成）；模型忽略 KV 缓存读取与通信开销——这是白板级一阶估算：数字理想化，<b>方向与量级可靠</b>。用它理解「为什么 API 降价靠批处理」「为什么 INT4 让单卡飞起来」足够，用它做采购预算不够。</div>
+        </div>
+      </div>
+    </details>
+    <div class="wire"><span>字节本身还能更小 ▼</span></div>
+
+    <details class="mod">
+      <summary><span class="m-caret">▶</span><span class="m-name">数字格式</span><span class="m-en">NUMBER FORMATS</span><span class="m-shape">FP32(4B) → BF16(2B) → FP8(1B) → INT4</span></summary>
+      <div class="m-body">
+        <p>每个参数用几位二进制存，是一根绳上的四件事：精度、显存、带宽、能耗。位数减半 ≈ 搬运减半 ≈ 斜坡区速度翻倍（接屋顶线）——所以整个行业在系统性地「用精度换速度」。</p>
+        <div class="forks"><span class="flab">分叉 · 训练精度</span>
+          <button class="fk on" data-v="a">BF16 ✓</button>
+          <button class="fk" data-v="b">FP8（前沿）</button>
+          <button class="fk" data-v="c">FP16（早期）</button>
+        </div>
+        <div class="fkb on" data-v="a">砍掉 FP32 的尾数精度、<b>保留它的指数位范围</b>：数值表示粗一点，但极大极小值不溢出——训练稳定性的关键。当今混合精度训练的主流选择。</div>
+        <div class="fkb" data-v="b">1 字节训练，Hopper 代（H100）起有硬件支持。DeepSeek-V3 大规模 FP8 训练是公开先例——「硬件代际决定训法」的实证：同样的钱买新一代卡，等于多买一倍带宽。</div>
+        <div class="fkb" data-v="c">与 BF16 同为 2 字节但指数位窄，训练易溢出，需要损失缩放等补丁——被 BF16 取代的主因。</div>
+        <p class="dim">推理侧的 INT8/INT4 量化已在 Ⅲ 平面详述；此处补硬件视角：能不能用某个格式，先看芯片支不支持（A100 无 FP8）——「模型怎么训、怎么跑」有时是采购合同问题。</p>
+      </div>
+    </details>
+    <div class="wire"><span>一张卡装不下，就要连线 ▼</span></div>
+
+    <details class="mod" id="mod-net">
+      <summary><span class="m-caret">▶</span><span class="m-name">互联与集群</span><span class="m-en">INTERCONNECT · CLUSTER · 🔬 LAB</span><span class="m-shape">HBM ≫ NVLink ≫ 节点间网络</span></summary>
+      <div class="m-body">
+        <p>带宽阶梯（H100 代量级）：卡内 HBM ~3.3 TB/s ≫ 同机卡间 NVLink ~900 GB/s ≫ 跨机 InfiniBand ~每链路 50 GB/s——每跨一级掉将近一个数量级。这架阶梯直接决定了 Ⅰ 平面并行训练的切法：</p>
+        <ul>
+          <li><b>张量并行</b>（把单层矩阵切开）通信最密 → 只敢在 NVLink 内做（一台机器 8 卡为界）；</li>
+          <li><b>流水线/数据并行</b>通信较疏 → 跨机器走 InfiniBand；</li>
+          <li><b>专家并行</b>（MoE 专属）看路由流量分布。<b>切法不是自由选择，是带宽阶梯的函数</b>——Ⅰ 平面「集群与并行」的账在此收清。</li>
+        </ul>
+        <p class="dim">万卡的日常（据 Llama-3 技术报告）：1.6 万张 H100 训练 54 天，发生四百余次意外中断——约每三小时坏一次，多为 GPU/显存故障。checkpoint 容灾不是优化项，是生存刚需。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 切积木：三种并行的通信画像<span class="demo-tag">G2 级</span></div>
+          <p class="dim" style="margin:4px 0 0">一个 8 层模型、两台机器各 4 卡。点击三种切法，看模型怎么分、通信走哪条带宽——「切法是带宽阶梯的函数」眼见为实。</p>
+          <div class="lab-ctrls">
+            <button type="button" class="fk on" id="nt-dp">数据并行</button>
+            <button type="button" class="fk" id="nt-tp">张量并行</button>
+            <button type="button" class="fk" id="nt-pp">流水线并行</button>
+          </div>
+          <div class="net-cells">
+            <div class="net-node"><div class="nn">机器 A（卡间 NVLink ~900 GB/s）</div><div class="net-gpus" id="nt-a"></div></div>
+            <div class="net-node"><div class="nn">机器 B（跨机 InfiniBand ~50 GB/s）</div><div class="net-gpus" id="nt-b"></div></div>
+          </div>
+          <div class="net-comm" id="nt-comm"></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>示意图（G2 级）：卡数与层数为教学缩编，通信量描述为定性画像；真实系统三种切法叠加使用（3D 并行）。核心规律是真的：<b>通信越密的切法，越只能待在带宽更高的那级互联里</b>。</div>
+        </div>
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>训练算力账本（EU AI Act 10^25 FLOPs 门槛的举证基础）、GPAI 技术文档中的能耗披露要求、机房坐标即法域——本平面的合规逻辑独特：义务挂在「资产」上而非「行为」上，是全图里唯一能用手指着核验的一层。<span class="ref">索引地图 L0 全层</span></p></div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= 边界登记簿 ================= -->
+  <section class="plane" id="scope" style="--pc:var(--ink-3)">
+    <div class="pl-head" style="border-left-color:var(--hairline)"><span class="rn" style="color:var(--ink-3)">APPENDIX</span><h2>蓝图的边界 · 已知未覆盖清单</h2>
+      <p class="pl-q">防返工登记簿。以下领域<b>刻意</b>尚未展开，但挂点已声明——按规则 R2/R4，扩建 = 新增平面或模块，不动现有结构。清单随行业演化滚动维护：发现新空白就登记，登记了就不慌。</p></div>
+    <div class="legend" style="margin-top:16px">
+      <div class="lg" style="border-color:var(--p5)"><b>✅ 多模态生成栈 → 已动工（v0.7）</b>已建成 PLANE Ⅴ 六模块 G1 骨架（VLM / 扩散 / 潜空间 / 条件引导 / 视频 / 语音克隆）。后续深化方向：扩散去噪过程实验室、声音克隆演示。</div>
+      <div class="lg" style="border-color:var(--p5)"><b>✅ 视觉理解（VLM）→ 已并入 PLANE Ⅴ</b>原计划挂在 Ⅱ 平面「分词」旁，实建时并入 Ⅴ 平面首模块（多模态内容更内聚）——登记簿承诺的是「有去处」，不锁死具体位置。</div>
+      <div class="lg" style="border-color:var(--p3)"><b>✅ 推理模型与测试时算力 → 已建（v0.9）</b>Ⅲ 平面新模块：长思维链、第二条 Scaling 曲线、思考预算、忠实性问题与朱批。</div>
+      <div class="lg" style="border-color:var(--p2)"><b>✅ 非 Transformer 架构 → 已建（v0.9）</b>Ⅱ 平面新模块「架构地平线」：Mamba/SSM 状态递推 vs 注意力全回看、混合架构、扩散 LM 登记。</div>
+      <div class="lg" style="border-color:var(--p1)"><b>✅ 评估科学 → 已建（v0.9）</b>Ⅰ 平面「评估·红队·发布」模块内扩建：基准三大陷阱（污染/Goodhart/饱和）、LLM 判官及其偏差、法务读分指南。</div>
+      <div class="lg" style="border-color:var(--p2)"><b>✅ 可解释性 → 已建（v0.9）</b>Ⅱ 平面新模块「可解释性：打开黑箱」：探针/特征分解/回路三进路、现状边界、「算法解释权」朱批。</div>
+      <div class="lg" style="border-style:dashed"><b>登记簿现状：六项全部落地。</b>本清单保持开放——发现新空白（如具身智能、世界模型）继续登记；登记了就不慌。</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap" style="padding:0">
+      <p>LLM 系统蓝图 · 主线 v0.15 · 2026-07-08。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
+      分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* 分叉 chips：组内切换 */
+document.querySelectorAll('.m-body').forEach(body => {
+  const groups = [];
+  let chips = null;
+  body.querySelectorAll('.forks, .fkb').forEach(el => {
+    if (el.classList.contains('forks')) { chips = { forks: el, bodies: [] }; groups.push(chips); }
+    else if (chips) chips.bodies.push(el);
+  });
+  groups.forEach(g => {
+    g.forks.querySelectorAll('.fk').forEach(btn => {
+      btn.addEventListener('click', () => {
+        g.forks.querySelectorAll('.fk').forEach(b => b.classList.toggle('on', b === btn));
+        g.bodies.forEach(fb => fb.classList.toggle('on', fb.dataset.v === btn.dataset.v));
+      });
+    });
+  });
+});
+
+/* 每平面：全部展开/收起 */
+document.querySelectorAll('.pl-tools button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const mods = document.getElementById(btn.dataset.plane).querySelectorAll('details.mod');
+    const anyClosed = Array.from(mods).some(m => !m.open);
+    mods.forEach(m => m.open = anyClosed);
+  });
+});
+
+/* ============ 🔬 RAG 实验室（v0.4） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const docEl = $('rag-doc');
+  if (!docEl) return;
+  const DIM = 64;
+
+  /* 字符二元组 → 特征哈希 → 64 维单位向量（真算法：feature hashing） */
+  function vectorize(text) {
+    const v = new Float32Array(DIM);
+    const s = text.replace(/[\s，。；：！？、）（""]+/g, '');
+    for (let i = 0; i < s.length - 1; i++) {
+      let h = 5381;
+      for (const c of s.slice(i, i + 2)) h = ((h << 5) + h + c.codePointAt(0)) >>> 0;
+      v[h % DIM] += ((h >>> 8) & 1) ? 1 : -1;
+    }
+    const n = Math.hypot(...v) || 1;
+    for (let i = 0; i < DIM; i++) v[i] /= n;
+    return v;
+  }
+  const cosine = (a, b) => { let s = 0; for (let i = 0; i < DIM; i++) s += a[i] * b[i]; return s; };
+
+  /* 固定伪随机投影向量（64维 → 2D，确定性） */
+  function projVec(seed) {
+    const r = new Float32Array(DIM); let x = seed;
+    for (let i = 0; i < DIM; i++) { x = (x * 1103515245 + 12345) >>> 0; r[i] = (x & 1) ? 1 : -1; }
+    return r;
+  }
+  const R1 = projVec(7), R2 = projVec(42);
+  const project = v => [cosine(v, R1), cosine(v, R2)];
+
+  /* 切分：按字数 + 就近断句 */
+  function chunkText(text, size, ov) {
+    const out = []; let i = 0;
+    while (i < text.length) {
+      let end = Math.min(i + size, text.length);
+      if (end < text.length) {
+        const win = text.slice(end, Math.min(end + 30, text.length));
+        const m = win.search(/[。；！？\n]/);
+        if (m >= 0) end += m + 1;
+      }
+      const c = text.slice(i, end).trim();
+      if (c.length > 8) out.push(c);
+      if (end >= text.length) break;
+      i = Math.max(end - ov, i + 1);
+    }
+    return out;
+  }
+
+  let state = { chunks: [], vecs: [], qv: null, scores: [], topk: [] };
+
+  function update() {
+    const size = +$('rag-cs').value, ov = +$('rag-ov').value, k = +$('rag-k').value;
+    $('rag-cs-o').textContent = size; $('rag-ov-o').textContent = ov; $('rag-k-o').textContent = k;
+    state.chunks = chunkText(docEl.value, size, ov);
+    state.vecs = state.chunks.map(vectorize);
+    const q = $('rag-q').value.trim();
+    state.qv = q ? vectorize(q) : null;
+    state.scores = state.qv ? state.vecs.map(v => cosine(state.qv, v)) : state.vecs.map(() => 0);
+    state.topk = state.scores.map((s, i) => [s, i]).sort((a, b) => b[0] - a[0]).slice(0, k).map(p => p[1]);
+
+    $('rag-chunks').innerHTML = state.chunks.map((c, i) =>
+      `<span class="lab-chunk" title="${c.replace(/"/g, '&quot;')}"><b>#${i + 1}</b>${c.slice(0, 26)}｜${c.length} 字</span>`).join('')
+      || '<span class="lab-chunk">（语料为空）</span>';
+
+    const rows = state.scores.map((s, i) => [s, i]).sort((a, b) => b[0] - a[0]);
+    $('rag-res').innerHTML = rows.map(([s, i]) => {
+      const hit = state.topk.includes(i);
+      const w = Math.max(0, s) * 100;
+      return `<div class="lab-res-row${hit ? ' hit' : ''}">
+        <span class="rn2">#${i + 1}${hit ? ' ✓' : ''}</span>
+        <span class="prev">${state.chunks[i].slice(0, 42)}…</span>
+        <span class="sc">${s.toFixed(3)}</span>
+        <div class="bar"><i style="width:${w}%"></i></div></div>`;
+    }).join('');
+
+    const picked = state.topk.slice().sort((a, b) => a - b);
+    const prompt = ['[系统指令] 你是文档问答助手，仅依据下列检索结果回答；无依据时明确说明。',
+      ...picked.map(i => `[检索结果 ${picked.indexOf(i) + 1} · 块#${i + 1} · 相似度 ${state.scores[i].toFixed(3)}]\n${state.chunks[i]}`),
+      `[用户问题] ${$('rag-q').value.trim() || '（空）'}`].join('\n\n');
+    $('rag-prompt').textContent = prompt;
+    const chars = prompt.length, pct = Math.min(100, chars / 8192 * 100);
+    $('rag-bud-i').style.width = pct.toFixed(1) + '%';
+    $('rag-bud-t').textContent = `约 ${chars} 字 ≈ ${(pct).toFixed(1)}%（按 1 字≈1 token 上限粗估）`;
+    draw();
+  }
+
+  function draw() {
+    const cv = $('rag-cv'), ctx = cv.getContext('2d');
+    const dpr = devicePixelRatio || 1, W = cv.clientWidth * dpr, H = 230 * dpr;
+    cv.width = W; cv.height = H;
+    const cs = getComputedStyle(document.documentElement);
+    const inkMuted = cs.getPropertyValue('--ink-3').trim(), ink = cs.getPropertyValue('--ink').trim(),
+      accent = cs.getPropertyValue('--p4').trim();
+    const pts = state.vecs.map(project);
+    if (state.qv) pts.push(project(state.qv));
+    if (!pts.length) return;
+    let xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+    let x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    const padX = (x1 - x0 || 1) * 0.18, padY = (y1 - y0 || 1) * 0.18;
+    x0 -= padX; x1 += padX; y0 -= padY; y1 += padY;
+    const sx = x => (x - x0) / (x1 - x0) * (W - 40 * dpr) + 20 * dpr;
+    const sy = y => (y - y0) / (y1 - y0) * (H - 40 * dpr) + 20 * dpr;
+    ctx.clearRect(0, 0, W, H);
+    ctx.font = `${10.5 * dpr}px ui-monospace, monospace`;
+    state.vecs.forEach((v, i) => {
+      const [px, py] = project(v), hit = state.topk.includes(i) && state.qv;
+      ctx.beginPath(); ctx.arc(sx(px), sy(py), 5 * dpr, 0, 7);
+      ctx.fillStyle = inkMuted; ctx.globalAlpha = hit ? 0.9 : 0.45; ctx.fill();
+      if (hit) { ctx.globalAlpha = 1; ctx.lineWidth = 2 * dpr; ctx.strokeStyle = accent; ctx.stroke(); }
+      ctx.globalAlpha = 0.8; ctx.fillStyle = inkMuted;
+      ctx.fillText('#' + (i + 1), sx(px) + 7 * dpr, sy(py) + 3 * dpr);
+    });
+    if (state.qv) {
+      const [px, py] = project(state.qv);
+      ctx.globalAlpha = 1; ctx.fillStyle = ink;
+      ctx.font = `${15 * dpr}px sans-serif`;
+      ctx.fillText('★', sx(px) - 7 * dpr, sy(py) + 5 * dpr);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  ['rag-cs', 'rag-ov', 'rag-k'].forEach(id => $(id).addEventListener('input', update));
+  docEl.addEventListener('input', update);
+  $('rag-q').addEventListener('input', update);
+  document.querySelectorAll('#mod-rag .lab-presets button').forEach(b =>
+    b.addEventListener('click', () => { $('rag-q').value = b.dataset.q; update(); }));
+  $('mod-rag').addEventListener('toggle', () => { if ($('mod-rag').open) update(); });
+  addEventListener('resize', draw);
+  new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  update();
+})();
+
+/* ============ 🔬 MoE 路由分诊台（v0.5） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const qEl = $('moe-q');
+  if (!qEl) return;
+  const DIM = 48, E = 8;
+
+  /* 词元向量：字符 + 前后文的特征哈希（真算法，玩具维度） */
+  function charVec(prev, c, next) {
+    const v = new Float32Array(DIM);
+    [prev + c, c + next, c].forEach(g => {
+      let h = 5381;
+      for (const ch of g) h = ((h << 5) + h + ch.codePointAt(0)) >>> 0;
+      v[h % DIM] += ((h >>> 8) & 1) ? 1 : -1;
+    });
+    const n = Math.hypot(...v) || 1;
+    for (let i = 0; i < DIM; i++) v[i] /= n;
+    return v;
+  }
+
+  let seed = 1, experts = [];
+  function reseed() {
+    experts = [];
+    let x = (seed * 2654435761) >>> 0;
+    for (let e = 0; e < E; e++) {
+      const w = new Float32Array(DIM);
+      for (let i = 0; i < DIM; i++) { x = (x * 1103515245 + 12345) >>> 0; w[i] = ((x >>> 16) / 32768) - 1; }
+      const n = Math.hypot(...w) || 1;
+      for (let i = 0; i < DIM; i++) w[i] /= n;
+      experts.push(w);
+    }
+  }
+  reseed();
+
+  const dot = (a, b) => { let s = 0; for (let i = 0; i < DIM; i++) s += a[i] * b[i]; return s; };
+  const softmax = arr => {
+    const m = Math.max(...arr), ex = arr.map(x => Math.exp(x - m));
+    const s = ex.reduce((a, b) => a + b, 0); return ex.map(x => x / s);
+  };
+  const topkIdx = (probs, k) =>
+    probs.map((p, i) => [p, i]).sort((a, b) => b[0] - a[0]).slice(0, k).map(p => p[1]);
+
+  function update() {
+    const k = +$('moe-k').value; $('moe-k-o').textContent = k;
+    const chars = Array.from(qEl.value).filter(c => /[㐀-鿿\w]/.test(c)).slice(0, 14);
+    const logitsAll = chars.map((c, i) =>
+      experts.map(w => dot(charVec(chars[i - 1] || '^', c, chars[i + 1] || '$'), w) * 6));
+
+    /* 均衡偏置：过载减分、闲置加分（DeepSeek 式免辅助损失均衡的机制演示） */
+    const bias = new Float32Array(E);
+    if ($('moe-bal').checked && chars.length) {
+      for (let it = 0; it < 40; it++) {
+        const load = new Float32Array(E);
+        logitsAll.forEach(lg => topkIdx(softmax(lg.map((v, e) => v + bias[e])), k).forEach(e => load[e]++));
+        const avg = chars.length * k / E;
+        for (let e = 0; e < E; e++) bias[e] -= 0.12 * (load[e] - avg);
+      }
+    }
+    const probsAll = logitsAll.map(lg => softmax(lg.map((v, e) => v + bias[e])));
+    const selAll = probsAll.map(p => topkIdx(p, k));
+
+    const grid = $('moe-grid');
+    grid.style.gridTemplateColumns = `auto repeat(${E}, minmax(24px, 1fr))`;
+    let html = '<span></span>' + Array.from({ length: E }, (_, e) => `<span class="mh">E${e + 1}</span>`).join('');
+    chars.forEach((c, t) => {
+      html += `<span class="mt">${c}</span>` + probsAll[t].map((p, e) =>
+        `<div class="moe-cell${selAll[t].includes(e) ? ' sel' : ''}"><i style="opacity:${(0.05 + p * 0.92).toFixed(2)}"></i></div>`).join('');
+    });
+    grid.innerHTML = chars.length ? html : '<span class="mt">（输入为空）</span>';
+
+    const load = new Float32Array(E);
+    selAll.forEach(sel => sel.forEach(e => load[e]++));
+    const total = chars.length * k || 1, maxLoad = Math.max(...load, 1);
+    $('moe-load').innerHTML = Array.from({ length: E }, (_, e) =>
+      `<div class="moe-load-row"><span class="rn2">E${e + 1}</span>
+        <div class="bar"><i style="width:${(load[e] / maxLoad * 100).toFixed(0)}%"></i></div>
+        <span class="ct">${load[e]} 次</span></div>`).join('');
+    let aux = 0;
+    for (let e = 0; e < E; e++) {
+      const f = load[e] / total;
+      const P = probsAll.reduce((s, p) => s + p[e], 0) / (probsAll.length || 1);
+      aux += f * P;
+    }
+    $('moe-aux').textContent = chars.length ? (E * aux).toFixed(2) : '—';
+  }
+
+  qEl.addEventListener('input', update);
+  $('moe-k').addEventListener('input', update);
+  $('moe-bal').addEventListener('change', update);
+  $('moe-seed').addEventListener('click', () => { seed++; reseed(); update(); });
+  document.querySelectorAll('#mod-moe .lab-presets button').forEach(b =>
+    b.addEventListener('click', () => { qEl.value = b.dataset.q; update(); }));
+  update();
+})();
+
+/* ============ 🔬 RLHF 打分器实验室（v0.6） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('rl-q')) return;
+  const FEATS = ['信息密度', '简洁', '结构化', '礼貌客套', '奉承讨好', '谨慎免责'];
+  const PAIRS = [
+    { q: '帮我总结这份合同的主要风险。',
+      a: { t: '三点：① 违约金上不封顶；② 单方解除权只有对方有；③ 争议管辖在对方所在地。建议优先谈第②点。', f: [.95, .75, .9, .1, 0, .1] },
+      b: { t: '感谢您的信任！合同风险需要结合具体场景综合判断，建议您咨询专业律师获取意见哦。', f: [.1, .5, .1, .9, .6, .95] } },
+    { q: '这个竞业条款对员工有效吗？',
+      a: { t: '您这个问题问得非常专业！确实值得深入研究，不同法院可能有不同观点。', f: [.1, .55, .05, .85, .95, .7] },
+      b: { t: '大概率部分无效：期限超两年的部分不受支持；未约定补偿金的，员工可主张不受约束。', f: [.9, .8, .5, .15, 0, .2] } },
+    { q: '用一句话解释什么是 RAG。',
+      a: { t: '让模型答题前先从你的资料库里检索相关段落——开卷考试。', f: [.85, .95, .2, .1, 0, 0] },
+      b: { t: 'RAG（检索增强生成）是一种将信息检索与文本生成相结合的技术框架，其核心思想是在生成阶段引入外部知识源以提升事实性。', f: [.7, .2, .3, .4, 0, .1] } },
+    { q: '客户半夜发消息骂产品烂，怎么回？',
+      a: { t: '先道歉安抚、再要问题截图，明早给排查结论和补偿方案。话术：「给您添麻烦了，我先记录问题……」', f: [.8, .6, .6, .8, .2, .2] },
+      b: { t: '亲，您的心情我们完全理解！您是我们最重要的客户，我们一定竭尽全力让您满意！', f: [.1, .6, .05, .95, .95, .3] } },
+    { q: '把这句话改得更礼貌：「这个方案不行，重做。」',
+      a: { t: '「这个方案与目标还有差距，麻烦按 X 方向再迭代一版，辛苦了。」', f: [.75, .85, .2, .85, .2, 0] },
+      b: { t: '可以改成：「您的方案已经非常出色了！如果能再稍微调整一下就更完美了！」', f: [.4, .5, .2, .9, .85, .3] } },
+    { q: '明天要向老板汇报事故，给我个提纲。',
+      a: { t: '① 事实与时间线 ② 影响与止损动作 ③ 根因 ④ 整改与时间表 ⑤ 需要拍板的事项。', f: [.9, .8, .95, .2, 0, .05] },
+      b: { t: '建议您态度诚恳一些，先承认问题再讲改进。具体内容还是要看事故情况，不好一概而论。', f: [.25, .6, .2, .7, .3, .8] } },
+    { q: 'AI 生成的合同初稿能直接用吗？',
+      a: { t: '不能。AI 初稿常见三类问题：条款幻觉、主体义务错配、法条过时——须逐条人工核验后使用。', f: [.9, .7, .7, .2, 0, .35] },
+      b: { t: '您能想到用 AI 提效真是走在前沿！理论上建议再请专业人士把把关，会更稳妥一点哦。', f: [.15, .55, .05, .9, .9, .75] } },
+    { q: '解释一下为什么长对话更贵。',
+      a: { t: '生成每个新字都要回看全部历史，缓存随长度线性涨、注意力计算随长度平方涨——字越多越贵。', f: [.9, .75, .4, .1, 0, 0] },
+      b: { t: '这是个好问题！主要是技术原理上的一些开销会随对话变长而增加，具体机制比较复杂。', f: [.15, .6, .1, .75, .5, .4] } },
+  ];
+  const T1 = { t: '「第12.2条允许任一方提前30日书面解约；已产生费用不退。另留意12.3条的资料返还义务。」', f: [.95, .8, .6, .1, 0, .1], name: '干货回答' };
+  const T2 = { t: '「您的问题真是切中要害！合同问题确实非常重要，我们会全力为您提供最贴心的支持！」', f: [.05, .5, .05, .95, .95, .6], name: '空洞奉承' };
+
+  let w, round, guesses, hits;
+  const sig = x => 1 / (1 + Math.exp(-x));
+  const dotf = (w, f) => w.reduce((s, v, i) => s + v * f[i], 0);
+
+  function reset() { w = FEATS.map(() => 0); round = 0; guesses = 0; hits = 0; render(); }
+
+  function renderW() {
+    const mx = Math.max(...w.map(Math.abs), 0.3);
+    $('rl-w').innerHTML = FEATS.map((n, i) => {
+      const pct = Math.abs(w[i]) / mx * 48;
+      const bar = w[i] >= 0
+        ? `<i style="left:50%;width:${pct}%"></i>`
+        : `<i class="neg" style="right:50%;width:${pct}%"></i>`;
+      return `<div class="rl-wrow"><span>${n}</span><div class="wbar">${bar}</div><span class="wv">${w[i] >= 0 ? '+' : ''}${w[i].toFixed(2)}</span></div>`;
+    }).join('');
+  }
+
+  function renderTest() {
+    const el = $('rl-test');
+    if (round < 5) { el.innerHTML = `<p class="dim" style="margin:4px 0">已标注 ${round} / 5 对——继续标注解锁考验。</p>`; return; }
+    const s1 = dotf(w, T1.f), s2 = dotf(w, T2.f);
+    const mx = Math.max(Math.abs(s1), Math.abs(s2), 0.1);
+    const bar = s => `<div class="wbar" style="position:relative;height:8px;background:var(--surface-2);border-radius:4px;margin-top:4px"><i style="position:absolute;top:0;bottom:0;left:0;border-radius:4px;background:var(--pc);width:${Math.max(0, s) / mx * 100}%"></i></div>`;
+    const verdict = s2 > s1
+      ? `<p class="rl-verdict">⚠ <b>打分器被攻破了</b>：零信息的彩虹屁得分更高。你的选择让「礼貌/奉承」维度权重压过了「信息密度」——按这个奖励模型强化出的助手，就是一个谄媚模型。这不是假设，是 ChatGPT 们真实经历过的事故路径。</p>`
+      : `<p class="rl-verdict">✓ <b>这次没被攻破</b>：干货仍然胜出。但注意——这只说明<b>你</b>的品味没被利用。真实标注是成千上万人的统计，只要人群平均偏爱客气与顺从，谄媚就会从数学里自己长出来。</p>`;
+    el.innerHTML = `
+      <div class="rl-tcard">${T1.name}：${T1.t}<div class="rl-tscore">打分 ${s1.toFixed(2)}</div>${bar(s1)}</div>
+      <div class="rl-tcard">${T2.name}：${T2.t}<div class="rl-tscore">打分 ${s2.toFixed(2)}</div>${bar(s2)}</div>${verdict}`;
+  }
+
+  function render() {
+    renderW(); renderTest();
+    const done = round >= PAIRS.length;
+    $('rl-round').textContent = done ? '标注完成' : `第 ${round + 1} / ${PAIRS.length} 对`;
+    const a = $('rl-a'), b = $('rl-b');
+    if (done) {
+      $('rl-q').textContent = '八对标注完成。去 ③ 看考验结果；或 ↺ 重开，这次试试全选「客气的」那个，看看能亲手养出什么。';
+      $('rl-guess').textContent = '';
+      a.style.display = b.style.display = 'none';
+      return;
+    }
+    a.style.display = b.style.display = '';
+    const p = PAIRS[round];
+    $('rl-q').textContent = '「' + p.q + '」';
+    a.textContent = 'A. ' + p.a.t; b.textContent = 'B. ' + p.b.t;
+    if (round >= 3) {
+      const pA = sig(dotf(w, p.a.f) - dotf(w, p.b.f));
+      $('rl-guess').textContent = `打分器预判：你会选 ${pA >= 0.5 ? 'A' : 'B'}（置信 ${(Math.max(pA, 1 - pA) * 100).toFixed(0)}%）`;
+      $('rl-guess').dataset.pred = pA >= 0.5 ? 'a' : 'b';
+    } else {
+      $('rl-guess').textContent = '（打分器还没学到什么，先看你怎么选）';
+      delete $('rl-guess').dataset.pred;
+    }
+  }
+
+  function choose(which) {
+    if (round >= PAIRS.length) return;
+    const p = PAIRS[round];
+    const chosen = which === 'a' ? p.a : p.b, other = which === 'a' ? p.b : p.a;
+    const pred = $('rl-guess').dataset.pred;
+    if (pred) { guesses++; if (pred === which) hits++; }
+    /* Bradley–Terry 逻辑回归一步：w += lr·(1−σ)·(f选−f弃) */
+    const d = chosen.f.map((v, i) => v - other.f[i]);
+    const pWin = sig(dotf(w, d));
+    d.forEach((v, i) => w[i] += 1.6 * (1 - pWin) * v);
+    round++;
+    $('rl-acc').textContent = guesses ? `打分器猜中率：${hits} / ${guesses}` : '打分器猜中率：—（第 4 对起开始预判）';
+    render();
+  }
+
+  $('rl-a').addEventListener('click', () => choose('a'));
+  $('rl-b').addEventListener('click', () => choose('b'));
+  $('rl-reset').addEventListener('click', () => { reset(); $('rl-acc').textContent = '打分器猜中率：—（第 4 对起开始预判）'; });
+  reset();
+})();
+
+/* ============ 🔬 注意力实验室（v0.8） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const qEl = $('att-q'); if (!qEl) return;
+  const DIM = 32, DK = 16;
+  function charVec(prev, c, next) {
+    const v = new Float32Array(DIM);
+    [prev + c, c + next, c].forEach(g => {
+      let h = 5381; for (const ch of g) h = ((h << 5) + h + ch.codePointAt(0)) >>> 0;
+      v[h % DIM] += ((h >>> 8) & 1) ? 1 : -1;
+    });
+    const n = Math.hypot(...v) || 1;
+    for (let i = 0; i < DIM; i++) v[i] /= n;
+    return v;
+  }
+  function projMat(seed) {
+    const m = []; let x = seed >>> 0 || 1;
+    for (let i = 0; i < DK; i++) {
+      const r = new Float32Array(DIM);
+      for (let j = 0; j < DIM; j++) { x = (x * 1103515245 + 12345) >>> 0; r[j] = ((x >>> 16) / 32768 - 1) / Math.sqrt(DIM); }
+      m.push(r);
+    } return m;
+  }
+  const HEADS = [{ q: projMat(11), k: projMat(23) }, { q: projMat(37), k: projMat(59) }, null];
+  let head = 0, focusI = -1;
+  const proj = (m, v) => m.map(r => { let s = 0; for (let i = 0; i < DIM; i++) s += r[i] * v[i]; return s; });
+
+  function update() {
+    const chars = Array.from(qEl.value).filter(c => /[㐀-鿿\w]/.test(c)).slice(0, 10);
+    const T = chars.length;
+    const vecs = chars.map((c, i) => charVec(chars[i - 1] || '^', c, chars[i + 1] || '$'));
+    const useMask = $('att-mask').checked, useScale = $('att-scale').checked;
+    let Q, K, dk;
+    if (HEADS[head]) { Q = vecs.map(v => proj(HEADS[head].q, v)); K = vecs.map(v => proj(HEADS[head].k, v)); dk = DK; }
+    else { Q = vecs; K = vecs; dk = DIM; }
+    const W = chars.map((_, i) => {
+      const row = chars.map((_, j) => {
+        if (useMask && j > i) return -Infinity;
+        let s = 0; for (let t = 0; t < Q[i].length; t++) s += Q[i][t] * K[j][t];
+        s *= 24; if (useScale) s /= Math.sqrt(dk);
+        return s;
+      });
+      const finite = row.filter(isFinite);
+      const mx = finite.length ? Math.max(...finite) : 0;
+      const ex = row.map(x => isFinite(x) ? Math.exp(x - mx) : 0);
+      const sum = ex.reduce((a, b) => a + b, 0) || 1;
+      return ex.map(x => x / sum);
+    });
+    if (focusI < 0 || focusI >= T) focusI = T - 1;
+    const grid = $('att-grid');
+    grid.style.gridTemplateColumns = `auto repeat(${T}, minmax(20px, 1fr))`;
+    let html = '<span></span>' + chars.map(c => `<span class="ah">${c}</span>`).join('');
+    chars.forEach((c, i) => {
+      html += `<span class="av${i === focusI ? ' on' : ''}" data-i="${i}" role="button" tabindex="0">${c} →</span>`
+        + chars.map((_, j) => (useMask && j > i)
+          ? `<div class="att-c masked"></div>`
+          : `<div class="att-c" title="${chars[i]}→${chars[j]}: ${W[i][j].toFixed(2)}"><i style="opacity:${(W[i][j] * 0.95 + 0.03).toFixed(2)}"></i></div>`).join('');
+    });
+    grid.innerHTML = T ? html : '<span class="av">（输入为空）</span>';
+    grid.querySelectorAll('.av[data-i]').forEach(el => {
+      const go = () => { focusI = +el.dataset.i; update(); };
+      el.addEventListener('click', go);
+      el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    });
+    $('att-focus').innerHTML = T ? `「<b>${chars[focusI]}</b>」在看谁：` + chars.map((c, j) =>
+      `<span style="background:color-mix(in srgb, var(--p2) ${Math.round(W[focusI][j] * 80)}%, transparent)">${c}</span>`).join('') : '';
+  }
+  qEl.addEventListener('input', update);
+  ['att-mask', 'att-scale'].forEach(id => $(id).addEventListener('change', update));
+  [0, 1, 2].forEach(h => $('att-h' + h).addEventListener('click', () => {
+    head = h; [0, 1, 2].forEach(x => $('att-h' + x).classList.toggle('on', x === h)); update();
+  }));
+  document.querySelectorAll('#mod-attn .lab-presets button').forEach(b =>
+    b.addEventListener('click', () => { qEl.value = b.dataset.q; focusI = -1; update(); }));
+  update();
+})();
+
+/* ============ 🔬 屋顶线计算器（v0.8） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const cv = $('rf-cv'); if (!cv) return;
+  const GPUS = [{ n: 'H100', f: 989e12, bw: 3.35e12, vr: 80 }, { n: 'A100 80G', f: 312e12, bw: 2.0e12, vr: 80 }, { n: 'RTX 4090', f: 165e12, bw: 1.0e12, vr: 24 }];
+  const MODELS = [{ n: '8B', p: 8e9 }, { n: '70B', p: 70e9 }];
+  const PREC = [{ n: 'FP16', b: 2 }, { n: 'INT8', b: 1 }, { n: 'INT4', b: 0.5 }];
+  let g = 0, m = 0, p = 0;
+  const fmt = x => x >= 1e6 ? (x / 1e6).toFixed(1) + ' M' : x >= 1e3 ? (x / 1e3).toFixed(1) + ' K' : x.toFixed(0);
+
+  function update() {
+    const B = 2 ** (+$('rf-b').value); $('rf-b-o').textContent = B;
+    const G = GPUS[g], M = MODELS[m], P = PREC[p];
+    const bytes = M.p * P.b, fits = bytes <= G.vr * 1e9;
+    const intensity = 2 * B / P.b, balance = G.f / G.bw;
+    const single = G.bw / bytes;
+    const total = Math.min(B * G.bw / bytes, G.f / (2 * M.p));
+    const cross = Math.ceil(balance * P.b / 2);
+    $('rf-read').innerHTML = `
+      <div class="rf-item"><div class="k">权重体积 / 显存</div><div class="v">${(bytes / 1e9).toFixed(1)} / ${G.vr} GB ${fits ? '✓ 装得下' : '<span class="warn">⚠ 装不下</span>'}</div></div>
+      <div class="rf-item"><div class="k">算术强度 vs 机器平衡点</div><div class="v">${intensity.toFixed(1)} vs ${balance.toFixed(0)} FLOPs/B</div></div>
+      <div class="rf-item"><div class="k">当前瓶颈</div><div class="v">${intensity < balance ? '带宽（斜坡区）' : '算力（平顶区）'}</div></div>
+      <div class="rf-item"><div class="k">单请求吐字上限</div><div class="v">≈ ${fmt(single)} token/s</div></div>
+      <div class="rf-item"><div class="k">整卡总吞吐上限</div><div class="v">≈ ${fmt(total)} token/s</div></div>
+      <div class="rf-item"><div class="k">喂饱算力所需并发</div><div class="v">≈ ${cross} 个请求</div></div>`;
+    draw(intensity, G);
+  }
+
+  function draw(intensity, G) {
+    const ctx = cv.getContext('2d'), dpr = devicePixelRatio || 1;
+    const W = cv.clientWidth * dpr, H = 240 * dpr;
+    cv.width = W; cv.height = H;
+    const cs = getComputedStyle(document.documentElement);
+    const ink3 = cs.getPropertyValue('--ink-3').trim(), ink = cs.getPropertyValue('--ink').trim(), pc = cs.getPropertyValue('--p0').trim();
+    const x0 = -1, x1 = 4, y0 = 11, y1 = 15.5;
+    const sx = lx => (lx - x0) / (x1 - x0) * (W - 60 * dpr) + 44 * dpr;
+    const sy = ly => H - 26 * dpr - (ly - y0) / (y1 - y0) * (H - 44 * dpr);
+    ctx.clearRect(0, 0, W, H);
+    ctx.font = `${10 * dpr}px ui-monospace, monospace`; ctx.fillStyle = ink3;
+    for (let e = 0; e <= 4; e++) { ctx.fillText('10' + '⁰¹²³⁴'[e], sx(e) - 6 * dpr, H - 10 * dpr); }
+    ctx.fillText('FLOPs/Byte →', W - 90 * dpr, H - 10 * dpr);
+    ctx.fillText('可达算力 ↑', 6 * dpr, 14 * dpr);
+    ctx.strokeStyle = pc; ctx.lineWidth = 2.2 * dpr; ctx.beginPath();
+    let first = true;
+    for (let lx = x0; lx <= x1; lx += 0.02) {
+      const ly = Math.min(lx + Math.log10(G.bw), Math.log10(G.f));
+      const px = sx(lx), py = sy(Math.max(y0, Math.min(y1, ly)));
+      first ? ctx.moveTo(px, py) : ctx.lineTo(px, py); first = false;
+    }
+    ctx.stroke();
+    const bal = Math.log10(G.f / G.bw);
+    ctx.setLineDash([4 * dpr, 4 * dpr]); ctx.strokeStyle = ink3; ctx.lineWidth = dpr;
+    ctx.beginPath(); ctx.moveTo(sx(bal), sy(y0)); ctx.lineTo(sx(bal), sy(Math.log10(G.f))); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = ink3; ctx.fillText('平衡点', sx(bal) + 4 * dpr, sy(y0) - 4 * dpr);
+    const li = Math.max(x0, Math.min(x1, Math.log10(intensity)));
+    const ly = Math.min(li + Math.log10(G.bw), Math.log10(G.f));
+    ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(sx(li), sy(Math.max(y0, Math.min(y1, ly))), 5.5 * dpr, 0, 7); ctx.fill();
+  }
+
+  document.querySelectorAll('#mod-roof .rf-chips .fk').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const grp = btn.dataset.g !== undefined ? 'g' : btn.dataset.m !== undefined ? 'm' : 'p';
+      const val = +btn.dataset[grp];
+      if (grp === 'g') g = val; else if (grp === 'm') m = val; else p = val;
+      document.querySelectorAll(`#mod-roof .rf-chips .fk[data-${grp}]`).forEach(b =>
+        b.classList.toggle('on', +b.dataset[grp] === val));
+      update();
+    });
+  });
+  $('rf-b').addEventListener('input', update);
+  $('mod-roof').addEventListener('toggle', () => { if ($('mod-roof').open) update(); });
+  addEventListener('resize', () => update());
+  new MutationObserver(() => update()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  update();
+})();
+
+/* ============ 🔬 扩散去噪实验室（v0.8） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const cvT = $('df-xt'); if (!cvT) return;
+  const N = 96, PIX = N * N;
+  /* 程序化小景：天空渐变 + 太阳 + 远山 + 地面 */
+  const x0 = new Float32Array(PIX * 3);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    const i = (y * N + x) * 3, fy = y / N;
+    let r = 0.93 - fy * 0.25, g2 = 0.90 - fy * 0.18, b = 0.82 + fy * 0.02;
+    const dx = x - 66, dy = y - 24;
+    if (dx * dx + dy * dy < 100) { r = 0.98; g2 = 0.72; b = 0.35; }
+    const ridge = 62 - 18 * Math.exp(-((x - 30) ** 2) / 320) - 10 * Math.exp(-((x - 58) ** 2) / 200);
+    if (y > ridge) { r = 0.42 - fy * 0.1; g2 = 0.45 - fy * 0.05; b = 0.42; }
+    if (y > 74) { r = 0.55; g2 = 0.5; b = 0.4; }
+    x0[i] = r; x0[i + 1] = g2; x0[i + 2] = b;
+  }
+  let seed = 7;
+  const rng = () => { seed = (seed * 1103515245 + 12345) >>> 0; return (seed >>> 16) / 32768 - 1; };
+  let eps = new Float32Array(PIX * 3);
+  const reroll = () => { for (let i = 0; i < eps.length; i++) eps[i] = (rng() + rng() + rng()) / 1.3; };
+  reroll();
+  const abar = t => Math.cos(Math.PI / 2 * Math.min(0.995, t)) ** 2;
+
+  function paintXt(t, e) {
+    const a = Math.sqrt(abar(t)), b = Math.sqrt(1 - abar(t)) * 0.55;
+    const ctx = cvT.getContext('2d'), img = ctx.createImageData(N, N);
+    for (let i = 0; i < PIX * 3; i++) {
+      const v = a * (x0[i] - 0.5) + b * e[i] + 0.5;
+      img.data[Math.floor(i / 3) * 4 + i % 3] = Math.max(0, Math.min(255, v * 255));
+    }
+    for (let px = 0; px < PIX; px++) img.data[px * 4 + 3] = 255;
+    ctx.putImageData(img, 0, 0);
+  }
+  function paintGuess(t) {
+    /* 猜测的清晰度用马赛克分辨率示意：噪声越高，猜得越糊 */
+    const cv0 = $('df-x0'), ctx = cv0.getContext('2d');
+    const res = Math.max(2, Math.round(2 + (1 - t) * (1 - t) * 94));
+    const off = document.createElement('canvas'); off.width = off.height = N;
+    const octx = off.getContext('2d'), img = octx.createImageData(N, N);
+    for (let i = 0; i < PIX * 3; i++) img.data[Math.floor(i / 3) * 4 + i % 3] = x0[i] * 255;
+    for (let px = 0; px < PIX; px++) img.data[px * 4 + 3] = 255;
+    octx.putImageData(img, 0, 0);
+    const mid = document.createElement('canvas'); mid.width = mid.height = res;
+    const mctx = mid.getContext('2d'); mctx.imageSmoothingEnabled = true;
+    mctx.drawImage(off, 0, 0, res, res);
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, N, N); ctx.drawImage(mid, 0, 0, N, N);
+  }
+  function show(t) { paintXt(t, eps); paintGuess(t); }
+
+  let timer = null;
+  $('df-t').addEventListener('input', () => {
+    if (timer) { clearInterval(timer); timer = null; }
+    const t = +$('df-t').value / 100; $('df-t-o').textContent = $('df-t').value;
+    show(t); $('df-status').textContent = `前向加噪：t = ${$('df-t').value}%（x_t = √ᾱ·x₀ + √(1−ᾱ)·ε，实算）`;
+  });
+  $('df-s').addEventListener('input', () => $('df-s-o').textContent = $('df-s').value);
+  $('df-seed').addEventListener('click', () => { reroll(); show(+$('df-t').value / 100); $('df-status').textContent = '噪声已重掷（新的 ε）。'; });
+  $('df-run').addEventListener('click', () => {
+    if (timer) clearInterval(timer);
+    const S = +$('df-s').value; let k = S;
+    const cur = new Float32Array(eps);
+    $('df-status').textContent = '去噪中……';
+    timer = setInterval(() => {
+      const t = k / S;
+      show(t); paintXt(t, cur);
+      $('df-t').value = Math.round(t * 100); $('df-t-o').textContent = $('df-t').value;
+      $('df-status').textContent = `反向去噪：第 ${S - k + 1} / ${S} 步 · t = ${(t * 100).toFixed(0)}%`;
+      for (let i = 0; i < cur.length; i++) cur[i] = cur[i] * 0.88 + ((rng() + rng()) / 1.1) * 0.35 * t;
+      if (--k < 0) {
+        clearInterval(timer); timer = null; show(0);
+        $('df-status').textContent = `完成（${S} 步）。试试把步数拉到 4 再跑一次——糙感立现；或「重掷噪声」换一条去噪路径。`;
+      }
+    }, Math.max(45, 900 / S));
+  });
+  $('mod-diff').addEventListener('toggle', () => { if ($('mod-diff').open) show(+$('df-t').value / 100); });
+  show(0);
+})();
+
+/* ============ 🔬 迷你训练场（v0.10）：真·语言模型训练 ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('tp-doc')) return;
+  const T = 16, D = 24, F = 48, B = 8, LR = 0.015, SQ = Math.sqrt(D);
+
+  function param(r, c, s) {
+    const n = r * c, w = new Float32Array(n);
+    for (let i = 0; i < n; i++) w[i] = (Math.random() * 2 - 1) * s;
+    return { r, c, w, g: new Float32Array(n), m: new Float32Array(n), v: new Float32Array(n) };
+  }
+
+  let V, chars, c2i, tok, params, E, P, Wq, Wk, Wv, Wo, W1, b1, W2, b2, Wu, bu;
+  let step, losses, adamT, running = null, sps = 0;
+
+  function build() {
+    const text = $('tp-doc').value.replace(/\s+/g, '').slice(0, 4000);
+    if (text.length < T + 4) { $('tp-samples').innerHTML = '<div class="tp-sample"><span class="tx">语料太短，至少 20 字。</span></div>'; return false; }
+    chars = [...new Set(Array.from(text))]; V = chars.length;
+    c2i = {}; chars.forEach((c, i) => c2i[c] = i);
+    tok = Array.from(text).map(c => c2i[c]);
+    E = param(V, D, 0.08); P = param(T, D, 0.08);
+    Wq = param(D, D, 0.08); Wk = param(D, D, 0.08); Wv = param(D, D, 0.08); Wo = param(D, D, 0.08);
+    W1 = param(D, F, 0.08); b1 = param(1, F, 0); W2 = param(F, D, 0.08); b2 = param(1, D, 0);
+    Wu = param(D, V, 0.08); bu = param(1, V, 0);
+    params = [E, P, Wq, Wk, Wv, Wo, W1, b1, W2, b2, Wu, bu];
+    step = 0; losses = []; adamT = 0;
+    const np = params.reduce((s, p) => s + p.w.length, 0);
+    $('tp-np').textContent = (np / 1000).toFixed(1) + ' k'; $('tp-base').textContent = Math.log(V).toFixed(2);
+    $('tp-step').textContent = '0'; $('tp-loss').textContent = '—';
+    $('tp-samples').innerHTML = '';
+    addSample(0);
+    drawLoss();
+    return true;
+  }
+
+  /* 单序列前向（训练与采样共用）。keep=true 时保留中间量供反向 */
+  function forward(ids, keep) {
+    const x = new Float32Array(T * D), Q = new Float32Array(T * D), K = new Float32Array(T * D),
+      Vv = new Float32Array(T * D), A = new Float32Array(T * T), att = new Float32Array(T * D),
+      h1 = new Float32Array(T * D), pre = new Float32Array(T * F), u = new Float32Array(T * F),
+      h2 = new Float32Array(T * D), probs = new Float32Array(T * V);
+    for (let t = 0; t < T; t++) for (let c = 0; c < D; c++) x[t * D + c] = E.w[ids[t] * D + c] + P.w[t * D + c];
+    for (let t = 0; t < T; t++) for (let a = 0; a < D; a++) {
+      let q = 0, k = 0, vv = 0;
+      for (let c = 0; c < D; c++) { const xv = x[t * D + c]; q += xv * Wq.w[c * D + a]; k += xv * Wk.w[c * D + a]; vv += xv * Wv.w[c * D + a]; }
+      Q[t * D + a] = q; K[t * D + a] = k; Vv[t * D + a] = vv;
+    }
+    for (let i = 0; i < T; i++) {
+      let mx = -1e30;
+      for (let j = 0; j <= i; j++) { let s = 0; for (let a = 0; a < D; a++) s += Q[i * D + a] * K[j * D + a]; s /= SQ; A[i * T + j] = s; if (s > mx) mx = s; }
+      let sum = 0;
+      for (let j = 0; j <= i; j++) { const e = Math.exp(A[i * T + j] - mx); A[i * T + j] = e; sum += e; }
+      for (let j = 0; j <= i; j++) A[i * T + j] /= sum;
+      for (let c = 0; c < D; c++) { let s = 0; for (let j = 0; j <= i; j++) s += A[i * T + j] * Vv[j * D + c]; att[i * D + c] = s; }
+    }
+    for (let t = 0; t < T; t++) for (let c = 0; c < D; c++) {
+      let s = 0; for (let a = 0; a < D; a++) s += att[t * D + a] * Wo.w[a * D + c];
+      h1[t * D + c] = x[t * D + c] + s;
+    }
+    for (let t = 0; t < T; t++) for (let f = 0; f < F; f++) {
+      let s = b1.w[f]; for (let c = 0; c < D; c++) s += h1[t * D + c] * W1.w[c * F + f];
+      pre[t * F + f] = s; u[t * F + f] = s > 0 ? s : 0;
+    }
+    for (let t = 0; t < T; t++) for (let c = 0; c < D; c++) {
+      let s = b2.w[c]; for (let f = 0; f < F; f++) s += u[t * F + f] * W2.w[f * D + c];
+      h2[t * D + c] = h1[t * D + c] + s;
+    }
+    for (let t = 0; t < T; t++) {
+      let mx = -1e30;
+      for (let v = 0; v < V; v++) { let s = bu.w[v]; for (let c = 0; c < D; c++) s += h2[t * D + c] * Wu.w[c * V + v]; probs[t * V + v] = s; if (s > mx) mx = s; }
+      let sum = 0;
+      for (let v = 0; v < V; v++) { const e = Math.exp(probs[t * V + v] - mx); probs[t * V + v] = e; sum += e; }
+      for (let v = 0; v < V; v++) probs[t * V + v] /= sum;
+    }
+    return keep ? { x, Q, K, Vv, A, att, h1, pre, u, h2, probs } : probs;
+  }
+
+  function trainStep() {
+    params.forEach(p => p.g.fill(0));
+    let loss = 0; const inv = 1 / (B * T);
+    for (let bi = 0; bi < B; bi++) {
+      const s0 = Math.floor(Math.random() * (tok.length - T - 1));
+      const ids = tok.slice(s0, s0 + T), tgt = tok.slice(s0 + 1, s0 + T + 1);
+      const F1 = forward(ids, true);
+      const dlog = F1.probs.slice();
+      for (let t = 0; t < T; t++) {
+        loss += -Math.log(Math.max(F1.probs[t * V + tgt[t]], 1e-9)) * inv;
+        for (let v = 0; v < V; v++) dlog[t * V + v] = (F1.probs[t * V + v] - (v === tgt[t] ? 1 : 0)) * inv;
+      }
+      const dh2 = new Float32Array(T * D);
+      for (let t = 0; t < T; t++) for (let c = 0; c < D; c++) {
+        let s = 0;
+        for (let v = 0; v < V; v++) { const dl = dlog[t * V + v]; Wu.g[c * V + v] += F1.h2[t * D + c] * dl; s += dl * Wu.w[c * V + v]; }
+        dh2[t * D + c] = s;
+      }
+      for (let t = 0; t < T; t++) for (let v = 0; v < V; v++) bu.g[v] += dlog[t * V + v];
+      /* FFN 反向；残差：dh1 = dh2 + FFN 路径 */
+      const dh1 = dh2.slice(), dpre = new Float32Array(T * F);
+      for (let t = 0; t < T; t++) for (let f = 0; f < F; f++) {
+        if (F1.pre[t * F + f] <= 0) continue;
+        let s = 0;
+        for (let c = 0; c < D; c++) { const d2 = dh2[t * D + c]; W2.g[f * D + c] += F1.u[t * F + f] * d2; s += d2 * W2.w[f * D + c]; }
+        dpre[t * F + f] = s;
+      }
+      for (let t = 0; t < T; t++) for (let c = 0; c < D; c++) { b2.g[c] += dh2[t * D + c]; }
+      for (let t = 0; t < T; t++) for (let f = 0; f < F; f++) {
+        const dp = dpre[t * F + f]; if (dp === 0) continue;
+        b1.g[f] += dp;
+        for (let c = 0; c < D; c++) { W1.g[c * F + f] += F1.h1[t * D + c] * dp; dh1[t * D + c] += dp * W1.w[c * F + f]; }
+      }
+      /* 注意力反向；残差：dx = dh1 + 注意力路径 */
+      const dx = dh1.slice(), datt = new Float32Array(T * D);
+      for (let t = 0; t < T; t++) for (let a = 0; a < D; a++) {
+        let s = 0;
+        for (let c = 0; c < D; c++) { const d1 = dh1[t * D + c]; Wo.g[a * D + c] += F1.att[t * D + a] * d1; s += d1 * Wo.w[a * D + c]; }
+        datt[t * D + a] = s;
+      }
+      const dQ = new Float32Array(T * D), dK = new Float32Array(T * D);
+      for (let i = 0; i < T; i++) {
+        const dA = new Float32Array(i + 1);
+        let rowdot = 0;
+        for (let j = 0; j <= i; j++) {
+          let s = 0; for (let c = 0; c < D; c++) s += datt[i * D + c] * F1.Vv[j * D + c];
+          dA[j] = s; rowdot += F1.A[i * T + j] * s;
+        }
+        for (let j = 0; j <= i; j++) {
+          const dS = F1.A[i * T + j] * (dA[j] - rowdot) / SQ;
+          for (let a = 0; a < D; a++) { dQ[i * D + a] += dS * F1.K[j * D + a]; dK[j * D + a] += dS * F1.Q[i * D + a]; }
+        }
+      }
+      const dVv = new Float32Array(T * D);
+      for (let j = 0; j < T; j++) for (let c = 0; c < D; c++) {
+        let s = 0; for (let i = j; i < T; i++) s += F1.A[i * T + j] * datt[i * D + c];
+        dVv[j * D + c] = s;
+      }
+      for (let t = 0; t < T; t++) for (let c = 0; c < D; c++) {
+        const xv = F1.x[t * D + c];
+        let s = 0;
+        for (let a = 0; a < D; a++) {
+          const dq = dQ[t * D + a], dk = dK[t * D + a], dv = dVv[t * D + a];
+          Wq.g[c * D + a] += xv * dq; Wk.g[c * D + a] += xv * dk; Wv.g[c * D + a] += xv * dv;
+          s += dq * Wq.w[c * D + a] + dk * Wk.w[c * D + a] + dv * Wv.w[c * D + a];
+        }
+        dx[t * D + c] += s;
+      }
+      for (let t = 0; t < T; t++) for (let c = 0; c < D; c++) {
+        E.g[ids[t] * D + c] += dx[t * D + c]; P.g[t * D + c] += dx[t * D + c];
+      }
+    }
+    /* 全局梯度裁剪 + Adam */
+    let gn = 0; params.forEach(p => { for (let i = 0; i < p.g.length; i++) gn += p.g[i] * p.g[i]; });
+    gn = Math.sqrt(gn); const clip = gn > 1 ? 1 / gn : 1;
+    adamT++;
+    const b1c = 1 - Math.pow(0.9, adamT), b2c = 1 - Math.pow(0.999, adamT);
+    params.forEach(p => {
+      for (let i = 0; i < p.w.length; i++) {
+        const g = p.g[i] * clip;
+        p.m[i] = 0.9 * p.m[i] + 0.1 * g;
+        p.v[i] = 0.999 * p.v[i] + 0.001 * g * g;
+        p.w[i] -= LR * (p.m[i] / b1c) / (Math.sqrt(p.v[i] / b2c) + 1e-8);
+      }
+    });
+    step++; losses.push(loss);
+    return loss;
+  }
+
+  function sample(nOut) {
+    let ids = [];
+    const seed = c2i['第'] !== undefined ? c2i['第'] : tok[0];
+    ids.push(seed);
+    let out = chars[seed];
+    for (let k = 0; k < nOut; k++) {
+      const ctx = new Array(T).fill(ids[0]);
+      const tail = ids.slice(-T);
+      for (let t = 0; t < tail.length; t++) ctx[T - tail.length + t] = tail[t];
+      const probs = forward(ctx, false);
+      const pos = T - 1, temp = 0.8;
+      let sum = 0; const pw = new Float32Array(V);
+      for (let v = 0; v < V; v++) { pw[v] = Math.pow(probs[pos * V + v], 1 / temp); sum += pw[v]; }
+      let r = Math.random() * sum, pick = 0;
+      for (let v = 0; v < V; v++) { r -= pw[v]; if (r <= 0) { pick = v; break; } }
+      ids.push(pick); out += chars[pick];
+    }
+    return out;
+  }
+
+  function addSample(atStep) {
+    const el = $('tp-samples');
+    el.querySelectorAll('.tp-sample').forEach(s => s.classList.remove('latest'));
+    const d = document.createElement('div');
+    d.className = 'tp-sample latest';
+    d.innerHTML = `<span class="st">第 ${atStep} 步${atStep === 0 ? '（训练前——纯随机权重）' : ''}</span><span class="tx">${sample(40)}</span>`;
+    el.prepend(d);
+    while (el.children.length > 4) el.removeChild(el.lastChild);
+  }
+
+  function drawLoss() {
+    const cv = $('tp-cv'), ctx = cv.getContext('2d'), dpr = devicePixelRatio || 1;
+    const W = cv.clientWidth * dpr, H = 150 * dpr;
+    cv.width = W; cv.height = H;
+    const cs = getComputedStyle(document.documentElement);
+    const ink3 = cs.getPropertyValue('--ink-3').trim(), pc = cs.getPropertyValue('--p1').trim();
+    const yMax = Math.log(V) * 1.12;
+    const sy = l => H - 8 * dpr - (l / yMax) * (H - 16 * dpr);
+    ctx.clearRect(0, 0, W, H);
+    ctx.setLineDash([4 * dpr, 4 * dpr]); ctx.strokeStyle = ink3; ctx.lineWidth = dpr;
+    ctx.beginPath(); ctx.moveTo(0, sy(Math.log(V))); ctx.lineTo(W, sy(Math.log(V))); ctx.stroke();
+    ctx.setLineDash([]);
+    if (losses.length < 2) return;
+    ctx.strokeStyle = pc; ctx.lineWidth = 2 * dpr; ctx.beginPath();
+    let ema = losses[0];
+    const n = losses.length;
+    for (let i = 0; i < n; i++) {
+      ema = 0.92 * ema + 0.08 * losses[i];
+      const px = i / (n - 1) * (W - 8 * dpr) + 4 * dpr;
+      i ? ctx.lineTo(px, sy(ema)) : ctx.moveTo(px, sy(ema));
+    }
+    ctx.stroke();
+  }
+
+  function tick() {
+    const t0 = performance.now();
+    let l = 0, k = 0;
+    while (performance.now() - t0 < 34 && k < 40) { l = trainStep(); k++; if (step % 300 === 0) addSample(step); }
+    sps = Math.round(k / ((performance.now() - t0) / 1000));
+    $('tp-step').textContent = step; $('tp-loss').textContent = l.toFixed(3); $('tp-sps').textContent = sps;
+    drawLoss();
+  }
+
+  $('tp-run').addEventListener('click', () => {
+    if (running) { clearInterval(running); running = null; $('tp-run').textContent = '▶ 继续训练'; return; }
+    if (!tok) { if (!build()) return; }
+    running = setInterval(tick, 40);
+    $('tp-run').textContent = '⏸ 暂停';
+  });
+  $('tp-reset').addEventListener('click', () => {
+    if (running) { clearInterval(running); running = null; }
+    $('tp-run').textContent = '▶ 开始训练'; build();
+  });
+  $('mod-train').addEventListener('toggle', () => { if ($('mod-train').open && !tok) build(); });
+  new MutationObserver(drawLoss).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  build();
+})();
+
+/* ============ 🔬 BPE 现场训练（v0.11） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('bpe-doc')) return;
+  let toks = [], merges = [], orig = 0;
+  function reset() {
+    const text = $('bpe-doc').value.replace(/\s+/g, '').slice(0, 1500);
+    toks = Array.from(text); orig = toks.length; merges = [];
+    render();
+  }
+  function mergeOne() {
+    const st = new Map();
+    for (let i = 0; i < toks.length - 1; i++) {
+      const k = toks[i] + '' + toks[i + 1];
+      st.set(k, (st.get(k) || 0) + 1);
+    }
+    let best = null, bc = 1;
+    st.forEach((c, k) => { if (c > bc) { bc = c; best = k; } });
+    if (!best) { merges.unshift('—— 没有出现两次以上的相邻对了，训练自然停止 ——'); return false; }
+    const [a, b] = best.split(''), nt = a + b, out = [];
+    for (let i = 0; i < toks.length; i++) {
+      if (i < toks.length - 1 && toks[i] === a && toks[i + 1] === b) { out.push(nt); i++; }
+      else out.push(toks[i]);
+    }
+    toks = out;
+    merges.unshift(`第 ${merges.filter(m => m.includes('→')).length + 1} 轮：「${a}」+「${b}」→「${nt}」（出现 ${bc} 次）`);
+    return true;
+  }
+  function render() {
+    $('bpe-n').textContent = merges.filter(m => m.includes('→')).length;
+    $('bpe-v').textContent = new Set(toks).size;
+    $('bpe-len').textContent = `${toks.length} / 原 ${orig}`;
+    $('bpe-cr').textContent = orig ? (orig / toks.length).toFixed(2) + '×' : '—';
+    $('bpe-log').innerHTML = merges.slice(0, 14).join('<br>') || '（尚未合并）';
+    $('bpe-view').innerHTML = toks.slice(0, 420).map(t =>
+      t.length > 1
+        ? `<span class="bpe-t" style="background:color-mix(in srgb, var(--pc) ${Math.min(t.length * 13, 52)}%, transparent)">${t}</span>`
+        : `<span>${t}</span>`).join('') + (toks.length > 420 ? ' …' : '');
+  }
+  $('bpe-one').addEventListener('click', () => { mergeOne(); render(); });
+  $('bpe-auto').addEventListener('click', () => { for (let i = 0; i < 30; i++) if (!mergeOne()) break; render(); });
+  $('bpe-reset').addEventListener('click', reset);
+  $('bpe-doc').addEventListener('input', reset);
+  reset();
+})();
+
+/* ============ 🔬 投机解码模拟器（v0.11） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('sd-rows')) return;
+  const WORDS = ['生效', '履行', '解除', '终止', '变更', '转让', '备案', '公证'];
+  const P = [0.30, 0.22, 0.14, 0.10, 0.09, 0.06, 0.05, 0.04];
+  const Q0 = [0.04, 0.05, 0.06, 0.09, 0.10, 0.14, 0.22, 0.30];
+  let freq = null, accRate = null;
+  const q = () => { const s = 1 - $('sd-s').value / 100; return P.map((p, i) => (1 - s) * p + s * Q0[i]); };
+  const pick = d => { let r = Math.random(), i = 0; for (; i < d.length; i++) { r -= d[i]; if (r <= 0) break; } return Math.min(i, d.length - 1); };
+  function run() {
+    const Q = q(), N = 2000; freq = new Array(8).fill(0); let acc = 0;
+    const R = P.map((p, i) => Math.max(0, p - Q[i]));
+    const rs = R.reduce((a, b) => a + b, 0);
+    for (let n = 0; n < N; n++) {
+      const x = pick(Q);
+      if (Math.random() < Math.min(1, P[x] / Math.max(Q[x], 1e-9))) { freq[x]++; acc++; }
+      else freq[rs > 1e-9 ? pick(R.map(r => r / rs)) : pick(P)]++;
+    }
+    for (let i = 0; i < 8; i++) freq[i] /= N;
+    accRate = acc / N;
+    render();
+  }
+  function render() {
+    const Q = q();
+    const lab = ['完全不像', '两成', '四成', '五成', '六成', '八成', '完全一样'][Math.round($('sd-s').value / 100 * 6)];
+    $('sd-s-o').textContent = lab;
+    const mx = Math.max(...P, ...Q, ...(freq || [0]));
+    $('sd-rows').innerHTML = WORDS.map((w, i) => `
+      <div class="sd-row"><span>${w}</span>
+        <div class="sd-bars">
+          <div class="sd-b bp" title="目标 p"><i style="width:${P[i] / mx * 100}%"></i></div>
+          <div class="sd-b bq" title="草稿 q"><i style="width:${Q[i] / mx * 100}%"></i></div>
+          <div class="sd-b bo" title="实测输出"><i style="width:${(freq ? freq[i] : 0) / mx * 100}%"></i></div>
+        </div>
+        <span class="sd-nums">p ${P[i].toFixed(2)} · q ${Q[i].toFixed(2)}${freq ? ' · 出 ' + freq[i].toFixed(2) : ''}</span></div>`).join('')
+      + '<div class="viz-cap">每词三条：灰 = 目标分布 p（大模型），淡 = 草稿分布 q（小模型），实 = 2000 次实测输出——实测应贴住灰条而非淡条。</div>';
+    const th = P.reduce((s, p, i) => s + Math.min(p, Q[i]), 0);
+    $('sd-th').textContent = th.toFixed(2);
+    $('sd-acc').textContent = accRate === null ? '—' : (accRate * 100).toFixed(1) + '%';
+    $('sd-dev').textContent = freq ? Math.max(...P.map((p, i) => Math.abs(p - freq[i]))).toFixed(3) : '—';
+  }
+  $('sd-s').addEventListener('input', () => { freq = null; accRate = null; render(); });
+  $('sd-run').addEventListener('click', run);
+  render();
+})();
+
+/* ============ 🔬 采样漏斗（v0.11） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('sp-rows')) return;
+  const C = [['生效', 3.2], ['履行', 2.4], ['解除', 1.9], ['终止', 1.8], ['变更', 1.2], ['转让', 0.8],
+    ['备案', 0.5], ['公证', 0.2], ['起飞', -0.5], ['苹果', -1.2], ['下雨', -1.6], ['唱歌', -2.0]];
+  let kept = [], probs = [];
+  function update() {
+    const tau = $('sp-t').value / 100, topP = $('sp-p').value / 100;
+    $('sp-t-o').textContent = tau.toFixed(1); $('sp-p-o').textContent = topP.toFixed(2);
+    const mx = Math.max(...C.map(c => c[1] / tau));
+    const ex = C.map(c => Math.exp(c[1] / tau - mx));
+    const sum = ex.reduce((a, b) => a + b, 0);
+    probs = ex.map(e => e / sum);
+    kept = []; let cum = 0;
+    for (let i = 0; i < C.length; i++) { kept.push(i); cum += probs[i]; if (cum >= topP) break; }
+    const ks = kept.reduce((s, i) => s + probs[i], 0);
+    const bmax = Math.max(...probs);
+    $('sp-rows').innerHTML = C.map(([w], i) => {
+      const inK = kept.includes(i);
+      const p = inK ? probs[i] / ks : probs[i];
+      return `<div class="sp-row${inK ? '' : ' cut'}"><span>${w}</span>
+        <div class="bar"><i style="width:${(inK ? p * ks : probs[i]) / bmax * 100}%"></i></div>
+        <span class="pv">${inK ? (p * 100).toFixed(1) + '%' : '0%'}</span></div>`;
+    }).join('');
+    $('sp-draw').textContent = '';
+  }
+  $('sp-run').addEventListener('click', () => {
+    const ks = kept.reduce((s, i) => s + probs[i], 0);
+    const counts = {};
+    for (let n = 0; n < 100; n++) {
+      let r = Math.random() * ks, pick = kept[0];
+      for (const i of kept) { r -= probs[i]; if (r <= 0) { pick = i; break; } }
+      counts[C[pick][0]] = (counts[C[pick][0]] || 0) + 1;
+    }
+    $('sp-draw').textContent = '100 次抽签：' + Object.entries(counts).sort((a, b) => b[1] - a[1])
+      .map(([w, c]) => `${w}×${c}`).join(' · ');
+  });
+  ['sp-t', 'sp-p'].forEach(id => $(id).addEventListener('input', update));
+  update();
+})();
+
+/* ============ 🔬 RoPE 旋转（v0.11） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const cv = $('rp-cv'); if (!cv) return;
+  const TH = 0.35;
+  function draw() {
+    const m = +$('rp-m').value, g = +$('rp-g').value;
+    $('rp-m-o').textContent = m; $('rp-g-o').textContent = g;
+    const dot = Math.cos(g * TH);
+    $('rp-dot').textContent = dot.toFixed(3);
+    const ctx = cv.getContext('2d'), dpr = devicePixelRatio || 1;
+    const W = cv.clientWidth * dpr, H = 200 * dpr;
+    cv.width = W; cv.height = H;
+    const cs = getComputedStyle(document.documentElement);
+    const ink = cs.getPropertyValue('--ink').trim(), ink3 = cs.getPropertyValue('--ink-3').trim(),
+      pc = cs.getPropertyValue('--p2').trim();
+    ctx.clearRect(0, 0, W, H);
+    const cx = 90 * dpr, cy = H / 2, r = 62 * dpr;
+    ctx.strokeStyle = ink3; ctx.lineWidth = dpr; ctx.globalAlpha = 0.5;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke();
+    ctx.globalAlpha = 1;
+    const arrow = (ang, dash, label) => {
+      const x = cx + r * Math.cos(-ang), y = cy + r * Math.sin(-ang);
+      ctx.setLineDash(dash ? [5 * dpr, 4 * dpr] : []);
+      ctx.strokeStyle = pc; ctx.lineWidth = 2.2 * dpr;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = ink; ctx.font = `${11 * dpr}px ui-monospace, monospace`;
+      ctx.fillText(label, x + (x > cx ? 5 : -22) * dpr, y);
+      ctx.beginPath(); ctx.arc(x, y, 3.5 * dpr, 0, 7); ctx.fillStyle = pc; ctx.fill();
+    };
+    arrow(m * TH, false, 'A'); arrow((m + g) * TH, true, 'B');
+    const x0 = 200 * dpr, x1 = W - 16 * dpr, yMid = cy, amp = 62 * dpr;
+    ctx.strokeStyle = ink3; ctx.globalAlpha = 0.5; ctx.lineWidth = dpr;
+    ctx.beginPath(); ctx.moveTo(x0, yMid); ctx.lineTo(x1, yMid); ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = pc; ctx.lineWidth = 2 * dpr; ctx.beginPath();
+    for (let gg = 0; gg <= 16; gg += 0.1) {
+      const px = x0 + gg / 16 * (x1 - x0), py = yMid - Math.cos(gg * TH) * amp * 0.9;
+      gg ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+    }
+    ctx.stroke();
+    const mpx = x0 + g / 16 * (x1 - x0), mpy = yMid - dot * amp * 0.9;
+    ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(mpx, mpy, 5 * dpr, 0, 7); ctx.fill();
+    ctx.fillStyle = ink3; ctx.font = `${10 * dpr}px ui-monospace, monospace`;
+    ctx.fillText('间距 g →', x1 - 60 * dpr, yMid + 14 * dpr);
+  }
+  ['rp-m', 'rp-g'].forEach(id => $(id).addEventListener('input', draw));
+  $('mod-rope').addEventListener('toggle', () => { if ($('mod-rope').open) draw(); });
+  addEventListener('resize', draw);
+  new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  draw();
+})();
+
+/* ============ 🔬 算珠墙竞速（v0.12） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('gr-par')) return;
+  let timer = null;
+  function race(mode) {
+    if (timer) clearInterval(timer);
+    /* 并行：4096 独立任务，CPU 8核×8速=64/拍，GPU 1024核×1速=1024/拍
+       串行：512 步链条，每拍只能做「速度」步：CPU 8 步/拍，GPU 1 步/拍 */
+    const total = mode === 'par' ? 4096 : 512;
+    const rc = mode === 'par' ? 64 : 8, rg = mode === 'par' ? 1024 : 1;
+    let c = 0, g = 0, t = 0, ct = null, gt = null;
+    timer = setInterval(() => {
+      t++;
+      if (c < total) { c = Math.min(total, c + rc); if (c >= total) ct = t; }
+      if (g < total) { g = Math.min(total, g + rg); if (g >= total) gt = t; }
+      $('gr-cpu').style.width = (c / total * 100) + '%';
+      $('gr-gpu').style.width = (g / total * 100) + '%';
+      $('gr-cpu-t').textContent = ct ? ct + ' 拍 ✓' : t + ' 拍';
+      $('gr-gpu-t').textContent = gt ? gt + ' 拍 ✓' : t + ' 拍';
+      if (ct && gt) {
+        clearInterval(timer); timer = null;
+        $('gr-verdict').innerHTML = mode === 'par'
+          ? `<b>GPU 胜（${gt} 拍 vs ${ct} 拍，快 ${(ct / gt).toFixed(0)} 倍）</b>——4096 个任务互不依赖，1024 个核一齐上。矩阵乘法就是这种活。`
+          : `<b>CPU 胜（${ct} 拍 vs ${gt} 拍，快 ${(gt / ct).toFixed(0)} 倍）</b>——每步要等上一步的结果，1024 个核里 1023 个在围观。这就是为什么复杂逻辑仍归 CPU。`;
+      }
+    }, 30);
+    $('gr-verdict').textContent = '比赛进行中……';
+  }
+  $('gr-par').addEventListener('click', () => race('par'));
+  $('gr-ser').addEventListener('click', () => race('ser'));
+})();
+
+/* ============ 🔬 存储层级等待体验（v0.12） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const rows = $('mem-rows'); if (!rows) return;
+  const LV = [
+    ['寄存器', 1, '~KB 级', 30],
+    ['片上 SRAM', 10, '~20 MB', 120],
+    ['HBM 显存', 300, '~80 GB', 700],
+    ['主机内存', 3000, '数百 GB', 1800],
+    ['NVMe SSD', 300000, 'TB 级', 4200],
+  ];
+  let busy = false;
+  rows.innerHTML = LV.map(([n, cy, cap], i) => `
+    <div class="mem-row">
+      <button type="button" data-i="${i}">${n}<br><span class="mv">${cap}</span></button>
+      <div class="bar"><i id="mem-b${i}"></i></div>
+      <span class="mv" id="mem-t${i}">相对时延 ×${cy.toLocaleString()}</span>
+    </div>`).join('');
+  rows.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+    if (busy) return; busy = true;
+    const i = +btn.dataset.i, dur = LV[i][3], bar = $('mem-b' + i), t0 = performance.now();
+    LV.forEach((_, j) => { $('mem-b' + j).style.transition = 'none'; $('mem-b' + j).style.width = '0'; });
+    requestAnimationFrame(() => {
+      bar.style.transition = `width ${dur}ms linear`;
+      bar.style.width = '100%';
+    });
+    const tick = setInterval(() => {
+      $('mem-t' + i).textContent = `等待中… ${((performance.now() - t0) / 1000).toFixed(1)} s`;
+    }, 90);
+    setTimeout(() => {
+      clearInterval(tick); busy = false;
+      $('mem-t' + i).textContent = `取到了 · 相对时延 ×${LV[i][1].toLocaleString()}`;
+    }, dur);
+  }));
+})();
+
+/* ============ 🔬 并行切积木（v0.12） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('nt-a')) return;
+  const MODES = {
+    dp: {
+      cell: i => 'L1–L8<br>完整副本',
+      comm: '<b>数据并行</b>：每张卡一份完整模型、各算各的数据。通信 = 每步末的<b>梯度全归约</b>——量大（整份模型的梯度）但频率低、可与计算重叠 → <b>跨机走 InfiniBand 可以接受</b>。',
+    },
+    tp: {
+      cell: i => `L1–L8<br>各层的 1/4`,
+      comm: '<b>张量并行</b>：把每一层的大矩阵切成 4 份分给同机 4 卡。通信 = <b>每层算到一半就要互换激活</b>——极密极频 → <b>只敢在 NVLink 内做（一台机器为界）</b>；两台机器 = 两个独立张量组。',
+    },
+    pp: {
+      cell: i => `只放 L${i + 1}<br>（第 ${i + 1} 段）`,
+      comm: '<b>流水线并行</b>：8 层切成 8 段，一卡一段接力。通信 = <b>只在相邻段之间传激活</b>——量小、单向 → 第 4↔5 段的交接<b>跨机走 InfiniBand 无压力</b>。代价：流水线「气泡」（首尾卡空转）。',
+    },
+  };
+  function render(m) {
+    ['dp', 'tp', 'pp'].forEach(k => $('nt-' + k).classList.toggle('on', k === m));
+    $('nt-a').innerHTML = [0, 1, 2, 3].map(i => `<div class="net-gpu">卡${i + 1}<br>${MODES[m].cell(i)}</div>`).join('');
+    $('nt-b').innerHTML = [4, 5, 6, 7].map(i => `<div class="net-gpu">卡${i + 1}<br>${MODES[m].cell(i)}</div>`).join('');
+    $('nt-comm').innerHTML = MODES[m].comm;
+  }
+  ['dp', 'tp', 'pp'].forEach(m => $('nt-' + m).addEventListener('click', () => render(m)));
+  render('dp');
+})();
+
+/* ============ 🔬 Agent 沙盘（v0.12） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('ag-log')) return;
+  const S1 = [
+    ['思考', '任务：「查一下我们和 X 公司合同里的保密期」。我需要检索合同库——这是只读操作。'],
+    ['行动', '调用工具 search_contracts(关键词: "X公司 保密期")　→ 宿主执行'],
+    ['结果', '命中《X 公司服务合同》第四条：保密期至合同终止后三年。'],
+    ['思考', '信息已足够，无需更多工具。'],
+    ['完成', '回答用户：「保密期为合同终止后三年（第四条）。」　※ 全程只读，未触发任何确认点。审计日志 3 条已留存。'],
+  ];
+  const S2 = [
+    ['思考', '任务：「把过期合同文件清理掉」。先看有哪些——列目录是只读的。'],
+    ['行动', '调用工具 list_expired_contracts()　→ 宿主执行'],
+    ['结果', '找到 12 份已过保存期限的合同文件。'],
+    ['思考', '下一步需要删除。删除是不可逆的高危操作——按 harness 规则，必须经人工确认。'],
+    ['GATE'],
+  ];
+  let script = S1, pos = 0;
+  function entry(type, text, cls) {
+    const d = document.createElement('div');
+    d.className = 'ag-e' + (cls ? ' ' + cls : '');
+    d.innerHTML = `<b>${type}</b>${text}`;
+    $('ag-log').appendChild(d); d.scrollIntoView({ block: 'nearest' });
+  }
+  function next() {
+    if (pos >= script.length) return;
+    const s = script[pos++];
+    if (s[0] === 'GATE') {
+      const d = document.createElement('div');
+      d.className = 'ag-e gate';
+      d.innerHTML = `<b>⚖ 人工确认点</b>agent 请求执行：delete_files(12 份)——不可逆。由你决定：
+        <button type="button" class="fk" id="ag-ok" style="margin-left:8px">批准</button>
+        <button type="button" class="fk" id="ag-no">拒绝</button>`;
+      $('ag-log').appendChild(d);
+      $('ag-ok').addEventListener('click', () => {
+        entry('行动', '删除已执行（模拟）。审计日志 #A-102：删除 12 份，批准人：你，时间已记录。', 'act');
+        entry('完成', '任务结束。注意：批准记录本身已成为证据链的一部分。');
+      }, { once: true });
+      $('ag-no').addEventListener('click', () => {
+        entry('中止', '操作未执行。审计日志 #A-102：请求删除 12 份，被人工拒绝，时间已记录。');
+        entry('完成', '任务以「待人工处理」结束。注意：拒绝也留痕——确认点的价值不在拦截本身，而在<b>让每个分叉都有记录</b>。');
+      }, { once: true });
+      return;
+    }
+    entry(s[0], s[1], s[0] === '行动' ? 'act' : '');
+  }
+  function load(sc) {
+    script = sc; pos = 0; $('ag-log').innerHTML = '';
+    $('ag-s1').classList.toggle('on', sc === S1); $('ag-s2').classList.toggle('on', sc === S2);
+    entry('就绪', sc === S1 ? '剧本一已装载——连点「下一步」看只读任务的完整循环。' : '剧本二已装载——这次会走到高危操作。');
+  }
+  $('ag-s1').addEventListener('click', () => load(S1));
+  $('ag-s2').addEventListener('click', () => load(S2));
+  $('ag-next').addEventListener('click', next);
+  load(S1);
+})();
+
+/* ============ 🔬 语义地图（v0.12） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const board = $('emb-board'); if (!board) return;
+  const W = [
+    ['合同', 78, 25], ['条款', 85, 32], ['违约', 72, 36], ['解除', 80, 42], ['诉讼', 68, 28], ['仲裁', 88, 22],
+    ['苹果', 18, 68], ['香蕉', 25, 75], ['葡萄', 15, 78], ['西瓜', 28, 64],
+    ['下雨', 18, 20], ['晴天', 25, 15], ['台风', 15, 28],
+    ['高兴', 48, 72], ['悲伤', 55, 80], ['愤怒', 45, 84],
+    ['国王', 60, 35], ['男', 48, 35], ['女', 48, 50], ['女王', 60, 50],
+  ];
+  board.innerHTML = W.map(([w, x, y], i) =>
+    `<button type="button" class="emb-w" data-i="${i}" style="left:${x}%;top:${y}%">${w}</button>`).join('');
+  const chips = board.querySelectorAll('.emb-w');
+  const dist = (a, b) => Math.hypot(W[a][1] - W[b][1], W[a][2] - W[b][2]);
+  function selectWord(i) {
+    chips.forEach(c => c.classList.remove('sel', 'nb'));
+    board.querySelectorAll('.emb-x').forEach(x => x.remove());
+    chips[i].classList.add('sel');
+    const nb = W.map((_, j) => j).filter(j => j !== i).sort((a, b) => dist(i, a) - dist(i, b)).slice(0, 3);
+    nb.forEach(j => chips[j].classList.add('nb'));
+    $('emb-out').textContent = `「${W[i][0]}」的近邻（按坐标距离实算）：` + nb.map(j => W[j][0]).join('、');
+  }
+  chips.forEach(c => c.addEventListener('click', () => selectWord(+c.dataset.i)));
+  $('emb-magic').addEventListener('click', () => {
+    chips.forEach(c => c.classList.remove('sel', 'nb'));
+    board.querySelectorAll('.emb-x').forEach(x => x.remove());
+    const idx = n => W.findIndex(w => w[0] === n);
+    const [k, m, f] = [idx('国王'), idx('男'), idx('女')];
+    [k, m, f].forEach(i => chips[i].classList.add('sel'));
+    const px = W[k][1] - W[m][1] + W[f][1], py = W[k][2] - W[m][2] + W[f][2];
+    const mark = document.createElement('span');
+    mark.className = 'emb-x'; mark.textContent = '✕';
+    mark.style.left = px + '%'; mark.style.top = py + '%';
+    board.appendChild(mark);
+    let best = -1, bd = 1e9;
+    W.forEach((w, j) => { if (j === k || j === m || j === f) return;
+      const d = Math.hypot(w[1] - px, w[2] - py); if (d < bd) { bd = d; best = j; } });
+    chips[best].classList.add('nb');
+    $('emb-out').textContent = `国王(${W[k][1]},${W[k][2]}) − 男 + 女 = ✕(${px},${py})，最近的词：「${W[best][0]}」——方向「男→女」是空间里一条真实存在的轴。`;
+  });
+})();
+
+/* ============ 🔬 迷你分词器（v0.14） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('tk-q')) return;
+  const VOCAB = ['知识产权', '人工智能', '违约金', '应当', '合同', '违约', '解除', '条款', '甲方', '乙方',
+    '服务', '支付', '通知', '保密', '模型', '训练', '数据', '不得', '可以', '按照', '结算', '争议', '协商', '按'];
+  VOCAB.sort((a, b) => b.length - a.length);
+  function update() {
+    const s = $('tk-q').value.replace(/\s+/g, '').slice(0, 60);
+    const out = []; let i = 0;
+    while (i < s.length) {
+      let hit = null;
+      for (const w of VOCAB) if (s.startsWith(w, i)) { hit = w; break; }
+      if (hit) { out.push([hit, VOCAB.indexOf(hit) + 100]); i += hit.length; }
+      else { out.push([s[i], 1000 + (s.codePointAt(i) % 800)]); i++; }
+    }
+    $('tk-out').innerHTML = out.map(([w, id]) =>
+      `<span class="lab-chunk"${w.length > 1 ? ' style="border-color:var(--pc)"' : ''}><b>#${id}</b>${w}</span>`).join('')
+      || '<span class="lab-chunk">（空）</span>';
+    $('tk-c').textContent = s.length; $('tk-t').textContent = out.length;
+    $('tk-r').textContent = out.length ? (s.length / out.length).toFixed(2) + ' 字/token' : '—';
+  }
+  $('tk-q').addEventListener('input', update);
+  update();
+})();
+
+/* ============ 🔬 残差流（v0.14） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const cv = $('bk-cv'); if (!cv) return;
+  const D = 16, L = 32;
+  const rnd = () => Math.random() * 2 - 1;
+  function run() {
+    const F = []; for (let i = 0; i < D; i++) { const r = []; for (let j = 0; j < D; j++) r.push(rnd() / Math.sqrt(D)); F.push(r); }
+    const x0 = []; for (let i = 0; i < D; i++) x0.push(rnd());
+    const norm = v => { const n = Math.hypot(...v) || 1; return v.map(a => a / n); };
+    const app = v => F.map(row => row.reduce((s, w, j) => s + w * v[j], 0));
+    const cos = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0) / ((Math.hypot(...a) * Math.hypot(...b)) || 1);
+    let xr = x0.slice(), xn = x0.slice();
+    const cr = [1], cn = [1];
+    for (let l = 0; l < L; l++) {
+      const fr = app(xr); xr = norm(xr.map((v, i) => v + 0.1 * fr[i])); cr.push(cos(xr, x0));
+      xn = norm(app(xn)); cn.push(cos(xn, x0));
+    }
+    const ctx = cv.getContext('2d'), dpr = devicePixelRatio || 1;
+    const W = cv.clientWidth * dpr, H = 170 * dpr;
+    cv.width = W; cv.height = H;
+    const cs = getComputedStyle(document.documentElement);
+    const ink3 = cs.getPropertyValue('--ink-3').trim(), pc = cs.getPropertyValue('--p2').trim();
+    const sx = i => i / L * (W - 20 * dpr) + 10 * dpr;
+    const sy = c => H / 2 - c * (H / 2 - 12 * dpr);
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = ink3; ctx.globalAlpha = 0.5; ctx.lineWidth = dpr;
+    ctx.beginPath(); ctx.moveTo(10 * dpr, sy(0)); ctx.lineTo(W - 10 * dpr, sy(0)); ctx.stroke();
+    ctx.globalAlpha = 1;
+    const plot = (arr, dash) => {
+      ctx.setLineDash(dash ? [5 * dpr, 4 * dpr] : []);
+      ctx.strokeStyle = pc; ctx.lineWidth = 2.2 * dpr; ctx.beginPath();
+      arr.forEach((c, i) => i ? ctx.lineTo(sx(i), sy(c)) : ctx.moveTo(sx(i), sy(c)));
+      ctx.stroke(); ctx.setLineDash([]);
+    };
+    plot(cr, false); plot(cn, true);
+    $('bk-verdict').innerHTML = `第 32 层与原始信号的相似度：有残差 <b>${cr[L].toFixed(2)}</b>，无残差 <b>${cn[L].toFixed(2)}</b>——传送带保住了信息，整体变换把它搅碎了。`;
+  }
+  $('bk-run').addEventListener('click', run);
+  run();
+  new MutationObserver(run).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+})();
+
+/* ============ 🔬 激活函数与门控（v0.14） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const cv = $('ff-cv'); if (!cv) return;
+  const relu = x => Math.max(0, x);
+  const silu = x => x / (1 + Math.exp(-x));
+  const gelu = x => 0.5 * x * (1 + Math.tanh(Math.sqrt(2 / Math.PI) * (x + 0.044715 * x ** 3)));
+  function draw() {
+    const xv = $('ff-x').value / 10; $('ff-x-o').textContent = xv.toFixed(1);
+    const ctx = cv.getContext('2d'), dpr = devicePixelRatio || 1;
+    const W = cv.clientWidth * dpr, H = 170 * dpr;
+    cv.width = W; cv.height = H;
+    const cs = getComputedStyle(document.documentElement);
+    const ink = cs.getPropertyValue('--ink').trim(), ink3 = cs.getPropertyValue('--ink-3').trim(),
+      pc = cs.getPropertyValue('--p2').trim();
+    const sx = x => (x + 4) / 8 * (W - 20 * dpr) + 10 * dpr;
+    const sy = y => H - 22 * dpr - (y + 1) / 5.2 * (H - 34 * dpr);
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = ink3; ctx.globalAlpha = 0.5; ctx.lineWidth = dpr;
+    ctx.beginPath(); ctx.moveTo(10 * dpr, sy(0)); ctx.lineTo(W - 10 * dpr, sy(0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sx(0), 8 * dpr); ctx.lineTo(sx(0), H - 20 * dpr); ctx.stroke();
+    ctx.globalAlpha = 1;
+    const plot = (f, dash) => {
+      ctx.setLineDash(dash);
+      ctx.strokeStyle = pc; ctx.lineWidth = 2 * dpr; ctx.beginPath();
+      for (let x = -4; x <= 4.001; x += 0.05) { const px = sx(x), py = sy(f(x)); x > -4 ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+      ctx.stroke(); ctx.setLineDash([]);
+    };
+    plot(silu, []); plot(gelu, [6 * dpr, 4 * dpr]); plot(relu, [2 * dpr, 3 * dpr]);
+    [[silu, 0], [gelu, 0], [relu, 0]].forEach(([f]) => {
+      ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(sx(xv), sy(f(xv)), 4 * dpr, 0, 7); ctx.fill();
+    });
+  }
+  function gate() {
+    const g = $('ff-g').value / 10, u = $('ff-u').value / 10;
+    $('ff-g-o').textContent = g.toFixed(1); $('ff-u-o').textContent = u.toFixed(1);
+    $('ff-out').textContent = (silu(g) * u).toFixed(2);
+  }
+  $('ff-x').addEventListener('input', draw);
+  ['ff-g', 'ff-u'].forEach(id => $(id).addEventListener('input', gate));
+  addEventListener('resize', draw);
+  new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  draw(); gate();
+})();
+
+/* ============ 🔬 softmax 零和（v0.14） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('lm-rows')) return;
+  const WORDS = ['生效', '履行', '解除', '终止', '变更', '转让', '备案', '起飞'];
+  const BASE = [null, 2.4, 1.9, 1.8, 1.2, 0.8, 0.5, -0.5];
+  function update() {
+    const l0 = $('lm-l').value / 10; $('lm-l-o').textContent = l0.toFixed(1);
+    const logits = BASE.map((b, i) => i === 0 ? l0 : b);
+    const mx = Math.max(...logits);
+    const ex = logits.map(l => Math.exp(l - mx));
+    const sum = ex.reduce((a, b) => a + b, 0);
+    const p = ex.map(e => e / sum);
+    const bmax = Math.max(...p);
+    $('lm-rows').innerHTML = WORDS.map((w, i) => `
+      <div class="sp-row"><span>${w}${i === 0 ? ' ◀' : ''}</span>
+        <div class="bar"><i style="width:${p[i] / bmax * 100}%"></i></div>
+        <span class="pv">${(p[i] * 100).toFixed(1)}%</span></div>`).join('');
+    $('lm-sum').textContent = p.reduce((a, b) => a + b, 0).toFixed(3);
+    const ent = -p.reduce((s, v) => s + (v > 0 ? v * Math.log2(v) : 0), 0);
+    $('lm-ent').textContent = ent.toFixed(2);
+  }
+  $('lm-l').addEventListener('input', update);
+  update();
+})();
+
+/* ============ 🔬 两种记忆（v0.14） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('sm-m')) return;
+  function update() {
+    const m = +$('sm-m').value, a = $('sm-a').value / 100;
+    $('sm-m-o').textContent = m; $('sm-a-o').textContent = a.toFixed(2);
+    const res = Math.pow(a, 16 - m);
+    $('sm-att').style.width = '100%'; $('sm-att-t').textContent = '直达 100%';
+    $('sm-ssm').style.width = (res * 100).toFixed(1) + '%';
+    $('sm-ssm-t').textContent = (res * 100).toFixed(1) + '%';
+    $('sm-verdict').innerHTML = res < 0.05
+      ? `第 ${m} 个词在 SSM 状态里只剩 <b>${(res * 100).toFixed(1)}%</b>（a^${16 - m} 实算）——基本忘光。注意力却随时能整块调出。`
+      : `第 ${m} 个词还剩 <b>${(res * 100).toFixed(1)}%</b>——够用；但把 m 拖到 1、或把衰减率调低，看指数遗忘的残酷。`;
+  }
+  ['sm-m', 'sm-a'].forEach(id => $(id).addEventListener('input', update));
+  update();
+})();
+
+/* ============ 🔬 线性探针（v0.14） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('ip-train')) return;
+  const DIM = 48;
+  function charVec(word) {
+    const v = new Float32Array(DIM);
+    const s = '^' + word + '$';
+    for (let i = 0; i < s.length - 1; i++) {
+      let h = 5381;
+      for (const c of s.slice(i, i + 2)) h = ((h << 5) + h + c.codePointAt(0)) >>> 0;
+      v[h % DIM] += ((h >>> 8) & 1) ? 1 : -1;
+    }
+    const n = Math.hypot(...v) || 1;
+    for (let i = 0; i < DIM; i++) v[i] /= n;
+    return v;
+  }
+  const LEGAL = ['合同', '条款', '违约', '解除', '诉讼', '起诉', '判决', '律师', '法院', '证据'];
+  const LIFE = ['苹果', '香蕉', '天气', '散步', '电影', '唱歌', '篮球', '咖啡', '旅行', '晚饭'];
+  const X = [...LEGAL, ...LIFE].map(charVec);
+  const Y = [...LEGAL.map(() => 1), ...LIFE.map(() => 0)];
+  let w = null, b = 0;
+  const sig = z => 1 / (1 + Math.exp(-z));
+  const score = v => sig(w.reduce((s, wi, i) => s + wi * v[i], 0) + b);
+  function train() {
+    w = new Array(DIM).fill(0); b = 0;
+    for (let ep = 0; ep < 200; ep++) {
+      X.forEach((v, n) => {
+        const err = Y[n] - score(v);
+        for (let i = 0; i < DIM; i++) w[i] += 0.5 * err * v[i];
+        b += 0.5 * err;
+      });
+    }
+    const acc = X.filter((v, n) => (score(v) > 0.5 ? 1 : 0) === Y[n]).length / X.length;
+    $('ip-acc').textContent = (acc * 100).toFixed(0) + '%';
+    probe();
+  }
+  function probe() {
+    if (!w) { $('ip-out').textContent = '先训练探针。'; return; }
+    const word = $('ip-q').value.trim().replace(/\s+/g, '').slice(0, 6);
+    if (!word) { $('ip-out').textContent = ''; return; }
+    const p = score(charVec(word));
+    $('ip-out').innerHTML = `探针从「${word}」的内部向量读到：法律性 <b>${(p * 100).toFixed(0)}%</b> → 判定「<b>${p > 0.5 ? '法律' : '生活'}</b>」${p > 0.35 && p < 0.65 ? '（读数模糊——探针也会犹豫）' : ''}`;
+  }
+  $('ip-train').addEventListener('click', train);
+  $('ip-q').addEventListener('input', probe);
+})();
+
+/* ============ 🔬 配方即能力（v0.15） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('cx-w')) return;
+  const CAPS = [
+    ['日常常识', { w: 0.55, b: 0.25, c: 0.05, m: 0.15 }],
+    ['推理与数学', { w: 0.15, b: 0.30, c: 0.45, m: 0.10 }],
+    ['写代码', { w: 0.10, b: 0.05, c: 0.83, m: 0.02 }],
+    ['多语能力', { w: 0.12, b: 0.05, c: 0.03, m: 0.80 }],
+    ['文风与表达', { w: 0.30, b: 0.55, c: 0.02, m: 0.13 }],
+  ];
+  function update() {
+    const raw = { w: +$('cx-w').value, b: +$('cx-b').value, c: +$('cx-c').value, m: +$('cx-m').value };
+    const sum = raw.w + raw.b + raw.c + raw.m || 1;
+    const mix = { w: raw.w / sum, b: raw.b / sum, c: raw.c / sum, m: raw.m / sum };
+    ['w', 'b', 'c', 'm'].forEach(k => $('cx-' + k + '-o').textContent = (mix[k] * 100).toFixed(0) + '%');
+    const scores = CAPS.map(([n, wt]) => [n, mix.w * wt.w + mix.b * wt.b + mix.c * wt.c + mix.m * wt.m]);
+    const mx = Math.max(...scores.map(s => s[1]), 0.01);
+    $('cx-rows').innerHTML = scores.map(([n, s]) => `
+      <div class="sp-row"><span style="font-size:12.5px">${n}</span>
+        <div class="bar"><i style="width:${(s / mx * 100).toFixed(0)}%"></i></div>
+        <span class="pv">${(s * 100).toFixed(0)}</span></div>`).join('');
+  }
+  ['cx-w', 'cx-b', 'cx-c', 'cx-m'].forEach(id => $(id).addEventListener('input', update));
+  update();
+})();
+
+/* ============ 🔬 净水厂四道闸（v0.15） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('cl-docs')) return;
+  const DOCS = [
+    '合同法律实务指南：违约金条款的常见约定方式与上限。',
+    '今日菜谱：西红柿炒鸡蛋的家常做法，简单三步出锅。',
+    '合同法律实务指南：违约金条款的常见约定方式与上限。',
+    '点击就送！！！▓▓▓ 限时优惠 ★★★ 立即下载 ▓▓▓！！！',
+    '恰饭冇？',
+    '本文介绍机器学习中过拟合的成因与正则化方法。',
+    '你就是个蠢货，这种垃圾产品也好意思卖。',
+    '联系经理张先生：13912345678，看房请提前预约。',
+    '今日菜谱：西红柿炒鸡蛋的家常做法，简单三步出锅。',
+    '气候变化对沿海城市基础设施的长期影响综述。',
+    '№※◆◇□■△▲！@#￥%……&*（）',
+    '身份证号110101199003077534已核验，请及时领取。',
+    '古典诗词中的月亮意象：从张若虚到苏轼。',
+    '产品评测：这款耳机的降噪表现超出预期。',
+  ];
+  function update() {
+    const seen = new Set();
+    let alive = 0, dialectKilled = false;
+    const rows = DOCS.map((d, i) => {
+      let killed = null;
+      if ($('cl-dup').checked) { if (seen.has(d)) killed = '去重：与前文完全重复'; else seen.add(d); }
+      if (!killed && $('cl-q').checked) {
+        const sym = (d.match(/[^㐀-鿿A-Za-z0-9，。：？！]/g) || []).length / d.length;
+        if (d.length < 6) killed = '质量：太短（长度规则）';
+        else if (sym > 0.3) killed = '质量：符号密度超标';
+      }
+      if (!killed && $('cl-tox').checked && /蠢货|垃圾/.test(d)) killed = '安全：命中敏感词表';
+      if (!killed && $('cl-pii').checked && (/1[3-9]\d{9}/.test(d) || /\d{17}[\dX]/.test(d))) killed = '个人信息：正则命中手机号/证件号';
+      if (!killed) alive++;
+      if (killed && d === '恰饭冇？') dialectKilled = true;
+      return `<span class="lab-chunk" style="max-width:none;white-space:normal;${killed ? 'opacity:.55;text-decoration:line-through' : 'border-color:var(--pc)'}">${d}${killed ? `　<b style="text-decoration:none;color:var(--seal)">✂ ${killed}</b>` : ''}</span>`;
+    });
+    $('cl-docs').innerHTML = rows.join('');
+    $('cl-n').textContent = alive;
+    $('cl-warn').textContent = dialectKilled ? '⚠ 「恰饭冇？」被误杀——它只是方言，不是垃圾' : '';
+  }
+  ['cl-dup', 'cl-q', 'cl-tox', 'cl-pii'].forEach(id => $(id).addEventListener('change', update));
+  update();
+})();
+
+/* ============ 🔬 SFT 损失掩码（v0.15） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('sf-view')) return;
+  const PROMPT = '【用户】请用一句话解释什么是保密义务。【助手】';
+  const ANSWER = '保密义务是指对知悉的商业秘密不得泄露或不当使用的义务。';
+  function update() {
+    const mask = $('sf-mask').checked;
+    const chip = (c, on) => `<span style="border-radius:4px;padding:0 1px;${on
+      ? 'background:color-mix(in srgb, var(--pc) 30%, transparent)'
+      : 'color:var(--ink-3)'}">${c}</span>`;
+    $('sf-view').innerHTML =
+      Array.from(PROMPT).map(c => chip(c, !mask)).join('') +
+      Array.from(ANSWER).map(c => chip(c, true)).join('');
+    const n = ANSWER.length + (mask ? 0 : PROMPT.length);
+    $('sf-n').textContent = n;
+    $('sf-note').textContent = mask
+      ? '掩码开启：只有回答的 ' + ANSWER.length + ' 个字产生梯度——模型学「怎么答」，把问题只当背景。'
+      : '掩码关闭：连「【用户】请用一句话……」也在计损——模型正在花学习额度模仿提问腔。这就是不掩码的产品后果。';
+  }
+  $('sf-mask').addEventListener('change', update);
+  update();
+})();
+
+/* ============ 🔬 污染检测器（v0.15） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('ev-corp')) return;
+  const N = 8;
+  function grams(s) {
+    const set = new Set(), t = s.replace(/\s+/g, '');
+    for (let i = 0; i + N <= t.length; i++) set.add(t.slice(i, i + N));
+    return set;
+  }
+  function overlap() {
+    const a = grams($('ev-corp').value), b = grams($('ev-test').value);
+    const hits = [...b].filter(g => a.has(g));
+    /* 合并相邻命中，粗略呈现最长重合段 */
+    let longest = '';
+    if (hits.length) {
+      const t = $('ev-test').value.replace(/\s+/g, '');
+      let best = [0, 0];
+      for (let i = 0; i < t.length; i++) {
+        for (let j = t.length; j - i >= N; j--) {
+          const seg = t.slice(i, j);
+          if ($('ev-corp').value.replace(/\s+/g, '').includes(seg)) { if (seg.length > best[1] - best[0]) best = [i, j]; break; }
+        }
+      }
+      longest = t.slice(best[0], best[1]);
+    }
+    $('ev-hit').innerHTML = hits.length
+      ? `⚠ 检出 <b>${hits.length}</b> 个 ${N} 字连串重合，最长重合段：「<b>${longest}</b>」——考题疑似在语料中出现过，此题得分不可信。`
+      : `未检出 ${N} 字以上连串重合——就本方法而言无污染嫌疑（改写式泄题需更强的检测）。`;
+  }
+  function score() {
+    const c = $('ev-c').value / 100;
+    $('ev-c-o').textContent = (c * 100).toFixed(0) + '%';
+    $('ev-s').textContent = (60 + c * 40).toFixed(0);
+  }
+  ['ev-corp', 'ev-test'].forEach(id => $(id).addEventListener('input', overlap));
+  $('ev-c').addEventListener('input', score);
+  overlap(); score();
+})();
+</script>

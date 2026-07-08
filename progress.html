@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>项目进度看板 · AI 合规全景地图</title>
+<style>
+  :root {
+    --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
+    --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
+    --hairline: #e3e1d8; --seal: #b0392e;
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4;
+    --serif: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", serif;
+    --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page: #131311; --surface: #1e1d1a; --surface-2: #262521; --ink: #f2f0e8; --ink-2: #b5b2a6;
+      --ink-3: #85827a; --hairline: #2e2d28; --seal: #e0705e;
+      --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; }
+  }
+  :root[data-theme="dark"] { --page: #131311; --surface: #1e1d1a; --surface-2: #262521; --ink: #f2f0e8;
+    --ink-2: #b5b2a6; --ink-3: #85827a; --hairline: #2e2d28; --seal: #e0705e;
+    --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; }
+  :root[data-theme="light"] { --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8; --ink: #1c1b18;
+    --ink-2: #57544c; --ink-3: #8a877e; --hairline: #e3e1d8; --seal: #b0392e;
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--page); color: var(--ink); font-family: var(--sans); line-height: 1.7; font-size: 15px; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 20px 60px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; color: var(--ink-3); }
+  h1 { font-family: var(--serif); font-size: clamp(30px, 5vw, 42px); margin: 8px 0 4px; }
+  .sub { color: var(--ink-2); max-width: 44em; }
+  h2 { font-family: var(--serif); font-size: 20px; margin: 34px 0 10px; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .links a { text-decoration: none; font-size: 13px; color: var(--ink-2); background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 5px 15px; }
+  .links a:hover, .links a:focus-visible { border-color: var(--ink-2); outline: none; }
+
+  .hero-bar { margin-top: 26px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 14px; padding: 18px 20px; }
+  .hb-top { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .hb-num { font-family: var(--serif); font-size: 44px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .hb-cap { font-size: 13px; color: var(--ink-3); }
+  .hb-track { height: 14px; background: var(--surface-2); border-radius: 7px; overflow: hidden; margin-top: 12px; display: flex; }
+  .hb-track i { display: block; height: 100%; }
+  .hb-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; font-size: 12.5px; color: var(--ink-2); }
+  .hb-legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+
+  .bars .row { display: grid; grid-template-columns: 9.5em 1fr 5.5em; gap: 12px; align-items: center; margin: 8px 0; font-size: 13.5px; }
+  .bars .track { height: 10px; background: var(--surface-2); border-radius: 5px; overflow: hidden; }
+  .bars .track i { display: block; height: 100%; border-radius: 5px; }
+  .bars .val { font-family: var(--mono); font-size: 12px; text-align: right; color: var(--ink-2); }
+
+  .plane-row { margin: 14px 0; }
+  .plane-name { font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .cells { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cell { font-size: 12px; border-radius: 7px; padding: 4px 11px; border: 1px solid var(--hairline);
+    color: var(--ink-3); background: var(--surface); }
+  .cell.g1 { color: var(--ink-2); border-color: var(--pc); box-shadow: inset 0 0 0 20rem color-mix(in srgb, var(--pc) 9%, transparent); }
+  .cell.g3 { color: var(--ink); border-color: var(--pc); box-shadow: inset 0 0 0 20rem color-mix(in srgb, var(--pc) 26%, transparent); font-weight: 600; }
+  .cell.g0 { border-style: dashed; background: none; }
+  .legend { font-size: 12.5px; color: var(--ink-2); margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  .legend .cell { pointer-events: none; }
+
+  .vlist { border-left: 2px solid var(--hairline); padding-left: 18px; }
+  .v { margin: 10px 0; position: relative; font-size: 14px; color: var(--ink-2); }
+  .v::before { content: ""; position: absolute; left: -23px; top: 7px; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--ink-3); }
+  .v.done::before { background: var(--p1); }
+  .v.now::before { background: var(--p2); box-shadow: 0 0 0 3px color-mix(in srgb, var(--p2) 30%, transparent); }
+  .v b { color: var(--ink); font-weight: 600; }
+  .v .vt { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-right: 8px; }
+
+  footer { margin-top: 40px; border-top: 1px solid var(--hairline); padding-top: 16px; font-size: 12.5px; color: var(--ink-3); }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">AI COMPLIANCE ATLAS · 项目进度看板</div>
+  <h1>哪里亮了，哪里还没亮</h1>
+  <p class="sub">数据驱动的进度实况：下方所有数字与亮灯由同一份数据表计算，每个版本更新一次。口径与权重公开写在总进度条下方——数字可以被质疑，但不会被粉饰。</p>
+  <div class="links">
+    <a href="index.html" target="_blank" rel="noopener">🗺️ 门户首页 ↗</a>
+    <a href="blueprint.html" target="_blank" rel="noopener">📐 工程蓝图（主线）↗</a>
+    <a href="thread.html" target="_blank" rel="noopener">🧵 叙事版（入门）↗</a>
+    <a href="index-map.html" target="_blank" rel="noopener">🧭 索引地图（目录）↗</a>
+  </div>
+
+  <div class="hero-bar">
+    <div class="hb-top"><span class="hb-num" id="total">—</span><span class="hb-cap" id="total-cap"></span></div>
+    <div class="hb-track" id="total-track"></div>
+    <div class="hb-legend" id="total-legend"></div>
+  </div>
+
+  <h2>四条分线</h2>
+  <div class="bars" id="bars"></div>
+
+  <h2>蓝图模块深度图 · 主线的每一格</h2>
+  <div id="planes"></div>
+  <div class="legend">
+    <span><span class="cell g0" style="--pc:var(--ink-3)">未建</span> 登记未动工</span>
+    <span><span class="cell g1" style="--pc:var(--p1)">G1</span> 骨架讲解（文字+分叉+形状）</span>
+    <span><span class="cell g3" style="--pc:var(--p1)">G3 🔬</span> 内嵌实验室（真算法可实操）</span>
+  </div>
+
+  <h2>版本时间线</h2>
+  <div class="vlist" id="vlist"></div>
+
+  <footer>
+    看板与蓝图同步更新；口径：总进度 = 蓝图骨架 35% + 模块深化 35% + 合规挂点填充 20% + 登记簿扩建 10%（权重为约定值，公开可议）。
+    最后更新见时间线最新条目。
+  </footer>
+</div>
+
+<script>
+/* ======== 唯一数据源：每个版本只改这里 ======== */
+const DATA = {
+  updated: '2026-07-08 · v0.15',
+  // depth: 0=登记未建 1=G1骨架 3=G3实验室
+  planes: [
+    { code: '0 物理基座', pc: 'var(--p0)', mods: [['为什么是GPU 🔬', 3], ['存储层级与内存墙 🔬', 3], ['屋顶线模型 🔬', 3], ['数字格式', 1], ['互联与集群 🔬', 3]] },
+    { code: 'Ⅰ 训练管线', pc: 'var(--p1)', mods: [['语料池与配比 🔬', 3], ['清洗·去重·过滤 🔬', 3], ['分词器训练 🔬', 3], ['预训练循环 🔬', 3], ['监督微调 SFT 🔬', 3], ['偏好优化 🔬', 3], ['评估·红队·发布 🔬', 3]] },
+    { code: 'Ⅱ 模型本体', pc: 'var(--p2)', mods: [['分词（运行时）🔬', 3], ['Embedding 🔬', 3], ['位置信息 🔬', 3], ['Block 总装 🔬', 3], ['注意力 🔬', 3], ['前馈网络 FFN 🔬', 3], ['MoE 🔬', 3], ['LM Head 🔬', 3], ['架构地平线 🔬', 3], ['可解释性 🔬', 3]] },
+    { code: 'Ⅲ 推理服务', pc: 'var(--p3)', mods: [['Prefill / Decode', 1], ['KV 缓存', 1], ['采样 🔬', 3], ['量化', 1], ['吞吐工程 🔬', 3], ['推理模型·测试时算力', 1]] },
+    { code: 'Ⅳ 系统组装', pc: 'var(--p4)', mods: [['上下文拼装', 1], ['RAG 🔬', 3], ['工具与 Agent 🔬', 3], ['护栏与标识', 1]] },
+    { code: 'Ⅴ 多模态', pc: 'var(--p5)', mods: [['视觉理解 VLM', 1], ['扩散模型 🔬', 3], ['潜空间与 VAE', 1], ['条件与引导', 1], ['视频生成', 1], ['语音栈·声音克隆', 1]] },
+    { code: 'APPENDIX 登记簿（扩建区）', pc: 'var(--ink-3)', mods: [['多模态生成栈 →Ⅴ', 1], ['视觉理解 →Ⅴ', 1], ['推理模型 →Ⅲ', 1], ['非 Transformer →Ⅱ', 1], ['评估科学 →Ⅰ', 1], ['可解释性 →Ⅱ', 1]] },
+  ],
+  hooks: { filled: 28, total: 28 },  // 合规挂点（索引地图 28 节点口径，v0.8 补全；内容为 AI 起草待用户法律审校）
+  versions: [
+    ['v0.1', '2026-07-05', '索引地图：七层 28 节点 + 例子库 + 合规接口', 'done'],
+    ['v0.2', '2026-07-06', '叙事长卷《一句话的旅程》→ 归档为入门版', 'done'],
+    ['v0.3', '2026-07-06', '工程蓝图定形：四平面 + 分叉 + 张量形状（主线形态收敛）', 'done'],
+    ['v0.3.5', '2026-07-06', 'PLANE 0 物理基座 + 已知未覆盖登记簿', 'done'],
+    ['v0.4', '2026-07-06', '第一个实验室：RAG 检索（Ⅳ）', 'done'],
+    ['v0.5', '2026-07-06', '第二个实验室：MoE 路由分诊台（Ⅱ）+ 字体 bug 修复', 'done'],
+    ['v0.6', '2026-07-06', '第三个实验室：RLHF 亲手标注（Ⅰ）+ 本看板上线', 'done'],
+    ['v0.7', '2026-07-07', 'PLANE Ⅴ 多模态平面动工：VLM · 扩散 · 潜空间 · 条件引导 · 视频 · 语音克隆（登记簿两项点亮）', 'done'],
+    ['v0.8', '2026-07-07', '三个新实验室（注意力矩阵 · 屋顶线计算器 · 扩散去噪）+ 合规挂点补全 28/28（AI 起草，待法律审校）', 'done'],
+    ['v0.9', '2026-07-07', '图景补全：登记簿六领域全部落地（推理模型→Ⅲ · 架构地平线→Ⅱ · 可解释性→Ⅱ · 评估科学→Ⅰ扩建）+ VERIFY.md 核验工作包（起草者自首清单）', 'done'],
+    ['v0.10', '2026-07-07', '迷你训练场（第七实验室·全站之巅：浏览器内真训练带注意力的语言模型）+ LAB-SPECS.md 施工规格书', 'done'],
+    ['v0.11', '2026-07-07', '实验室冲刺 ×4：BPE 现场训练（Ⅰ）· 投机解码模拟器（Ⅲ）· 采样漏斗（Ⅲ）· RoPE 旋转（Ⅱ）——十一实验室', 'done'],
+    ['v0.12', '2026-07-08', '用户点名五模块深化：算珠墙竞速（并行/串行两赛）· 内存墙等待体验 · 并行切积木 · Agent 沙盘（人工确认点）· 语义地图——十六实验室', 'done'],
+    ['v0.13', '2026-07-08', '部署就绪包：🗺️ 统一门户首页上线 + DEPLOY.md 部署手册（含站内链接替换方案与 GitHub Pages 全程网页操作指南）', 'done'],
+    ['v0.14', '2026-07-08', '模型本体平面（Ⅱ）实验室全亮：迷你分词器 · 残差流 32 层对照 · 激活函数与门控 · softmax 零和 · 两种记忆（SSM vs 注意力）· 线性探针——二十二实验室', 'done'],
+    ['v0.15', '2026-07-08', '训练管线平面（Ⅰ）实验室全亮：配方即能力 · 净水厂四道闸（含方言误杀陷阱）· SFT 损失掩码 · 污染检测器（真 8 字连串重合）——二十六实验室', 'now'],
+    ['v1.0', '待定', '核验版：用户主导的 学习→审核→反馈→其他模型修改 循环 · 朱批统一调整 · 部署上线', 'todo'],
+  ],
+  weights: { skeleton: 0.35, labs: 0.35, hooks: 0.20, registry: 0.10 },
+};
+
+/* ======== 以下全部自动计算，勿手改 ======== */
+const blueprintPlanes = DATA.planes.filter(p => !p.code.startsWith('APPENDIX'));
+const registry = DATA.planes.find(p => p.code.startsWith('APPENDIX'));
+const allMods = blueprintPlanes.flatMap(p => p.mods);
+const nMods = allMods.length;
+const nLabs = allMods.filter(m => m[1] === 3).length;
+const sk = 1, labs = nLabs / nMods, hk = DATA.hooks.filled / DATA.hooks.total,
+  rg = registry.mods.filter(m => m[1] > 0).length / registry.mods.length;
+const W = DATA.weights;
+const parts = [
+  ['蓝图骨架', sk, W.skeleton, 'var(--p2)'],
+  ['模块深化（实验室）', labs, W.labs, 'var(--p1)'],
+  ['合规挂点填充', hk, W.hooks, 'var(--seal)'],
+  ['登记簿扩建', rg, W.registry, 'var(--p3)'],
+];
+const total = parts.reduce((s, p) => s + p[1] * p[2], 0);
+
+document.getElementById('total').textContent = (total * 100).toFixed(0) + '%';
+document.getElementById('total-cap').textContent =
+  `骨架 ${nMods}/${nMods} · 实验室 ${nLabs}/${nMods} · 合规 ${DATA.hooks.filled}/${DATA.hooks.total} · 扩建 ${registry.mods.filter(m => m[1] > 0).length}/${registry.mods.length}　（${DATA.updated}）`;
+document.getElementById('total-track').innerHTML = parts.map(p =>
+  `<i style="width:${(p[1] * p[2] * 100).toFixed(1)}%;background:${p[3]}"></i>`).join('');
+document.getElementById('total-legend').innerHTML = parts.map(p =>
+  `<span><span class="sw" style="background:${p[3]}"></span>${p[0]}（权重 ${(p[2] * 100).toFixed(0)}%）</span>`).join('');
+
+document.getElementById('bars').innerHTML = parts.map(p => `
+  <div class="row"><span>${p[0]}</span>
+    <div class="track"><i style="width:${(p[1] * 100).toFixed(0)}%;background:${p[3]}"></i></div>
+    <span class="val">${(p[1] * 100).toFixed(0)}%</span></div>`).join('');
+
+document.getElementById('planes').innerHTML = DATA.planes.map(p => `
+  <div class="plane-row" style="--pc:${p.pc}">
+    <div class="plane-name" style="color:${p.pc}">${p.code}</div>
+    <div class="cells">${p.mods.map(([n, d]) =>
+      `<span class="cell ${d === 3 ? 'g3' : d === 1 ? 'g1' : 'g0'}">${n}</span>`).join('')}</div>
+  </div>`).join('');
+
+document.getElementById('vlist').innerHTML = DATA.versions.map(([v, d, t, s]) =>
+  `<div class="v ${s}"><span class="vt">${v} · ${d}</span><b>${t.split('：')[0]}</b>${t.includes('：') ? '：' + t.split('：').slice(1).join('：') : ''}</div>`).join('');
+</script>

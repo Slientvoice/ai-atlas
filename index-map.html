@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 技术全景地图 · v0.1</title>
+<style>
+  :root {
+    --page: #f7f6f2;
+    --surface: #fcfcfa;
+    --surface-2: #f1efe8;
+    --ink: #1c1b18;
+    --ink-2: #57544c;
+    --ink-3: #8a877e;
+    --hairline: #e3e1d8;
+    --ring: rgba(28, 27, 24, 0.10);
+    --seal: #b0392e;          /* 朱批 · 合规专用红 */
+    --seal-soft: rgba(176, 57, 46, 0.08);
+    --l0: #2a78d6; --l1: #1baf7a; --l2: #eda100; --l3: #008300;
+    --l4: #4a3aa7; --l5: #eb6834; --l6: #e87ba4;
+    --shadow: 0 10px 32px rgba(28, 27, 24, 0.10);
+    --serif: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", serif;
+    --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Menlo", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #131311; --surface: #1e1d1a; --surface-2: #262521;
+      --ink: #f2f0e8; --ink-2: #b5b2a6; --ink-3: #85827a;
+      --hairline: #2e2d28; --ring: rgba(255, 255, 255, 0.10);
+      --seal: #e0705e; --seal-soft: rgba(224, 112, 94, 0.12);
+      --l0: #3987e5; --l1: #199e70; --l2: #c98500; --l3: #2e9e2e;
+      --l4: #9085e9; --l5: #d95926; --l6: #d55181;
+      --shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #131311; --surface: #1e1d1a; --surface-2: #262521;
+    --ink: #f2f0e8; --ink-2: #b5b2a6; --ink-3: #85827a;
+    --hairline: #2e2d28; --ring: rgba(255, 255, 255, 0.10);
+    --seal: #e0705e; --seal-soft: rgba(224, 112, 94, 0.12);
+    --l0: #3987e5; --l1: #199e70; --l2: #c98500; --l3: #2e9e2e;
+    --l4: #9085e9; --l5: #d95926; --l6: #d55181;
+    --shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+  }
+  :root[data-theme="light"] {
+    --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
+    --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
+    --hairline: #e3e1d8; --ring: rgba(28, 27, 24, 0.10);
+    --seal: #b0392e; --seal-soft: rgba(176, 57, 46, 0.08);
+    --l0: #2a78d6; --l1: #1baf7a; --l2: #eda100; --l3: #008300;
+    --l4: #4a3aa7; --l5: #eb6834; --l6: #e87ba4;
+    --shadow: 0 10px 32px rgba(28, 27, 24, 0.10);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--page); color: var(--ink);
+    font-family: var(--sans); line-height: 1.75;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--hairline); }
+  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.5; }
+  .hero-inner { position: relative; padding: 72px 20px 46px; max-width: 1060px; margin: 0 auto; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em;
+    color: var(--ink-3); text-transform: uppercase;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 700; margin: 10px 0 6px;
+    font-size: clamp(34px, 6vw, 54px); line-height: 1.15; text-wrap: balance;
+  }
+  .hero-sub { color: var(--ink-2); max-width: 44em; margin: 8px 0 0; }
+  .hero-sub .seal-word { color: var(--seal); }
+  .stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 30px; }
+  .stat .num {
+    font-family: var(--serif); font-size: 30px; font-weight: 700; line-height: 1.1;
+  }
+  .stat .lab { font-size: 12.5px; color: var(--ink-3); letter-spacing: 0.05em; }
+
+  /* ---------- sections ---------- */
+  section { padding: 44px 0 8px; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 6px; }
+  .sec-head .no {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.12em;
+  }
+  h2 {
+    font-family: var(--serif); font-size: clamp(24px, 3.4vw, 32px);
+    margin: 0; line-height: 1.25; text-wrap: balance;
+  }
+  .sec-note { color: var(--ink-2); max-width: 46em; margin: 8px 0 24px; }
+
+  /* ---------- legend ---------- */
+  .legend {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px; margin: 18px 0 8px;
+  }
+  .legend-item {
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 10px; padding: 14px 16px; font-size: 14px; color: var(--ink-2);
+  }
+  .legend-item b { color: var(--ink); display: block; margin-bottom: 3px; font-weight: 600; }
+  .swatches { display: flex; gap: 5px; margin-top: 8px; }
+  .swatches i { width: 22px; height: 8px; border-radius: 4px; display: block; }
+
+  /* ---------- map layers ---------- */
+  .layer { margin: 34px 0 0; padding-left: 22px; position: relative; }
+  .layer::before {
+    content: ""; position: absolute; left: 0; top: 6px; bottom: -34px;
+    width: 4px; border-radius: 2px; background: var(--lc); opacity: 0.85;
+  }
+  .layer:last-of-type::before { bottom: 6px; }
+  .layer-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px; }
+  .layer-code {
+    font-family: var(--mono); font-size: 12.5px; font-weight: 700;
+    color: var(--lc); letter-spacing: 0.1em;
+  }
+  .layer-name { font-family: var(--serif); font-size: 23px; font-weight: 700; }
+  .layer-gist { color: var(--ink-2); font-size: 14.5px; }
+  .density {
+    margin-left: auto; font-size: 12.5px; color: var(--seal);
+    display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .density .dots { letter-spacing: 2px; }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+    gap: 12px; margin-top: 14px;
+  }
+  .node {
+    text-align: left; font: inherit; color: inherit; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 12px; padding: 15px 16px 12px; position: relative;
+    display: flex; flex-direction: column; gap: 6px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .node:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--lc); }
+  .node:focus-visible { outline: 2px solid var(--lc); outline-offset: 2px; }
+  .node-top { display: flex; align-items: center; gap: 8px; }
+  .node-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--lc); flex: none; }
+  .node-en {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.06em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .node-name { font-family: var(--serif); font-weight: 700; font-size: 17.5px; line-height: 1.35; }
+  .node-gist {
+    color: var(--ink-2); font-size: 13.5px; line-height: 1.6; flex: 1;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .node-meta {
+    display: flex; gap: 12px; font-size: 12px; color: var(--ink-3);
+    border-top: 1px dashed var(--hairline); padding-top: 8px; margin-top: 2px;
+  }
+  .node-meta .seal-tag { color: var(--seal); }
+
+  /* ---------- rules ---------- */
+  .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+  .rule {
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 12px; padding: 18px 20px;
+  }
+  .rule .rid { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.12em; }
+  .rule h3 { font-family: var(--serif); font-size: 18px; margin: 6px 0 6px; }
+  .rule p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+  /* ---------- next / flagship ---------- */
+  .next-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .next-card {
+    background: var(--surface-2); border: 1px dashed var(--ink-3);
+    border-radius: 12px; padding: 18px 20px;
+  }
+  .next-card h3 { font-family: var(--serif); font-size: 18px; margin: 0 0 6px; }
+  .next-card p { margin: 0; font-size: 14px; color: var(--ink-2); }
+  .next-card .tag { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.1em; }
+
+  footer {
+    margin-top: 56px; border-top: 1px solid var(--hairline);
+    padding: 26px 0 48px; color: var(--ink-3); font-size: 13px;
+  }
+  footer .seal-note { color: var(--seal); }
+
+  /* ---------- detail panel ---------- */
+  .backdrop {
+    position: fixed; inset: 0; background: rgba(20, 19, 16, 0.45);
+    opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 40;
+  }
+  .backdrop.on { opacity: 1; pointer-events: auto; }
+  .panel {
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(620px, 100vw);
+    background: var(--surface); border-left: 1px solid var(--hairline);
+    transform: translateX(102%); transition: transform 0.24s ease;
+    z-index: 50; display: flex; flex-direction: column;
+  }
+  .panel.on { transform: translateX(0); box-shadow: var(--shadow); }
+  .panel-head {
+    padding: 18px 24px 14px; border-bottom: 1px solid var(--hairline);
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .layer-chip {
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    color: var(--lc); border: 1px solid var(--lc); border-radius: 999px;
+    padding: 2px 10px; white-space: nowrap; margin-top: 6px;
+  }
+  .panel-title { flex: 1; }
+  .panel-title h3 { font-family: var(--serif); font-size: 24px; margin: 0; line-height: 1.3; }
+  .panel-title .en { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+  .close-btn {
+    background: none; border: 1px solid var(--hairline); border-radius: 8px;
+    color: var(--ink-2); font-size: 18px; line-height: 1; padding: 8px 11px; cursor: pointer;
+  }
+  .close-btn:hover { border-color: var(--ink-2); }
+  .close-btn:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 2px; }
+  .panel-body { overflow-y: auto; padding: 8px 24px 40px; }
+  .pgist {
+    font-family: var(--serif); font-size: 18.5px; line-height: 1.65; margin: 16px 0;
+    border-left: 3px solid var(--lc); padding-left: 14px; text-wrap: balance;
+  }
+  .psec { margin: 22px 0; }
+  .psec-h {
+    font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; color: var(--ink-3);
+    margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+  }
+  .psec p { margin: 0 0 8px; font-size: 15px; color: var(--ink); }
+  .psec ul { margin: 0; padding-left: 20px; font-size: 14.5px; color: var(--ink-2); }
+  .psec ul li { margin-bottom: 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font: inherit; font-size: 13px; cursor: pointer; color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--hairline); border-radius: 999px;
+    padding: 4px 13px; transition: border-color 0.15s ease;
+  }
+  .chip:hover, .chip:focus-visible { border-color: var(--ink-2); outline: none; }
+  .chip .cdot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; }
+  .flow-lab { font-size: 12px; color: var(--ink-3); margin: 10px 0 6px; }
+  .ex-item {
+    display: block; text-decoration: none; background: var(--surface-2);
+    border: 1px solid var(--hairline); border-radius: 10px; padding: 11px 14px; margin-bottom: 8px;
+    transition: border-color 0.15s ease;
+  }
+  .ex-item:hover, .ex-item:focus-visible { border-color: var(--lc); outline: none; }
+  .ex-item b { font-size: 14.5px; font-weight: 600; }
+  .ex-item span { display: block; font-size: 13px; color: var(--ink-2); margin-top: 2px; }
+  .ex-item .url { font-family: var(--mono); font-size: 11px; color: var(--ink-3); word-break: break-all; }
+  .empty-ex { font-size: 13.5px; color: var(--ink-3); font-style: italic; }
+  .build-box {
+    background: var(--surface-2); border-radius: 10px; padding: 12px 15px;
+    font-size: 14px; color: var(--ink-2);
+  }
+  /* 朱批 · compliance */
+  .seal-sec {
+    border-left: 3px solid var(--seal); background: var(--seal-soft);
+    border-radius: 0 10px 10px 0; padding: 14px 16px;
+  }
+  .seal-sec .psec-h { color: var(--seal); margin-bottom: 10px; }
+  .seal-pill {
+    font-size: 11px; font-weight: 600; border-radius: 999px; padding: 2px 10px;
+    border: 1px solid var(--seal); color: var(--seal); margin-left: auto;
+  }
+  .seal-sec ul { color: var(--ink); }
+  .seal-stub { font-size: 13px; color: var(--ink-2); }
+  .seal-stub dl { margin: 8px 0 0; }
+  .seal-stub dt { font-weight: 600; font-size: 12.5px; color: var(--seal); float: left; clear: left; margin-right: 8px; }
+  .seal-stub dd { margin: 0 0 4px 84px; color: var(--ink-3); }
+  .vdate { font-size: 12px; color: var(--ink-3); margin-top: 26px; border-top: 1px dashed var(--hairline); padding-top: 10px; }
+
+  @media (max-width: 640px) {
+    .density { margin-left: 0; }
+    .hero-inner { padding-top: 52px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .node, .panel, .backdrop, .chip, .ex-item { transition: none; }
+  }
+</style>
+
+<header class="hero">
+  <canvas id="mesh" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div class="eyebrow">AI COMPLIANCE ATLAS · v0.1 骨架 · 技术先行</div>
+    <h1>AI 技术全景地图</h1>
+    <p class="hero-sub">
+      一幅从<b>硅</b>到<b>产品</b>的技术长卷：算力 → 数据 → 模型 → 对齐 → 部署 → 应用 → 产品。
+      先看懂每一站的技术如何运作，<span class="seal-word">合规义务则以「朱批」形式挂在对应的技术环节上</span>——技术是卷，法律是批注。
+    </p>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <div class="sec-head"><span class="no">§1</span><h2>怎么读这张图</h2></div>
+    <p class="sec-note">
+      自上而下就是数据与决策的流向，也是建议的学习顺序。点击任何一个节点，查看它的七栏详情：
+      人话解释、运作原理、关键抉择、上下游关联、可动手玩的学习范例、这张图将来怎么做、以及预留的合规挂点。
+      节点详情里的「上游 / 下游」可以直接点击跳转——这就是「层层递进」的雏形。
+    </p>
+    <div class="legend">
+      <div class="legend-item">
+        <b>七层七色</b>颜色只用来表示层级，别无它意。层级色从算力层到产品层依次为：
+        <div class="swatches">
+          <i style="background:var(--l0)"></i><i style="background:var(--l1)"></i>
+          <i style="background:var(--l2)"></i><i style="background:var(--l3)"></i>
+          <i style="background:var(--l4)"></i><i style="background:var(--l5)"></i>
+          <i style="background:var(--l6)"></i>
+        </div>
+      </div>
+      <div class="legend-item">
+        <b><span style="color:var(--seal)">朱批红 = 合规专用</span></b>
+        红色在全站只做一件事：标记法律义务与风险。每层的「合规密度」提示该层挂着多少法律问题——你会发现疏密本身就是洞察。
+      </div>
+      <div class="legend-item">
+        <b>🎓 范例 · ⚖ 挂点</b>
+        节点卡片下沿标注：可玩的交互范例数量，以及合规挂点是「已填」还是「待补」。待补不是缺陷，是预留的接口（规则 R4）。
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="no">§2</span><h2>地图 · 从硅到产品</h2></div>
+    <div id="map"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="no">§3</span><h2>规则手册 · 整个站点的约法六章</h2></div>
+    <p class="sec-note">这六条规则是站点的「宪法」：任何新增的图、新增的节点都要遵守，保证几年后回看仍然成体系。</p>
+    <div class="rules-grid">
+      <div class="rule"><div class="rid">R1 · 交互深度</div><h3>三级递进，不求一步到位</h3>
+        <p>每张图分三级：G1 静态结构图（先有骨架）→ G2 动画流程（看见数据流动）→ G3 真模拟（浏览器里跑真算法，如内嵌真分词器）。每个节点从 G1 起步，逐站升级。</p></div>
+      <div class="rule"><div class="rid">R2 · 节点模板</div><h3>七栏固定，空着也保留</h3>
+        <p>每个节点固定七栏：一句话 / 如何运作 / 关键抉择 / 上下游 / 学习范例 / 这张图怎么做 / 合规挂点。空栏目保留占位不删除——「待补」可见，本身就是接口。</p></div>
+      <div class="rule"><div class="rid">R3 · 视觉语言</div><h3>颜色即语法</h3>
+        <p>颜色只表示层级（七层七色）；朱红专属合规，技术图中永不出现；数据流向恒定自上而下；同一手势同一含义（点击=下钻，悬停=释义）。</p></div>
+      <div class="rule"><div class="rid">R4 · 合规接口</div><h3>技术与合规解耦</h3>
+        <p>每节点固定字段：触发行为 / 义务与法条 / 典型案例 / 状态。技术先行阶段全部标「待补」；日后填充只填接口、不动技术图。两个板块可以独立演进。</p></div>
+      <div class="rule"><div class="rid">R5 · 准确性</div><h3>三道闸，防止「一本正经地错」</h3>
+        <p>① AI 起草必须附来源；② 与至少一个权威范例或官方文档对照；③ 定期请有技术背景的朋友（或第二个 AI）抽查。每个节点标注「最后核验日期」，未核验默认存疑。</p></div>
+      <div class="rule"><div class="rid">R6 · 技术选型</div><h3>纯静态，能借不造</h3>
+        <p>纯 HTML/SVG/Canvas 静态站，无后端无数据库；一节点一文件；GitHub Pages 或 Cloudflare Pages 免费托管。交互首选原生 SVG+JS；开源范例（注意许可证）能改造就不重造。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="no">§4</span><h2>下一步 · v0.2 旗舰图候选</h2></div>
+    <p class="sec-note">按 R1，从地图里挑一站做成 G2/G3 级的「真交互」样板。三个候选，按「学习价值 × 市面空缺 × 合规密度」排序：</p>
+    <div class="next-grid">
+      <div class="next-card"><div class="tag">候选 A · L5</div><h3>RAG 全链路动画</h3>
+        <p>输入一个真实问题，动画走完切分 → 向量化 → 检索 → 拼装 → 生成的全过程，每站可点回上游节点。链条最完整、合规问题最密集、企业落地最普遍——旗舰首选。</p></div>
+      <div class="next-card"><div class="tag">候选 B · L2</div><h3>MoE 分诊台</h3>
+        <p>看一句话里的每个词元被「路由器」分给哪位专家。当前架构分岔的核心概念，市面上尚无好的中文交互版——差异化最强。</p></div>
+      <div class="next-card"><div class="tag">候选 C · L3</div><h3>RLHF 亲手标注</h3>
+        <p>访客亲自当十次标注员（二选一），实时看「奖励模型」的品味被自己的选择塑造。把「对齐」从名词变成体感——与法律价值观要求衔接最自然。</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      本地图由 AI（Claude）检索并起草于 2026-07-05，作为学习与建站的 v0.1 骨架。
+      <span class="seal-note">按规则 R5：所有技术断言尚未经人工核验，默认存疑；</span>
+      外部范例链接的可用性以访问时为准。学习范例来源见各节点详情。
+    </p>
+  </footer>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-name">
+  <div class="panel-head">
+    <span class="layer-chip" id="p-chip"></span>
+    <div class="panel-title">
+      <h3 id="panel-name"></h3>
+      <span class="en" id="p-en"></span>
+    </div>
+    <button class="close-btn" id="p-close" aria-label="关闭详情">×</button>
+  </div>
+  <div class="panel-body" id="p-body"></div>
+</aside>
+
+<script>
+const LAYERS = [
+  { code: 'L0', name: '算力层', en: 'COMPUTE', gist: '一切从「有多少芯片」开始', density: 2 },
+  { code: 'L1', name: '数据层', en: 'DATA', gist: '模型吃什么长大', density: 3 },
+  { code: 'L2', name: '模型层', en: 'MODEL', gist: '心脏：架构与预训练', density: 1 },
+  { code: 'L3', name: '对齐层', en: 'ALIGNMENT', gist: '教它当一个有分寸的助手', density: 3 },
+  { code: 'L4', name: '部署层', en: 'SERVING', gist: '从实验室到可调用的服务', density: 2 },
+  { code: 'L5', name: '应用层', en: 'APPLICATION', gist: 'RAG、工具、智能体：落地的技术路径', density: 3 },
+  { code: 'L6', name: '产品层', en: 'PRODUCT', gist: '用户见到的最后一公里，义务最密处', density: 3 },
+];
+
+const NODES = [
+{ id:'gpu', layer:0, name:'GPU 与显存', en:'GPU · HBM',
+  gist:'AI 的厂房与地皮：模型能做多大、跑多快，第一约束是芯片算力与显存容量。',
+  how:'训练和运行大模型，本质是天文数字级的矩阵乘法。GPU 有成千上万个小计算核心，擅长同时做海量简单运算（CPU 则是少数强核心，擅长复杂逻辑）。模型的全部参数必须装进「显存」才能参与计算，所以显存容量直接决定单卡能承载的模型规模；HBM（高带宽内存）把内存芯片立体堆叠在处理器旁边，解决「算得快但数据喂不上」的瓶颈。',
+  choices:['显存需求 ≈ 参数量 × 精度字节数：一个 700 亿参数模型按 16 位精度约需 140GB，单卡装不下，必须多卡协作。','「内存墙」：带宽往往比算力更早成为瓶颈——芯片够快，数据搬不过来。','训练卡与推理卡是不同的产品与市场。'],
+  up:[], down:['cluster','infer'],
+  examples:[{t:'HBM 交互式讲解（abhik.ai）', u:'https://www.abhik.ai/concepts/gpu-computing/hbm-memory', w:'用交互图讲清 3D 堆叠内存与「内存墙」，从 DDR 一路讲到 HBM4。'}],
+  build:'「算珠墙」：左边画一个 CPU（8 个大格子），右边一个 GPU（数千小格子），点「开始计算」看同一批任务在两边被消化的速度差；再加一根显存条，拖动参数量滑块，超载即变红。SVG + 少量 JS 即可。',
+  comp:{ status:'filled', items:['芯片出口管制：美国 EAR 对高端 AI 芯片的出口管制——尽调中「算力从哪来」本身是合规问题。','算力租赁合同中的转售限制与最终用户承诺条款。'] } },
+
+{ id:'cluster', layer:0, name:'集群与并行训练', en:'CLUSTER · PARALLELISM',
+  gist:'一张卡装不下大模型，就把上万张卡连成一台「超级计算机」，把模型和数据切开分工。',
+  how:'三种切法：数据并行（每张卡放完整模型，各算一部分数据）、张量并行（把单层的大矩阵切开分给多卡）、流水线并行（把不同的层分给不同的卡，像流水线接力）。卡与卡之间用 NVLink / InfiniBand 高速互联——通信一旦跟不上，昂贵的算力就在空转等待。',
+  choices:['万卡集群的日常故障：一次训练持续数月，硬件天天坏，靠「存档点」（checkpoint）随坏随续。','通信开销与计算量的平衡是集群设计的核心艺术。'],
+  up:['gpu'], down:['pretrain'],
+  examples:[{t:'Ultra-Scale Playbook（Hugging Face）', u:'https://huggingface.co/spaces/nanotron/ultrascale-playbook', w:'交互式讲解千卡并行训练的完整工程手册，三种并行方式有动图。'}],
+  build:'一个模型被切成积木、分发到卡片矩阵上：三种并行 = 三种切法动画，一目了然。',
+  comp:{ status:'filled', items:['EU AI Act 以训练算力 10^25 FLOPs 为「系统性风险」门槛——算力规模本身成了法律触发器，训练算力需要留痕可证。'] } },
+
+{ id:'location', layer:0, name:'云算力与部署地', en:'CLOUD · JURISDICTION',
+  gist:'自建机房还是租云？机器放在哪个国家？这是成本问题，更是法域问题。',
+  how:'多数公司不自购 GPU，而是按小时租用云厂商（AWS、Azure、阿里云等）的集群。数据和模型物理上在谁的机房、哪个法域，决定适用什么法律。训练在 A 国、服务 B 国用户、日志存 C 国，是常见架构，也是常见的合规雷区。',
+  choices:['自建（重资产、可控）vs 云（弹性、依赖第三方）。','云合同里的责任划分、数据位置承诺、政府调取条款值得逐字读。'],
+  up:['gpu'], down:['api'],
+  examples:[],
+  build:'世界地图 + 数据流动线：点击一条跨境线，弹出该路径触发的法域规则清单。',
+  comp:{ status:'filled', items:['数据跨境：PIPL 出境安全评估 / 标准合同；GDPR 第五章。','政府调取：美国 CLOUD Act 对美系云商全球数据的触达。'] } },
+
+{ id:'collect', layer:1, name:'数据采集', en:'DATA COLLECTION',
+  gist:'大模型的原材料主要来自互联网爬取——量级以「整个互联网的文本」计。',
+  how:'来源四类：公开网络爬取（如 Common Crawl 的全网存档）、公开数据集、授权或购买的数据、自家产品的用户数据。原始网页经正文提取、去广告后进入语料库。robots.txt 只是「君子协议」，不是技术屏障，更不是法律豁免。',
+  choices:['语料的语言与领域配比，直接决定模型的能力偏向（中文弱？代码强？皆源于此）。','高质量语料（书籍、论文、代码）最稀缺，也最容易踩权利红线。'],
+  up:[], down:['clean','label'],
+  examples:[{t:'Common Crawl', u:'https://commoncrawl.org/', w:'亲眼看看「全网爬取存档」长什么样——多数大模型的起点。'}],
+  build:'漏斗图：从「全网 PB 级」到「清洗后 TB 级语料」，每层漏斗点开看被滤掉了什么。',
+  comp:{ status:'filled', items:['著作权：NYT v. OpenAI 等系列诉讼——用受版权保护内容训练是否构成合理使用，全球进行中。','欧盟 DSM 指令的文本数据挖掘（TDM）例外与权利人退出（opt-out）机制。','个人信息：公开个人信息「合理处理」的边界（PIPL 第 13、27 条）。','爬虫行为本身：robots 协议、反不正当竞争的国内判例线。'] } },
+
+{ id:'clean', layer:1, name:'清洗与过滤', en:'CLEANING · FILTERING',
+  gist:'原始网络数据又脏又毒，训练前要过一遍工业级的「净水处理」。',
+  how:'流水线四站：去重（重复内容会让模型死记硬背）、质量过滤（用小分类器给网页打分，低分弃用）、毒性与违法内容过滤、个人信息检测与移除（识别并删除证件号、电话等）。每一站都是规则 + 小模型的组合。',
+  choices:['过滤过狠会误伤多样性——方言、少数群体表达容易被「质量分」错杀。','个人信息清除永远做不到 100%，残留是常态而非事故。'],
+  up:['collect'], down:['token','pretrain'],
+  examples:[],
+  build:'流水线动画：脏数据方块依次流过去重 → 质检 → 过滤 → 去个人信息四站，被拦下的方块掉进废料桶，点击废料桶看类型分布。',
+  comp:{ status:'filled', items:['《生成式AI暂行办法》第 7 条：训练数据来源合法性要求。','TC260《生成式人工智能服务安全基本要求》：语料抽检合格率等量化指标——技术指标直接写进合规文件的罕见样本。'] } },
+
+{ id:'label', layer:1, name:'标注与偏好数据', en:'ANNOTATION · PREFERENCE',
+  gist:'让模型「懂人话、有分寸」的关键原料，是人类一条条写出来、选出来的。',
+  how:'两类人工数据：示范数据（人写出「理想回答」，教模型格式与语气）和偏好数据（人在模型的两个回答中选更好的一个，供 RLHF 使用）。大量依赖外包标注团队，标注指南本身就是一份价值观文件。',
+  choices:['标注质量决定对齐上限——「垃圾偏好进，谄媚模型出」。','「什么算好回答」的标注指南，是法律与伦理进入技术的第一个入口。'],
+  up:['collect'], down:['sft','rlhf'],
+  examples:[],
+  build:'展示一条真实的标注任务界面（二选一 + 理由），让访客体会「AI 的品味来自人」。',
+  comp:{ status:'filled', items:['标注外包的数据安全与保密协议链条。','标注员劳动保护：肯尼亚内容审核员诉讼等案例线（心理创伤与最低工资争议）。'] } },
+
+{ id:'synthetic', layer:1, name:'合成数据', en:'SYNTHETIC DATA',
+  gist:'用 AI 生成的数据训练 AI——高质量真实数据快用完了，这是主流补充方案。',
+  how:'强模型生成题目与解答、把大模型的能力「蒸馏」成训练素材，或对真实数据改写扩增。风险叫「模型坍塌」：反复吃自己产出的模型会放大偏差、丢失长尾知识。',
+  choices:['合成数据的配比与真实数据的锚定。','用竞品模型的输出训练自己，普遍存在但多违反服务条款。'],
+  up:['collect'], down:['pretrain','sft'],
+  examples:[],
+  build:'',
+  comp:{ status:'filled', items:['服务条款限制：主流闭源模型 ToS 普遍禁止「用输出训练竞品」——蒸馏路线的合同违约与不正当竞争双重风险。','AI 生成物可版权性存疑 → 合成语料的权利链条天然薄弱，数据采购中难以取得有效权利保证。','TC260 语料规范对来源多样性的要求：合成数据占比与生成过程留痕（监管口径演进中，需定期复核）。'] } },
+
+{ id:'token', layer:2, name:'分词 Tokenization', en:'TOKENIZATION · BPE',
+  gist:'模型不认识「字」，只认识「编号」——分词是把文字切成碎片并编号的过账程序。',
+  how:'BPE 算法从海量语料统计出最常见的字符组合，作为「词元」（token）。「人工智能」可能是 2 个 token，一个生僻英文词可能被切成 4 个。模型的计费、上下文长度、生成速度，全部以 token 为单位。',
+  choices:['中文的 token 效率通常低于英文：同样内容更费 token = 更贵。','分词决定模型「看世界的颗粒度」：数学算错、字母数不对，病根多在这里。'],
+  up:['clean'], down:['embed'],
+  examples:[{t:'Tiktokenizer', u:'https://www.tiktokenizer.app/', w:'实时看你输入的句子被切成什么样，支持 GPT、Claude 等多家模型。'},{t:'Tokenizer Playground（Hugging Face）', u:'https://huggingface.co/spaces/Xenova/the-tokenizer-playground', w:'对比不同模型的切法差异。'}],
+  build:'G3 级最容易实现的一站：开源分词器有浏览器版，可直接内嵌一个「输入即切分」的真演示。',
+  comp:{ status:'filled', items:['几乎无直接法定义务——密度极低本身即信息：法律追问数据与行为，不问编码方式。','但计费按 token：中文 token 效率劣势 = 同等内容成本更高，API 采购谈判中可量化主张的一项。'] } },
+
+{ id:'embed', layer:2, name:'向量嵌入 Embedding', en:'EMBEDDING · VECTOR',
+  gist:'把每个词元变成一串数字坐标，让「意思相近」变成「距离相近」——后续一切魔法的地基。',
+  how:'每个 token 映射为几百到几千维的向量（一串数字），语义关系变成几何关系：著名例子是 国王 − 男 + 女 ≈ 女王。模型的「理解」、RAG 的检索、相似度匹配，全部建立在这个几何空间上。',
+  choices:['维度越高表达越细，计算与存储越贵。','嵌入模型本身是独立产品（如 text-embedding 系列），选型影响整个 RAG 的质量。'],
+  up:['token'], down:['transformer','rag'],
+  examples:[{t:'Embedding Projector（TensorFlow）', u:'https://projector.tensorflow.org/', w:'在 3D 空间里亲手旋转、搜索词向量的邻居，体感「语义即距离」。'}],
+  build:'二维散点图：预置几十个词，点击一个词高亮它的近邻；切换「法律 / 水果 / 军事」聚类看语义分区。',
+  comp:{ status:'filled', items:['向量是不是个人信息：已有研究证明嵌入向量可被部分反演回原文——「已匿名化/已脱敏」抗辩的技术弱点。','向量库出境 = 数据出境：文本变向量只是形态转换，不改变数据的法律属性，跨境评估不能因此绕行。'] } },
+
+{ id:'transformer', layer:2, name:'Transformer 与注意力', en:'TRANSFORMER · ATTENTION',
+  gist:'当代所有大模型共用的一颗心脏：让每个词「环顾全句、决定重点看谁」，如此堆叠上百层。',
+  how:'注意力机制：每个 token 对句中所有其他 token 计算「相关度权重」，按权重吸收它们的信息——「银行」在「河边的银行」里会重点看「河」。一层 = 注意力 + 前馈网络；GPT-3 有 96 层，信息逐层提炼，越深越抽象。你想要的「神经网状图」，原型就在这一站。',
+  choices:['上下文窗口的代价：注意力计算量随长度平方增长——长上下文贵，根源在此。','多头注意力：每层并行多组注意力，各看各的角度（语法、指代、语义……）。'],
+  up:['embed'], down:['moe','pretrain'],
+  examples:[
+    {t:'Transformer Explainer（佐治亚理工）', u:'https://poloclub.github.io/transformer-explainer/', w:'浏览器里跑一个真的 GPT-2，逐层动画展开——你项目形态的黄金标准。'},
+    {t:'LLM Visualization（Bycroft）', u:'https://bbycroft.net/llm', w:'3D 全模型漫游，每层、每个注意力头都能飞进去看。'},
+    {t:'TensorFlow Playground', u:'https://playground.tensorflow.org/', w:'最适合入门的「多层神经网」手感：亲手加减层数与神经元，看拟合效果变化。'},
+    {t:'The Illustrated Transformer', u:'https://jalammar.github.io/illustrated-transformer/', w:'经典图解长文，交互图之外的最佳读本。'},
+    {t:'GPT-2 in Excel', u:'https://spreadsheets-are-all-you-need.ai/', w:'整个 GPT-2 装进 Excel 表格——对非工程师是祛魅时刻：AI 就是一张巨大的算表。'}],
+  build:'不要从零造。Transformer Explainer 是 MIT 协议开源，学习期先「临摹改造」，吃透后再谈原创。',
+  comp:{ status:'filled', items:['架构本身几乎不直接触发法律义务——这一层的「合规密度：低」本身就是网站要传达的洞察：法律追问的是数据与行为，不是数学。','「开源模型」须分层看：论文（公开知识）、代码（软件许可证）、权重（另行许可）——三层权利客体与许可条件各自独立，尽调勿混为一谈。'] } },
+
+{ id:'moe', layer:2, name:'架构抉择：Dense vs MoE', en:'DENSE vs MIXTURE-OF-EXPERTS',
+  gist:'造一个全科全能的大脑，还是一群专科医生加一个分诊台？当前最重要的架构分岔。',
+  how:'MoE（专家混合）把每层的前馈网络复制成多个「专家」，另训练一个「路由器」为每个 token 挑选 1–2 个专家处理。总参数巨大、每次只激活一小部分：DeepSeek-V3 共 6710 亿参数、每个 token 只激活约 370 亿。新闻里「参数量」与「激活参数量」两个数字的由来即在此。',
+  choices:['MoE 训练更难（专家负载要均衡）但推理更省；Dense 简单可靠。','头部模型多已转向 MoE（Mixtral、DeepSeek 公开；GPT-4 据业界报道）。'],
+  up:['transformer'], down:['pretrain'],
+  examples:[{t:'A Visual Guide to MoE（Grootendorst）', u:'https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-mixture-of-experts', w:'图解质量极高，一步步拆开路由器与专家。'}],
+  build:'「分诊台」交互：输入一句话，看每个词元被路由到哪位专家（颜色流向动画）。市面尚无好的中文交互版——你的机会。',
+  comp:{ status:'filled', items:['披露口径一致性：「总参数」与「激活参数」是两个数——宣传物料与备案材料中的参数表述应内部一致，防虚假宣传争议。','监管算力阈值（EU AI Act 10^25 FLOPs）按训练计算量认定，与激活参数无关——勿因 MoE 的「省」误判义务不触发。'] } },
+
+{ id:'pretrain', layer:2, name:'预训练与 Scaling Laws', en:'PRE-TRAINING · SCALING LAWS',
+  gist:'用「猜下一个词」这一件事读完整个互联网——大模型的全部知识来自这个看似简单的游戏。',
+  how:'给模型看一段话的前半，让它猜下一个 token；猜错就微调几百亿个参数，如此重复数万亿次。损失（猜错程度）随算力、数据、参数量的增加按可预测的曲线下降——这就是 Scaling Laws，「大力出奇迹」的数学依据，也是算力军备竞赛的根源。',
+  choices:['一次训练数月、成本以千万美元计，中途失败不可逆——所以数据配比等决策要在开跑前锁定。','预训练完的模型只会「接着写」，还不会「回答问题」——那是下一层的事。'],
+  up:['cluster','clean','transformer','moe'], down:['sft','open'],
+  examples:[],
+  build:'Scaling Laws 交互曲线：拖动「算力预算」滑块，看损失曲线与能力涌现点——市面缺好的交互版，机会 +1。',
+  comp:{ status:'filled', items:['EU AI Act 的 GPAI（通用人工智能模型）义务几乎全挂在这一站：训练数据摘要披露、版权政策、超过 10^25 FLOPs 的系统性风险附加义务。','中国大模型上线前的双备案（算法备案 + 生成式AI服务备案）。'] } },
+
+{ id:'sft', layer:3, name:'监督微调 SFT', en:'SUPERVISED FINE-TUNING',
+  gist:'预训练教会模型「语言」，SFT 教会它「当一个助手」——用人写的问答示范定格式。',
+  how:'预训练完的模型只会续写文本，不会对话。SFT 用「问题 → 理想回答」的示范样本继续训练，让它学会对话体、服从指令、遵守格式。数据量不大（万条级）但质量要求极高——这一步之后，它才开始像 ChatGPT。',
+  choices:['示范数据的风格 = 产品的性格。','SFT 可以塑形，但压不住深层倾向——所以还需要下一站。'],
+  up:['pretrain','label'], down:['rlhf'],
+  examples:[],
+  build:'对照演示：同一个问题，「预训练原始模型」与「SFT 后模型」的输出并排——直观看到「续写」变「回答」。',
+  comp:{ status:'filled', items:['微调数据是企业合规盲区高发地：员工把真实客户数据做成示范样本——个人信息与商业秘密「进入参数」的常见路径，须设内控审批。','微调服务合同要点：训练数据用途限定、微调产物（整套权重或 LoRA 补丁）的权属与使用边界。'] } },
+
+{ id:'rlhf', layer:3, name:'RLHF 与偏好对齐', en:'RLHF · DPO',
+  gist:'让人类当裁判打分，训练出一个「品味模型」，再让它日夜调教主模型——得体谈吐的来源。',
+  how:'三步：① 收集人类偏好（对两个回答选更好的那个）；② 用这些选择训练「奖励模型」——一个学会了人类品味的打分器；③ 主模型不断生成回答、奖励模型打分、按分数强化。DPO 等新方法把三步并作一步，原理同源：把人类偏好变成可优化的数学信号。',
+  choices:['奖励模型会被「钻空子」：模型学会讨好打分器而非真正变好（reward hacking）——AI 谄媚问题的技术根源。','偏好数据的人群构成 = 模型价值观的人群构成。'],
+  up:['sft','label'], down:['safety'],
+  examples:[{t:'Illustrating RLHF（Hugging Face）', u:'https://huggingface.co/blog/rlhf', w:'标准图解，三步流程一图看懂。'},{t:'RLHF 101（CMU）', u:'https://blog.ml.cmu.edu/2025/06/01/rlhf-101-a-technical-tutorial-on-reinforcement-learning-from-human-feedback/', w:'进阶技术版，读完可与工程师对话。'}],
+  build:'「亲手标注」交互：访客当十次标注员（二选一），实时看一个迷你奖励模型的品味被自己的选择塑造——把「对齐」从名词变成体感。',
+  comp:{ status:'filled', items:['价值观的法定要求直接进入这一站的损失函数：《生成式AI暂行办法》第 4 条——这是法律离算法最近的地方。','对齐标准文件（什么该拒答）是监管审查与备案材料的核心。'] } },
+
+{ id:'safety', layer:3, name:'安全对齐与红队', en:'SAFETY · RED TEAM',
+  gist:'教模型「什么不能说、不能做」，然后专门雇人想方设法让它变坏——上线前的渗透测试。',
+  how:'安全训练（有害请求的拒答示范与强化）+ 红队测试（专家尝试越狱、诱导、注入，发现漏洞回炉再训）+ 自动化评估基准跑分。越狱与防御是持续攻防，没有一劳永逸。',
+  choices:['拒答边界的松紧是产品决策：过松出事，过紧惹恼用户。','第三方红队与内部红队的组合。'],
+  up:['rlhf'], down:['guardrail','api'],
+  examples:[],
+  build:'攻防记分板：展示几类经典越狱手法（角色扮演、编码绕过……）与防御的演进时间线。',
+  comp:{ status:'filled', items:['TC260《基本要求》的题库抽检与拒答率指标——红队结果直接对应备案材料。','EU AI Act 对系统性风险模型的对抗测试与事故报告义务。'] } },
+
+{ id:'infer', layer:4, name:'推理与 KV 缓存', en:'INFERENCE · KV CACHE',
+  gist:'模型说话是一个字一个字挤出来的，每个字都要过一遍全部几百亿参数——快慢贵贱都按字算。',
+  how:'自回归生成：生成第 N 个 token 时要「回看」前面全部内容。KV 缓存把已算过的中间结果存在显存里避免重算，代价是长对话显存暴涨。这是 API 按 token 计费、长上下文更贵、首字延迟存在的共同技术根源。',
+  choices:['吞吐（同时服务多少人）与延迟（单人多快）的取舍。','长上下文的显存成本让「无限记忆」在物理上不成立。'],
+  up:['gpu','transformer'], down:['quant','api'],
+  examples:[],
+  build:'打字机动画 + 显存水位条：对话越长水位越高——「记忆的代价」可视化。',
+  comp:{ status:'filled', items:['「我们不存储您的对话」的技术核查清单：KV 缓存驻留、推理日志、误用监测样本各留存多久——对外承诺必须与架构对得上。','推理日志既是《办法》项下的留存对象，也是安全事件的取证基础：留存期限与访问权限应当成文。'] } },
+
+{ id:'quant', layer:4, name:'量化与蒸馏', en:'QUANTIZATION · DISTILLATION',
+  gist:'把模型压缩降精，装进更小更便宜的机器——手机上跑大模型靠的就是这两招。',
+  how:'量化：把参数从 16 位精度降到 8 位、4 位（每个数字用更少字节存），显存减半再减半，智商几乎不掉。蒸馏：让小模型学习大模型的输出，「老师教学生」，把能力浓缩进小身板。',
+  choices:['精度降到多少开始「变笨」，因模型与任务而异。','端侧部署（手机、车机）意味着模型离开你的服务器——控制力随之改变。'],
+  up:['infer'], down:['open'],
+  examples:[],
+  build:'滑块交互：拖动精度（16→8→4 位），看显存条缩短、回答质量微妙变化的并排样例。',
+  comp:{ status:'filled', items:['开源模型被第三方量化再分发后，安全措施与义务链条如何延续——责任主体认定的新场景。','送审与部署的一致性：备案时评估的是哪个精度版本？量化可能造成能力漂移，使评估结论失效——模型版本与精度应钉入备案材料和采购合同。','蒸馏 = 用他人模型输出训练自己：回看「合成数据」节点的 ToS 与不正当竞争问题。'] } },
+
+{ id:'open', layer:4, name:'开源 vs 闭源发布', en:'OPEN vs CLOSED WEIGHTS',
+  gist:'把模型权重公开放出 = 泼出去的水。这个决定的法律含义与「开源软件」完全不同。',
+  how:'开放权重（Llama、DeepSeek）不等于开源代码：拿到权重的人可以微调、可以低成本抹除安全对齐（去对齐）、可以离线部署无法召回。一旦放出，任何后续治理都只能靠许可证条款——而条款对匿名下载者近乎无力。',
+  choices:['开放带来生态与影响力，闭源保住控制与商业化——头部玩家的路线分裂。','「开放权重」许可证多含限制条款（如 Llama 社区协议），并非 OSI 意义的开源。'],
+  up:['pretrain','quant'], down:['api'],
+  examples:[],
+  build:'对照表 + 决策树：开源 / 开放权重 / 闭源 API 三条路的能力、控制、责任对比。',
+  comp:{ status:'filled', items:['EU AI Act 对开源 GPAI 的部分豁免及其边界（系统性风险模型不豁免）。','中国对开源模型提供者与服务提供者的备案口径区分。','许可证条款作为「私法治理」工具的实际约束力问题。'] } },
+
+{ id:'api', layer:4, name:'API 服务', en:'API · SERVING',
+  gist:'大多数「AI 产品」其实是套在几家基础模型 API 外面的壳——理解 API 就理解了产业分工。',
+  how:'开发者按 token 付费调用大厂模型。一次调用 = 系统提示词（开发者预置的角色与规则）+ 用户输入 → 模型输出。上下文窗口是模型一次能「看见」的上限，超出即遗忘。基础模型方、应用开发方、终端用户——三层分工从此开始。',
+  choices:['模型选型三角：能力、价格、延迟。','供应商锁定与多模型路由策略。'],
+  up:['infer','safety','location','open'], down:['prompt','rag','tools','agent'],
+  examples:[],
+  build:'一次 API 调用的解剖图：系统提示词 + 对话历史 + 用户输入如何拼成一次请求，计费在哪里发生。',
+  comp:{ status:'filled', items:['责任分层的起点：基础模型提供者 vs 应用部署者（EU AI Act 的 provider/deployer 二分；中国办法的服务提供者认定）。','日志留存义务与用户输入用于再训练的合同条款（企业采购审查重点）。'] } },
+
+{ id:'prompt', layer:5, name:'提示词工程', en:'PROMPTING',
+  gist:'不改模型本身，仅靠「怎么问」控制输出——成本最低的定制手段，也是最脆弱的。',
+  how:'系统提示词设定角色、规则与边界；few-shot 示例给出样板；结构化要求约束输出格式。脆弱性与生俱来：提示词注入——用户输入里藏一句「忽略以上全部指令」，就可能覆盖开发者的规则。',
+  choices:['提示词是「软约束」：影响概率，不保证服从。','重要规则不能只靠提示词，要配后面的护栏层。'],
+  up:['api'], down:['rag','agent'],
+  examples:[],
+  build:'注入攻防小游戏：给访客一个带系统提示词的机器人，挑战用输入把它带偏——亲手体会「软约束」。',
+  comp:{ status:'filled', items:['提示词注入导致越权输出的责任场景——「谁拼装了上下文谁举证」的分析框架正在形成。','系统提示词的商业秘密属性：已有泄露纠纷先例，可保护性取决于保密措施（技术 + 合同）是否到位。','提示词中含个人信息或商密而调用第三方 API = 向外提供数据，触发相应告知与合同义务。'] } },
+
+{ id:'rag', layer:5, name:'RAG 检索增强生成', en:'RETRIEVAL-AUGMENTED GENERATION',
+  gist:'让模型开卷考试：回答前先从你的资料库里检索相关段落塞给它——企业落地的第一主流形态。',
+  how:'全链条：文档切分（资料切成段落块）→ 向量化（每块算出语义坐标，见 L2 嵌入站）→ 存入向量库 → 用户提问同样向量化 → 按语义距离检索最相关的几块 → 拼进提示词 → 模型据此作答。每一环都有工程抉择：块切多大、检索几条、要不要重排序。',
+  choices:['RAG 缓解幻觉但不根治：检索错则答错——垃圾进垃圾出在此复活。','权限继承难题:员工通过 AI 问出了他本无权查看的文件，谁的责任？'],
+  up:['embed','api','prompt'], down:['agent'],
+  examples:[{t:'RAG Visualized（Proser）', u:'https://zackproser.com/demos/rag-visualized', w:'全链路交互演示，作者曾主导 Pinecone 的 RAG 架构。'}],
+  build:'建议做成你的旗舰图：输入真实问题，动画走完切分 → 向量落点 → 检索命中 → 拼装 → 生成，每一站可点击跳回上游节点（嵌入、推理）——完美示范「层层递进」。',
+  comp:{ status:'filled', items:['知识库是合规重灾区：库内个人信息与商业秘密的处理合法性。','检索越权与数据泄露：向量库的访问控制普遍薄弱。','输入端著作权：把整本书、整库判例塞进知识库的授权问题。','生成内容侵权的平台注意义务：杭互「奥特曼案」等 AIGC 判例线可类比适用。'] } },
+
+{ id:'ftrag', layer:5, name:'抉择：微调 vs RAG vs 提示词', en:'FINE-TUNE vs RAG vs PROMPT',
+  gist:'「让模型懂我的业务」有三条路，深浅与贵贱不同——每个 AI 项目立项时的第一个技术决策。',
+  how:'三级阶梯：提示词（最快最浅，知识放在对话窗口里）→ RAG（知识外挂在资料库，可更新、可溯源、可删除）→ 微调（知识与风格内化进模型参数，效果深但贵、难回退）。经验法则：事实知识用 RAG，风格格式用微调，一切先试提示词。',
+  choices:['微调后的模型是新资产还是衍生品？采购与知识产权条款的新课题。','混合架构（微调 + RAG）是成熟形态。'],
+  up:['prompt','rag'], down:['agent'],
+  examples:[],
+  build:'决策树交互：回答三五个问题（知识多久更新一次？要溯源吗？预算？），得到路线建议——法务做尽调时也能用。',
+  comp:{ status:'filled', items:['三条路的合规画像截然不同：RAG 的知识可删可改，利于响应删除权；个人信息一旦微调「进入参数」，如何响应删除请求（GDPR 机器遗忘难题）尚无定论。'] } },
+
+{ id:'tools', layer:5, name:'工具调用 Function Calling', en:'FUNCTION CALLING',
+  gist:'给模型一双手：让它能查数据库、发邮件、调 API——从「聊天」到「办事」的分水岭。',
+  how:'开发者预先声明可用工具（名称 + 参数格式），模型在需要时输出「我要调用工具 X，参数 Y」的结构化指令，宿主程序执行后把结果喂回模型。关键事实：模型本身从不真正「动手」，动手的永远是宿主程序——责任分析的支点。',
+  choices:['给哪些工具 = 给哪些权限，工具清单就是权限清单。','高危操作（转账、删除）是否设人工确认点。'],
+  up:['api'], down:['agent'],
+  examples:[],
+  build:'一次工具调用的时序图动画：模型「想」→ 输出指令 → 宿主执行 → 结果回填 → 模型继续——五步循环看三遍就懂。',
+  comp:{ status:'filled', items:['工具授权边界与操作审计日志——责任认定的证据基础设施。','工具清单即权限清单：每个工具声明对应一项数据/系统访问授权——「最小必要」原则的技术落点。','第三方工具接入（MCP 等协议生态）= 供应链引入：来源审查、权限沙箱、恶意工具的注入面。'] } },
+
+{ id:'agent', layer:5, name:'智能体 Agent 与 Harness', en:'AGENT · HARNESS',
+  gist:'把模型、工具、循环组装成能自主多步办事的系统；Harness 是这套「驾驶舱」——你正在用的 Claude Code 就是一个。',
+  how:'核心是循环：观察（读任务与环境）→ 思考（模型决定下一步）→ 行动（调用工具）→ 观察结果 → 再思考……直到它判断任务完成。之上再加记忆（跨轮、跨会话）、上下文管理、MCP（模型连接外部工具的通用协议）。同一个模型装进不同 Harness，能力与风险完全不同——Harness 决定权限边界与护栏，这是技术事实，也是责任分配的事实基础。',
+  choices:['自主步数越多，偏离与放大错误的空间越大——「自主性」是产品参数，也是风险参数。','人工确认点（human-in-the-loop）放在哪里，是安全设计的核心决策。'],
+  up:['api','tools','rag','prompt','ftrag'], down:['chatbot','copilot'],
+  examples:[{t:'Agent Loop Designs', u:'https://agent-loop.app.teenyapp.com/', w:'11 种智能体循环设计的交互图解，从单次调用到自我改进循环。'},{t:'Agent Loop 3D（EngineersOfAI）', u:'https://engineersofai.com/playground/agent-loop', w:'观察-思考-行动循环的 3D 动画演示。'},{t:'Claude Code 的循环拆解（官方文档）', u:'https://code.claude.com/docs/en/agent-sdk/agent-loop', w:'一个真实产品 Harness 的循环如何运作——对照你正在使用的工具读。'}],
+  build:'沙盘动画：一个任务进来，看 agent 转圈——每步的思考、工具调用、结果都留痕可展开；在图上标出「人工确认点」可以插在哪里。',
+  comp:{ status:'filled', items:['自主行为的责任链：agent 错误下单、误删数据时，模型方 / Harness 方 / 部署方 / 用户的责任划分。','授权与留痕：审计日志是未来纠纷的核心证据。','EU AI Act 风险分级中「自主性程度」的加权作用；agent 间交互的规则真空——接口留好，这一块会快速演化。'] } },
+
+{ id:'guardrail', layer:5, name:'护栏 Guardrails', en:'GUARDRAILS · MODERATION',
+  gist:'在模型的嘴前和耳后各站一个保安：输入先审、输出再审——合规要求落地成代码的地方。',
+  how:'输入侧：注入检测、敏感内容识别、身份与权限校验；输出侧：内容审核分类器、个人信息泄露检测、事实性校验。实现可以是关键词规则，也可以是另一个小模型当审核员。护栏独立于大模型存在——大模型是概率的，护栏要的是确定性。',
+  choices:['误杀率与漏过率的永恒权衡。','护栏日志既是安全资产也是合规证据。'],
+  up:['safety','api'], down:['chatbot','copilot','watermark'],
+  examples:[],
+  build:'双保安动画：一条消息进出各过一道安检门，被拦截的样本点开看拦截理由。',
+  comp:{ status:'filled', items:['内容安全义务的主要技术实现点：审核机制、关键词库、拒答策略都是备案材料。','审核记录的留存期限与调取程序。'] } },
+
+{ id:'chatbot', layer:6, name:'对话助手', en:'CHATBOT · ASSISTANT',
+  gist:'最直观的产品形态——但聊天框底下，是上面整条链的总和。',
+  how:'界面 + 会话管理 + 记忆工程（把历史对话与用户偏好持续拼回上下文窗口——模型本身没有记忆，「记住你」是工程做出来的幻觉）+ 上面全部六层的组装。评估用户看到的任何 AI 产品，都可以沿这张地图向下拆。',
+  choices:['记忆的边界：记多久、记什么、用户能否删除。','多轮对话中的身份与权限保持。'],
+  up:['agent','guardrail'], down:[],
+  examples:[],
+  build:'解剖图：点击聊天界面的每个部位（输入框、回答、记忆提示），高亮它对应的地图下层节点——「产品即地图索引」。',
+  comp:{ status:'filled', items:['生成式AI服务备案与公示义务。','用户协议、AI 身份披露、免责提示的效力边界。','未成年人保护模式。','投诉举报入口与处置时限——与你处理投诉的实务经验直接衔接。'] } },
+
+{ id:'copilot', layer:6, name:'Copilot 与嵌入式 AI', en:'COPILOT · EMBEDDED',
+  gist:'AI 不做独立产品，而是长在现有软件里：写作助手、代码补全、合同审查——B 端落地的主形态。',
+  how:'在既有工作流内嵌 AI 能力：编辑器里的补全、办公套件里的总结、法务系统里的合同初审。用户往往意识不到「这是 AI」，输出直接进入业务流程——出错的传播路径比聊天框更隐蔽。',
+  choices:['人的复核环节设不设、设在哪——效率与责任的直接交换。','嵌入场景的错误归因困难：是人的判断还是 AI 的建议？'],
+  up:['agent','api','guardrail'], down:[],
+  examples:[],
+  build:'',
+  comp:{ status:'filled', items:['责任分配三角：软件商 / 模型方 / 企业用户——嵌入越深，归因越难，合同里的责任划分越要提前写清。','职业责任场景：律师引用 AI 幻觉判例被法院处罚的案例线——离你的行业最近的警钟。','AI 参与度披露的萌芽：法院、期刊、监管对「本成果是否使用 AI」的披露要求正在成形，执业场景先行。'] } },
+
+{ id:'watermark', layer:6, name:'内容标识与溯源', en:'LABELING · WATERMARK · C2PA',
+  gist:'AI 生成的内容必须亮明身份——显式标注 + 隐式水印，全球监管在此罕见地一致。',
+  how:'双轨：显式标识（画面角标、文字声明，给人看）+ 隐式标识（元数据、不可见水印、C2PA 内容凭证，给机器验）。平台侧还有检测义务：识别入站内容是否 AI 生成。技术上，水印可被裁剪、转码削弱——标识是概率工程而非印章。',
+  choices:['标识的鲁棒性 vs 内容质量的权衡。','跨平台流转中标识的存续。'],
+  up:['guardrail'], down:[],
+  examples:[],
+  build:'演示一张图片的 C2PA 凭证链：拍摄 → AI 编辑 → 平台转发，每一步凭证如何续写或断裂。',
+  comp:{ status:'filled', items:['《人工智能生成合成内容标识办法》及配套强制性国标（2025-09-01 施行）：显式 + 隐式双轨义务。','《深度合成规定》的既有标识要求。','EU AI Act 第 50 条透明度义务。','C2PA 作为行业事实标准的采纳趋势。'] } },
+];
+
+/* ---------- render map ---------- */
+const mapEl = document.getElementById('map');
+LAYERS.forEach((ly, i) => {
+  const sec = document.createElement('div');
+  sec.className = 'layer';
+  sec.style.setProperty('--lc', `var(--l${i})`);
+  const dots = '●'.repeat(ly.density) + '○'.repeat(3 - ly.density);
+  const densLabel = ['低', '中', '高'][ly.density - 1];
+  sec.innerHTML = `
+    <div class="layer-head">
+      <span class="layer-code">${ly.code} ${ly.en}</span>
+      <span class="layer-name">${ly.name}</span>
+      <span class="layer-gist">${ly.gist}</span>
+      <span class="density" title="该层挂载法律义务的密集程度"><span class="dots">${dots}</span>合规密度·${densLabel}</span>
+    </div>
+    <div class="grid"></div>`;
+  const grid = sec.querySelector('.grid');
+  NODES.filter(n => n.layer === i).forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'node';
+    b.style.setProperty('--lc', `var(--l${i})`);
+    const exN = n.examples.length;
+    const sealTxt = n.comp.status === 'filled' ? '⚖ 挂点已填' : '⚖ 挂点待补';
+    b.innerHTML = `
+      <div class="node-top"><span class="node-dot"></span><span class="node-en">${n.en}</span></div>
+      <div class="node-name">${n.name}</div>
+      <div class="node-gist">${n.gist}</div>
+      <div class="node-meta"><span>🎓 范例 ${exN ? exN + ' 个' : '待补'}</span><span class="seal-tag">${sealTxt}</span></div>`;
+    b.addEventListener('click', () => openNode(n.id));
+    grid.appendChild(b);
+  });
+  mapEl.appendChild(sec);
+});
+
+/* ---------- stats ---------- */
+const exTotal = NODES.reduce((s, n) => s + n.examples.length, 0);
+const filled = NODES.filter(n => n.comp.status === 'filled').length;
+document.getElementById('stats').innerHTML = [
+  ['7', '层'], [String(NODES.length), '节点'], [String(exTotal), '个可玩范例'],
+  [`${filled} / ${NODES.length - filled}`, '合规挂点 已填 / 待补'],
+].map(([n, l]) => `<div class="stat"><div class="num">${n}</div><div class="lab">${l}</div></div>`).join('');
+
+/* ---------- detail panel ---------- */
+const panel = document.getElementById('panel');
+const backdrop = document.getElementById('backdrop');
+let lastFocus = null;
+
+function chipsHtml(ids) {
+  if (!ids.length) return '<span class="empty-ex">（链条端点）</span>';
+  return ids.map(id => {
+    const n = NODES.find(x => x.id === id);
+    if (!n) return '';
+    return `<button class="chip" data-goto="${id}"><span class="cdot" style="background:var(--l${n.layer})"></span>${n.name}</button>`;
+  }).join('');
+}
+
+function openNode(id) {
+  const n = NODES.find(x => x.id === id);
+  if (!n) return;
+  const ly = LAYERS[n.layer];
+  if (!panel.classList.contains('on')) lastFocus = document.activeElement;
+  const chip = document.getElementById('p-chip');
+  chip.textContent = `${ly.code} ${ly.name}`;
+  chip.style.setProperty('--lc', `var(--l${n.layer})`);
+  document.getElementById('panel-name').textContent = n.name;
+  document.getElementById('p-en').textContent = n.en;
+
+  const ex = n.examples.length
+    ? n.examples.map(e => `<a class="ex-item" href="${e.u}" target="_blank" rel="noopener">
+        <b>${e.t} ↗</b><span>${e.w}</span><span class="url">${e.u}</span></a>`).join('')
+    : '<p class="empty-ex">待补——市面暂缺好的交互范例。按 R2 保留占位：这既是空缺，也是你自己做图的机会清单。</p>';
+
+  const build = n.build
+    ? `<div class="build-box">${n.build}</div>`
+    : '<div class="build-box" style="opacity:.65">待规划（R2：占位保留）。</div>';
+
+  let comp;
+  if (n.comp.items.length) {
+    comp = `<ul>${n.comp.items.map(i => `<li>${i}</li>`).join('')}</ul>`;
+    if (n.comp.status === 'stub') comp += `<p class="seal-stub" style="margin:10px 0 0">△ 以上为线索性记录，完整挂点待填。</p>`;
+  } else {
+    comp = `<div class="seal-stub">接口已预留，内容待填（R4）：
+      <dl><dt>触发行为</dt><dd>待补</dd><dt>义务与法条</dt><dd>待补</dd><dt>典型案例</dt><dd>待补</dd></dl></div>`;
+  }
+
+  document.getElementById('p-body').innerHTML = `
+    <p class="pgist" style="--lc:var(--l${n.layer})">${n.gist}</p>
+    <div class="psec"><div class="psec-h">① 它如何运作</div><p>${n.how}</p></div>
+    <div class="psec"><div class="psec-h">② 关键抉择与细节</div>
+      <ul>${n.choices.map(c => `<li>${c}</li>`).join('')}</ul></div>
+    <div class="psec"><div class="psec-h">③ 上下游（点击跳转）</div>
+      <div class="flow-lab">▲ 上游 · 它依赖谁</div><div class="chips">${chipsHtml(n.up)}</div>
+      <div class="flow-lab">▼ 下游 · 谁依赖它</div><div class="chips">${chipsHtml(n.down)}</div></div>
+    <div class="psec"><div class="psec-h">④ 学习范例 · 先去玩再回来</div>${ex}</div>
+    <div class="psec"><div class="psec-h">⑤ 这张图将来怎么做</div>${build}</div>
+    <div class="psec seal-sec"><div class="psec-h">⚖ 合规挂点（朱批）
+      <span class="seal-pill">${n.comp.status === 'filled' ? '已填' : '待补'}</span></div>${comp}</div>
+    <div class="vdate">R5 核验状态：AI 起草 · 2026-07-05 · 未经人工核验，默认存疑</div>`;
+
+  document.getElementById('p-body').querySelectorAll('[data-goto]').forEach(b =>
+    b.addEventListener('click', () => openNode(b.dataset.goto)));
+
+  panel.classList.add('on');
+  backdrop.classList.add('on');
+  document.getElementById('p-body').scrollTop = 0;
+  document.getElementById('p-close').focus();
+}
+
+function closePanel() {
+  panel.classList.remove('on');
+  backdrop.classList.remove('on');
+  if (lastFocus) { lastFocus.focus(); lastFocus = null; }
+}
+document.getElementById('p-close').addEventListener('click', closePanel);
+backdrop.addEventListener('click', closePanel);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+/* ---------- hero mesh ---------- */
+(function mesh() {
+  const cv = document.getElementById('mesh');
+  const ctx = cv.getContext('2d');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, nodes = [], edges = [], pulses = [];
+  const COLS = 6, layerHues = () => {
+    const cs = getComputedStyle(document.documentElement);
+    return [0, 1, 2, 3, 4, 5].map(i => cs.getPropertyValue(`--l${Math.min(i, 6)}`).trim());
+  };
+  let hues = [];
+  function setup() {
+    const r = cv.parentElement.getBoundingClientRect();
+    W = cv.width = r.width * devicePixelRatio;
+    H = cv.height = r.height * devicePixelRatio;
+    nodes = []; edges = []; hues = layerHues();
+    const rows = 5;
+    for (let c = 0; c < COLS; c++) {
+      for (let r2 = 0; r2 < rows; r2++) {
+        nodes.push({
+          x: (c + 0.5) / COLS * W,
+          y: (r2 + 0.7 + Math.sin(c * 1.7 + r2) * 0.22) / (rows + 0.4) * H,
+          c
+        });
+      }
+    }
+    for (let c = 0; c < COLS - 1; c++) {
+      const a = nodes.filter(n => n.c === c), b = nodes.filter(n => n.c === c + 1);
+      a.forEach(n1 => b.forEach(n2 => {
+        if (Math.random() < 0.42) edges.push([n1, n2]);
+      }));
+    }
+    pulses = Array.from({ length: 9 }, () => ({
+      e: edges[Math.floor(Math.random() * edges.length)],
+      t: Math.random(), v: 0.003 + Math.random() * 0.006
+    }));
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink-3').trim();
+    ctx.globalAlpha = 0.22;
+    ctx.strokeStyle = ink; ctx.lineWidth = devicePixelRatio * 0.6;
+    edges.forEach(([a, b]) => {
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    });
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = ink;
+    nodes.forEach(n => { ctx.beginPath(); ctx.arc(n.x, n.y, devicePixelRatio * 2.2, 0, 7); ctx.fill(); });
+    ctx.globalAlpha = 0.9;
+    pulses.forEach(p => {
+      const [a, b] = p.e;
+      const x = a.x + (b.x - a.x) * p.t, y = a.y + (b.y - a.y) * p.t;
+      ctx.fillStyle = hues[a.c] || ink;
+      ctx.beginPath(); ctx.arc(x, y, devicePixelRatio * 2.6, 0, 7); ctx.fill();
+      if (!reduced) {
+        p.t += p.v;
+        if (p.t > 1) { p.t = 0; p.e = edges[Math.floor(Math.random() * edges.length)]; }
+      }
+    });
+    ctx.globalAlpha = 1;
+    if (!reduced) requestAnimationFrame(draw);
+  }
+  setup(); draw();
+  addEventListener('resize', () => { setup(); if (reduced) draw(); });
+  new MutationObserver(() => { hues = layerHues(); if (reduced) draw(); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+})();
+</script>

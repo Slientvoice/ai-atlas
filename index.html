@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 合规全景地图</title>
+<style>
+  :root {
+    --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
+    --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
+    --hairline: #e3e1d8; --seal: #b0392e;
+    --p0: #2a78d6; --p2: #eda100; --p5: #e87ba4; --p3: #4a3aa7;
+    --shadow: 0 10px 32px rgba(28,27,24,0.10);
+    --serif: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", serif;
+    --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    --grid: rgba(28,27,24,0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page: #131311; --surface: #1e1d1a; --surface-2: #262521; --ink: #f2f0e8; --ink-2: #b5b2a6;
+      --ink-3: #85827a; --hairline: #2e2d28; --seal: #e0705e; --grid: rgba(255,255,255,0.045);
+      --p0: #3987e5; --p2: #c98500; --p5: #d55181; --p3: #9085e9; --shadow: 0 10px 32px rgba(0,0,0,0.45); }
+  }
+  :root[data-theme="dark"] { --page: #131311; --surface: #1e1d1a; --surface-2: #262521; --ink: #f2f0e8;
+    --ink-2: #b5b2a6; --ink-3: #85827a; --hairline: #2e2d28; --seal: #e0705e; --grid: rgba(255,255,255,0.045);
+    --p0: #3987e5; --p2: #c98500; --p5: #d55181; --p3: #9085e9; --shadow: 0 10px 32px rgba(0,0,0,0.45); }
+  :root[data-theme="light"] { --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8; --ink: #1c1b18;
+    --ink-2: #57544c; --ink-3: #8a877e; --hairline: #e3e1d8; --seal: #b0392e; --grid: rgba(28,27,24,0.05);
+    --p0: #2a78d6; --p2: #eda100; --p5: #e87ba4; --p3: #4a3aa7; --shadow: 0 10px 32px rgba(28,27,24,0.10); }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--page); color: var(--ink); font-family: var(--sans); line-height: 1.8; font-size: 16px; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 22px; }
+  header { padding: 84px 0 46px; border-bottom: 1px solid var(--hairline);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; color: var(--ink-3); }
+  h1 { font-family: var(--serif); font-size: clamp(38px, 7vw, 60px); margin: 12px 0 10px; line-height: 1.15; }
+  .sub { color: var(--ink-2); max-width: 40em; font-size: 17px; }
+  .sub .seal-w { color: var(--seal); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 40px 0 8px; }
+  .card { display: block; text-decoration: none; color: inherit; background: var(--surface);
+    border: 1px solid var(--hairline); border-top: 3px solid var(--ac); border-radius: 14px;
+    padding: 20px 22px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .card:hover, .card:focus-visible { transform: translateY(-3px); box-shadow: var(--shadow); outline: none; }
+  .card .ic { font-size: 22px; }
+  .card h2 { font-family: var(--serif); font-size: 21px; margin: 6px 0 4px; }
+  .card p { margin: 0; font-size: 14px; color: var(--ink-2); }
+  .card .tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; color: var(--ac); font-weight: 700; }
+  section { padding: 40px 0 6px; }
+  h3 { font-family: var(--serif); font-size: 22px; margin: 0 0 8px; }
+  section p { color: var(--ink-2); max-width: 44em; margin: 8px 0; }
+  section b { color: var(--ink); }
+  .route { border-left: 3px solid var(--hairline); padding-left: 18px; margin: 14px 0; }
+  .route p { margin: 6px 0; font-size: 15px; }
+  .route .rn { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-right: 8px; }
+  footer { border-top: 1px solid var(--hairline); margin-top: 48px; padding: 24px 0 60px; color: var(--ink-3); font-size: 13px; }
+  footer .sn { color: var(--seal); }
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 技术为经 · 合规为纬</div>
+    <h1>AI 合规全景地图</h1>
+    <p class="sub">一个以<b>真实技术结构</b>为线索的 AI 认知与合规站点：先看懂机器如何炼成、如何运转、如何被组装成产品，<span class="seal-w">法律义务以「朱批」钉在它实际发生的技术环节上</span>。由一位法务人员与 AI 结对建造，既是学习的过程，也是学习的产物。</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="cards">
+    <a class="card" href="blueprint.html" style="--ac:var(--p2)">
+      <span class="ic">📐</span><span class="tag">主线 · 从这里开始</span>
+      <h2>LLM 系统蓝图</h2>
+      <p>六平面 38 模块的通用工程结构图：真实术语、可切换的技术分叉、张量形状——内嵌 16 个可实操的真算法实验室，包括在你浏览器里现场训练一个语言模型。</p>
+    </a>
+    <a class="card" href="index-map.html" style="--ac:var(--p0)">
+      <span class="ic">🧭</span><span class="tag">目录 · 按需查阅</span>
+      <h2>索引地图</h2>
+      <p>七层 28 节点的全目录：每个技术环节的人话解释、上下游关联、精选学习范例链接，与全部 28 条合规挂点。</p>
+    </a>
+    <a class="card" href="thread.html" style="--ac:var(--p5)">
+      <span class="ic">🧵</span><span class="tag">入门 · 给非技术访客</span>
+      <h2>一句话的旅程</h2>
+      <p>滚动叙事：一句真实的话流过 AI 的全部七层——按下回车之后的三秒，放慢一万倍讲给你听。</p>
+    </a>
+    <a class="card" href="progress.html" style="--ac:var(--p3)">
+      <span class="ic">🚦</span><span class="tag">工地 · 建设实况</span>
+      <h2>进度看板</h2>
+      <p>哪里亮了哪里没亮：模块深度亮灯图、四条分线进度与版本时间线——数据驱动，与站点同步更新。</p>
+    </a>
+  </div>
+
+  <section>
+    <h3>建议的走法</h3>
+    <div class="route">
+      <p><span class="rn">初来</span>先走《一句话的旅程》建立整体感（十分钟），再进蓝图从 PLANE 0 地基读起。</p>
+      <p><span class="rn">进阶</span>直接进蓝图，只读模块折叠标题过一遍全图，第二遍展开细读、第三遍玩 🔬 实验室——重点推荐「迷你训练场」与「投机解码」。</p>
+      <p><span class="rn">法务同行</span>沿朱红色的「⚖ 朱批」走：它们只出现在义务实际发生的技术环节上——这正是本站与法条检索工具的不同之处。</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap" style="padding:0">
+      <p>本站遵循「诚实简化」原则：所有实验室标明真算法与教学简化的边界；<span class="sn">技术内容由 AI 起草、处于持续人工核验中，标注「示意 / 据报道 / 研究观点」处请对照权威来源。</span>合规内容不构成法律意见。</p>
+    </div>
+  </footer>
+</div>
