@@ -10,7 +10,7 @@
     --hairline: #e3e1d8; --seal: #b0392e;
     --p0: #2a78d6; --p2: #eda100; --p5: #e87ba4; --p3: #4a3aa7;
     --shadow: 0 10px 32px rgba(28,27,24,0.10);
-    --serif: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", serif;
+    --serif: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif; /* 2026-07-09 用户拍板：宋体退役，全站统一现代黑体 */
     --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
     --grid: rgba(28,27,24,0.05);
@@ -47,6 +47,14 @@
   .card h2 { font-family: var(--serif); font-size: 21px; margin: 6px 0 4px; }
   .card p { margin: 0; font-size: 14px; color: var(--ink-2); }
   .card .tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; color: var(--ac); font-weight: 700; }
+  .card-wide { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--hairline); border-left: 3px solid var(--ac);
+    border-radius: 12px; padding: 13px 20px; margin-top: 14px; font-size: 14px; transition: border-color .15s; }
+  .card-wide:hover, .card-wide:focus-visible { border-color: var(--ac); outline: none; }
+  .card-wide b { font-size: 15px; white-space: nowrap; }
+  .card-wide .cw-d { color: var(--ink-2); font-size: 13px; }
+  .card-wide .cw-a { margin-left: auto; color: var(--ink-3); }
+  @media (max-width: 640px) { .card-wide .cw-d { display: none; } }
   section { padding: 40px 0 6px; }
   h3 { font-family: var(--serif); font-size: 22px; margin: 0 0 8px; }
   section p { color: var(--ink-2); max-width: 44em; margin: 8px 0; }
@@ -71,7 +79,7 @@
     <a class="card" href="blueprint.html" style="--ac:var(--p2)">
       <span class="ic">📐</span><span class="tag">主线 · 从这里开始</span>
       <h2>LLM 系统蓝图</h2>
-      <p>六平面 38 模块的通用工程结构图：真实术语、可切换的技术分叉、张量形状——内嵌 16 个可实操的真算法实验室，包括在你浏览器里现场训练一个语言模型。</p>
+      <p>六平面 38 模块的通用工程结构图：真实术语、可切换的技术分叉、张量形状——内嵌 38 个可实操的真算法实验室，包括在你浏览器里现场训练一个语言模型。</p>
     </a>
     <a class="card" href="index-map.html" style="--ac:var(--p0)">
       <span class="ic">🧭</span><span class="tag">目录 · 按需查阅</span>
@@ -83,12 +91,10 @@
       <h2>一句话的旅程</h2>
       <p>滚动叙事：一句真实的话流过 AI 的全部七层——按下回车之后的三秒，放慢一万倍讲给你听。</p>
     </a>
-    <a class="card" href="progress.html" style="--ac:var(--p3)">
-      <span class="ic">🚦</span><span class="tag">工地 · 建设实况</span>
-      <h2>进度看板</h2>
-      <p>哪里亮了哪里没亮：模块深度亮灯图、四条分线进度与版本时间线——数据驱动，与站点同步更新。</p>
-    </a>
   </div>
+  <a class="card-wide" href="progress.html" style="--ac:var(--p3)">
+    <span class="ic">🚦</span><b>进度看板</b><span class="cw-d">建设实况：模块亮灯图 · 分线进度 · 版本时间线（面向关心建设过程的访客）</span><span class="cw-a">→</span>
+  </a>
 
   <section>
     <h3>建议的走法</h3>

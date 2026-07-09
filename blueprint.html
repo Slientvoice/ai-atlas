@@ -11,7 +11,7 @@
     --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4;
     --grid: rgba(28,27,24,0.05);
     --shadow: 0 10px 32px rgba(28,27,24,0.10);
-    --serif: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", serif;
+    --serif: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif; /* 2026-07-09 用户拍板：宋体退役，全站统一现代黑体 */
     --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
   }
@@ -308,7 +308,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.17 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.18 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -1591,13 +1591,15 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
       <div class="lg" style="border-color:var(--p2)"><b>✅ 非 Transformer 架构 → 已建（v0.9）</b>Ⅱ 平面新模块「架构地平线」：Mamba/SSM 状态递推 vs 注意力全回看、混合架构、扩散 LM 登记。</div>
       <div class="lg" style="border-color:var(--p1)"><b>✅ 评估科学 → 已建（v0.9）</b>Ⅰ 平面「评估·红队·发布」模块内扩建：基准三大陷阱（污染/Goodhart/饱和）、LLM 判官及其偏差、法务读分指南。</div>
       <div class="lg" style="border-color:var(--p2)"><b>✅ 可解释性 → 已建（v0.9）</b>Ⅱ 平面新模块「可解释性：打开黑箱」：探针/特征分解/回路三进路、现状边界、「算法解释权」朱批。</div>
-      <div class="lg" style="border-style:dashed"><b>登记簿现状：六项全部落地。</b>本清单保持开放——发现新空白（如具身智能、世界模型）继续登记；登记了就不慌。</div>
+      <div class="lg"><b>具身智能与机器人</b>VLA 模型（视觉-语言-动作三位一体）：AI 长出手脚之后的新大陆——真实世界交互数据、安全边界与产品责任的全新法域。挂点：未来 PLANE Ⅵ。<i style="color:var(--ink-3)">（未建 · 2026-07-09 登记）</i></div>
+      <div class="lg"><b>世界模型</b>从「预测下一个词」到「预测下一刻的物理世界」——视频生成野心的尽头，可能改写 Ⅴ 平面的半壁。挂点：Ⅴ 平面扩建或并入 PLANE Ⅵ。<i style="color:var(--ink-3)">（未建 · 2026-07-09 登记）</i></div>
+      <div class="lg" style="border-style:dashed"><b>登记簿现状：首批六项已全部落地（各条 ✅ 注明去处），新登记两项待建。</b>本清单永久开放——发现新空白就登记，登记了就不慌；它不是待办清单，是这张蓝图的抗震制度。</div>
     </div>
   </section>
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.17 · 2026-07-09。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.18 · 2026-07-09。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
