@@ -308,7 +308,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.15 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.16 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -926,8 +926,8 @@
       <p class="pl-q">这一平面回答：一次 API 调用背后，Ⅱ 的结构是如何被高效运行的。所有工程都围绕一个矛盾：生成是逐 token 串行的，而 GPU 喜欢并行。</p></div>
     <div class="pl-tools"><button data-plane="pl3">全部展开 / 收起</button></div>
 
-    <details class="mod">
-      <summary><span class="m-caret">▶</span><span class="m-name">Prefill 与 Decode 两阶段</span><span class="m-en">PREFILL / DECODE</span><span class="m-shape">prefill: [T] 并行 · decode: [1] × 循环</span></summary>
+    <details class="mod" id="mod-pd">
+      <summary><span class="m-caret">▶</span><span class="m-name">Prefill 与 Decode 两阶段</span><span class="m-en">PREFILL / DECODE · 🔬 LAB</span><span class="m-shape">prefill: [T] 并行 · decode: [1] × 循环</span></summary>
       <div class="m-body">
         <p>一次请求天然分两段，性格迥异：</p>
         <ul>
@@ -935,12 +935,25 @@
           <li><b>Decode</b>：此后每生成一个 token，只前向<b>这一个</b>新位置（T=1），但要读取此前全部缓存——计算量很小、搬运量巨大（<b>显存带宽瓶颈</b>）。吐字速度（TPS）由带宽决定。</li>
         </ul>
         <p class="dim">「AI 回答前顿一下、然后匀速吐字」的完整技术解释即此。两个瓶颈不同，也解释了为什么推理优化是独立于训练的一门工程。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 首字延迟计算器<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">用屋顶线的真公式算给你看：贴进去的文档越长，第一个字等得越久（prefill 卡算力）；而之后的吐字速度雷打不动（decode 卡带宽）。按 H100 + 8B 模型理想值实算。</p>
+          <div class="lab-ctrls">
+            <label>① 提示词长度 <output id="pd-t-o">2048</output> token <input type="range" id="pd-t" min="7" max="17" value="11"></label>
+            <button type="button" class="fk" id="pd-run">▶ 播放这次请求（按真实比例缩放）</button>
+          </div>
+          <div class="race-row"><span>Prefill（读题）</span><div class="bar"><i id="pd-p"></i></div><span class="tv" id="pd-p-t">—</span></div>
+          <div class="race-row"><span>Decode（作答 100 字）</span><div class="bar"><i id="pd-d"></i></div><span class="tv" id="pd-d-t">—</span></div>
+          <div class="tp-stats"><span>理论首字延迟 <b id="pd-ttft">—</b></span><span>理论吐字速度 <b id="pd-tps">—</b> token/s（与提示词长短无关）</span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>公式实算（TTFT ≈ 2·P·T ÷ 峰值算力；每字 ≈ 权重字节 ÷ 带宽，取 H100/8B@fp16 理想值），播放动画按两者真实比例缩放。真实系统还有调度与网络开销、且长上下文时 KV 读取会拖慢 decode——理想值是下限。自查：把提示词从 2K 拖到 128K，看首字延迟涨了 64 倍而吐字速度纹丝不动——「贴长文档要多等」的物理根源。</div>
+        </div>
       </div>
     </details>
     <div class="wire"><span>decode 依赖的核心数据结构 ▼</span></div>
 
-    <details class="mod" open>
-      <summary><span class="m-caret">▶</span><span class="m-name">KV 缓存</span><span class="m-en">KV CACHE</span><span class="m-shape">2 · N · h_kv · d_h · T · 字节数</span></summary>
+    <details class="mod" open id="mod-kv">
+      <summary><span class="m-caret">▶</span><span class="m-name">KV 缓存</span><span class="m-en">KV CACHE · 🔬 LAB</span><span class="m-shape">2 · N · h_kv · d_h · T · 字节数</span></summary>
       <div class="m-body">
         <p>Decode 时每个新 token 都要对「此前所有位置」做注意力——若每次重算所有位置的 K、V，成本随长度平方爆炸。解法：算过一次就存显存里。代价是一笔精确可算的显存账：</p>
         <code class="fx">每 token 缓存 = 2 (K和V) × N层 × h_kv × d_h × 精度字节
@@ -948,6 +961,27 @@ Llama-3-8B @fp16: 2 × 32 × 8 × 128 × 2 B = 128 KB/token
 → 8K 上下文 ≈ 1 GB／每条并发请求</code>
         <p>Ⅱ 平面 GQA 的红利在此兑现：h_kv 从 32 减到 8，这笔账直接 ÷4。<b>架构选择（Ⅱ）与服务成本（Ⅲ）通过这条公式咬合</b>——跨平面读图的第一个样本。</p>
         <p class="dim">工程注记：PagedAttention（vLLM）把缓存按「页」管理如操作系统虚拟内存，消灭碎片，是开源推理引擎的核心创新。「无限长的记忆」在物理上不成立，根源即这笔账。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 显存水位计算器<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">上面那条公式变成可以拨的算盘：拖上下文长度和并发数，看一张 80GB 的卡还剩多少喘息空间——以及「无限记忆」在哪一格撞墙。</p>
+          <div class="lab-ctrls">
+            <span class="rf-chips"><span class="flab2">模型</span>
+              <button type="button" class="fk on" data-km="0">8B</button>
+              <button type="button" class="fk" data-km="1">70B（GQA 同款结构）</button>
+              <span class="flab2" style="margin-left:10px">KV 精度</span>
+              <button type="button" class="fk on" data-kp="0">FP16</button>
+              <button type="button" class="fk" data-kp="1">INT8</button></span>
+          </div>
+          <div class="lab-ctrls">
+            <label>上下文 <output id="kv-t-o">8K</output> <input type="range" id="kv-t" min="10" max="17" value="13"></label>
+            <label>并发请求 <output id="kv-b-o">4</output> <input type="range" id="kv-b" min="0" max="7" value="2"></label>
+          </div>
+          <div class="race-row"><span>权重占用</span><div class="bar"><i id="kv-w" style="background:var(--ink-3)"></i></div><span class="tv" id="kv-w-t">—</span></div>
+          <div class="race-row"><span>KV 缓存占用</span><div class="bar"><i id="kv-c"></i></div><span class="tv" id="kv-c-t">—</span></div>
+          <div class="viz-cap" id="kv-verdict"></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>全部按模块正文的公式实算（2 × 层数 × KV头 × 头维 × 长度 × 字节；8B: N=32,h_kv=8,d_h=128；70B: N=80,h_kv=8,d_h=128），对照 80GB 卡。省略了激活值等杂项占用——真实水位只会更高。自查：8B + FP16 + 128K 上下文 + 8 并发 ≈ 128GB 的 KV——比模型本身大八倍，这就是「长上下文贵在显存」的算术。</div>
+        </div>
       </div>
     </details>
     <div class="wire"><span>模型给出 logits[V] → 谁来拍板 ▼</span></div>
@@ -984,8 +1018,8 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     </details>
     <div class="wire"><span>横向优化之一：把数字变小 ▼</span></div>
 
-    <details class="mod">
-      <summary><span class="m-caret">▶</span><span class="m-name">量化</span><span class="m-en">QUANTIZATION</span><span class="m-shape">fp16 → int8 → int4（权重&缓存）</span></summary>
+    <details class="mod" id="mod-quant">
+      <summary><span class="m-caret">▶</span><span class="m-name">量化</span><span class="m-en">QUANTIZATION · 🔬 LAB</span><span class="m-shape">fp16 → int8 → int4（权重&缓存）</span></summary>
       <div class="m-body">
         <p>把每个参数用更少比特存：显存与带宽同步减半再减半——而 decode 是带宽瓶颈（见上），所以量化常常「又省又快」。可后训练完成（GPTQ、AWQ 等，量化时无需重训），KV 缓存同样可量化。</p>
         <div class="forks"><span class="flab">分叉 · 精度档位</span>
@@ -997,6 +1031,18 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
         <div class="fkb" data-v="b">减半到约 8 GB，质量损失通常难以察觉。生产环境常见默认。</div>
         <div class="fkb" data-v="c">再减半（约 4 GB，消费级显卡可跑 8B）。质量开始看任务掉：闲聊无感、数学与代码先崩。「量化悬崖」位置因模型而异，需实测。</div>
         <p class="dim">法务注记：开源模型被第三方量化再分发是常态——「你评估过的模型」与「实际部署的模型」可能不是同一份数字，合同里值得钉死版本与精度。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 亲手压一次权重<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">真量化算法在本地跑：16 个真实权重值被压成 n 比特整数再解压回来。空心条 = 原值，实心条 = 解压值，红字 = 每个值的失真。拖比特数，看「悬崖」在哪。</p>
+          <div class="lab-ctrls">
+            <label>比特数 <output id="qz-b-o">8</output> bit <input type="range" id="qz-b" min="2" max="8" value="8"></label>
+            <button type="button" class="fk" id="qz-roll">↻ 重掷一组权重</button>
+          </div>
+          <div id="qz-rows"></div>
+          <div class="tp-stats"><span>平均失真 <b id="qz-err">—</b></span><span>体积 <b id="qz-size">—</b>（相对 FP16）</span><span>可表示的档位数 <b id="qz-lv">—</b></span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>对称量化的真公式实算（scale = max|w| ÷ (2ⁿ⁻¹−1)；q = round(w/scale)；解压 = q×scale）——这就是 INT8/INT4 的数学本体，工业方法（GPTQ/AWQ）是在此之上按误差影响智能分配精度。自查：8 bit 时失真几乎不可见；4 bit 开始可感；2 bit 时所有权重被挤进 3 个档位——「量化悬崖」不是比喻，是档位数的指数坍塌（2ⁿ 档）。</div>
+        </div>
       </div>
     </details>
     <div class="wire"><span>横向优化之二：把并行喂饱 ▼</span></div>
@@ -1031,8 +1077,8 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     </details>
     <div class="wire"><span>推理不只是「跑得快」——还可以「想得久」▼</span></div>
 
-    <details class="mod">
-      <summary><span class="m-caret">▶</span><span class="m-name">推理模型与测试时算力</span><span class="m-en">REASONING · TEST-TIME COMPUTE</span><span class="m-shape">思考 token ×10–100 → 质量↑</span></summary>
+    <details class="mod" id="mod-ttc">
+      <summary><span class="m-caret">▶</span><span class="m-name">推理模型与测试时算力</span><span class="m-en">REASONING · TEST-TIME COMPUTE · 🔬 LAB</span><span class="m-shape">思考 token ×10–100 → 质量↑</span></summary>
       <div class="m-body">
         <p>2024–2025 的路线转折：让模型在作答前先生成大段<b>思维链</b>（可见或隐藏的中间推理 token）——自己列步骤、自查、回溯，然后才给答案。训练法接 Ⅰ 平面的 GRPO：用「可自动判分的任务」（数学、代码）做强化，模型自己学会了反思。效果是推理类任务的大幅跃升；代价是延迟与 token 消耗成倍到数十倍。</p>
         <p>深层意义：这是<b>第二条 Scaling 曲线</b>——预训练把算力堆在「学」，这条路把算力堆在「想」。「思考预算」（thinking budget）从此成为产品旋钮：同一个模型，多想十倍就是另一个价、另一种能力。</p>
@@ -1044,6 +1090,19 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
         <div class="fkb" data-v="a">一遍前向直接出答案。便宜快速，简单任务的正解——「杀鸡不用牛刀」在计费上是真金白银。</div>
         <div class="fkb on" data-v="b">o1 / DeepSeek-R1 / Claude 扩展思考路线：串行地想。注意思维链的<b>忠实性问题</b>：嘴上写的理由未必是真实的计算路径（接下方 Ⅱ「可解释性」）——把思维链当「心声证据」要打折。</div>
         <div class="fkb" data-v="c">同一题并行采样 N 个答案，用多数投票或验证器挑最好——「人多力量大」的机器版，适合有客观对错的任务。</div>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 用算力买正确率的数学<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">「多想换多对」的一条真数学（并行采样 + 多数投票版）：同一道题独立答 N 次取多数——正确率按二项分布实算。拖两个滑杆，看质量曲线与账单一起涨。</p>
+          <div class="lab-ctrls">
+            <label>单次作答正确率 <output id="tc-p-o">65%</output> <input type="range" id="tc-p" min="30" max="90" value="65"></label>
+            <label>采样次数 N = <output id="tc-n-o">5</output> <input type="range" id="tc-n" min="0" max="6" value="2"></label>
+          </div>
+          <div class="race-row"><span>答 1 次</span><div class="bar"><i id="tc-one"></i></div><span class="tv" id="tc-one-t">—</span></div>
+          <div class="race-row"><span>答 N 次取多数</span><div class="bar"><i id="tc-maj"></i></div><span class="tv" id="tc-maj-t">—</span></div>
+          <div class="tp-stats"><span>正确率提升 <b id="tc-gain">—</b></span><span>算力账单 <b id="tc-cost">—</b>×</span><span id="tc-note" style="color:var(--ink-3)"></span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>多数投票正确率按二项分布精确计算（假设各次作答独立、答错时不巧合地错成同一答案——理想化假设，真实增益略低）。两个自查：把单次正确率拖到 30%（低于一半）——多采样反而<b>越投越错</b>，测试时算力不是万灵药，底子太差时是放大器；正确率 65% 时从 1 → 31 次，提升越来越薄而账单线性涨——「思考预算」旋钮的经济学。长思维链是另一条串行路径，数学不同、直觉相通。</div>
+        </div>
+
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p>计费透明：用户为看不见的隐藏思考 token 付费——披露与计量争议的新场景；思维链的留存与取证价值/风险；监管算力口径的观察点：现行阈值按训练算力计，测试时算力尚在框架之外（口径演化中）。</p></div>
       </div>
     </details>
@@ -1435,7 +1494,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.15 · 2026-07-08。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.16 · 2026-07-09。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
@@ -3016,5 +3075,142 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
   ['ev-corp', 'ev-test'].forEach(id => $(id).addEventListener('input', overlap));
   $('ev-c').addEventListener('input', score);
   overlap(); score();
+})();
+
+/* ============ 🔬 首字延迟计算器（v0.16） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('pd-t')) return;
+  const F = 989e12, BW = 3.35e12, P = 8e9, OUT = 100;
+  const perTok = P * 2 / BW;            /* 每字秒数（带宽瓶颈） */
+  let timer = null;
+  function calc() {
+    const T = 2 ** (+$('pd-t').value);
+    $('pd-t-o').textContent = T >= 1024 ? (T / 1024) + 'K' : T;
+    const ttft = 2 * P * T / F;
+    $('pd-ttft').textContent = ttft >= 1 ? ttft.toFixed(2) + ' s' : (ttft * 1000).toFixed(0) + ' ms';
+    $('pd-tps').textContent = (1 / perTok).toFixed(0);
+    return ttft;
+  }
+  $('pd-t').addEventListener('input', () => { calc(); });
+  $('pd-run').addEventListener('click', () => {
+    if (timer) clearInterval(timer);
+    const ttft = calc();
+    const K = 3;
+    const pMs = Math.min(ttft * 1000 * K, 5000), dMs = OUT * perTok * 1000 * K;
+    const t0 = performance.now();
+    $('pd-p').style.width = '0'; $('pd-d').style.width = '0';
+    timer = setInterval(() => {
+      const el = performance.now() - t0;
+      if (el < pMs) {
+        $('pd-p').style.width = (el / pMs * 100) + '%';
+        $('pd-p-t').textContent = '读题中…'; $('pd-d-t').textContent = '等待首字';
+      } else {
+        $('pd-p').style.width = '100%';
+        $('pd-p-t').textContent = '完成' + (ttft * 1000 * K > 5000 ? '（播放已截断）' : '');
+        const de = Math.min((el - pMs) / dMs, 1);
+        $('pd-d').style.width = (de * 100) + '%';
+        $('pd-d-t').textContent = Math.round(de * OUT) + ' / ' + OUT + ' 字';
+        if (de >= 1) { clearInterval(timer); timer = null; }
+      }
+    }, 40);
+  });
+  calc();
+})();
+
+/* ============ 🔬 KV 水位计算器（v0.16） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('kv-t')) return;
+  const M = [{ n: '8B', L: 32, hkv: 8, dh: 128, w: 16 }, { n: '70B', L: 80, hkv: 8, dh: 128, w: 140 }];
+  const PB = [2, 1];
+  let m = 0, p = 0;
+  const VRAM = 80;
+  function update() {
+    const T = 2 ** (+$('kv-t').value), B = 2 ** (+$('kv-b').value);
+    $('kv-t-o').textContent = T >= 1024 ? (T / 1024) + 'K' : T;
+    $('kv-b-o').textContent = B;
+    const md = M[m], bytes = PB[p];
+    const perTokKB = 2 * md.L * md.hkv * md.dh * bytes / 1024;
+    const cacheGB = perTokKB * T * B / 1024 / 1024;
+    $('kv-w').style.width = Math.min(md.w / VRAM * 100, 100) + '%';
+    $('kv-w-t').textContent = md.w + ' GB';
+    $('kv-c').style.width = Math.min(cacheGB / VRAM * 100, 100) + '%';
+    $('kv-c-t').textContent = cacheGB >= 10 ? cacheGB.toFixed(0) + ' GB' : cacheGB.toFixed(1) + ' GB';
+    const total = md.w + cacheGB;
+    $('kv-verdict').innerHTML = md.w > VRAM
+      ? `⚠ ${md.n} 的权重单卡已装不下（${md.w}GB > 80GB，需多卡张量并行）——此处仅看 KV 的账：每 token ${perTokKB.toFixed(0)} KB，当前合计 ${cacheGB.toFixed(1)} GB。`
+      : total > VRAM
+        ? `⚠ <b>撞墙</b>：权重 ${md.w} + KV ${cacheGB.toFixed(1)} = ${total.toFixed(1)} GB，超出 80GB 卡 ${(total - VRAM).toFixed(1)} GB——减并发、缩上下文、或给 KV 量化。`
+        : `✓ 装得下：还剩 ${(VRAM - total).toFixed(1)} GB 余量（每 token 缓存 ${perTokKB.toFixed(0)} KB 实算）。`;
+  }
+  document.querySelectorAll('#mod-kv .rf-chips .fk').forEach(btn => btn.addEventListener('click', () => {
+    const g = btn.dataset.km !== undefined ? 'km' : 'kp';
+    const v = +btn.dataset[g];
+    if (g === 'km') m = v; else p = v;
+    document.querySelectorAll(`#mod-kv .rf-chips .fk[data-${g}]`).forEach(b => b.classList.toggle('on', +b.dataset[g] === v));
+    update();
+  }));
+  ['kv-t', 'kv-b'].forEach(id => $(id).addEventListener('input', update));
+  update();
+})();
+
+/* ============ 🔬 量化实验室（v0.16） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('qz-b')) return;
+  let W = [];
+  const roll = () => { W = Array.from({ length: 16 }, () => +( (Math.random() + Math.random() + Math.random() - 1.5).toFixed(3) )); };
+  function update() {
+    const b = +$('qz-b').value; $('qz-b-o').textContent = b;
+    const maxAbs = Math.max(...W.map(Math.abs)) || 1;
+    const scale = maxAbs / (2 ** (b - 1) - 1);
+    const deq = W.map(w => Math.round(w / scale) * scale);
+    const errs = W.map((w, i) => Math.abs(w - deq[i]));
+    $('qz-rows').innerHTML = W.map((w, i) => `
+      <div class="sd-row"><span style="font-family:var(--mono);font-size:10.5px">w${i + 1}</span>
+        <div class="sd-bars">
+          <div class="sd-b bp" title="原值"><i style="width:${Math.abs(w) / maxAbs * 100}%"></i></div>
+          <div class="sd-b bo" title="解压值"><i style="width:${Math.abs(deq[i]) / maxAbs * 100}%"></i></div>
+        </div>
+        <span class="sd-nums">${w.toFixed(3)} → ${deq[i].toFixed(3)}${errs[i] > 0.0005 ? ` <span style="color:var(--seal)">±${errs[i].toFixed(3)}</span>` : ' ✓'}</span></div>`).join('');
+    $('qz-err').textContent = (errs.reduce((a, e) => a + e, 0) / 16).toFixed(4);
+    $('qz-size').textContent = (b / 16 * 100).toFixed(0) + '%';
+    $('qz-lv').textContent = 2 ** b;
+  }
+  $('qz-b').addEventListener('input', update);
+  $('qz-roll').addEventListener('click', () => { roll(); update(); });
+  roll(); update();
+})();
+
+/* ============ 🔬 测试时算力的数学（v0.16） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('tc-p')) return;
+  const NS = [1, 3, 5, 9, 15, 21, 31];
+  function majority(p, n) {
+    /* 二项分布：多数票正确 = Σ_{k>n/2} C(n,k) p^k (1−p)^(n−k) */
+    let sum = 0;
+    for (let k = Math.floor(n / 2) + 1; k <= n; k++) {
+      let c = 1;
+      for (let i = 0; i < k; i++) c = c * (n - i) / (i + 1);
+      sum += c * p ** k * (1 - p) ** (n - k);
+    }
+    return sum;
+  }
+  function update() {
+    const p = +$('tc-p').value / 100, n = NS[+$('tc-n').value];
+    $('tc-p-o').textContent = ($('tc-p').value) + '%';
+    $('tc-n-o').textContent = n;
+    const maj = n === 1 ? p : majority(p, n);
+    $('tc-one').style.width = (p * 100) + '%'; $('tc-one-t').textContent = (p * 100).toFixed(0) + '%';
+    $('tc-maj').style.width = (maj * 100) + '%'; $('tc-maj-t').textContent = (maj * 100).toFixed(1) + '%';
+    const gain = (maj - p) * 100;
+    $('tc-gain').textContent = (gain >= 0 ? '+' : '') + gain.toFixed(1) + ' 个百分点';
+    $('tc-cost').textContent = n;
+    $('tc-note').textContent = p < 0.5 && n > 1 ? '⚠ 单次低于五成：越投越错' : p >= 0.5 && n >= 15 ? '边际收益已明显递减' : '';
+  }
+  ['tc-p', 'tc-n'].forEach(id => $(id).addEventListener('input', update));
+  update();
 })();
 </script>
