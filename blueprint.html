@@ -312,18 +312,28 @@
   .fig .dim2 { fill: var(--ink-2); }
   .fig .dim3 { fill: var(--ink-3); }
   .rg2 { transition: opacity 0.4s ease; }
-  .rg2.dim { opacity: 0.35; }
+  /* 虚影须足够透明：特写区域内穿插的他区元素（塔顶、logits 管）才不会与文字打架 */
+  .rg2.dim { opacity: 0.1; }
   .pt { cursor: pointer; }
   .pt:hover text, .pt:focus-visible text { fill: var(--ink); }
-  .figbar { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-  #figwhere { font-size: 12px; color: var(--ink-3); letter-spacing: 0.06em; }
-  #figreset { font: inherit; font-size: 12px; cursor: pointer; color: var(--ink); background: var(--surface);
-    border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 14px; margin-left: auto; display: none; }
-  #figreset:hover, #figreset:focus-visible { border-color: var(--ink-2); outline: none; }
+  .figbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+  #figwhere { font-size: 12px; color: var(--ink-3); letter-spacing: 0.06em; margin-right: auto; }
+  .figbtn { font: inherit; font-size: 12px; cursor: pointer; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 13px; }
+  .figbtn:hover, .figbtn:focus-visible { border-color: var(--ink-2); outline: none; }
+  .figbtn.on { border-color: var(--p2); box-shadow: inset 0 0 0 1px var(--p2); }
+  #figreset { display: none; }
   .figcap { font-size: 12.5px; color: var(--ink-3); margin: 6px 0 0; }
+  #figshow { position: fixed; left: 14px; bottom: 14px; z-index: 60; display: none;
+    font: inherit; font-size: 13px; cursor: pointer; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 7px 16px; box-shadow: var(--shadow); }
+  .cols.nofig .fig { display: none; }
+  .cols.nofig ~ #figshow, body:has(.cols.nofig) #figshow { display: block; }
   details.mod.flash { outline: 2px solid var(--pc); outline-offset: 3px; }
   @media (min-width: 1180px) {
     .cols { display: grid; grid-template-columns: minmax(400px, 46%) minmax(0, 1fr); align-items: start; }
+    .cols.nofig { display: block; }
+    .cols.nofig > .wrap { margin: 0 auto; }
     .fig { position: sticky; top: 0; height: 100vh; max-width: none; margin: 0;
       padding: 12px 8px 12px 22px; display: flex; flex-direction: column; justify-content: center; }
     .fig svg { max-height: 82vh; }
@@ -334,7 +344,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.19 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.20 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -361,8 +371,11 @@
           <text x="126" y="134" font-size="12" text-anchor="middle" class="dim2">RAG 向量库</text>
           <polyline points="186,110 250,64" fill="none" stroke="var(--p4)" stroke-width="1" stroke-dasharray="4 3"/></g>
         <g class="pt" data-go="ag-log"><rect x="814" y="84" width="120" height="60" rx="8" fill="color-mix(in srgb, var(--p4) 10%, transparent)" stroke="var(--p4)" stroke-width="1.2"/>
-          <circle cx="848" cy="108" r="13" fill="none" stroke="var(--ink-3)" stroke-width="1.4" stroke-dasharray="3 3"/>
-          <text x="874" y="134" font-size="12" text-anchor="middle" class="dim2">Agent 循环</text>
+          <circle cx="842" cy="106" r="11" fill="none" stroke="var(--ink-3)" stroke-width="1.4" stroke-dasharray="3 3"/>
+          <polygon points="842,93 838,99 846,99" fill="var(--ink-3)"/>
+          <text x="860" y="103" font-size="9" class="dim3">观察·思考</text>
+          <text x="860" y="114" font-size="9" class="dim3">→ 行动 ↻</text>
+          <text x="874" y="136" font-size="12" text-anchor="middle" class="dim2">Agent 循环</text>
           <polyline points="814,112 750,64" fill="none" stroke="var(--p4)" stroke-width="1" stroke-dasharray="4 3"/></g>
         <g class="pt" data-go="gd-q"><rect x="944" y="286" width="14" height="60" fill="color-mix(in srgb, var(--p4) 25%, transparent)" stroke="var(--p4)" stroke-width="1.2"/>
           <text x="936" y="372" font-size="12" text-anchor="end" class="dim2">护栏 → 输出</text></g>
@@ -486,10 +499,13 @@
   </svg>
   <div class="figbar">
     <span id="figwhere" class="mono">整机总览</span>
-    <button type="button" id="figreset">⌂ 整机</button>
+    <button type="button" class="figbtn on" id="figfollow">镜头跟随：开</button>
+    <button type="button" class="figbtn" id="figreset">⌂ 整机</button>
+    <button type="button" class="figbtn" id="fighide">收起图 ⇤</button>
   </div>
-  <p class="figcap">点击图上任意部位 → 跳到对应模块；滚动右侧正文 → 镜头自动跟随章节。此图是全站的「你在这里」。</p>
+  <p class="figcap">点击部位 → 直达模块并展开（镜头同时推进）。开启「镜头跟随」后，滚动正文时镜头也会自动跟着章节走。此图是全站的「你在这里」。</p>
 </aside>
+<button type="button" id="figshow">🗺 展开全景图</button>
 
 <div class="wrap">
 
@@ -1743,7 +1759,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.19 · 2026-07-10。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.20 · 2026-07-10。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
@@ -3741,7 +3757,7 @@ function paintScene(cv, fine) {
     pl4: [24, 24, 952, 150], pl5: [46, 444, 310, 116], pl0: [0, 558, 1000, 162] };
   const NAME = { pl0: '0 硬件基座', pl1: 'Ⅰ 训练管线', pl2: 'Ⅱ 模型本体', pl3: 'Ⅲ 推理服务', pl4: 'Ⅳ 系统组装', pl5: 'Ⅴ 多模态模型组' };
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let cur = HOME.slice(), anim = null, active = null;
+  let cur = HOME.slice(), anim = null, active = null, follow = true;
 
   function flyTo(box) {
     if (reduced) { cur = box.slice(); svg.setAttribute('viewBox', cur.join(' ')); return; }
@@ -3754,22 +3770,42 @@ function paintScene(cv, fine) {
       if (t < 1) anim = requestAnimationFrame(step);
     })(t0);
   }
-  function setActive(pl) {
-    if (pl === active) return;
+  function setActive(pl, forceFly) {
+    const changed = pl !== active;
     active = pl;
-    document.querySelectorAll('#pscene > .rg2').forEach(g =>
-      g.classList.toggle('dim', pl !== null && g.dataset.pl !== pl));
-    flyTo(pl ? BOX[pl] : HOME);
-    $('figwhere').textContent = pl ? NAME[pl] : '整机总览';
-    $('figreset').style.display = pl ? 'block' : 'none';
+    if (changed) {
+      document.querySelectorAll('#pscene > .rg2').forEach(g =>
+        g.classList.toggle('dim', pl !== null && g.dataset.pl !== pl));
+      $('figwhere').textContent = pl ? NAME[pl] : '整机总览';
+      $('figreset').style.display = pl ? 'block' : 'none';
+    }
+    /* 跟随关闭时，只有点击（forceFly）或复位才动镜头 */
+    if (pl === null) flyTo(HOME);
+    else if ((changed && follow) || forceFly) flyTo(BOX[pl]);
   }
   $('figreset').addEventListener('click', () => setActive(null));
+  $('figfollow').addEventListener('click', () => {
+    follow = !follow;
+    $('figfollow').textContent = '镜头跟随：' + (follow ? '开' : '关');
+    $('figfollow').classList.toggle('on', follow);
+    if (follow && active) flyTo(BOX[active]);
+  });
+  $('fighide').addEventListener('click', () => {
+    document.querySelector('.cols').classList.add('nofig');
+    $('figshow').style.display = 'block';
+  });
+  $('figshow').addEventListener('click', () => {
+    document.querySelector('.cols').classList.remove('nofig');
+    $('figshow').style.display = 'none';
+  });
 
-  /* 图 → 文：部件点击直达模块并展开 */
+  /* 图 → 文：部件点击 = 镜头推进其所在区域 + 直达模块并展开 */
   document.querySelectorAll('#pscene .pt').forEach(pt => {
     pt.setAttribute('tabindex', '0');
     const go = e => {
       e.stopPropagation();
+      const rg = pt.closest('.rg2');
+      if (rg) setActive(rg.dataset.pl, true);
       const el = document.getElementById(pt.dataset.go);
       if (!el) return;
       const mod = el.closest('details.mod');
@@ -3783,9 +3819,10 @@ function paintScene(cv, fine) {
     pt.addEventListener('click', go);
     pt.addEventListener('keydown', e => { if (e.key === 'Enter') go(e); });
   });
-  /* 区域空白处点击 → 平面章节 */
+  /* 区域空白处点击 → 镜头推进 + 平面章节 */
   document.querySelectorAll('#pscene > .rg2').forEach(g => {
     g.addEventListener('click', () => {
+      setActive(g.dataset.pl, true);
       const sec = document.getElementById(g.dataset.pl);
       if (sec) sec.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
     });
@@ -3799,7 +3836,7 @@ function paintScene(cv, fine) {
     entries.forEach(e => { ratios[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
     let best = null, br = 0.08;
     Object.entries(ratios).forEach(([id, r]) => { if (r > br) { br = r; best = id; } });
-    if (best && BOX[best]) setActive(best);
+    if (best && BOX[best]) setActive(best, false);
     else if (!best) setActive(null);
   }, { threshold: [0.1, 0.25, 0.5] });
   ['pl0', 'pl1', 'pl2', 'pl3', 'pl4', 'pl5'].forEach(id => {
