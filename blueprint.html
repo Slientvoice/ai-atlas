@@ -63,7 +63,9 @@
   .as-card { display: block; text-decoration: none; background: var(--surface); border: 1.5px solid var(--pc);
     border-radius: 12px; padding: 13px 18px; transition: box-shadow .15s ease; }
   .as-card:hover, .as-card:focus-visible { box-shadow: var(--shadow); outline: none; }
+  /* 统一两行式：首行 编号+名称，描述永远独占第二行——六卡步调一致，不许随缘换行 */
   .as-card .t { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .as-card .d { flex-basis: 100%; margin-top: 3px; line-height: 1.55; }
   .as-card .rn { font-family: var(--mono); font-weight: 700; color: var(--pc); font-size: 13px; letter-spacing: 0.08em; }
   .as-card b { font-family: var(--serif); font-size: 17.5px; }
   .as-card span.d { font-size: 13px; color: var(--ink-2); }
