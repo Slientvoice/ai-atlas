@@ -335,6 +335,7 @@
   .cols .fig { display: none; }
   .cols.graphic .fig { display: block; }
   .cols.graphic .assembly { display: none; }
+  .cols.graphic #toplegend { display: none; } /* 图例是正文阅读参考，图形态下让位给全景图 */
   .as-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
   .assembly .as-card.here { box-shadow: 0 0 0 2px var(--pc); }
   /* 全屏大图 */
@@ -356,7 +357,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.23 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.23.2 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -554,7 +555,7 @@
     </a>
   </div>
 
-  <div class="legend">
+  <div class="legend" id="toplegend">
     <div class="lg"><b>形状记号（贯穿全页）</b>
       <code>B</code> 批大小 · <code>T</code> 序列长度 · <code>d</code> 隐藏维度 · <code>h</code> 注意力头数 · <code>d_h</code> 每头维度 · <code>V</code> 词表大小 · <code>N</code> 层数
     </div>
@@ -562,7 +563,7 @@
       全页数字例默认取 <b>Llama-3-8B</b>（开源可查证）：<code>N=32, d=4096, h_q=32, h_kv=8, d_h=128, V≈128k</code>。别家模型数值不同、结构同构。
     </div>
     <div class="lg"><b>分叉 chips</b>
-      每个模块列出该处真实存在的技术路线，<b>✓ 标主流</b>；点击切换查看各路线的机理与权衡。平面颜色与索引地图层色对应；<span style="color:var(--seal)">朱红仍专属合规</span>。
+      每个模块列出该处真实存在的技术路线（<b>✓ 标主流</b>），点击切换查看各路线的机理与权衡。平面颜色与索引地图层色对应；<span style="color:var(--seal)">朱红仍专属合规</span>。
     </div>
   </div>
 
