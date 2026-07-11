@@ -311,24 +311,44 @@
   .fig .mono { font-family: var(--mono); }
   .fig .dim2 { fill: var(--ink-2); }
   .fig .dim3 { fill: var(--ink-3); }
-  .rg2 { transition: opacity 0.4s ease; }
+  .rg2 { transition: opacity 0.4s ease, filter 0.4s ease; }
   /* 虚影须足够透明：特写区域内穿插的他区元素（塔顶、logits 管）才不会与文字打架 */
   .rg2.dim { opacity: 0.1; }
+  /* 立体质感：主要构件带浅投影；楼层厚度唇边由 JS 生成 */
+  #pscene .elev { filter: drop-shadow(0 2px 2.5px rgba(0, 0, 0, 0.18)); }
   .pt { cursor: pointer; }
   .pt:hover text, .pt:focus-visible text { fill: var(--ink); }
   .figbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
   #figwhere { font-size: 12px; color: var(--ink-3); letter-spacing: 0.06em; margin-right: auto; }
-  .figbtn { font: inherit; font-size: 12px; cursor: pointer; color: var(--ink); background: var(--surface);
-    border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 13px; }
+  .figbtn { font: inherit; font-size: 12px; cursor: pointer; color: var(--ink);
+    background: linear-gradient(var(--surface), var(--surface-2));
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 13px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 1px 0 color-mix(in srgb, #fff 40%, transparent); }
   .figbtn:hover, .figbtn:focus-visible { border-color: var(--ink-2); outline: none; }
+  .figbtn:active { transform: translateY(1px); box-shadow: 0 0 1px rgba(0, 0, 0, 0.15); }
   .figbtn.on { border-color: var(--p2); box-shadow: inset 0 0 0 1px var(--p2); }
   #figreset { display: none; }
   .figcap { font-size: 12.5px; color: var(--ink-3); margin: 6px 0 0; }
   #figshow { position: fixed; left: 14px; bottom: 14px; z-index: 60; display: none;
-    font: inherit; font-size: 13px; cursor: pointer; color: var(--ink); background: var(--surface);
+    font: inherit; font-size: 13px; cursor: pointer; color: var(--ink);
+    background: linear-gradient(var(--surface), var(--surface-2));
     border: 1px solid var(--hairline); border-radius: 999px; padding: 7px 16px; box-shadow: var(--shadow); }
   .cols.nofig .fig { display: none; }
-  .cols.nofig ~ #figshow, body:has(.cols.nofig) #figshow { display: block; }
+  /* 图形/文字双视图 */
+  .figtext { display: none; overflow-y: auto; max-height: 82vh; padding: 2px; }
+  .fig.textmode #pano { display: none; }
+  .fig.textmode .figtext { display: block; }
+  .figtext .as-card { margin-bottom: 8px; }
+  .figtext .as-card.here { box-shadow: 0 0 0 2px var(--pc); }
+  /* 收起/展开过渡 */
+  .fig { transition: opacity 0.32s ease, transform 0.32s ease; }
+  .cols.hiding .fig { opacity: 0; transform: translateX(-20px); }
+  /* 全屏大图 */
+  #bigov { position: fixed; inset: 0; z-index: 80; display: none; padding: 2.5vh 3vw;
+    background: color-mix(in srgb, var(--page) 94%, transparent); backdrop-filter: blur(4px); cursor: zoom-out; }
+  #bigov.on { display: flex; flex-direction: column; gap: 6px; }
+  #bigov svg { flex: 1; min-height: 0; width: 100%; }
+  #bigov .bigcap { text-align: center; font-size: 13px; color: var(--ink-3); flex: none; }
   details.mod.flash { outline: 2px solid var(--pc); outline-offset: 3px; }
   @media (min-width: 1180px) {
     .cols { display: grid; grid-template-columns: minmax(400px, 46%) minmax(0, 1fr); align-items: start; }
@@ -344,7 +364,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.20 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.21 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -364,13 +384,13 @@
       <g class="rg2" id="rg2-pl4" data-pl="pl4">
         <rect x="42" y="42" width="916" height="516" rx="16" fill="none" stroke="var(--p4)" stroke-width="2.5"/>
         <text x="60" y="70" font-size="17" font-weight="700" fill="var(--p4)">Ⅳ 系统组装</text>
-        <g class="pt" data-go="ct-view"><rect x="250" y="50" width="500" height="22" rx="10" fill="color-mix(in srgb, var(--p4) 15%, transparent)" stroke="var(--p4)" stroke-width="1"/>
+        <g class="pt" data-go="ct-view"><rect class="elev" x="250" y="50" width="500" height="22" rx="10" fill="color-mix(in srgb, var(--p4) 15%, transparent)" stroke="var(--p4)" stroke-width="1"/>
           <text x="500" y="66" font-size="12" text-anchor="middle" class="dim2">上下文拼装（系统提示 + 记忆 + 检索 + 输入 → 一条序列）</text></g>
-        <g class="pt" data-go="rag-doc"><rect x="66" y="84" width="120" height="60" rx="8" fill="color-mix(in srgb, var(--p4) 10%, transparent)" stroke="var(--p4)" stroke-width="1.2"/>
+        <g class="pt" data-go="rag-doc"><rect class="elev" x="66" y="84" width="120" height="60" rx="8" fill="color-mix(in srgb, var(--p4) 10%, transparent)" stroke="var(--p4)" stroke-width="1.2"/>
           <line x1="80" y1="100" x2="172" y2="100" stroke="var(--ink-3)" stroke-width="1"/><line x1="80" y1="110" x2="172" y2="110" stroke="var(--ink-3)" stroke-width="1"/>
           <text x="126" y="134" font-size="12" text-anchor="middle" class="dim2">RAG 向量库</text>
           <polyline points="186,110 250,64" fill="none" stroke="var(--p4)" stroke-width="1" stroke-dasharray="4 3"/></g>
-        <g class="pt" data-go="ag-log"><rect x="814" y="84" width="120" height="60" rx="8" fill="color-mix(in srgb, var(--p4) 10%, transparent)" stroke="var(--p4)" stroke-width="1.2"/>
+        <g class="pt" data-go="ag-log"><rect class="elev" x="814" y="84" width="120" height="60" rx="8" fill="color-mix(in srgb, var(--p4) 10%, transparent)" stroke="var(--p4)" stroke-width="1.2"/>
           <circle cx="842" cy="106" r="11" fill="none" stroke="var(--ink-3)" stroke-width="1.4" stroke-dasharray="3 3"/>
           <polygon points="842,93 838,99 846,99" fill="var(--ink-3)"/>
           <text x="860" y="103" font-size="9" class="dim3">观察·思考</text>
@@ -383,7 +403,7 @@
 
       <!-- Ⅰ 训练管线 -->
       <g class="rg2" id="rg2-pl1" data-pl="pl1">
-        <rect x="64" y="196" width="292" height="250" rx="12" fill="color-mix(in srgb, var(--p1) 6%, transparent)" stroke="var(--p1)" stroke-width="1.8" stroke-dasharray="7 4"/>
+        <rect class="elev" x="64" y="196" width="292" height="250" rx="12" fill="color-mix(in srgb, var(--p1) 6%, transparent)" stroke="var(--p1)" stroke-width="1.8" stroke-dasharray="7 4"/>
         <text x="78" y="222" font-size="16" font-weight="700" fill="var(--p1)">Ⅰ 训练管线</text>
         <text x="78" y="240" font-size="11" class="dim3">（训练完成 → 权重冻结，此后停机）</text>
         <g class="pt" data-go="cx-w"><ellipse cx="108" cy="262" rx="19" ry="6" fill="none" stroke="var(--ink-3)" stroke-width="1.2"/>
@@ -406,31 +426,31 @@
           <text x="284" y="411" font-size="11" text-anchor="middle" class="dim2">评估 · 红队</text></g>
         <polyline points="330,407 384,407" fill="none" stroke="var(--p1)" stroke-width="2" marker-end="url(#parr1)"/>
         <rect x="384" y="388" width="14" height="38" fill="color-mix(in srgb, var(--p1) 30%, transparent)" stroke="var(--p1)" stroke-width="1.2"/>
-        <text x="391" y="440" font-size="10" text-anchor="middle" class="mono dim2">权重冻结</text>
+        <text x="380" y="440" font-size="10" text-anchor="end" class="mono dim2">权重冻结</text>
       </g>
 
       <!-- Ⅱ 模型本体 -->
       <g class="rg2" id="rg2-pl2" data-pl="pl2">
-        <rect x="398" y="104" width="204" height="466" rx="8" fill="color-mix(in srgb, var(--p2) 7%, transparent)" stroke="var(--p2)" stroke-width="2.2"/>
+        <rect class="elev" x="398" y="104" width="204" height="466" rx="8" fill="color-mix(in srgb, var(--p2) 7%, transparent)" stroke="var(--p2)" stroke-width="2.2"/>
         <text x="500" y="96" font-size="17" font-weight="700" text-anchor="middle" fill="var(--p2)">Ⅱ 模型本体 · N×Block</text>
-        <g class="pt" data-go="lm-rows"><rect x="412" y="114" width="176" height="30" rx="6" fill="color-mix(in srgb, var(--p2) 22%, transparent)" stroke="var(--p2)" stroke-width="1.3"/>
+        <g class="pt" data-go="lm-rows"><rect class="elev" x="412" y="114" width="176" height="30" rx="6" fill="color-mix(in srgb, var(--p2) 22%, transparent)" stroke="var(--p2)" stroke-width="1.3"/>
           <text x="500" y="134" font-size="12" text-anchor="middle" class="mono">LM Head → logits[V]</text></g>
         <g class="pt" data-go="bk-cv"><line x1="410" y1="150" x2="410" y2="504" stroke="var(--p2)" stroke-width="3"/>
           <polygon points="410,154 404,165 416,165" fill="var(--p2)"/>
           <text x="403" y="330" font-size="10.5" class="mono dim2" transform="rotate(-90 403 330)">残差流（贯穿 N 层）</text></g>
         <g id="pfloors"></g>
         <text x="502" y="349" font-size="13" text-anchor="middle" class="dim3">⋮　×32 层同构　⋮</text>
-        <g class="pt" data-go="emb-board"><rect x="412" y="506" width="176" height="34" rx="6" fill="color-mix(in srgb, var(--p2) 22%, transparent)" stroke="var(--p2)" stroke-width="1.3"/>
+        <g class="pt" data-go="emb-board"><rect class="elev" x="412" y="506" width="176" height="34" rx="6" fill="color-mix(in srgb, var(--p2) 22%, transparent)" stroke="var(--p2)" stroke-width="1.3"/>
           <text x="500" y="528" font-size="12" text-anchor="middle" class="mono">Embedding [V×d]</text></g>
-        <g class="pt" data-go="rp-cv"><rect x="500" y="544" width="88" height="18" rx="9" fill="none" stroke="var(--p2)" stroke-width="1"/>
-          <text x="544" y="557" font-size="10" text-anchor="middle" class="mono dim2">+ 位置编码 RoPE</text></g>
-        <g class="pt" data-go="tk-q"><rect x="412" y="544" width="80" height="18" rx="9" fill="none" stroke="var(--p2)" stroke-width="1"/>
-          <text x="452" y="557" font-size="10" text-anchor="middle" class="mono dim2">分词 → ids</text></g>
+        <g class="pt" data-go="rp-cv"><rect x="500" y="540" width="88" height="16" rx="9" fill="none" stroke="var(--p2)" stroke-width="1"/>
+          <text x="544" y="551" font-size="10" text-anchor="middle" class="mono dim2">+ 位置编码 RoPE</text></g>
+        <g class="pt" data-go="tk-q"><rect x="412" y="540" width="80" height="16" rx="9" fill="none" stroke="var(--p2)" stroke-width="1"/>
+          <text x="452" y="551" font-size="10" text-anchor="middle" class="mono dim2">分词 → ids</text></g>
       </g>
 
       <!-- Ⅲ 推理服务 -->
       <g class="rg2" id="rg2-pl3" data-pl="pl3">
-        <rect x="640" y="196" width="292" height="250" rx="12" fill="color-mix(in srgb, var(--p3) 6%, transparent)" stroke="var(--p3)" stroke-width="1.8"/>
+        <rect class="elev" x="640" y="196" width="292" height="250" rx="12" fill="color-mix(in srgb, var(--p3) 6%, transparent)" stroke="var(--p3)" stroke-width="1.8"/>
         <text x="654" y="222" font-size="16" font-weight="700" fill="var(--p3)">Ⅲ 推理服务</text>
         <g class="pt" data-go="kv-t"><ellipse cx="700" cy="256" rx="25" ry="7" fill="none" stroke="var(--ink-3)" stroke-width="1.2"/>
           <path d="M675 256 v62 a25 7 0 0 0 50 0 v-62" fill="color-mix(in srgb, var(--p3) 12%, transparent)" stroke="var(--ink-3)" stroke-width="1.2"/>
@@ -449,14 +469,14 @@
         <g class="pt" data-go="pd-t">
           <polyline points="588,129 788,129 788,240" fill="none" stroke="var(--p3)" stroke-width="1.5" marker-end="url(#parr3)"/>
           <text x="690" y="122" font-size="10" text-anchor="middle" class="mono dim3">logits</text>
-          <path d="M846 260 h46 v152 h-560 v-98" fill="none" stroke="var(--p3)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#parr3)"/>
-          <text x="612" y="426" font-size="11" text-anchor="middle" fill="var(--p3)">自回归循环：新 token 回到输入 ↻（Prefill 一次 · Decode 逐字）</text></g>
+          <path d="M846 260 h94 v-199 h-190" fill="none" stroke="var(--p3)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#parr3)"/>
+          <text x="800" y="312" font-size="11" text-anchor="middle" fill="var(--p3)">自回归循环 ↻</text><text x="800" y="326" font-size="9" text-anchor="middle" class="dim3">新 token 回到上下文 · Prefill 一次 Decode 逐字</text></g>
         <polyline points="892,318 944,318" fill="none" stroke="var(--p3)" stroke-width="1.5" marker-end="url(#parr3)"/>
       </g>
 
       <!-- Ⅴ 多模态模型组 -->
       <g class="rg2" id="rg2-pl5" data-pl="pl5">
-        <rect x="72" y="470" width="250" height="66" rx="10" fill="color-mix(in srgb, var(--p5) 8%, transparent)" stroke="var(--p5)" stroke-width="1.8"/>
+        <rect class="elev" x="72" y="470" width="250" height="66" rx="10" fill="color-mix(in srgb, var(--p5) 8%, transparent)" stroke="var(--p5)" stroke-width="1.8"/>
         <text x="86" y="492" font-size="14" font-weight="700" fill="var(--p5)">Ⅴ 多模态模型组</text>
         <text x="86" y="507" font-size="10" class="dim3">独立模型族 · 经工具调用与本体协作</text>
         <g font-size="10" class="mono">
@@ -471,7 +491,7 @@
 
       <!-- 0 硬件基座 -->
       <g class="rg2" id="rg2-pl0" data-pl="pl0">
-        <rect x="2" y="578" width="996" height="136" rx="10" fill="color-mix(in srgb, var(--p0) 7%, transparent)" stroke="var(--p0)" stroke-width="2"/>
+        <rect class="elev" x="2" y="578" width="996" height="136" rx="10" fill="color-mix(in srgb, var(--p0) 7%, transparent)" stroke="var(--p0)" stroke-width="2"/>
         <text x="20" y="606" font-size="16" font-weight="700" fill="var(--p0)">0 硬件基座</text>
         <g class="pt" data-go="gr-par"><g id="pcores"></g>
           <text x="250" y="702" font-size="11" text-anchor="middle" class="dim2">GPU 核阵</text></g>
@@ -497,15 +517,29 @@
       </defs>
     </g>
   </svg>
+  <div class="figtext" id="figtext">
+    <a class="as-card" href="#pl4" style="--pc:var(--p4)" data-pl="pl4"><div class="t"><span class="rn">Ⅳ</span><b>系统组装</b><span class="d">上下文拼装 · RAG 向量库 · Agent 循环 · 护栏</span></div></a>
+    <a class="as-card" href="#pl1" style="--pc:var(--p1)" data-pl="pl1"><div class="t"><span class="rn">Ⅰ</span><b>训练管线</b><span class="d">语料 → 清洗 → 分词器 → 预训练 → SFT/RLHF → 评估 → 权重冻结</span></div></a>
+    <a class="as-card" href="#pl2" style="--pc:var(--p2)" data-pl="pl2"><div class="t"><span class="rn">Ⅱ</span><b>模型本体</b><span class="d">Embedding → N×Block（Attention/FFN/MoE）→ LM Head · 残差流贯穿</span></div></a>
+    <a class="as-card" href="#pl3" style="--pc:var(--p3)" data-pl="pl3"><div class="t"><span class="rn">Ⅲ</span><b>推理服务</b><span class="d">Prefill/Decode 自回归循环 · KV Cache · 采样器 · 量化 · 批处理</span></div></a>
+    <a class="as-card" href="#pl5" style="--pc:var(--p5)" data-pl="pl5"><div class="t"><span class="rn">Ⅴ</span><b>多模态模型组</b><span class="d">VLM · 扩散 · VAE · CFG · 视频 · 语音——独立模型族</span></div></a>
+    <a class="as-card" href="#pl0" style="--pc:var(--p0)" data-pl="pl0"><div class="t"><span class="rn">0</span><b>硬件基座</b><span class="d">GPU 核阵 · HBM · 互联 · 屋顶线 · 数字格式</span></div></a>
+  </div>
   <div class="figbar">
     <span id="figwhere" class="mono">整机总览</span>
     <button type="button" class="figbtn on" id="figfollow">镜头跟随：开</button>
+    <button type="button" class="figbtn" id="figmode">文字版</button>
+    <button type="button" class="figbtn" id="figbig">⛶ 大图</button>
     <button type="button" class="figbtn" id="figreset">⌂ 整机</button>
-    <button type="button" class="figbtn" id="fighide">收起图 ⇤</button>
+    <button type="button" class="figbtn" id="fighide">收起 ⇤</button>
   </div>
-  <p class="figcap">点击部位 → 直达模块并展开（镜头同时推进）。开启「镜头跟随」后，滚动正文时镜头也会自动跟着章节走。此图是全站的「你在这里」。</p>
+  <p class="figcap">点击部位 → 直达模块并展开（镜头同时推进）；「镜头跟随」开启时滚动正文镜头随章节走；「文字版」切到卡片目录；「⛶ 大图」全屏细看。此图是全站的「你在这里」。</p>
 </aside>
 <button type="button" id="figshow">🗺 展开全景图</button>
+<div id="bigov" role="dialog" aria-label="全景大图">
+  <svg viewBox="0 0 1000 720"><use href="#pscene"></use></svg>
+  <p class="bigcap">全屏查看 · 点击任意处或按 Esc 返回（大图为镜像视图，交互请回左栏原图）</p>
+</div>
 
 <div class="wrap">
 
@@ -1759,7 +1793,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.20 · 2026-07-10。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.21 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
@@ -3740,6 +3774,7 @@ function paintScene(cv, fine) {
     const moe = i === 4;
     return `<g>
       <rect x="416" y="${y}" width="172" height="36" rx="5" fill="color-mix(in srgb, var(--p2) 13%, transparent)" stroke="var(--p2)" stroke-width="1" class="pt" data-go="bk-cv"/>
+      <rect x="418" y="${y + 33}" width="168" height="3.5" rx="1.5" fill="color-mix(in srgb, var(--p2) 42%, transparent)"/>
       <g class="pt" data-go="att-q"><rect x="424" y="${y + 6}" width="72" height="24" rx="4" fill="var(--surface)" stroke="var(--ink-3)" stroke-width="1"/>
         <text x="460" y="${y + 22}" font-size="10.5" text-anchor="middle" class="mono dim2">Attention</text></g>
       <g class="pt" data-go="${moe ? 'moe-q' : 'ff-cv'}"><rect x="506" y="${y + 6}" width="72" height="24" rx="4" fill="var(--surface)" stroke="${moe ? 'var(--p2)' : 'var(--ink-3)'}" stroke-width="${moe ? 1.6 : 1}"/>
@@ -3770,12 +3805,19 @@ function paintScene(cv, fine) {
       if (t < 1) anim = requestAnimationFrame(step);
     })(t0);
   }
+  const glow = pl => getComputedStyle(document.documentElement).getPropertyValue('--p' + pl.slice(2)).trim();
   function setActive(pl, forceFly) {
     const changed = pl !== active;
     active = pl;
     if (changed) {
-      document.querySelectorAll('#pscene > .rg2').forEach(g =>
-        g.classList.toggle('dim', pl !== null && g.dataset.pl !== pl));
+      document.querySelectorAll('#pscene > .rg2').forEach(g => {
+        const hot = pl !== null && g.dataset.pl === pl;
+        g.classList.toggle('dim', pl !== null && !hot);
+        /* 未缩放时也能看出当前区域：微光晕 */
+        g.style.filter = hot ? `drop-shadow(0 0 5px ${glow(pl)})` : '';
+      });
+      document.querySelectorAll('.figtext .as-card').forEach(c =>
+        c.classList.toggle('here', c.dataset.pl === pl));
       $('figwhere').textContent = pl ? NAME[pl] : '整机总览';
       $('figreset').style.display = pl ? 'block' : 'none';
     }
@@ -3790,14 +3832,29 @@ function paintScene(cv, fine) {
     $('figfollow').classList.toggle('on', follow);
     if (follow && active) flyTo(BOX[active]);
   });
+  /* 收起/展开带过渡：先淡出滑走，再收列（反向亦然） */
+  const cols = document.querySelector('.cols');
   $('fighide').addEventListener('click', () => {
-    document.querySelector('.cols').classList.add('nofig');
-    $('figshow').style.display = 'block';
+    cols.classList.add('hiding');
+    setTimeout(() => {
+      cols.classList.add('nofig'); cols.classList.remove('hiding');
+      $('figshow').style.display = 'block';
+    }, reduced ? 0 : 330);
   });
   $('figshow').addEventListener('click', () => {
-    document.querySelector('.cols').classList.remove('nofig');
     $('figshow').style.display = 'none';
+    cols.classList.remove('nofig'); cols.classList.add('hiding');
+    requestAnimationFrame(() => requestAnimationFrame(() => cols.classList.remove('hiding')));
   });
+  /* 图形 / 文字双视图 */
+  $('figmode').addEventListener('click', () => {
+    const t = document.querySelector('.fig').classList.toggle('textmode');
+    $('figmode').textContent = t ? '图形版' : '文字版';
+  });
+  /* 全屏大图 */
+  $('figbig').addEventListener('click', () => $('bigov').classList.add('on'));
+  $('bigov').addEventListener('click', () => $('bigov').classList.remove('on'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') $('bigov').classList.remove('on'); });
 
   /* 图 → 文：部件点击 = 镜头推进其所在区域 + 直达模块并展开 */
   document.querySelectorAll('#pscene .pt').forEach(pt => {
