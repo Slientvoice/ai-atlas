@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>模型门派谱系</title>
+<style>
+  :root {
+    --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
+    --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
+    --hairline: #e3e1d8; --seal: #b0392e;
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
+    --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page: #131311; --surface: #1e1d1a; --surface-2: #262521; --ink: #f2f0e8; --ink-2: #b5b2a6;
+      --ink-3: #85827a; --hairline: #2e2d28; --seal: #e0705e;
+      --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
+  }
+  :root[data-theme="dark"] { --page: #131311; --surface: #1e1d1a; --surface-2: #262521; --ink: #f2f0e8;
+    --ink-2: #b5b2a6; --ink-3: #85827a; --hairline: #2e2d28; --seal: #e0705e;
+    --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
+  :root[data-theme="light"] { --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8; --ink: #1c1b18;
+    --ink-2: #57544c; --ink-3: #8a877e; --hairline: #e3e1d8; --seal: #b0392e;
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--page); color: var(--ink); font-family: var(--sans); line-height: 1.75; font-size: 15px; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 46px 20px 60px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; color: var(--ink-3); }
+  h1 { font-size: clamp(30px, 5vw, 42px); margin: 8px 0 4px; }
+  .sub { color: var(--ink-2); max-width: 46em; }
+  h2 { font-size: 21px; margin: 40px 0 10px; }
+  a { color: inherit; }
+
+  /* 活页横幅：本页与主线的契约 */
+  .loose { margin-top: 22px; border: 1.5px dashed var(--p4); border-radius: 12px; background: var(--surface);
+    padding: 14px 18px; font-size: 13.5px; color: var(--ink-2); }
+  .loose b { color: var(--ink); }
+  .loose .lt { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; color: var(--p4); font-weight: 700; display: block; margin-bottom: 4px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 14px 0 0; font-size: 13px; color: var(--ink-2); }
+  .legend b { color: var(--ink); font-weight: 600; }
+
+  /* 小传卡 */
+  .bio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin-top: 14px; }
+  .bio { background: var(--surface); border: 1px solid var(--hairline); border-left: 3px solid var(--bc, var(--hairline));
+    border-radius: 10px; padding: 14px 16px; font-size: 13.5px; color: var(--ink-2); }
+  .bio h3 { margin: 0 0 2px; font-size: 15.5px; color: var(--ink); }
+  .bio .fl { font-family: var(--mono); font-size: 11px; color: var(--ink-3); display: block; margin-bottom: 6px; }
+  .bio p { margin: 0; }
+
+  /* 对照矩阵 */
+  .mtx-scroll { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 12px; background: var(--surface); margin-top: 14px; }
+  table { border-collapse: collapse; min-width: 1180px; width: 100%; font-size: 13px; }
+  th, td { padding: 9px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; text-align: left; }
+  thead th { font-size: 13.5px; background: var(--surface-2); position: sticky; top: 0; }
+  tbody tr:last-child td, tbody tr:last-child th { border-bottom: none; }
+  tbody th { /* 行首=分叉路口，粘在左侧便于横向滚动时对照 */
+    position: sticky; left: 0; background: var(--surface); min-width: 132px; max-width: 160px;
+    font-weight: 600; color: var(--ink); border-right: 1px solid var(--hairline); }
+  tbody th a { font-size: 11.5px; font-family: var(--mono); color: var(--ink-3); text-decoration: none; display: block; margin-top: 2px; }
+  tbody th a:hover { color: var(--ink); text-decoration: underline; }
+  td { color: var(--ink-2); min-width: 128px; }
+  td sup { font-size: 10px; color: var(--ink-3); margin-left: 2px; }
+  tr.seal-row th, tr.seal-row td { background: color-mix(in srgb, var(--seal) 6%, var(--surface)); }
+  tr.seal-row th { color: var(--seal); }
+
+  /* 朱批 */
+  .seal-note { margin-top: 22px; border: 1px solid color-mix(in srgb, var(--seal) 45%, transparent); border-left: 3px solid var(--seal);
+    border-radius: 10px; padding: 14px 18px; background: color-mix(in srgb, var(--seal) 5%, var(--surface)); font-size: 13.5px; color: var(--ink-2); }
+  .seal-note .sh { color: var(--seal); font-weight: 700; margin-bottom: 6px; }
+  .seal-note ol { margin: 0; padding-left: 1.4em; }
+  .seal-note li { margin: 4px 0; }
+
+  .others { margin-top: 18px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px;
+    padding: 13px 16px; font-size: 13.5px; color: var(--ink-2); }
+  .others b { color: var(--ink); }
+
+  .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .links a { text-decoration: none; font-size: 13px; color: var(--ink-2); background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 5px 15px; }
+  .links a:hover, .links a:focus-visible { border-color: var(--ink-2); outline: none; }
+  footer { margin-top: 40px; border-top: 1px solid var(--hairline); padding-top: 16px; font-size: 12.5px; color: var(--ink-3); }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">AI COMPLIANCE ATLAS · 活页 · 谱系 v1</div>
+  <h1>模型门派谱系</h1>
+  <p class="sub">Claude、GPT、Gemini、Grok、DeepSeek、Llama、Qwen——七家的差别，大部分不是神秘配方，而是在<a href="blueprint.html">工程蓝图</a>教过的那些「分叉路口」上各自选了不同的岔。这一页把选择摆成一张对照表：学完蓝图，就能读懂业界。</p>
+
+  <div class="loose">
+    <span class="lt">📎 活页机制 · 盘点基准日 2026-07-12</span>
+    与主线蓝图讲「不变的原理」不同，本页是<b>商业格局快照，保质期以月计</b>——过期整页换新（谱系独立编号 v1、v2……），不影响主线版本。
+    全部内容由 AI 起草、<b>未经人工核验</b>（规则 R5）；起草者为 Claude（Anthropic）——<b>评述自家门派存在利益相关</b>，措辞已尽量中性，读者自行折扣。
+    <div class="legend"><b>来源标注</b><span>◉ 官方论文 / 技术报告 / 官方宣称</span><span>◐ 媒体报道或行业共识</span><span>○ 传闻或推断——引用前必核</span></div>
+  </div>
+
+  <h2>七家小传</h2>
+  <div class="bio-grid">
+    <div class="bio" style="--bc:var(--p0)"><h3>OpenAI · GPT 系</h3><span class="fl">旗舰（基准日）：GPT-5 系 ◉</span>
+      <p>把「大力出奇迹」从假说变成产业的公司：GPT 系列证明了规模定律，o 系列开创了「先想后答」的慢思考路线（后并入主线）。如今产品优先，架构细节自 GPT-4 起全面保密，饭碗是全球最大的 AI 超级应用。</p></div>
+    <div class="bio" style="--bc:var(--p4)"><h3>Anthropic · Claude</h3><span class="fl">旗舰（基准日）：Claude 4.5 → 5 代（Fable/Mythos 分级）◉</span>
+      <p>从 OpenAI 分出、把「安全」写进公司章程的一派：宪法式对齐（RLAIF）与可解释性研究是招牌，产品线克制，主攻企业与写代码场景。<b>利益相关：本页起草者即出自此门。</b></p></div>
+    <div class="bio" style="--bc:var(--p2)"><h3>Google · Gemini</h3><span class="fl">旗舰（基准日）：Gemini 3 ◉</span>
+      <p>发明 Transformer 的老钱世家（2017 年那篇论文就出自它家），一度被 ChatGPT 打醒，合并 DeepMind 后全力反攻。独门武器是全链路自有：自研 TPU 芯片、搜索与 YouTube 数据、安卓与办公套件分发。</p></div>
+    <div class="bio" style="--bc:var(--p3)"><h3>xAI · Grok</h3><span class="fl">旗舰（基准日）：Grok 4 系 ◉</span>
+      <p>最年轻也最激进：靠创纪录速度自建超大算力集群追赶，独家使用 X（推特）实时数据。安全尺度刻意放宽既是卖点也是雷区——出过广为报道的失控事故 ◐。</p></div>
+    <div class="bio" style="--bc:var(--p1)"><h3>DeepSeek · 深度求索</h3><span class="fl">旗舰（基准日）：V3.x + R1 系 ◉</span>
+      <p>量化基金养出的研究组，2025 年初用 R1 证明「花小钱也能上牌桌」，一度震动美股。全线开放权重、论文毫无保留，其工程降本招法（MLA、FP8、细粒度 MoE——蓝图 MoE 模块里讲的就是它）被全行业抄作业。</p></div>
+    <div class="bio" style="--bc:var(--p5)"><h3>Meta · Llama</h3><span class="fl">旗舰（基准日）：Llama 4 系 ◉</span>
+      <p>开放权重路线的旗手——蓝图全站数字例锚定的正是它家 Llama-3。「不卖模型、开源换生态」养活了全球开源社区；但 4 代口碑波折后重金重组超级智能实验室，开源承诺出现摇摆 ◐。</p></div>
+    <div class="bio" style="--bc:var(--p6)"><h3>阿里 · Qwen（通义千问）</h3><span class="fl">旗舰（基准日）：Qwen3 系 ◉</span>
+      <p>国内梯队的开源代表：从小尺寸到旗舰几乎全开源、许可证宽松，全球下载量与衍生模型数常年霸榜 ◐。商业闭环押在阿里云上。国内其余群雄见页尾脚注。</p></div>
+  </div>
+
+  <h2>分叉路口对照矩阵</h2>
+  <p class="sub" style="font-size:13.5px">行 = 蓝图里教过的技术分叉（点击行首小字可跳回对应模块）；列 = 七家的选择。横向可滚动，行首常驻。</p>
+  <div class="mtx-scroll"><table>
+    <thead><tr><th>分叉路口</th><th>GPT</th><th>Claude</th><th>Gemini</th><th>Grok</th><th>DeepSeek</th><th>Llama</th><th>Qwen</th></tr></thead>
+    <tbody>
+      <tr><th>架构骨干<br>Dense vs MoE<a href="blueprint.html#mod-moe">→ 蓝图 Ⅱ·MoE</a></th>
+        <td>保密；MoE 为业界推断<sup>○</sup></td><td>保密<sup>○</sup></td><td>MoE（1.5 起官方提及）<sup>◉</sup></td><td>Grok-1 曾开源 MoE<sup>◉</sup>；新旗舰保密<sup>○</sup></td><td>细粒度 MoE + MLA，论文全公开<sup>◉</sup></td><td>3 代 Dense<sup>◉</sup>；4 代转 MoE<sup>◉</sup></td><td>Dense 与 MoE 双线并出<sup>◉</sup></td></tr>
+      <tr><th>对齐路线<a href="blueprint.html#pl1">→ 蓝图 Ⅰ·偏好优化</a></th>
+        <td>RLHF 路线开创者（InstructGPT）<sup>◉</sup></td><td>宪法式 AI / RLAIF<sup>◉</sup></td><td>RLHF 系，公开细节少<sup>◐</sup></td><td>RLHF；尺度定位刻意宽松<sup>◐</sup></td><td>GRPO（R1 论文）<sup>◉</sup></td><td>SFT + DPO + RLHF 混合<sup>◉</sup></td><td>多阶段 RLHF / GRPO 系<sup>◉</sup></td></tr>
+      <tr><th>慢思考路线<a href="blueprint.html#mod-ttc">→ 蓝图 Ⅲ·测试时算力</a></th>
+        <td>o 系开创，后并入统一路由<sup>◉</sup></td><td>扩展思考：同一模型可开关<sup>◉</sup></td><td>thinking 档位<sup>◉</sup></td><td>3 代起 Think 模式<sup>◉</sup></td><td>R1 = 开源推理路线代表作<sup>◉</sup></td><td>截至基准日无旗舰推理版<sup>◐</sup></td><td>混合思考，可开关<sup>◉</sup></td></tr>
+      <tr><th>多模态姿态<a href="blueprint.html#mod-vlm">→ 蓝图 Ⅴ·VLM</a></th>
+        <td>原生全模态主打：文图音同网<sup>◉</sup></td><td>图像理解为主，不做生图<sup>◉</sup></td><td>原生多模态从头训练，姿态最激进<sup>◉</sup></td><td>图文理解 + 生图<sup>◐</sup></td><td>文本为主，多模态另线探索<sup>◉</sup></td><td>4 代原生多模态<sup>◉</sup></td><td>全家桶：VL / Audio / Omni<sup>◉</sup></td></tr>
+      <tr><th>算力底座<a href="blueprint.html#mod-net">→ 蓝图 0·互联与集群</a></th>
+        <td>英伟达 + 微软云；超级数据中心计划<sup>◐</sup></td><td>多云并用 + 定制芯片合作<sup>◐</sup></td><td>自研 TPU 全链路——七家中唯一<sup>◉</sup></td><td>自建超大集群，建设速度著称<sup>◐</sup></td><td>管制芯片约束下的极致工程效率<sup>◐</sup></td><td>自建 GPU 集群（数十万卡级宣称）<sup>◐</sup></td><td>阿里云自有基础设施<sup>◉</sup></td></tr>
+      <tr><th>权重开放</th>
+        <td>封闭；另有小型开源分支<sup>◉</sup></td><td>封闭<sup>◉</sup></td><td>封闭 + Gemma 开源小模型线<sup>◉</sup></td><td>旧版曾开源，旗舰封闭<sup>◉</sup></td><td>全线开放权重，许可宽松<sup>◉</sup></td><td>开放权重旗手（许可证附条件）<sup>◉</sup></td><td>开放最彻底的梯队之一<sup>◉</sup></td></tr>
+      <tr><th>数据姿态<a href="blueprint.html#mod-corpus">→ 蓝图 Ⅰ·语料池</a></th>
+        <td>网络 + 授权 + 合成；多起版权诉讼在身<sup>◐</sup></td><td>书籍语料诉讼已达成大额和解<sup>◐</sup></td><td>搜索生态 + YouTube 独有资产<sup>◐</sup></td><td>X 平台实时数据独家<sup>◉</sup></td><td>公开语料 + 合成；被指蒸馏他家输出<sup>○</sup></td><td>公开网络 + 自家社交平台；亦有书籍诉讼<sup>◐</sup></td><td>中文语料深耕 + 电商生态<sup>◐</sup></td></tr>
+      <tr><th>安全主张<a href="blueprint.html#mod-eval">→ 蓝图 Ⅰ·评估与红队</a></th>
+        <td>部署前「准备度框架」<sup>◉</sup></td><td>责任扩展政策 RSP + 可解释性研究最重注<sup>◉</sup></td><td>前沿安全框架<sup>◉</sup></td><td>刻意宽松的「求真」定位；出过公开事故<sup>◐</sup></td><td>安全文档相对薄；境内内容过滤<sup>◐</sup></td><td>开源安全工具链（Guard 系）<sup>◉</sup></td><td>境内备案合规体系内<sup>◉</sup></td></tr>
+      <tr><th>商业形态</th>
+        <td>超级应用 + API，消费者第一<sup>◉</sup></td><td>企业与开发者，代码场景标杆<sup>◉</sup></td><td>生态捆绑：搜索 / 办公 / 安卓<sup>◉</sup></td><td>订阅捆绑 X<sup>◉</sup></td><td>低价 API + 开源引流<sup>◉</sup></td><td>不卖模型，开源换生态<sup>◉</sup></td><td>云捆绑（阿里云）<sup>◉</sup></td></tr>
+      <tr class="seal-row"><th>司法辖区<br>（合规视角）</th>
+        <td>美 · 境内未备案</td><td>美 · 境内未备案</td><td>美 · 境内未备案</td><td>美 · 境内未备案</td><td>中 · 已备案；出海反向受多国政府限制<sup>◐</sup></td><td>美 · 开放权重可本地部署，但仍需算法与内容合规评估</td><td>中 · 已备案，境内采购路径最短</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="seal-note"><div class="sh">⚖ 朱批 · 选型即合规决策（AI 起草，待用户法律审校）</div>
+    <ol>
+      <li><b>开放权重 vs 封闭 API</b>：责任主体、数据出境路径、私有化部署可行性全然不同——这是采购尽调的第一分叉。</li>
+      <li><b>境内备案状态</b>决定能否面向公众提供服务（生成式 AI 管理暂行办法的备案要求）；美系模型的境内使用需另行设计合规路径。</li>
+      <li><b>美系模型双向审视</b>：既看数据跨境与内容合规，也要注意出口管制条线的反向波及。</li>
+      <li><b>「数据姿态」一行是供应商风险信号源</b>：训练数据诉讼与和解直接映射到侵权连带与合同保证条款的谈判点。</li>
+    </ol>
+  </div>
+
+  <div class="others"><b>脚注 · 国内其余群雄（按下不表，谱系 v2 视需要扩列）：</b>
+    Kimi（月之暗面，开源万亿级 MoE 出圈）、豆包（字节，消费者体量）、GLM（智谱）、MiniMax、阶跃星辰、混元（腾讯）、文心（百度）——境内备案模型的共同点：合规采购路径短，但出海时同样面临反向审查。</div>
+
+  <div class="links">
+    <a href="index.html">🗺️ 返回门户</a>
+    <a href="blueprint.html">📐 工程蓝图（主线）</a>
+    <a href="progress.html">🚦 进度看板</a>
+  </div>
+
+  <footer>模型门派谱系 · 活页 v1 · 盘点基准日 2026-07-12 · 全部断言按来源三级标注，未经人工核验（R5）。本页过期即整页换新，不追补丁。</footer>
+</div>
