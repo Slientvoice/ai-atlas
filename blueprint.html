@@ -357,7 +357,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.23.3 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.23.4 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -583,10 +583,10 @@
           <div class="lab-head">🔬 实验室 · 配方即能力<span class="demo-tag">G2 级</span></div>
           <p class="dim" style="margin:4px 0 0">算力预算固定 = 语料总量固定：拖动四类语料的占比（自动归一化到 100%），看模型的能力画像跟着变形。<b>抬高一项必然压低其他</b>——预训练的第一个残酷事实。</p>
           <div class="lab-ctrls" style="flex-direction:column;align-items:flex-start;gap:6px">
-            <label>网页 <output id="cx-w-o">—</output> <input type="range" id="cx-w" min="0" max="100" value="60"></label>
-            <label>书籍论文 <output id="cx-b-o">—</output> <input type="range" id="cx-b" min="0" max="100" value="20"></label>
-            <label>代码 <output id="cx-c-o">—</output> <input type="range" id="cx-c" min="0" max="100" value="12"></label>
-            <label>多语文本 <output id="cx-m-o">—</output> <input type="range" id="cx-m" min="0" max="100" value="8"></label>
+            <label>网页 <output id="cx-w-o">—</output> <input type="range" id="cx-w" min="0" max="100" step="0.1" value="60"></label>
+            <label>书籍论文 <output id="cx-b-o">—</output> <input type="range" id="cx-b" min="0" max="100" step="0.1" value="20"></label>
+            <label>代码 <output id="cx-c-o">—</output> <input type="range" id="cx-c" min="0" max="100" step="0.1" value="12"></label>
+            <label>多语文本 <output id="cx-m-o">—</output> <input type="range" id="cx-m" min="0" max="100" step="0.1" value="8"></label>
           </div>
           <label class="lab-lab">能力画像（实时）</label>
           <div id="cx-rows"></div>
@@ -3265,26 +3265,30 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
     ['文风与表达', { w: 0.30, b: 0.55, c: 0.02, m: 0.13 }],
   ];
   const S = ['cx-w', 'cx-b', 'cx-c', 'cx-m'];
-  /* 零和联动：拖动一条，其余三条按现有比例实时收放，总和恒等于 100% */
+  /* 零和联动（浮点记账版）：份额以浮点内部状态维护、滑杆步进 0.1——拖动一条时
+     其余三条按比例平滑同步收放；旧整数版会把 1% 余量随机取整到某一条上造成跳动 */
+  const share = Object.fromEntries(S.map(id => [id, +$(id).value]));
   function redistribute(changed) {
-    const v = Object.fromEntries(S.map(id => [id, +$(id).value]));
+    share[changed] = +$(changed).value;
     const rest = S.filter(id => id !== changed);
-    const restSum = rest.reduce((s, id) => s + v[id], 0);
-    const budget = 100 - v[changed];
+    const restSum = rest.reduce((s, id) => s + share[id], 0);
+    const budget = 100 - share[changed];
     rest.forEach(id => {
-      $(id).value = restSum > 0 ? Math.round(v[id] * budget / restSum) : Math.round(budget / 3);
+      share[id] = restSum > 0 ? share[id] * budget / restSum : budget / 3;
+      $(id).value = share[id];
     });
-    /* 取整残差补给其余里最大的一条，确保精确 100 */
-    const drift = 100 - S.reduce((s, id) => s + +$(id).value, 0);
-    if (drift !== 0) {
-      const big = rest.sort((a, b) => +$(b).value - +$(a).value)[0];
-      $(big).value = +$(big).value + drift;
-    }
+  }
+  /* 显示用最大余数法取整：四个整数百分比恰好合计 100 */
+  function displayPercents() {
+    const fl = S.map(id => [id, Math.floor(share[id]), share[id] % 1]);
+    let left = 100 - fl.reduce((s, p) => s + p[1], 0);
+    [...fl].sort((a, b) => b[2] - a[2]).forEach(p => { if (left > 0) { p[1]++; left--; } });
+    fl.forEach(([id, v]) => $(id + '-o').textContent = v + '%');
   }
   function update(changed) {
     if (changed) redistribute(changed);
-    const mix = Object.fromEntries(S.map(id => [id.slice(3), +$(id).value / 100]));
-    S.forEach(id => $(id + '-o').textContent = $(id).value + '%');
+    const mix = Object.fromEntries(S.map(id => [id.slice(3), share[id] / 100]));
+    displayPercents();
     const scores = CAPS.map(([n, wt]) => [n, mix.w * wt.w + mix.b * wt.b + mix.c * wt.c + mix.m * wt.m]);
     const mx = Math.max(...scores.map(s => s[1]), 0.01);
     $('cx-rows').innerHTML = scores.map(([n, s]) => `
