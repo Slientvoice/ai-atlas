@@ -357,7 +357,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.23.2 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.23.3 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -3264,11 +3264,27 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
     ['多语能力', { w: 0.12, b: 0.05, c: 0.03, m: 0.80 }],
     ['文风与表达', { w: 0.30, b: 0.55, c: 0.02, m: 0.13 }],
   ];
-  function update() {
-    const raw = { w: +$('cx-w').value, b: +$('cx-b').value, c: +$('cx-c').value, m: +$('cx-m').value };
-    const sum = raw.w + raw.b + raw.c + raw.m || 1;
-    const mix = { w: raw.w / sum, b: raw.b / sum, c: raw.c / sum, m: raw.m / sum };
-    ['w', 'b', 'c', 'm'].forEach(k => $('cx-' + k + '-o').textContent = (mix[k] * 100).toFixed(0) + '%');
+  const S = ['cx-w', 'cx-b', 'cx-c', 'cx-m'];
+  /* 零和联动：拖动一条，其余三条按现有比例实时收放，总和恒等于 100% */
+  function redistribute(changed) {
+    const v = Object.fromEntries(S.map(id => [id, +$(id).value]));
+    const rest = S.filter(id => id !== changed);
+    const restSum = rest.reduce((s, id) => s + v[id], 0);
+    const budget = 100 - v[changed];
+    rest.forEach(id => {
+      $(id).value = restSum > 0 ? Math.round(v[id] * budget / restSum) : Math.round(budget / 3);
+    });
+    /* 取整残差补给其余里最大的一条，确保精确 100 */
+    const drift = 100 - S.reduce((s, id) => s + +$(id).value, 0);
+    if (drift !== 0) {
+      const big = rest.sort((a, b) => +$(b).value - +$(a).value)[0];
+      $(big).value = +$(big).value + drift;
+    }
+  }
+  function update(changed) {
+    if (changed) redistribute(changed);
+    const mix = Object.fromEntries(S.map(id => [id.slice(3), +$(id).value / 100]));
+    S.forEach(id => $(id + '-o').textContent = $(id).value + '%');
     const scores = CAPS.map(([n, wt]) => [n, mix.w * wt.w + mix.b * wt.b + mix.c * wt.c + mix.m * wt.m]);
     const mx = Math.max(...scores.map(s => s[1]), 0.01);
     $('cx-rows').innerHTML = scores.map(([n, s]) => `
@@ -3276,7 +3292,7 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
         <div class="bar"><i style="width:${(s / mx * 100).toFixed(0)}%"></i></div>
         <span class="pv">${(s * 100).toFixed(0)}</span></div>`).join('');
   }
-  ['cx-w', 'cx-b', 'cx-c', 'cx-m'].forEach(id => $(id).addEventListener('input', update));
+  S.forEach(id => $(id).addEventListener('input', () => update(id)));
   update();
 })();
 
