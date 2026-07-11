@@ -8,7 +8,7 @@
     --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
     --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
     --hairline: #e3e1d8; --seal: #b0392e; --seal-soft: rgba(176,57,46,0.07);
-    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4;
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
     --grid: rgba(28,27,24,0.05);
     --shadow: 0 10px 32px rgba(28,27,24,0.10);
     --serif: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif; /* 2026-07-09 用户拍板：宋体退役，全站统一现代黑体 */
@@ -20,7 +20,7 @@
       --page: #131311; --surface: #1e1d1a; --surface-2: #262521;
       --ink: #f2f0e8; --ink-2: #b5b2a6; --ink-3: #85827a;
       --hairline: #2e2d28; --seal: #e0705e; --seal-soft: rgba(224,112,94,0.10);
-      --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181;
+      --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e;
       --grid: rgba(255,255,255,0.045);
       --shadow: 0 10px 32px rgba(0,0,0,0.45);
     }
@@ -29,7 +29,7 @@
     --page: #131311; --surface: #1e1d1a; --surface-2: #262521;
     --ink: #f2f0e8; --ink-2: #b5b2a6; --ink-3: #85827a;
     --hairline: #2e2d28; --seal: #e0705e; --seal-soft: rgba(224,112,94,0.10);
-    --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181;
+    --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e;
     --grid: rgba(255,255,255,0.045);
     --shadow: 0 10px 32px rgba(0,0,0,0.45);
   }
@@ -37,7 +37,7 @@
     --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
     --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
     --hairline: #e3e1d8; --seal: #b0392e; --seal-soft: rgba(176,57,46,0.07);
-    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4;
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
     --grid: rgba(28,27,24,0.05);
     --shadow: 0 10px 32px rgba(28,27,24,0.10);
   }
@@ -357,7 +357,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.23.4 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.24 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -481,6 +481,17 @@
         </g>
       </g>
 
+      <!-- Ⅵ 具身与世界 -->
+      <g class="rg2" id="rg2-pl6" data-pl="pl6">
+        <rect class="elev" x="640" y="470" width="292" height="66" rx="10" fill="color-mix(in srgb, var(--p6) 8%, transparent)" stroke="var(--p6)" stroke-width="1.8"/>
+        <text x="654" y="492" font-size="14" font-weight="700" fill="var(--p6)">Ⅵ 具身与世界</text>
+        <text x="654" y="507" font-size="10" class="dim3">预测世界 · 驱动手脚——AI 触碰物理现实</text>
+        <g font-size="10" class="mono">
+          <g class="pt" data-go="wm-a"><rect x="654" y="514" width="70" height="15" rx="4" fill="none" stroke="var(--p6)" stroke-width="1"/><text x="689" y="525" text-anchor="middle" class="dim2">世界模型</text></g>
+          <g class="pt" data-go="vla-cv"><rect x="730" y="514" width="88" height="15" rx="4" fill="none" stroke="var(--p6)" stroke-width="1"/><text x="774" y="525" text-anchor="middle" class="dim2">具身 · VLA</text></g>
+        </g>
+      </g>
+
       <!-- 0 硬件基座 -->
       <g class="rg2" id="rg2-pl0" data-pl="pl0">
         <rect class="elev" x="2" y="578" width="996" height="136" rx="10" fill="color-mix(in srgb, var(--p0) 7%, transparent)" stroke="var(--p0)" stroke-width="2"/>
@@ -548,6 +559,10 @@
     <div class="as-wire">│ 同一地基上的另一族造物 ▼</div>
     <a class="as-card" href="#pl5" style="--pc:var(--p5)" data-pl="pl5">
       <div class="t"><span class="rn">Ⅴ</span><b>多模态模型组</b><span class="d">看见与生成图像 / 视频 / 声音：VLM · 扩散 · VAE · 条件引导 · 视频 · 语音</span></div>
+    </a>
+    <div class="as-wire">│ 伸向物理世界 ▼</div>
+    <a class="as-card" href="#pl6" style="--pc:var(--p6)" data-pl="pl6">
+      <div class="t"><span class="rn">Ⅵ</span><b>具身与世界</b><span class="d">世界模型（预测下一刻）· 具身智能 VLA（驱动手脚）——AI 触碰物理现实</span></div>
     </a>
     <div class="as-wire">│ 以上全部平面运行其上 ▼</div>
     <a class="as-card" href="#pl0" style="--pc:var(--p0)" data-pl="pl0">
@@ -1634,6 +1649,83 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
     </details>
   </section>
 
+  <!-- ================= PLANE VI ================= -->
+  <section class="plane" id="pl6" style="--pc:var(--p6)">
+    <div class="pl-head"><span class="rn">PLANE Ⅵ</span><h2>具身与世界 · AI 触碰物理现实</h2>
+      <p class="pl-q">这一平面回答：当 AI 需要「预测世界、动手改变世界」时，前面五个平面还缺什么。这是全图演化最快、定论最少的前沿（v0.24 落地登记簿最后两项）——按 R5 从严存疑，表述多留余地。</p></div>
+    <div class="pl-tools"><button data-plane="pl6">全部展开 / 收起</button></div>
+
+    <details class="mod" id="mod-wm">
+      <summary><span class="m-caret">▶</span><span class="m-name">世界模型</span><span class="m-en">WORLD MODELS · 🔬 LAB</span><span class="m-shape">状态 + 动作 → 下一刻状态</span></summary>
+      <div class="m-body">
+        <p>从「预测下一个词」到「预测下一刻的世界」。语言模型压缩的是文本的统计规律；世界模型要压缩的是<b>环境的动力学</b>：给定当前状态与将要发生的动作，预测下一刻会怎样。有了它，AI 才能在脑内排练（规划）而不必事事真做。</p>
+        <div class="forks"><span class="flab">分叉 · 怎么获得一台内在模拟器</span>
+          <button class="fk" data-v="a">视频生成顺带学</button>
+          <button class="fk on" data-v="b">潜空间预测</button>
+          <button class="fk" data-v="c">混合物理引擎</button>
+        </div>
+        <div class="fkb" data-v="a">把视频模型规模化，指望它顺路内化物理（Sora 一族被称为「世界模拟器」的主张）——画面像不等于物理对，学界争论正酣（据各方公开论战，持续更新）。</div>
+        <div class="fkb on" data-v="b">不生成像素，只在抽象状态空间里预测未来（Dreamer 系、JEPA 路线——LeCun 力主）：便宜、可用于规划，自动驾驶与机器人领域的现实主力。</div>
+        <div class="fkb" data-v="c">神经网络管感知与不确定性，显式物理引擎管刚体规律——工程折中，仿真训练（sim-to-real）的基座。</div>
+        <p class="dim">共同的命门：<b>长程预测误差复利</b>——每步小错，滚雪球成大错。下方实验室把这件事变成可见的。</p>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 弹球预言家<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">同一颗球、同一初速：左边用<b>真实物理</b>（重力+碰撞实算）预测未来，右边是「没有世界模型」的稻草人——只会把当前速度直线外推。看两个未来多少步内分道扬镳。</p>
+          <div class="lab-ctrls">
+            <button type="button" class="fk" id="wm-run">▶ 播放两个未来</button>
+            <button type="button" class="fk" id="wm-roll">↻ 新的初速</button>
+            <span style="font-family:var(--mono);font-size:12px">第 <b id="wm-step">0</b> 步 · 两个预言相距 <b id="wm-div">0</b> px</span>
+          </div>
+          <div class="df-row">
+            <div class="df-cell"><canvas id="wm-a" width="240" height="150" style="image-rendering:auto;max-width:260px"></canvas><div class="viz-cap">有世界模型：内化了重力与碰撞规律</div></div>
+            <div class="df-cell"><canvas id="wm-b" width="240" height="150" style="image-rendering:auto;max-width:260px"></canvas><div class="viz-cap">无世界模型：只会恒速直线外推</div></div>
+          </div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>左侧物理为实算（半隐式欧拉积分 + 墙面弹性碰撞），右侧「恒速外推」是刻意的稻草人基线——真实视频模型的物理直觉介于两者之间且不稳定。教学点是真的：<b>预测的价值不在下一帧，在于误差不随步数复利</b>；右侧读数在第一次碰撞后爆炸式增长，正是「没内化规律」的数学后果。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>预测错世界的归责：自动驾驶事故中「感知错了」与「预测/规划错了」举证路径不同——世界模型把责任分析推入模型内部；仿真数据训练占比的披露问题（监管口径演化中）。</p></div>
+      </div>
+    </details>
+    <div class="wire"><span>预测得了世界，还要动得了手 ▼</span></div>
+
+    <details class="mod" id="mod-vla">
+      <summary><span class="m-caret">▶</span><span class="m-name">具身智能与 VLA</span><span class="m-en">EMBODIED AI · VLA · 🔬 LAB</span><span class="m-shape">看见 + 听懂 → 关节角序列</span></summary>
+      <div class="m-body">
+        <p>给大脑接上手脚。VLA（视觉-语言-动作）模型把三件事放进同一网络：视觉编码器看环境、语言骨干懂指令，而输出头从「词表 logits」换成<b>动作</b>（离散动作 token 或连续控制量）——RT-2、π0 一族（据公开论文）。AI 从「说话」进化到「做事」，也把整套责任分析拽进了物理世界。</p>
+        <ul>
+          <li><b>数据瓶颈</b>：互联网上没有「动作数据」——靠人类遥操作示教、仿真合成（sim-to-real）与看视频学动作补课，条条昂贵。</li>
+          <li><b>频率鸿沟</b>：语言 token 以秒计，机械臂控制常要 50Hz 以上——下方实验室让你亲手体会这道沟。</li>
+        </ul>
+        <div class="forks"><span class="flab">分叉 · 大脑怎么接手脚</span>
+          <button class="fk" data-v="a">端到端 VLA</button>
+          <button class="fk on" data-v="b">分层：LLM 规划 + 传统控制 ✓</button>
+          <button class="fk" data-v="c">仿真优先</button>
+        </div>
+        <div class="fkb" data-v="a">感知到动作一张网络直通（RT-2/π0 路线）：上限高、可从大模型继承常识；数据饥渴、行为难验证——前沿所在。</div>
+        <div class="fkb on" data-v="b">LLM 只做高层规划（「先拿杯子再倒水」），底层交给成熟的运动控制栈执行——现实产品的主流折中，责任边界也最清晰（规划错 vs 执行错可分离）。</div>
+        <div class="fkb" data-v="c">先在物理仿真里练成千上万小时再迁移真机：便宜安全，但「仿真到现实的落差」（sim-to-real gap）是永恒税负。</div>
+
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 机械臂追点：频率鸿沟体感<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">一条双关节机械臂（逆运动学实算）追踪绕圈的目标。切换「决策频率」——1Hz 是语言模型逐句下指令的节奏，20Hz 接近真实控制器：看慢脑子如何永远慢半拍。</p>
+          <div class="lab-ctrls">
+            <span class="rf-chips"><span class="flab2">决策频率</span>
+              <button type="button" class="fk" data-hz="1">1 Hz（说话的节奏）</button>
+              <button type="button" class="fk on" data-hz="5">5 Hz</button>
+              <button type="button" class="fk" data-hz="20">20 Hz（干活的节奏）</button></span>
+            <span style="font-family:var(--mono);font-size:12px">落后目标 <b id="vla-err">—</b> px</span>
+          </div>
+          <div class="lab-2d"><canvas id="vla-cv" height="220"></canvas>
+            <div class="viz-cap">臂的关节角由逆运动学解析解实时求出（余弦定理）；● = 移动目标，✚ = 臂尖。低频下臂尖永远追着目标的影子。</div></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>逆运动学为精确解析解；玩具双关节、无动力学与力矩限制（真机还有惯量、延迟、安全层）。教学点是真的：<b>「理解指令」与「执行动作」相差两个数量级的节奏</b>——这就是分层架构存在的理由，也是端到端 VLA 必须解决的核心工程矛盾。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>责任分析的分水岭：软件输出一旦驱动物理动作，「纯信息服务」的缓冲带消失——产品质量与侵权规则直接适用；安全停机、人机共处间距等机器人规范演化中；遥操作示教数据中的作业员个人信息与工伤界面。</p></div>
+      </div>
+    </details>
+  </section>
+
   <!-- ================= PLANE 0 ================= -->
   <section class="plane" id="pl0" style="--pc:var(--p0)">
     <div class="pl-head"><span class="rn">PLANE 0</span><h2>物理基座 · 一切运行其上</h2>
@@ -1797,9 +1889,9 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
       <div class="lg" style="border-color:var(--p2)"><b>✅ 非 Transformer 架构 → 已建（v0.9）</b>Ⅱ 平面新模块「架构地平线」：Mamba/SSM 状态递推 vs 注意力全回看、混合架构、扩散 LM 登记。</div>
       <div class="lg" style="border-color:var(--p1)"><b>✅ 评估科学 → 已建（v0.9）</b>Ⅰ 平面「评估·红队·发布」模块内扩建：基准三大陷阱（污染/Goodhart/饱和）、LLM 判官及其偏差、法务读分指南。</div>
       <div class="lg" style="border-color:var(--p2)"><b>✅ 可解释性 → 已建（v0.9）</b>Ⅱ 平面新模块「可解释性：打开黑箱」：探针/特征分解/回路三进路、现状边界、「算法解释权」朱批。</div>
-      <div class="lg"><b>具身智能与机器人</b>VLA 模型（视觉-语言-动作三位一体）：AI 长出手脚之后的新大陆——真实世界交互数据、安全边界与产品责任的全新法域。挂点：未来 PLANE Ⅵ。<i style="color:var(--ink-3)">（未建 · 2026-07-09 登记）</i></div>
-      <div class="lg"><b>世界模型</b>从「预测下一个词」到「预测下一刻的物理世界」——视频生成野心的尽头，可能改写 Ⅴ 平面的半壁。挂点：Ⅴ 平面扩建或并入 PLANE Ⅵ。<i style="color:var(--ink-3)">（未建 · 2026-07-09 登记）</i></div>
-      <div class="lg" style="border-style:dashed"><b>登记簿现状：首批六项已全部落地（各条 ✅ 注明去处），新登记两项待建。</b>本清单永久开放——发现新空白就登记，登记了就不慌；它不是待办清单，是这张蓝图的抗震制度。</div>
+      <div class="lg" style="border-color:var(--p6)"><b>✅ 具身智能与机器人 → 已建（v0.24）</b>PLANE Ⅵ 新模块「具身智能与 VLA」：三分叉（端到端/分层/仿真优先）、数据瓶颈与频率鸿沟、机械臂追点实验室、产品责任朱批。</div>
+      <div class="lg" style="border-color:var(--p6)"><b>✅ 世界模型 → 已建（v0.24）</b>PLANE Ⅵ 新模块「世界模型」：三分叉（视频顺带学/潜空间预测/混合引擎）、误差复利命门、弹球预言家实验室、归责朱批。</div>
+      <div class="lg" style="border-style:dashed"><b>登记簿现状：先后登记的八项已全部落地（各条 ✅ 注明去处）。</b>本清单永久开放——发现新空白（如脑机接口、群体智能）随时登记；它不是待办清单，是这张蓝图的抗震制度。</div>
     </div>
   </section>
 
@@ -3821,8 +3913,8 @@ function paintScene(cv, fine) {
   /* 镜头 */
   const HOME = [0, 0, 1000, 720];
   const BOX = { pl1: [44, 170, 380, 300], pl2: [370, 66, 260, 516], pl3: [600, 86, 400, 372],
-    pl4: [24, 24, 952, 150], pl5: [46, 444, 310, 116], pl0: [0, 558, 1000, 162] };
-  const NAME = { pl0: '0 硬件基座', pl1: 'Ⅰ 训练管线', pl2: 'Ⅱ 模型本体', pl3: 'Ⅲ 推理服务', pl4: 'Ⅳ 系统组装', pl5: 'Ⅴ 多模态模型组' };
+    pl4: [24, 24, 952, 150], pl5: [46, 444, 310, 116], pl6: [620, 450, 330, 118], pl0: [0, 558, 1000, 162] };
+  const NAME = { pl0: '0 硬件基座', pl1: 'Ⅰ 训练管线', pl2: 'Ⅱ 模型本体', pl3: 'Ⅲ 推理服务', pl4: 'Ⅳ 系统组装', pl5: 'Ⅴ 多模态模型组', pl6: 'Ⅵ 具身与世界' };
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let cur = HOME.slice(), anim = null, active = null, follow = true;
 
@@ -3920,9 +4012,118 @@ function paintScene(cv, fine) {
     if (best && BOX[best]) setActive(best, false);
     else if (!best) setActive(null);
   }, { threshold: [0.1, 0.25, 0.5] });
-  ['pl0', 'pl1', 'pl2', 'pl3', 'pl4', 'pl5'].forEach(id => {
+  ['pl0', 'pl1', 'pl2', 'pl3', 'pl4', 'pl5', 'pl6'].forEach(id => {
     const s = document.getElementById(id);
     if (s) io.observe(s);
   });
+})();
+
+/* ============ 🔬 弹球预言家（v0.24） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const ca = $('wm-a'); if (!ca) return;
+  const cb = $('wm-b'), W = 240, H = 150, R = 7, G = 0.22, E = 0.92;
+  let seed = 3;
+  const rng = () => { seed = (seed * 1103515245 + 12345) >>> 0; return (seed >>> 16) / 32768 - 1; };
+  let init, timer = null;
+  function roll() {
+    init = { x: 40, y: 40, vx: 2.2 + rng() * 1.2, vy: rng() * 1.5 };
+    if (timer) { clearInterval(timer); timer = null; }
+    draw(init, init, [], [], 0);
+  }
+  function paint(cv, p, trail, color) {
+    const ctx = cv.getContext('2d');
+    const cs = getComputedStyle(document.documentElement);
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = cs.getPropertyValue('--hairline').trim();
+    ctx.strokeRect(0.5, 0.5, W - 1, H - 1);
+    ctx.strokeStyle = color; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.4; ctx.beginPath();
+    trail.forEach((q, i) => i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y));
+    ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, 7); ctx.fill();
+  }
+  function draw(pa, pb, ta, tb, step) {
+    const cs = getComputedStyle(document.documentElement);
+    paint(ca, pa, ta, cs.getPropertyValue('--p6').trim());
+    paint(cb, pb, tb, cs.getPropertyValue('--ink-3').trim());
+    $('wm-step').textContent = step;
+    $('wm-div').textContent = Math.hypot(pa.x - pb.x, pa.y - pb.y).toFixed(0);
+  }
+  $('wm-run').addEventListener('click', () => {
+    if (timer) { clearInterval(timer); timer = null; return; }
+    /* 左：真实物理（半隐式欧拉 + 弹性碰撞）；右：恒速直线外推（无重力概念的稻草人） */
+    let a = { ...init }, b = { ...init }, step = 0;
+    const ta = [], tb = [];
+    timer = setInterval(() => {
+      a.vy += G; a.x += a.vx; a.y += a.vy;
+      if (a.x < R) { a.x = R; a.vx = -a.vx * E; } if (a.x > W - R) { a.x = W - R; a.vx = -a.vx * E; }
+      if (a.y < R) { a.y = R; a.vy = -a.vy * E; } if (a.y > H - R) { a.y = H - R; a.vy = -a.vy * E; }
+      b.x += init.vx; b.y += init.vy;
+      ta.push({ x: a.x, y: a.y }); tb.push({ x: b.x, y: b.y });
+      if (ta.length > 90) { ta.shift(); tb.shift(); }
+      draw(a, b, ta, tb, ++step);
+      if (step >= 320) { clearInterval(timer); timer = null; }
+    }, 28);
+  });
+  $('wm-roll').addEventListener('click', roll);
+  roll();
+})();
+
+/* ============ 🔬 机械臂追点（v0.24） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  const cv = $('vla-cv'); if (!cv) return;
+  const L1 = 78, L2 = 64;
+  let hz = 5, lastDecide = 0, armT = { x: 0, y: 0 }, phase = 0;
+  function target(now) {
+    /* 目标绕圈：8 秒一圈 */
+    const a = now / 8000 * Math.PI * 2;
+    return { a };
+  }
+  function loop(now) {
+    const dpr = devicePixelRatio || 1;
+    const W = cv.clientWidth * dpr, H = 220 * dpr;
+    cv.width = W; cv.height = H;
+    const cs = getComputedStyle(document.documentElement);
+    const ink = cs.getPropertyValue('--ink').trim(), ink3 = cs.getPropertyValue('--ink-3').trim(),
+      pc = cs.getPropertyValue('--p6').trim();
+    const base = { x: W / 2, y: H - 14 * dpr };
+    const s = dpr;
+    const ang = now / 8000 * Math.PI * 2;
+    const tgt = { x: base.x + Math.cos(ang) * 95 * s, y: base.y - 70 * s + Math.sin(ang) * 45 * s };
+    /* 只按决策频率更新臂的目标——这就是「频率鸿沟」 */
+    if (now - lastDecide >= 1000 / hz) { armT = { x: tgt.x, y: tgt.y }; lastDecide = now; }
+    /* 逆运动学解析解（余弦定理） */
+    const dx = armT.x - base.x, dy = armT.y - base.y;
+    let d = Math.hypot(dx, dy);
+    d = Math.max(Math.abs(L1 - L2) * s + 1, Math.min((L1 + L2) * s - 1, d));
+    const a2 = Math.acos((d * d - (L1 * s) ** 2 - (L2 * s) ** 2) / (2 * L1 * s * L2 * s));
+    const a1 = Math.atan2(dy, dx) - Math.atan2(L2 * s * Math.sin(a2), L1 * s + L2 * s * Math.cos(a2));
+    const j = { x: base.x + Math.cos(a1) * L1 * s, y: base.y + Math.sin(a1) * L1 * s };
+    const tip = { x: j.x + Math.cos(a1 + a2) * L2 * s, y: j.y + Math.sin(a1 + a2) * L2 * s };
+    const ctx = cv.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = ink3; ctx.globalAlpha = 0.35; ctx.setLineDash([3 * s, 4 * s]);
+    ctx.beginPath(); ctx.ellipse(base.x, base.y - 70 * s, 95 * s, 45 * s, 0, 0, 7); ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.lineWidth = 5 * s; ctx.lineCap = 'round'; ctx.strokeStyle = pc;
+    ctx.beginPath(); ctx.moveTo(base.x, base.y); ctx.lineTo(j.x, j.y); ctx.lineTo(tip.x, tip.y); ctx.stroke();
+    ctx.fillStyle = ink;
+    [base, j].forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 4.5 * s, 0, 7); ctx.fill(); });
+    ctx.strokeStyle = ink; ctx.lineWidth = 2 * s;
+    ctx.beginPath(); ctx.moveTo(tip.x - 6 * s, tip.y); ctx.lineTo(tip.x + 6 * s, tip.y);
+    ctx.moveTo(tip.x, tip.y - 6 * s); ctx.lineTo(tip.x, tip.y + 6 * s); ctx.stroke();
+    ctx.fillStyle = pc; ctx.beginPath(); ctx.arc(tgt.x, tgt.y, 5 * s, 0, 7); ctx.fill();
+    $('vla-err').textContent = (Math.hypot(tgt.x - tip.x, tgt.y - tip.y) / s).toFixed(0);
+    requestAnimationFrame(loop);
+  }
+  document.querySelectorAll('#mod-vla .rf-chips .fk').forEach(b =>
+    b.addEventListener('click', () => {
+      hz = +b.dataset.hz;
+      document.querySelectorAll('#mod-vla .rf-chips .fk').forEach(x =>
+        x.classList.toggle('on', x === b));
+    }));
+  requestAnimationFrame(loop);
 })();
 </script>
