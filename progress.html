@@ -37,6 +37,7 @@
   .links a { text-decoration: none; font-size: 13px; color: var(--ink-2); background: var(--surface);
     border: 1px solid var(--hairline); border-radius: 999px; padding: 5px 15px; }
   .links a:hover, .links a:focus-visible { border-color: var(--ink-2); outline: none; }
+  .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 2px; }
 
   .hero-bar { margin-top: 26px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 14px; padding: 18px 20px; }
   .hb-top { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
@@ -80,10 +81,10 @@
   <h1>哪里亮了，哪里还没亮</h1>
   <p class="sub">数据驱动的进度实况：下方所有数字与亮灯由同一份数据表计算，每个版本更新一次。口径与权重公开写在总进度条下方——数字可以被质疑，但不会被粉饰。</p>
   <div class="links">
-    <a href="index.html" target="_blank" rel="noopener">🗺️ 门户首页 ↗</a>
-    <a href="blueprint.html" target="_blank" rel="noopener">📐 工程蓝图（主线）↗</a>
-    <a href="thread.html" target="_blank" rel="noopener">🧵 叙事版（入门）↗</a>
-    <a href="index-map.html" target="_blank" rel="noopener">🧭 索引地图（目录）↗</a>
+    <a href="index.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg> 门户首页 ↗</a>
+    <a href="blueprint.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线）↗</a>
+    <a href="thread.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h7a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h7"/></svg> 叙事版（入门）↗</a>
+    <a href="index-map.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.4 4.6-4.6 2.4 2.4-4.6z"/></svg> 索引地图（目录）↗</a>
   </div>
 
   <div class="hero-bar">
@@ -115,7 +116,7 @@
 <script>
 /* ======== 唯一数据源：每个版本只改这里 ======== */
 const DATA = {
-  updated: '2026-07-12 · 谱系 v2',
+  updated: '2026-07-12 · v0.24.2',
   // depth: 0=登记未建 1=G1骨架 3=G3实验室
   planes: [
     { code: '0 物理基座', pc: 'var(--p0)', mods: [['为什么是GPU 🔬', 3], ['存储层级与内存墙 🔬', 3], ['屋顶线模型 🔬', 3], ['数字格式 🔬', 3], ['互联与集群 🔬', 3]] },
@@ -156,7 +157,8 @@ const DATA = {
     ['v0.23', '2026-07-11', '布局双态定稿：默认回归 v0.18 版式（顶部带连接线的总装配图 + 单栏正文，滚动时装配卡高亮你在这里）；点「切换为图形全景」才进入左右分栏图形态，图形态内可一键返回文字版', 'done'],
     ['v0.24', '2026-07-11', '🌍 PLANE Ⅵ 具身与世界落成：世界模型（弹球预言家——误差复利可见）· 具身智能 VLA（机械臂追点——频率鸿沟体感）——七平面 40 模块 40 实验室，登记簿八项全落地', 'done'],
     ['谱系 v1', '2026-07-12', '🧬 活页新页「模型门派谱系」：七家（GPT/Claude/Gemini/Grok/DeepSeek/Llama/Qwen）在蓝图各分叉路口的选择对照矩阵 + 小传 + 选型合规朱批；来源三级标注（◉◐○）+ 盘点基准日 + 独立版本号的活页保鲜机制', 'done'],
-    ['谱系 v2', '2026-07-12', '🧬 谱系扩列（用户拍板行列互换）：开放度五层阶梯图（L0 封闭→L4 全开放，权重/代码/数据三要素拆解）+ 门派矩阵转置为一家一行（新增 Kimi/智谱/豆包/混元共十一家，点行展开小传与四维详情）', 'now'],
+    ['谱系 v2', '2026-07-12', '🧬 谱系扩列（用户拍板行列互换）：开放度五层阶梯图（L0 封闭→L4 全开放，权重/代码/数据三要素拆解）+ 门派矩阵转置为一家一行（新增 Kimi/智谱/豆包/混元共十一家，点行展开小传与四维详情）', 'done'],
+    ['v0.24.2', '2026-07-12', '🎨 全站图标统一：页面身份 emoji（📐🧵🧭🧬🚦🗺）全部换为 Lucide 式单色线稿图标（工程风转向的第一步落地）；门户工程风改版试样稿 v3.4 迭代中（冷白/锐角/mono/朱批印章/单箭头巡演）', 'now'],
     ['v1.0', '待定', '核验版：用户主导的 学习→审核→反馈→其他模型修改 循环 · 朱批统一调整 · 部署上线', 'todo'],
   ],
   weights: { skeleton: 0.35, labs: 0.35, hooks: 0.20, registry: 0.10 },

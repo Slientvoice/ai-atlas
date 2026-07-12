@@ -354,15 +354,16 @@
     .cols.graphic > .wrap { margin: 0; max-width: 880px; padding: 0 32px; }
   }
   @media (prefers-reduced-motion: reduce) { .m-caret, .rg2 { transition: none; } }
+  .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 2px; }
 </style>
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.24.1 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.24.2 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
-      <a href="progress.html" target="_blank" rel="noopener">🚦 进度看板 ↗</a>
+      <a href="progress.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 进度看板 ↗</a>
       <a href="index-map.html" target="_blank" rel="noopener">索引地图 · 28 节点目录 ↗</a>
       <a href="thread.html" target="_blank" rel="noopener">叙事版 · 一句话的旅程（入门）↗</a>
     </div>
@@ -540,7 +541,7 @@
   <!-- 总装配图（文字态默认视图，v0.18 版式回归） -->
   <div class="assembly" id="assembly" aria-label="总装配图">
     <div class="as-head"><span class="mono" style="font-size:12px;letter-spacing:.1em;color:var(--ink-3)">总装配图 · 六平面连接</span>
-      <button type="button" class="figbtn" id="toGraphic">🗺 切换为图形全景（左右分栏）</button></div>
+      <button type="button" class="figbtn" id="toGraphic"><svg class="ico" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg> 切换为图形全景（左右分栏）</button></div>
     <a class="as-card" href="#pl1" style="--pc:var(--p1)" data-pl="pl1">
       <div class="t"><span class="rn">Ⅰ</span><b>训练管线</b><span class="d">权重如何炼成：语料 → 预训练 → 后训练 → 冻结发布</span></div>
     </a>
@@ -1898,7 +1899,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.24.1 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.24.2 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>

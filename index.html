@@ -44,6 +44,9 @@
     padding: 20px 22px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
   .card:hover, .card:focus-visible { transform: translateY(-3px); box-shadow: var(--shadow); outline: none; }
   .card .ic { font-size: 22px; }
+  .ic svg, .cw-ic { width: 22px; height: 22px; fill: none; stroke: var(--ac); stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round; vertical-align: -5px; }
+  .card-wide .ic svg { width: 19px; height: 19px; vertical-align: -4px; }
   .card h2 { font-family: var(--serif); font-size: 21px; margin: 6px 0 4px; }
   .card p { margin: 0; font-size: 14px; color: var(--ink-2); }
   .card .tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; color: var(--ac); font-weight: 700; }
@@ -77,26 +80,26 @@
 <div class="wrap">
   <div class="cards">
     <a class="card" href="blueprint.html" style="--ac:var(--p2)">
-      <span class="ic">📐</span><span class="tag">主线 · 从这里开始</span>
+      <span class="ic"><svg viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg></span><span class="tag">主线 · 从这里开始</span>
       <h2>LLM 系统蓝图</h2>
       <p>六平面 38 模块的通用工程结构图：真实术语、可切换的技术分叉、张量形状——内嵌 38 个可实操的真算法实验室，包括在你浏览器里现场训练一个语言模型。</p>
     </a>
     <a class="card" href="index-map.html" style="--ac:var(--p0)">
-      <span class="ic">🧭</span><span class="tag">目录 · 按需查阅</span>
+      <span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.4 4.6-4.6 2.4 2.4-4.6z"/></svg></span><span class="tag">目录 · 按需查阅</span>
       <h2>索引地图</h2>
       <p>七层 28 节点的全目录：每个技术环节的人话解释、上下游关联、精选学习范例链接，与全部 28 条合规挂点。</p>
     </a>
     <a class="card" href="thread.html" style="--ac:var(--p5)">
-      <span class="ic">🧵</span><span class="tag">入门 · 给非技术访客</span>
+      <span class="ic"><svg viewBox="0 0 24 24"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h7a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h7"/></svg></span><span class="tag">入门 · 给非技术访客</span>
       <h2>一句话的旅程</h2>
       <p>滚动叙事：一句真实的话流过 AI 的全部七层——按下回车之后的三秒，放慢一万倍讲给你听。</p>
     </a>
   </div>
   <a class="card-wide" href="genealogy.html" style="--ac:var(--p4)">
-    <span class="ic">🧬</span><b>模型门派谱系</b><span class="cw-d">活页 · 开放度五层阶梯 + 十一家大模型的分叉路口对照——学完蓝图，读懂业界（盘点基准日 2026-07）</span><span class="cw-a">→</span>
+    <span class="ic"><svg viewBox="0 0 24 24"><path d="M6 3v12.5"/><circle cx="6" cy="18.5" r="2.5"/><circle cx="18" cy="5.5" r="2.5"/><path d="M18 8a8 8 0 0 1-8 8H8"/></svg></span><b>模型门派谱系</b><span class="cw-d">活页 · 开放度五层阶梯 + 十一家大模型的分叉路口对照——学完蓝图，读懂业界（盘点基准日 2026-07）</span><span class="cw-a">→</span>
   </a>
   <a class="card-wide" href="progress.html" style="--ac:var(--p3)">
-    <span class="ic">🚦</span><b>进度看板</b><span class="cw-d">建设实况：模块亮灯图 · 分线进度 · 版本时间线（面向关心建设过程的访客）</span><span class="cw-a">→</span>
+    <span class="ic"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><b>进度看板</b><span class="cw-d">建设实况：模块亮灯图 · 分线进度 · 版本时间线（面向关心建设过程的访客）</span><span class="cw-a">→</span>
   </a>
 
   <section>
