@@ -5,9 +5,9 @@
 <title>LLM 系统蓝图</title>
 <style>
   :root {
-    --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
-    --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
-    --hairline: #e3e1d8; --seal: #b0392e; --seal-soft: rgba(176,57,46,0.07);
+    --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
+    --ink: #16181d; --ink-2: #4b5158; --ink-3: #858b93;
+    --hairline: #e1e4e8; --seal: #b0392e; --seal-soft: rgba(176,57,46,0.07);
     --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
     --grid: rgba(28,27,24,0.05);
     --shadow: 0 10px 32px rgba(28,27,24,0.10);
@@ -17,26 +17,26 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --page: #131311; --surface: #1e1d1a; --surface-2: #262521;
-      --ink: #f2f0e8; --ink-2: #b5b2a6; --ink-3: #85827a;
-      --hairline: #2e2d28; --seal: #e0705e; --seal-soft: rgba(224,112,94,0.10);
+      --page: #0f1114; --surface: #16181c; --surface-2: #1d2024;
+      --ink: #e8eaed; --ink-2: #b0b4ba; --ink-3: #7d828a;
+      --hairline: #262a2f; --seal: #e0705e; --seal-soft: rgba(224,112,94,0.10);
       --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e;
       --grid: rgba(255,255,255,0.045);
       --shadow: 0 10px 32px rgba(0,0,0,0.45);
     }
   }
   :root[data-theme="dark"] {
-    --page: #131311; --surface: #1e1d1a; --surface-2: #262521;
-    --ink: #f2f0e8; --ink-2: #b5b2a6; --ink-3: #85827a;
-    --hairline: #2e2d28; --seal: #e0705e; --seal-soft: rgba(224,112,94,0.10);
+    --page: #0f1114; --surface: #16181c; --surface-2: #1d2024;
+    --ink: #e8eaed; --ink-2: #b0b4ba; --ink-3: #7d828a;
+    --hairline: #262a2f; --seal: #e0705e; --seal-soft: rgba(224,112,94,0.10);
     --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e;
     --grid: rgba(255,255,255,0.045);
     --shadow: 0 10px 32px rgba(0,0,0,0.45);
   }
   :root[data-theme="light"] {
-    --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
-    --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
-    --hairline: #e3e1d8; --seal: #b0392e; --seal-soft: rgba(176,57,46,0.07);
+    --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
+    --ink: #16181d; --ink-2: #4b5158; --ink-3: #858b93;
+    --hairline: #e1e4e8; --seal: #b0392e; --seal-soft: rgba(176,57,46,0.07);
     --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
     --grid: rgba(28,27,24,0.05);
     --shadow: 0 10px 32px rgba(28,27,24,0.10);
@@ -55,13 +55,13 @@
   .sub { color: var(--ink-2); max-width: 44em; }
   .top-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
   .top-links a { text-decoration: none; font-size: 13px; color: var(--ink-2); background: var(--surface);
-    border: 1px solid var(--hairline); border-radius: 999px; padding: 5px 15px; }
+    border: 1px solid var(--hairline); border-radius: 4px; padding: 5px 15px; }
   .top-links a:hover, .top-links a:focus-visible { border-color: var(--ink-2); outline: none; }
 
   /* 总装配图 */
   .assembly { margin: 34px 0 6px; display: grid; gap: 0; }
   .as-card { display: block; text-decoration: none; background: var(--surface); border: 1.5px solid var(--pc);
-    border-radius: 12px; padding: 13px 18px; transition: box-shadow .15s ease; }
+    border-radius: 6px; padding: 13px 18px; transition: box-shadow .15s ease; }
   .as-card:hover, .as-card:focus-visible { box-shadow: var(--shadow); outline: none; }
   /* 统一两行式：首行 编号+名称，描述永远独占第二行——六卡步调一致，不许随缘换行 */
   .as-card .t { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
@@ -75,7 +75,7 @@
 
   /* legend */
   .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 22px 0; }
-  .lg { background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px; padding: 13px 16px; font-size: 13.5px; color: var(--ink-2); }
+  .lg { background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; padding: 13px 16px; font-size: 13.5px; color: var(--ink-2); }
   .lg b { color: var(--ink); } /* 卡内正文粗体保持内联 */
   .lg > b:first-child { display: block; margin-bottom: 3px; } /* 仅开头粗体作卡标题独占一行 */
   .lg code { font-family: var(--mono); font-size: 12px; color: var(--ink); }
@@ -88,11 +88,11 @@
   .pl-q { color: var(--ink-2); font-size: 14.5px; max-width: 44em; margin: 4px 0 0; }
   .pl-tools { margin: 14px 0 4px; }
   .pl-tools button { font: inherit; font-size: 12.5px; color: var(--ink-2); background: var(--surface);
-    border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 14px; cursor: pointer; }
+    border: 1px solid var(--hairline); border-radius: 4px; padding: 3px 14px; cursor: pointer; }
   .pl-tools button:hover, .pl-tools button:focus-visible { border-color: var(--ink-2); outline: none; }
 
   /* modules */
-  details.mod { background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; margin: 0; overflow: hidden; }
+  details.mod { background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; margin: 0; overflow: hidden; }
   details.mod[open] { border-color: var(--pc); }
   details.mod summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 12px;
     padding: 13px 18px; flex-wrap: wrap; }
@@ -123,7 +123,7 @@
   .forks { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 10px; }
   .forks .flab { font-size: 12px; color: var(--ink-3); align-self: center; letter-spacing: 0.06em; }
   .fk { font: inherit; font-size: 13px; cursor: pointer; color: var(--ink-2); background: var(--surface);
-    border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 13px; }
+    border: 1px solid var(--hairline); border-radius: 4px; padding: 3px 13px; }
   .fk:hover, .fk:focus-visible { border-color: var(--pc); outline: none; }
   .fk.on { color: var(--ink); border-color: var(--pc); box-shadow: inset 0 0 0 1px var(--pc); font-weight: 600; }
   .fkb { display: none; background: var(--surface-2); border-radius: 8px; padding: 10px 14px; font-size: 14px; color: var(--ink-2); max-width: 46em; }
@@ -138,7 +138,7 @@
   .viz-cap { font-size: 12px; color: var(--ink-3); margin-top: 8px; line-height: 1.6; }
   .demo-tag { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); border: 1px dashed var(--ink-3);
     border-radius: 4px; padding: 0 6px; margin-left: 8px; vertical-align: 2px; font-weight: 400; }
-  .lab { border: 1.5px solid var(--pc); border-radius: 12px; padding: 16px 18px; margin: 18px 0;
+  .lab { border: 1.5px solid var(--pc); border-radius: 6px; padding: 16px 18px; margin: 18px 0;
     background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
     background-size: 24px 24px; }
   .lab-head { font-family: var(--serif); font-weight: 700; font-size: 16.5px; margin-bottom: 4px; }
@@ -159,7 +159,7 @@
     border: 1.5px solid var(--hairline); border-radius: 8px; padding: 9px 12px; width: 100%; }
   .lab-presets { display: flex; flex-wrap: wrap; gap: 7px; }
   .lab-presets button { font: inherit; font-size: 12.5px; cursor: pointer; color: var(--ink-2);
-    background: var(--surface); border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 13px; }
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 4px; padding: 3px 13px; }
   .lab-presets button:hover, .lab-presets button:focus-visible { border-color: var(--pc); outline: none; }
   .lab-res-row { display: grid; grid-template-columns: 3.4em 1fr 4em; gap: 10px; align-items: center;
     font-size: 13px; padding: 6px 8px; border-radius: 7px; margin: 3px 0; color: var(--ink-2); }
@@ -198,7 +198,7 @@
   .rl-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   @media (max-width: 620px) { .rl-pair { grid-template-columns: 1fr; } }
   .rl-ans { font: inherit; font-size: 13.5px; line-height: 1.7; text-align: left; cursor: pointer; color: var(--ink);
-    background: var(--surface); border: 1.5px solid var(--hairline); border-radius: 10px; padding: 12px 14px; }
+    background: var(--surface); border: 1.5px solid var(--hairline); border-radius: 6px; padding: 12px 14px; }
   .rl-ans:hover, .rl-ans:focus-visible { border-color: var(--pc); outline: none; }
   .rl-ans:disabled { cursor: default; opacity: 0.55; }
   .rl-wrow { display: grid; grid-template-columns: 5.4em 1fr 3.6em; gap: 10px; align-items: center;
@@ -208,7 +208,7 @@
   .rl-wrow .wbar i { position: absolute; top: 0; bottom: 0; border-radius: 4px; background: var(--pc); }
   .rl-wrow .wbar i.neg { background: var(--ink-3); }
   .rl-wrow .wv { font-family: var(--mono); font-size: 11px; text-align: right; }
-  .rl-test .rl-tcard { border: 1px solid var(--hairline); border-radius: 10px; padding: 10px 14px; margin: 8px 0;
+  .rl-test .rl-tcard { border: 1px solid var(--hairline); border-radius: 6px; padding: 10px 14px; margin: 8px 0;
     font-size: 13.5px; color: var(--ink-2); background: var(--surface); }
   .rl-test .rl-tscore { font-family: var(--mono); font-size: 11.5px; color: var(--ink); margin-top: 4px; }
   .rl-verdict { font-size: 13.5px; margin-top: 8px; }
@@ -271,7 +271,7 @@
   .mem-row .bar i { display: block; height: 100%; width: 0; background: var(--pc); border-radius: 5px; }
   .mem-row .mv { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
   .net-cells { display: flex; gap: 14px; flex-wrap: wrap; margin: 10px 0; }
-  .net-node { flex: 1; min-width: 220px; border: 1.5px dashed var(--hairline); border-radius: 10px; padding: 10px; }
+  .net-node { flex: 1; min-width: 220px; border: 1.5px dashed var(--hairline); border-radius: 6px; padding: 10px; }
   .net-node .nn { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); margin-bottom: 6px; }
   .net-gpus { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
   .net-gpu { background: var(--surface); border: 1px solid var(--pc); border-radius: 7px; padding: 5px 4px;
@@ -284,11 +284,11 @@
   .ag-e.act { border-color: var(--pc); }
   .ag-e.gate { border-color: var(--seal); background: var(--seal-soft); }
   .ag-e.gate b { color: var(--seal); }
-  .emb-board { position: relative; height: 320px; background: var(--surface-2); border-radius: 10px; overflow: hidden;
+  .emb-board { position: relative; height: 320px; background: var(--surface-2); border-radius: 6px; overflow: hidden;
     background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
     background-size: 26px 26px; }
   .emb-w { position: absolute; transform: translate(-50%, -50%); font-size: 13.5px; cursor: pointer;
-    background: var(--surface); border: 1.5px solid var(--hairline); border-radius: 999px; padding: 2px 11px; }
+    background: var(--surface); border: 1.5px solid var(--hairline); border-radius: 4px; padding: 2px 11px; }
   .emb-w:hover, .emb-w:focus-visible { border-color: var(--pc); outline: none; }
   .emb-w.sel { border-color: var(--pc); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pc) 30%, transparent); font-weight: 700; }
   .emb-w.nb { border-color: var(--pc); border-style: dashed; }
@@ -325,7 +325,7 @@
   #figwhere { font-size: 12px; color: var(--ink-3); letter-spacing: 0.06em; margin-right: auto; }
   .figbtn { font: inherit; font-size: 12px; cursor: pointer; color: var(--ink);
     background: linear-gradient(var(--surface), var(--surface-2));
-    border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 13px;
+    border: 1px solid var(--hairline); border-radius: 4px; padding: 3px 13px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 1px 0 color-mix(in srgb, #fff 40%, transparent); }
   .figbtn:hover, .figbtn:focus-visible { border-color: var(--ink-2); outline: none; }
   .figbtn:active { transform: translateY(1px); box-shadow: 0 0 1px rgba(0, 0, 0, 0.15); }
@@ -359,7 +359,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.24.2 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.25 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -1899,7 +1899,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.24.2 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.25 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>

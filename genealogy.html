@@ -5,23 +5,23 @@
 <title>模型门派谱系</title>
 <style>
   :root {
-    --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8;
-    --ink: #1c1b18; --ink-2: #57544c; --ink-3: #8a877e;
-    --hairline: #e3e1d8; --seal: #b0392e;
+    --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
+    --ink: #16181d; --ink-2: #4b5158; --ink-3: #858b93;
+    --hairline: #e1e4e8; --seal: #b0392e;
     --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
     --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --page: #131311; --surface: #1e1d1a; --surface-2: #262521; --ink: #f2f0e8; --ink-2: #b5b2a6;
-      --ink-3: #85827a; --hairline: #2e2d28; --seal: #e0705e;
+    :root { --page: #0f1114; --surface: #16181c; --surface-2: #1d2024; --ink: #e8eaed; --ink-2: #b0b4ba;
+      --ink-3: #7d828a; --hairline: #262a2f; --seal: #e0705e;
       --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
   }
-  :root[data-theme="dark"] { --page: #131311; --surface: #1e1d1a; --surface-2: #262521; --ink: #f2f0e8;
-    --ink-2: #b5b2a6; --ink-3: #85827a; --hairline: #2e2d28; --seal: #e0705e;
+  :root[data-theme="dark"] { --page: #0f1114; --surface: #16181c; --surface-2: #1d2024; --ink: #e8eaed;
+    --ink-2: #b0b4ba; --ink-3: #7d828a; --hairline: #262a2f; --seal: #e0705e;
     --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
-  :root[data-theme="light"] { --page: #f7f6f2; --surface: #fcfcfa; --surface-2: #f1efe8; --ink: #1c1b18;
-    --ink-2: #57544c; --ink-3: #8a877e; --hairline: #e3e1d8; --seal: #b0392e;
+  :root[data-theme="light"] { --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3; --ink: #16181d;
+    --ink-2: #4b5158; --ink-3: #858b93; --hairline: #e1e4e8; --seal: #b0392e;
     --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300; }
 
   * { box-sizing: border-box; }
@@ -35,7 +35,7 @@
   a { color: inherit; }
 
   /* 活页横幅：本页与主线的契约 */
-  .loose { margin-top: 22px; border: 1.5px dashed var(--p4); border-radius: 12px; background: var(--surface);
+  .loose { margin-top: 22px; border: 1.5px dashed var(--p4); border-radius: 6px; background: var(--surface);
     padding: 14px 18px; font-size: 13.5px; color: var(--ink-2); }
   .loose b { color: var(--ink); }
   .loose .lt { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; color: var(--p4); font-weight: 700; display: block; margin-bottom: 4px; }
@@ -45,20 +45,20 @@
   /* ===== 开放度阶梯 ===== */
   .ladder { margin-top: 14px; display: grid; gap: 8px; }
   .rung { display: grid; grid-template-columns: 108px 1fr; gap: 14px; background: var(--surface);
-    border: 1px solid var(--hairline); border-left: 4px solid var(--lc, var(--hairline)); border-radius: 10px; padding: 12px 16px; }
+    border: 1px solid var(--hairline); border-left: 4px solid var(--lc, var(--hairline)); border-radius: 6px; padding: 12px 16px; }
   .rung .lv { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--lc, var(--ink)); line-height: 1.5; }
   .rung .lv small { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; }
   .rung .rd { font-size: 13px; color: var(--ink-2); }
   .rung .rd p { margin: 0 0 6px; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .chip { font-size: 12.5px; border: 1.5px solid var(--lc, var(--ink-3)); color: var(--ink); background: color-mix(in srgb, var(--lc, var(--ink-3)) 10%, transparent);
-    border-radius: 999px; padding: 2px 12px; font-weight: 600; }
+    border-radius: 4px; padding: 2px 12px; font-weight: 600; }
   .chip.side { border-style: dashed; font-weight: 400; color: var(--ink-2); background: none; }
   .chip.ghost { border-style: dotted; color: var(--ink-3); font-weight: 400; background: none; }
   @media (max-width: 560px) { .rung { grid-template-columns: 1fr; gap: 6px; } }
 
   /* ===== 门派矩阵（一家一行，点行展开详情） ===== */
-  .mtx-scroll { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 12px; background: var(--surface); margin-top: 14px; }
+  .mtx-scroll { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 6px; background: var(--surface); margin-top: 14px; }
   table { border-collapse: collapse; min-width: 920px; width: 100%; font-size: 13px; }
   th, td { padding: 9px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; text-align: left; }
   thead th { font-size: 13px; background: var(--surface-2); white-space: nowrap; }
@@ -87,18 +87,18 @@
 
   /* 朱批 */
   .seal-note { margin-top: 24px; border: 1px solid color-mix(in srgb, var(--seal) 45%, transparent); border-left: 3px solid var(--seal);
-    border-radius: 10px; padding: 14px 18px; background: color-mix(in srgb, var(--seal) 5%, var(--surface)); font-size: 13.5px; color: var(--ink-2); }
+    border-radius: 6px; padding: 14px 18px; background: color-mix(in srgb, var(--seal) 5%, var(--surface)); font-size: 13.5px; color: var(--ink-2); }
   .seal-note .sh { color: var(--seal); font-weight: 700; margin-bottom: 6px; }
   .seal-note ol { margin: 0; padding-left: 1.4em; }
   .seal-note li { margin: 4px 0; }
 
-  .others { margin-top: 18px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px;
+  .others { margin-top: 18px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px;
     padding: 13px 16px; font-size: 13.5px; color: var(--ink-2); }
   .others b { color: var(--ink); }
 
   .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
   .links a { text-decoration: none; font-size: 13px; color: var(--ink-2); background: var(--surface);
-    border: 1px solid var(--hairline); border-radius: 999px; padding: 5px 15px; }
+    border: 1px solid var(--hairline); border-radius: 4px; padding: 5px 15px; }
   .links a:hover, .links a:focus-visible { border-color: var(--ink-2); outline: none; }
   .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 2px; }
   footer { margin-top: 40px; border-top: 1px solid var(--hairline); padding-top: 16px; font-size: 12.5px; color: var(--ink-3); }
