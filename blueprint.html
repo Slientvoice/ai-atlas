@@ -42,6 +42,7 @@
     --shadow: 0 10px 32px rgba(28,27,24,0.10);
   }
   * { box-sizing: border-box; }
+  code { font-family: var(--mono); font-size: 0.93em; } /* 字体即语法：变量符号一律等宽（v0.25.1） */
   html, body { margin: 0; }
   body { background: var(--page); color: var(--ink); font-family: var(--sans); line-height: 1.75; font-size: 15.5px; -webkit-font-smoothing: antialiased; }
   .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
@@ -359,7 +360,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.25 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.25.1 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -903,7 +904,7 @@
         </div>
       </div>
     </details>
-    <div class="wire"><span>[T, d] ▼ 进入主体：同构 Block 堆叠 ×N（8B: N=32；70B: N=80）</span></div>
+    <div class="wire"><span>[T, d] ▼ 进入主体：同构 Block 堆叠 ×N（8B: <code>N=32</code>；70B: <code>N=80</code>）</span></div>
 
     <details class="mod">
       <summary><span class="m-caret">▶</span><span class="m-name">Block 总装 × N</span><span class="m-en">TRANSFORMER BLOCK · 🔬 LAB</span><span class="m-shape">[T, d] → [T, d]（每层同构）</span></summary>
@@ -935,30 +936,30 @@
     <div class="wire"><span>Block 内部第一个子单元 ▼</span></div>
 
     <details class="mod" open id="mod-attn">
-      <summary><span class="m-caret">▶</span><span class="m-name">注意力</span><span class="m-en">ATTENTION · 🔬 LAB</span><span class="m-shape">[B,T,d] → [B,T,d]　中间量 [B,h,T,T]</span></summary>
+      <summary><span class="m-caret">▶</span><span class="m-name">注意力</span><span class="m-en">ATTENTION · 🔬 LAB</span><span class="m-shape">[B,T,d] → [B,T,d]　中间量 <code>[B,h,T,T]</code></span></summary>
       <div class="m-body">
         <p>整摞模型中<b>唯一让 token 之间交换信息</b>的地方（其余模块都是每个位置各算各的）。每个位置对此前所有位置计算相关度，按权重汇聚信息。核心式：</p>
         <code class="fx">Attention(Q, K, V) = softmax( Q·Kᵀ / √d_k ) · V</code>
-        <details class="dv"><summary>展开：Q / K / V 从哪来、mask 怎么加、多头是什么</summary>
-          <p>· 同一输入 X 乘三个<b>学出来的</b>投影矩阵：Q=XW_Q（我在找什么）、K=XW_K（我能提供什么）、V=XW_V（真要取走的内容）。Q·Kᵀ 两两打分，除以 √d_k 防数值过大，softmax 归一成权重后对 V 加权求和。<br>
+        <details class="dv"><summary>展开：<code>Q / K / V</code> 从哪来、mask 怎么加、多头是什么</summary>
+          <p>· 同一输入 <code>X</code> 乘三个<b>学出来的</b>投影矩阵：<code>Q=XW_Q</code>（我在找什么）、<code>K=XW_K</code>（我能提供什么）、<code>V=XW_V</code>（真要取走的内容）。<code>Q·Kᵀ</code> 两两打分，除以 √<code>d_k</code> 防数值过大，softmax 归一成权重后对 V 加权求和。<br>
           · 因果掩码：给「未来位置」的打分强行置 −∞（softmax 后即 0）——生成式模型不许偷看后文，训练与推理同款规则。<br>
-          · 多头：把 d 拆成 h 份（8B: h=32，每头 d_h=128），各头在自己的子空间独立做上式、各学各的关系类型（指代、语法、位置…），结果拼接后过输出投影 W_O。</p>
+          · 多头：把 <code>d</code> 拆成 <code>h</code> 份（8B: <code>h=32</code>，每头 <code>d_h=128</code>），各头在自己的子空间独立做上式、各学各的关系类型（指代、语法、位置…），结果拼接后过输出投影 W_O。</p>
         </details>
-        <div class="forks"><span class="flab">分叉 · KV 头配置</span>
+        <div class="forks"><span class="flab">分叉 · <code>KV</code> 头配置</span>
           <button class="fk" data-v="a">MHA</button>
           <button class="fk on" data-v="b">GQA ✓</button>
           <button class="fk" data-v="c">MQA</button>
           <button class="fk" data-v="d">MLA（前沿）</button>
         </div>
-        <div class="fkb" data-v="a">Multi-Head：每个 Q 头配独享的 K、V 头（h_kv = h_q = 32）。表达力满配，但推理时 KV 缓存最肥（Ⅲ平面详算）。原版设计，大模型已少用。</div>
-        <div class="fkb on" data-v="b">Grouped-Query：多组 Q 头共享少量 KV 头（8B: h_q=32, h_kv=8，即 4 个 Q 头共用一套 KV）。KV 缓存直接 ÷4，质量几乎不掉。Llama-3、Qwen 等当今标配——架构决策被推理成本倒逼的典型案例。</div>
-        <div class="fkb" data-v="c">Multi-Query：极端版，全部 Q 头共用 1 套 KV（h_kv=1）。缓存最省、质量有可感损失，被 GQA 取代为主流折中。</div>
+        <div class="fkb" data-v="a">Multi-Head：每个 <code>Q</code> 头配独享的 <code>K</code>、<code>V</code> 头（<code>h_kv = h_q = 32</code>）。表达力满配，但推理时 KV 缓存最肥（Ⅲ平面详算）。原版设计，大模型已少用。</div>
+        <div class="fkb on" data-v="b">Grouped-Query：多组 <code>Q</code> 头共享少量 <code>KV</code> 头（8B: <code>h_q=32</code>, <code>h_kv=8</code>，即 4 个 <code>Q</code> 头共用一套 <code>KV</code>）。KV 缓存直接 ÷4，质量几乎不掉。Llama-3、Qwen 等当今标配——架构决策被推理成本倒逼的典型案例。</div>
+        <div class="fkb" data-v="c">Multi-Query：极端版，全部 <code>Q</code> 头共用 1 套 <code>KV</code>（<code>h_kv=1</code>）。缓存最省、质量有可感损失，被 GQA 取代为主流折中。</div>
         <div class="fkb" data-v="d">Multi-head Latent Attention：不存 K、V 本身，存一个低秩压缩「潜向量」，用时再展开——缓存比 GQA 再小数倍。DeepSeek-V2/V3 的招牌创新，前沿方向。</div>
-        <p class="dim">⚠ 复杂度 O(T²)：打分矩阵 [B,h,T,T] 随长度平方增长——「长上下文为什么贵」的数学根源。工程补丁 FlashAttention 不改数学，只改显存访问顺序（不再落盘整个 T×T 矩阵），是「同一公式、不同工程」的好例子。</p>
+        <p class="dim">⚠ 复杂度 <code>O(T²)</code>：打分矩阵 <code>[B,h,T,T]</code> 随长度平方增长——「长上下文为什么贵」的数学根源。工程补丁 FlashAttention 不改数学，只改显存访问顺序（不再落盘整个 <code>T×T</code> 矩阵），是「同一公式、不同工程」的好例子。</p>
 
         <div class="lab">
-          <div class="lab-head">🔬 实验室 · 亲眼看 softmax(QKᵀ/√d)V<span class="demo-tag">G3 级</span></div>
-          <p class="dim" style="margin:4px 0 0">上面那条核心公式此刻在你浏览器里逐项计算：输入一句话，看 T×T 注意力矩阵长什么样、因果掩码怎么挡住未来、去掉 √d 缩放后 softmax 如何饱和。</p>
+          <div class="lab-head">🔬 实验室 · 亲眼看 <code>softmax(QKᵀ/√d)V</code><span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">上面那条核心公式此刻在你浏览器里逐项计算：输入一句话，看 <code>T×T</code> 注意力矩阵长什么样、因果掩码怎么挡住未来、去掉 √d 缩放后 softmax 如何饱和。</p>
 
           <label class="lab-lab" for="att-q">① 输入（取前 10 字，每字一词元）</label>
           <div class="lab-q">
@@ -975,7 +976,7 @@
               <button type="button" class="fk" data-h="1" id="att-h1">头 2</button>
               <button type="button" class="fk" data-h="2" id="att-h2">相似度头</button></span>
             <label><input type="checkbox" id="att-mask" checked> 因果掩码</label>
-            <label><input type="checkbox" id="att-scale" checked> ÷√d 缩放</label>
+            <label><input type="checkbox" id="att-scale" checked> <code>÷√d</code> 缩放</label>
           </div>
 
           <label class="lab-lab">③ 注意力矩阵（行 = 谁在看，列 = 看谁；色深 = softmax 权重）</label>
@@ -983,7 +984,7 @@
           <div class="viz-cap">斜纹格 = 被因果掩码禁看的「未来」。点击左侧行标签，在下方句子里看该词元的注意力分布。</div>
           <div class="att-focus" id="att-focus"></div>
 
-          <div class="lab-honest"><b>诚实标注（R5）：</b>softmax、÷√d、因果掩码、多头并行的数学与真实模型完全一致、逐项实时计算；但 Q/K 投影矩阵是固定随机的（真实模型的头是训练出来、各司其职的——语法头、指代头……去 Transformer Explainer 看真头）。两个自查实验：关掉「÷√d 缩放」看权重坍缩到一格（softmax 饱和——公式里 √d 存在的理由）；「相似度头」不做投影、纯按向量相似度分配注意力——投影矩阵的价值恰是让模型能学出「不同于相似度」的关注方式。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>softmax、<code>÷√d</code>、因果掩码、多头并行的数学与真实模型完全一致、逐项实时计算；但 Q/K 投影矩阵是固定随机的（真实模型的头是训练出来、各司其职的——语法头、指代头……去 Transformer Explainer 看真头）。两个自查实验：关掉「<code>÷√d</code> 缩放」看权重坍缩到一格（softmax 饱和——公式里 √d 存在的理由）；「相似度头」不做投影、纯按向量相似度分配注意力——投影矩阵的价值恰是让模型能学出「不同于相似度」的关注方式。</div>
         </div>
       </div>
     </details>
@@ -1090,9 +1091,9 @@
     <div class="wire"><span>本体讲完——两个望向本体之外与之内的附加模块 ▼</span></div>
 
     <details class="mod" id="mod-ssm">
-      <summary><span class="m-caret">▶</span><span class="m-name">架构地平线：非 Transformer</span><span class="m-en">BEYOND TRANSFORMER · SSM · 🔬 LAB</span><span class="m-shape">O(T²) 全回看 → O(1) 状态递推</span></summary>
+      <summary><span class="m-caret">▶</span><span class="m-name">架构地平线：非 Transformer</span><span class="m-en">BEYOND TRANSFORMER · SSM · 🔬 LAB</span><span class="m-shape"><code>O(T²)</code> 全回看 → O(1) 状态递推</span></summary>
       <div class="m-body">
-        <p>Transformer 不是终点——注意力那张 O(T²) 的账单（越长越贵、KV 缓存吃显存）一直在催生替代路线。最有力的挑战者是<b>状态空间模型</b>（SSM，代表作 Mamba）：不再「每个字回看全文」，而是维护一个<b>固定大小的状态</b>逐字递推——像人的工作记忆，而不是每说一个词都重读全文。生成时每步 O(1)、无 KV 缓存膨胀。</p>
+        <p>Transformer 不是终点——注意力那张 <code>O(T²)</code> 的账单（越长越贵、KV 缓存吃显存）一直在催生替代路线。最有力的挑战者是<b>状态空间模型</b>（SSM，代表作 Mamba）：不再「每个字回看全文」，而是维护一个<b>固定大小的状态</b>逐字递推——像人的工作记忆，而不是每说一个词都重读全文。生成时每步 O(1)、无 KV 缓存膨胀。</p>
         <p class="dim">代价：精确回忆远处细节的能力偏弱（状态是有损压缩）。现实折中是<b>混合架构</b>：多数层用 SSM、少数层保留注意力——多家实验室已有产品化尝试。另一条更远的线：扩散语言模型（整段并行去噪而非逐字生成，Ⅴ 平面思想搬回文本），潜在的速度革命，尚在早期商用探索。</p>
         <div class="forks"><span class="flab">分叉</span>
           <button class="fk on" data-v="a">Transformer ✓ 现王座</button>
@@ -1176,13 +1177,13 @@
     <div class="wire"><span>decode 依赖的核心数据结构 ▼</span></div>
 
     <details class="mod" open id="mod-kv">
-      <summary><span class="m-caret">▶</span><span class="m-name">KV 缓存</span><span class="m-en">KV CACHE · 🔬 LAB</span><span class="m-shape">2 · N · h_kv · d_h · T · 字节数</span></summary>
+      <summary><span class="m-caret">▶</span><span class="m-name">KV 缓存</span><span class="m-en">KV CACHE · 🔬 LAB</span><span class="m-shape">2 · N · <code>h_kv</code> · <code>d_h</code> · T · 字节数</span></summary>
       <div class="m-body">
         <p>Decode 时每个新 token 都要对「此前所有位置」做注意力——若每次重算所有位置的 K、V，成本随长度平方爆炸。解法：算过一次就存显存里。代价是一笔精确可算的显存账：</p>
         <code class="fx">每 token 缓存 = 2 (K和V) × N层 × h_kv × d_h × 精度字节
 Llama-3-8B @fp16: 2 × 32 × 8 × 128 × 2 B = 128 KB/token
 → 8K 上下文 ≈ 1 GB／每条并发请求</code>
-        <p>Ⅱ 平面 GQA 的红利在此兑现：h_kv 从 32 减到 8，这笔账直接 ÷4。<b>架构选择（Ⅱ）与服务成本（Ⅲ）通过这条公式咬合</b>——跨平面读图的第一个样本。</p>
+        <p>Ⅱ 平面 GQA 的红利在此兑现：<code>h_kv</code> 从 32 减到 8，这笔账直接 ÷4。<b>架构选择（Ⅱ）与服务成本（Ⅲ）通过这条公式咬合</b>——跨平面读图的第一个样本。</p>
         <p class="dim">工程注记：PagedAttention（vLLM）把缓存按「页」管理如操作系统虚拟内存，消灭碎片，是开源推理引擎的核心创新。「无限长的记忆」在物理上不成立，根源即这笔账。</p>
 
         <div class="lab">
@@ -1203,7 +1204,7 @@ Llama-3-8B @fp16: 2 × 32 × 8 × 128 × 2 B = 128 KB/token
           <div class="race-row"><span>权重占用</span><div class="bar"><i id="kv-w" style="background:var(--ink-3)"></i></div><span class="tv" id="kv-w-t">—</span></div>
           <div class="race-row"><span>KV 缓存占用</span><div class="bar"><i id="kv-c"></i></div><span class="tv" id="kv-c-t">—</span></div>
           <div class="viz-cap" id="kv-verdict"></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>全部按模块正文的公式实算（2 × 层数 × KV头 × 头维 × 长度 × 字节；8B: N=32,h_kv=8,d_h=128；70B: N=80,h_kv=8,d_h=128），对照 80GB 卡。省略了激活值等杂项占用——真实水位只会更高。自查：8B + FP16 + 128K 上下文 + 8 并发 ≈ 128GB 的 KV——比模型本身大八倍，这就是「长上下文贵在显存」的算术。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>全部按模块正文的公式实算（2 × 层数 × KV头 × 头维 × 长度 × 字节；8B: <code>N=32</code>,<code>h_kv=8</code>,<code>d_h=128</code>；70B: <code>N=80</code>,<code>h_kv=8</code>,<code>d_h=128</code>），对照 80GB 卡。省略了激活值等杂项占用——真实水位只会更高。自查：8B + FP16 + 128K 上下文 + 8 并发 ≈ 128GB 的 KV——比模型本身大八倍，这就是「长上下文贵在显存」的算术。</div>
         </div>
       </div>
     </details>
@@ -1613,7 +1614,7 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
             <span>≈ <b id="vd-book">—</b> 本 10 万字书的 token 量</span>
             <span id="vd-note" style="color:var(--ink-3)"></span>
           </div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>算术实算（块数 = (宽/16)×(高/16)×(帧数/4)，取业界常见的 16×16×4 时空块设定，各家实现有别、量级同构；按中文 1 字≈1 token 折算书本）。这笔账解释了视频生成的一切经济学：为什么按秒计费、为什么先出低清预览、为什么「一致性」难——注意力要在这几十万个块之间两两照应，O(T²) 的账单在此最为惨烈（接 PLANE 0 屋顶线）。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>算术实算（块数 = (宽/16)×(高/16)×(帧数/4)，取业界常见的 16×16×4 时空块设定，各家实现有别、量级同构；按中文 1 字≈1 token 折算书本）。这笔账解释了视频生成的一切经济学：为什么按秒计费、为什么先出低清预览、为什么「一致性」难——注意力要在这几十万个块之间两两照应，<code>O(T²)</code> 的账单在此最为惨烈（接 PLANE 0 屋顶线）。</div>
         </div>
 
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p>深度伪造视频的标识义务（接 Ⅳ「护栏与标识」：《标识办法》显式+隐式双轨）、肖像权、以及选举等场景的专门规制——全图合规密度最高的一格。</p></div>
@@ -1770,7 +1771,7 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
       <div class="m-body">
         <p>核心事实：<b>数据从来不住在计算发生的地方</b>，要一级级搬过来。层级每往下一级，容量大十到千倍、速度慢约一个数量级（A100 量级例：片上 SRAM 约 19 TB/s 但只有 ~20MB；HBM 约 2 TB/s、几十 GB；主机内存百 GB/s 级；硬盘更慢）。</p>
         <p>HBM（高带宽显存）是把 DRAM 芯片立体堆叠、经硅中介层千针直连处理器——「把仓库盖到工厂隔壁，再修一条千车道的路」。即便如此，<b>算力的增速长期高于带宽的增速</b>，芯片越来越多的时间花在等数据上：这就是「内存墙」。能耗账同样在搬运侧——从 HBM 搬一个字节的能耗，远高于对它做一次乘加。</p>
-        <p class="dim">收账（Ⅱ 平面伏笔）：FlashAttention 的全部秘密 = 精心安排计算顺序，让注意力的 T×T 中间矩阵始终待在 SRAM 里、不落 HBM。不改数学，只改「货物动线」。</p>
+        <p class="dim">收账（Ⅱ 平面伏笔）：FlashAttention 的全部秘密 = 精心安排计算顺序，让注意力的 <code>T×T</code> 中间矩阵始终待在 SRAM 里、不落 HBM。不改数学，只改「货物动线」。</p>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 亲自等一次数据<span class="demo-tag">G3 级</span></div>
@@ -1899,7 +1900,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.25 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.25.1 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
