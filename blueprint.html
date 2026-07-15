@@ -172,6 +172,16 @@
   .lab-res-row .sc { font-family: var(--mono); font-size: 11.5px; text-align: right; }
   .lab-2d { margin: 14px 0 4px; }
   .lab-2d canvas { width: 100%; display: block; background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; }
+  /* SwiGLU 门控输出条（v0.25.3） */
+  .ff-eq { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-family: var(--mono); font-size: 12.5px; color: var(--ink-2); margin-top: 8px; }
+  .ff-eq b { color: var(--ink); }
+  .ff-eq .op { color: var(--ink-3); }
+  .ff-eq .ff-outnum { color: var(--p2); font-size: 13.5px; }
+  .ff-bar { position: relative; flex: 1 1 140px; min-width: 120px; height: 16px; background: var(--surface-2); border: 1px solid var(--hairline); border-radius: 4px; overflow: hidden; }
+  .ff-bar::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--ink-3); opacity: 0.5; }
+  .ff-bar i { position: absolute; top: 2px; bottom: 2px; background: var(--p2); transition: width 0.08s; }
+  #ff-bar-pos { left: 50%; border-radius: 0 2px 2px 0; }
+  #ff-bar-neg { right: 50%; border-radius: 2px 0 0 2px; }
   .lab-prompt { font-family: var(--mono); font-size: 12px; line-height: 1.65; background: var(--surface);
     border: 1px solid var(--hairline); border-radius: 8px; padding: 10px 13px; margin: 0;
     white-space: pre-wrap; word-break: break-all; max-height: 220px; overflow-y: auto; color: var(--ink-2); }
@@ -360,7 +370,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.25.2 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.25.3 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -1007,16 +1017,16 @@
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 激活函数与门控<span class="demo-tag">G3 级</span></div>
-          <p class="dim" style="margin:4px 0 0">三代激活函数的真曲线并排画出；拖动输入 x，看三家各放行多少。下方是 SwiGLU 门控的体感：内容与门各自独立，<b>门说了算</b>。</p>
+          <p class="dim" style="margin:4px 0 0">三代激活函数的真曲线并排画出。拖<b>输入 <code>x</code></b> 看三家各放行多少；拖<b>门 gate</b> 让金点在 SiLU 曲线上滑动、下方输出条随之涨落——把门拖进负区，<b>内容再大输出也被掐灭</b>，门说了算。</p>
           <div class="lab-ctrls"><label>输入 x = <output id="ff-x-o">1.0</output> <input type="range" id="ff-x" min="-40" max="40" value="10"></label></div>
           <div class="lab-2d"><canvas id="ff-cv" height="170"></canvas>
-            <div class="viz-cap">实线 SiLU（SwiGLU 所用）· 虚线 GELU · 点线 ReLU；● = 当前 x。负区的差异是三代演化的全部剧情：硬归零 → 平滑 → 平滑且可轻微反悔。</div></div>
+            <div class="viz-cap">实线 SiLU（SwiGLU 所用）· 虚线 GELU · 点线 ReLU；● = 当前 <code>x</code>（三曲线各一点）· <span style="color:var(--p2)">◆ 金点 = 门 gate 在 SiLU 曲线上的落点，高度即「门开多大」</span>。负区差异是三代演化的全部剧情：硬归零 → 平滑 → 平滑且可轻微反悔。</div></div>
           <div class="lab-ctrls" style="margin-top:8px">
             <label>门 gate = <output id="ff-g-o">1.0</output> <input type="range" id="ff-g" min="-30" max="30" value="10"></label>
             <label>内容 up = <output id="ff-u-o">2.0</output> <input type="range" id="ff-u" min="-30" max="30" value="20"></label>
-            <span style="font-family:var(--mono);font-size:12.5px">SiLU(gate)×up = <b id="ff-out">—</b></span>
           </div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>三条曲线与门控算式均为真函数实算（ReLU=max(0,x)；SiLU=x·σ(x)；GELU 用标准近似式）。教学点：把「门」拖到负值——内容再大，输出也被掐灭；这就是「一路算内容、一路算放行多少」的字面演示，也是 SwiGLU 三矩阵结构存在的理由。</div>
+          <div class="ff-eq"><span>SiLU(门)=<b id="ff-gv">—</b></span><span class="op">×</span><span>内容=<b id="ff-uv">—</b></span><span class="op">=</span><div class="ff-bar" title="输出 = SiLU(门)×内容，幅度按 ±9 归一，中线为零"><i id="ff-bar-neg"></i><i id="ff-bar-pos"></i></div><span class="op">→</span><b id="ff-out" class="ff-outnum">—</b></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>三条曲线、金点位置与输出条均为真函数实算（ReLU=max(0,x)；SiLU=x·σ(x)；GELU 用标准近似式；输出条 = SiLU(门)×内容，幅度按 ±9 归一显示）。教学点：门走的是 SiLU——负区几乎全被压平（金点贴地），此时内容 <code>up</code> 再大，乘出来仍近乎零；这就是「一路算内容、一路算放行多少」的字面演示，也是 SwiGLU 三矩阵结构存在的理由。</div>
         </div>
       </div>
     </details>
@@ -1900,7 +1910,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.25.2 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.25.3 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
@@ -3243,14 +3253,29 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
     [[silu, 0], [gelu, 0], [relu, 0]].forEach(([f]) => {
       ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(sx(xv), sy(f(xv)), 4 * dpr, 0, 7); ctx.fill();
     });
+    /* 门控标记：当前 gate 落在 SiLU 曲线上的位置（v0.25.3，把下方门控滑块接到曲线上） */
+    const gv = $('ff-g').value / 10, sgv = silu(gv);
+    ctx.strokeStyle = pc; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.4 * dpr; ctx.setLineDash([3 * dpr, 3 * dpr]);
+    ctx.beginPath(); ctx.moveTo(sx(gv), sy(0)); ctx.lineTo(sx(gv), sy(sgv)); ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.fillStyle = pc; ctx.beginPath(); ctx.arc(sx(gv), sy(sgv), 5 * dpr, 0, 7); ctx.fill();
+    ctx.strokeStyle = cs.getPropertyValue('--surface').trim(); ctx.lineWidth = 1.6 * dpr; ctx.stroke();
+    ctx.fillStyle = pc; ctx.font = 700 + ' ' + (11 * dpr) + 'px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('门', sx(gv), sy(sgv) - 9 * dpr);
   }
   function gate() {
     const g = $('ff-g').value / 10, u = $('ff-u').value / 10;
     $('ff-g-o').textContent = g.toFixed(1); $('ff-u-o').textContent = u.toFixed(1);
-    $('ff-out').textContent = (silu(g) * u).toFixed(2);
+    const sg = silu(g), out = sg * u;
+    $('ff-gv').textContent = sg.toFixed(2); $('ff-uv').textContent = u.toFixed(1);
+    $('ff-out').textContent = out.toFixed(2);
+    const half = Math.min(Math.abs(out) / 9, 1) * 50;
+    $('ff-bar-pos').style.width = out >= 0 ? half + '%' : '0%';
+    $('ff-bar-neg').style.width = out < 0 ? half + '%' : '0%';
   }
   $('ff-x').addEventListener('input', draw);
-  ['ff-g', 'ff-u'].forEach(id => $(id).addEventListener('input', gate));
+  $('ff-g').addEventListener('input', () => { draw(); gate(); }); /* 门变化：既动曲线上的金点、也更新输出条 */
+  $('ff-u').addEventListener('input', gate); /* 内容不在曲线上，只影响输出条 */
   addEventListener('resize', draw);
   new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   $('mod-ff').addEventListener('toggle', () => { if ($('mod-ff').open) draw(); }); /* 折叠态 clientWidth=0，展开时重绘（v0.25.2 修空白画布） */
