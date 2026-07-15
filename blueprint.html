@@ -44,6 +44,7 @@
   * { box-sizing: border-box; }
   code { font-family: var(--mono); font-size: 0.93em; } /* 字体即语法：变量符号一律等宽（v0.25.1） */
   html, body { margin: 0; }
+  html { scroll-behavior: smooth; } /* 顶部锚点跳转改平滑滚动：沿途逐帧渐进光栅化，消除首次瞬移的整屏重绘闪白（v0.25.4） */
   body { background: var(--page); color: var(--ink); font-family: var(--sans); line-height: 1.75; font-size: 15.5px; -webkit-font-smoothing: antialiased; }
   .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
   a { color: inherit; }
@@ -82,7 +83,8 @@
   .lg code { font-family: var(--mono); font-size: 12px; color: var(--ink); }
 
   /* planes */
-  section.plane { padding: 46px 0 8px; }
+  section.plane { padding: 46px 0 8px; scroll-margin-top: 14px; } /* 跳转落点留出顶边呼吸 */
+  details.mod { scroll-margin-top: 14px; }
   .pl-head { border-left: 4px solid var(--pc); padding-left: 16px; margin-bottom: 6px; }
   .pl-head .rn { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--pc); letter-spacing: 0.1em; }
   h2 { font-family: var(--serif); font-size: clamp(24px, 3.6vw, 31px); margin: 2px 0; line-height: 1.25; }
@@ -364,13 +366,13 @@
     .cols.graphic .fig svg { max-height: 82vh; }
     .cols.graphic > .wrap { margin: 0; max-width: 880px; padding: 0 32px; }
   }
-  @media (prefers-reduced-motion: reduce) { .m-caret, .rg2 { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .m-caret, .rg2 { transition: none; } html { scroll-behavior: auto; } }
   .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 2px; }
 </style>
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.25.3 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.25.4 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -1910,7 +1912,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.25.3 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.25.4 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
