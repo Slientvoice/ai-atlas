@@ -13,7 +13,7 @@
     --shadow: 0 10px 32px rgba(28,27,24,0.10);
     --serif: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif; /* 2026-07-09 用户拍板：宋体退役，全站统一现代黑体 */
     --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    --mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -372,7 +372,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.25.4 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.25.5 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -1912,7 +1912,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.25.4 · 2026-07-11。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.25.5 · 2026-07-16。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
@@ -2052,7 +2052,7 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
     const sx = x => (x - x0) / (x1 - x0) * (W - 40 * dpr) + 20 * dpr;
     const sy = y => (y - y0) / (y1 - y0) * (H - 40 * dpr) + 20 * dpr;
     ctx.clearRect(0, 0, W, H);
-    ctx.font = `${10.5 * dpr}px ui-monospace, monospace`;
+    ctx.font = `${10.5 * dpr}px ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace`;
     state.vecs.forEach((v, i) => {
       const [px, py] = project(v), hit = state.topk.includes(i) && state.qv;
       ctx.beginPath(); ctx.arc(sx(px), sy(py), 5 * dpr, 0, 7);
@@ -2402,7 +2402,7 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
     const sx = lx => (lx - x0) / (x1 - x0) * (W - 60 * dpr) + 44 * dpr;
     const sy = ly => H - 26 * dpr - (ly - y0) / (y1 - y0) * (H - 44 * dpr);
     ctx.clearRect(0, 0, W, H);
-    ctx.font = `${10 * dpr}px ui-monospace, monospace`; ctx.fillStyle = ink3;
+    ctx.font = `${10 * dpr}px ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace`; ctx.fillStyle = ink3;
     for (let e = 0; e <= 4; e++) { ctx.fillText('10' + '⁰¹²³⁴'[e], sx(e) - 6 * dpr, H - 10 * dpr); }
     ctx.fillText('FLOPs/Byte →', W - 90 * dpr, H - 10 * dpr);
     ctx.fillText('可达算力 ↑', 6 * dpr, 14 * dpr);
@@ -2928,7 +2928,7 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
       ctx.strokeStyle = pc; ctx.lineWidth = 2.2 * dpr;
       ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = ink; ctx.font = `${11 * dpr}px ui-monospace, monospace`;
+      ctx.fillStyle = ink; ctx.font = `${11 * dpr}px ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace`;
       ctx.fillText(label, x + (x > cx ? 5 : -22) * dpr, y);
       ctx.beginPath(); ctx.arc(x, y, 3.5 * dpr, 0, 7); ctx.fillStyle = pc; ctx.fill();
     };
@@ -2945,7 +2945,7 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
     ctx.stroke();
     const mpx = x0 + g / 16 * (x1 - x0), mpy = yMid - dot * amp * 0.9;
     ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(mpx, mpy, 5 * dpr, 0, 7); ctx.fill();
-    ctx.fillStyle = ink3; ctx.font = `${10 * dpr}px ui-monospace, monospace`;
+    ctx.fillStyle = ink3; ctx.font = `${10 * dpr}px ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace`;
     ctx.fillText('间距 g →', x1 - 60 * dpr, yMid + 14 * dpr);
   }
   ['rp-m', 'rp-g'].forEach(id => $(id).addEventListener('input', draw));
@@ -3838,7 +3838,7 @@ function paintScene(cv, fine) {
     ctx.beginPath(); ctx.moveTo(U[0], U[1]);
     ctx.lineTo(U[0] + 2.6 * (C[0] - U[0]), U[1] + 2.6 * (C[1] - U[1])); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.font = `${11 * dpr}px ui-monospace, monospace`; ctx.fillStyle = ink3;
+    ctx.font = `${11 * dpr}px ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace`; ctx.fillStyle = ink3;
     ctx.strokeStyle = ink3; ctx.lineWidth = 2 * dpr;
     ctx.beginPath(); ctx.arc(U[0], U[1], 6 * dpr, 0, 7); ctx.stroke();
     ctx.fillText('○ 无提示', U[0] - 20 * dpr, U[1] + 22 * dpr);
@@ -3847,7 +3847,7 @@ function paintScene(cv, fine) {
     const cx = Math.max(10 * dpr, Math.min(W - 10 * dpr, Fx)), cy = Math.max(12 * dpr, Math.min(H - 12 * dpr, Fy));
     ctx.fillStyle = pc; ctx.font = `${20 * dpr}px sans-serif`;
     ctx.fillText('★', cx - 9 * dpr, cy + 7 * dpr);
-    ctx.fillStyle = ink; ctx.font = `${11 * dpr}px ui-monospace, monospace`;
+    ctx.fillStyle = ink; ctx.font = `${11 * dpr}px ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace`;
     ctx.fillText(`s=${s.toFixed(1)}${s > 1.05 ? ' 外推区' : s < 0.95 ? ' 欠引导' : ''}${Fx > W ? '（已冲出画面）' : ''}`, Math.min(cx + 12 * dpr, W - 120 * dpr), cy);
   }
   $('cf-s').addEventListener('input', draw);
