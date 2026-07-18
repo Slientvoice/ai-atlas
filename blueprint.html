@@ -388,7 +388,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.27.1 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.28 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -1604,6 +1604,37 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p>自主步数 × 工具权限 = 风险敞口；审计日志是未来纠纷的核心证据。<span class="ref">索引地图 L5「Agent 与 Harness」</span></p></div>
       </div>
     </details>
+    <div class="wire"><span>循环讲完了——工具究竟怎么「接」上来？报文层 ▼</span></div>
+
+    <details class="mod" id="mod-proto">
+      <summary><span class="m-caret">▶</span><span class="m-name">工具协议</span><span class="m-en">FUNCTION CALLING · MCP · 🔬 LAB</span><span class="m-shape">工具清单注入 → JSON 调用 ↔ 结果回填</span></summary>
+      <div class="m-body">
+        <p>上一个模块讲循环，这里下到<b>报文层</b>：「接工具」的全部真相是四段文本的往返——①工具清单（名称/用途/参数 schema）作为文本注入上下文；②模型在该出手时生成一段结构化 JSON（工具名+参数）；③宿主解析、真正执行、把结果作为新消息拼回上下文；④模型读到结果继续作答。模型全程只做它唯一会做的事：预测下一个 token——<b>调用请求本身也是逐 token 生成的普通文本</b>，所以会有参数写错、编造不存在工具的「参数幻觉」，schema 校验必须在宿主侧。</p>
+        <p class="dim">另一笔账常被忽略：每接一个工具 = 向上下文注入一段 schema 文本。工具接得越多，预算被吃得越多、模型选错工具的概率也越高——「工具选择」本身就是模型的一次判断。下面实验室里拖一下滑杆，这笔账立刻可见。</p>
+        <div class="forks"><span class="flab">分叉 · 接入路线</span>
+          <button class="fk on" data-v="a">原生 function calling ✓</button>
+          <button class="fk" data-v="b">MCP 标准协议</button>
+          <button class="fk" data-v="c">Computer Use</button>
+        </div>
+        <div class="fkb on" data-v="a">各家私有报文格式（OpenAI 的 tools、Anthropic 的 tool_use——字段名互不兼容），模型侧经专门微调学会输出结构化调用。成熟稳定、生态最广；代价是每接一家供应商就要改一次对接代码。</div>
+        <div class="fkb" data-v="b">Model Context Protocol：把「工具如何被发现、描述、调用」标准化为 JSON-RPC 协议（initialize → tools/list → tools/call）。工具做成 server、应用做 client，一次开发处处可接——USB-C 之于外设。2024-11 Anthropic 开源，此后被业界陆续采纳（据公开报道，未经人工核验）。你正在用的 Claude Code 就靠它接外部工具。</div>
+        <div class="fkb" data-v="c">不接任何协议：直接给模型屏幕截图 + 鼠标键盘——把「人用软件的方式」当万能接口。通用性最强（理论上能用一切软件），也最慢、最贵、错误率最高；代表探索方向而非当前主流。</div>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 报文显微镜<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">一次「查合同」调用的完整报文往返，四幕连播（JSON 现场拼装、长度实算）。拖工具数看 schema 吃预算；切到 MCP 看同一件事的标准化形态。</p>
+          <div class="lab-ctrls">
+            <label>接入工具 <output id="pr-n-o">2</output> 个 <input type="range" id="pr-n" min="1" max="5" value="2"></label>
+            <button type="button" class="fk on" id="pr-nat">原生报文</button>
+            <button type="button" class="fk" id="pr-mcp">MCP 报文</button>
+          </div>
+          <div class="lab-prompt" id="pr-view" style="max-height:300px;overflow-y:auto;white-space:pre-wrap"></div>
+          <div class="tp-stats"><span>工具清单占用 <b id="pr-sch">—</b> 字符 ≈ <b id="pr-tok">—</b> token</span><span>占 8k 窗口 <b id="pr-pct">—</b>%</span><span id="pr-note" style="color:var(--ink-3)"></span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>报文由浏览器现场 <code>JSON</code> 拼装、长度实算；形态为<b>结构等价的通用示意</b>——各家字段名不同（OpenAI <code>tools</code>、Anthropic <code>tool_use</code>、MCP JSON-RPC）。「幕②模型输出」是预写样本：真实调用由模型逐 token 生成，这正是参数幻觉的来源、也是宿主必须校验 schema 的理由。token 为估算（中文 1 字≈1 token、ASCII 约 4 字符 1 token），不同分词器结果有别。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p class="dim">挂点预留（合规层冻结中，2026-07-18 起另行规划）。</p></div>
+      </div>
+    </details>
     <div class="wire"><span>出口前最后一道 ▼</span></div>
 
     <details class="mod" id="mod-guard">
@@ -2072,7 +2103,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.27.1 · 2026-07-18。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.28 · 2026-07-18。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
@@ -4077,6 +4108,64 @@ function paintScene(cv, fine) {
   });
   $('vc-k').addEventListener('input', strip);
   strip();
+})();
+
+/* ============ 🔬 报文显微镜 · 工具协议（v0.28，照 LAB-SPECS S10 施工） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('pr-view')) return;
+  /* 预置工具库：法务趣味的五件工具（schema 为结构等价的通用形态） */
+  const TOOLS = [
+    { name: 'searchContracts', description: '按关键词检索合同库，返回命中条款', input_schema: { type: 'object', properties: { query: { type: 'string', description: '检索词' }, dateRange: { type: 'string', description: '年份范围，可选' } }, required: ['query'] } },
+    { name: 'calc', description: '计算数学表达式（违约金、滞纳金试算）', input_schema: { type: 'object', properties: { expression: { type: 'string' } }, required: ['expression'] } },
+    { name: 'createEvent', description: '在日历创建提醒（如异议期届满日）', input_schema: { type: 'object', properties: { title: { type: 'string' }, time: { type: 'string' } }, required: ['title', 'time'] } },
+    { name: 'fxRate', description: '查询汇率（涉外合同金额折算）', input_schema: { type: 'object', properties: { from: { type: 'string' }, to: { type: 'string' } }, required: ['from', 'to'] } },
+    { name: 'sendMail', description: '发送邮件（高危：应设人工确认点）', input_schema: { type: 'object', properties: { to: { type: 'string' }, subject: { type: 'string' }, body: { type: 'string' } }, required: ['to', 'subject'] } },
+  ];
+  const CALL = { name: 'searchContracts', arguments: { query: '解约条款', dateRange: '2025-2026' } };
+  const RESULT = '命中 2 条：《服务合作合同》第五条——任一方可提前三十日以书面形式通知对方解除本合同……';
+  const ANSWER = '「根据《服务合作合同》第五条，任一方均可提前三十日书面通知解除；因重大违约致合同目的不能实现的，守约方可立即解除。」';
+  /* token 粗账：中文 1 字≈1 token，ASCII 约 4 字符 1 token（页内已标注为估算） */
+  const estTok = s => {
+    let cjk = 0, other = 0;
+    for (const ch of s) (ch >= '一' && ch <= '鿿') ? cjk++ : other++;
+    return cjk + Math.ceil(other / 4);
+  };
+  const J = o => JSON.stringify(o, null, 1);
+  let mode = 'nat';
+  function draw() {
+    const n = +$('pr-n').value;
+    $('pr-n-o').textContent = n;
+    const tools = TOOLS.slice(0, n);
+    const schemaStr = J(tools);
+    let acts;
+    if (mode === 'nat') {
+      acts = [
+        ['幕① 注入 · 系统提示携带工具清单（' + n + ' 个，宿主拼进上下文）', schemaStr],
+        ['幕② 模型输出 · 调用请求（结构化文本，逐 token 生成——预写样本）', J(CALL)],
+        ['幕③ 宿主执行 → 结果作为新消息回填', J({ role: 'tool', name: CALL.name, content: RESULT })],
+        ['幕④ 模型读到结果后的最终回答', ANSWER],
+      ];
+    } else {
+      acts = [
+        ['幕⓪ 握手 · initialize（client ↔ server 各自报能力）', J({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18', clientInfo: { name: 'atlas-demo' } } })],
+        ['幕① 发现 · tools/list → 服务器返回工具清单（' + n + ' 个）', J({ jsonrpc: '2.0', id: 2, result: { tools: tools } })],
+        ['幕② 调用 · tools/call（模型的调用意图被宿主翻译成协议请求）', J({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: CALL.name, arguments: CALL.arguments } })],
+        ['幕③ 结果返回', J({ jsonrpc: '2.0', id: 3, result: { content: [{ type: 'text', text: RESULT }] } })],
+        ['幕④ 模型读到结果后的最终回答', ANSWER],
+      ];
+    }
+    $('pr-view').textContent = acts.map(([h, b]) => '── ' + h + ' ──\n' + b).join('\n\n');
+    const tok = estTok(schemaStr);
+    $('pr-sch').textContent = schemaStr.length;
+    $('pr-tok').textContent = tok;
+    $('pr-pct').textContent = (tok / 8192 * 100).toFixed(1);
+    $('pr-note').textContent = n >= 4 ? '——还没开口，预算先被工具清单吃掉一截' : '';
+  }
+  $('pr-n').addEventListener('input', draw);
+  $('pr-nat').addEventListener('click', () => { mode = 'nat'; $('pr-nat').classList.add('on'); $('pr-mcp').classList.remove('on'); draw(); });
+  $('pr-mcp').addEventListener('click', () => { mode = 'mcp'; $('pr-mcp').classList.add('on'); $('pr-nat').classList.remove('on'); draw(); });
+  draw();
 })();
 
 /* ============ 🗼 系统全景导航仪（v0.26，接替 v0.19 图文联动） ============
