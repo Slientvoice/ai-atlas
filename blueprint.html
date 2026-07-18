@@ -388,7 +388,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.28 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.29 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -1529,6 +1529,52 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p>注入导致越权输出的责任分配，取决于「谁拼装了上下文」——这一格的架构图就是责任链图。<span class="ref">索引地图 L5「提示词工程」</span></p></div>
       </div>
     </details>
+    <div class="wire"><span>拼装讲完「是什么」——窗口塞不下的时候怎么办？ ▼</span></div>
+
+    <details class="mod" id="mod-ctxeng">
+      <summary><span class="m-caret">▶</span><span class="m-name">上下文工程</span><span class="m-en">CONTEXT ENGINEERING · 🔬 LAB</span><span class="m-shape">固定窗口 <code>T_max</code> 内的预算分配</span></summary>
+      <div class="m-body">
+        <p>上下文不是记忆，是<b>每次请求都重新装填的行李箱</b>。窗口就那么大（<code>T_max</code>），系统提示、工具清单、记忆摘要、对话历史、检索结果全要挤这一个箱子。上下文工程回答三个问题：<b>装什么、怎么压、挤不下砍谁</b>。所谓模型「忘事」，多数不是遗忘——是那条信息这一次没被装进箱子。</p>
+        <p class="dim">长上下文模型（百万级窗口）没有终结这门手艺：窗口越大，「迷失在中间」（关键信息埋在长文中部时命中率下降的实验现象）与成本问题越突出，工程上照样要管。法务问答机器人复述三小时前的关键口径忽对忽错，病根多半在此格，不在「模型记性」。</p>
+        <div class="forks"><span class="flab">分叉 · 历史管理策略</span>
+          <button class="fk on" data-v="a">滑动窗口 ✓</button>
+          <button class="fk" data-v="b">摘要压缩</button>
+          <button class="fk" data-v="c">外部记忆 + 检索</button>
+        </div>
+        <div class="fkb on" data-v="a">只留最近 N 轮，最老的直接掉出窗外。简单、无失真、可预期；代价是三小时前敲定的要点<b>整段消失</b>——模型不是忘了，是根本没看见。</div>
+        <div class="fkb" data-v="b">把老历史压成摘要塞回窗口（摘要由模型自己写）。省空间；代价是<b>有损压缩</b>——细节、原话、数字在压缩中走样，且下一轮会基于失真的摘要再摘要，误差逐轮累积（自我污染）。</div>
+        <div class="fkb" data-v="c">关键事实写进窗口<b>外</b>的存储（文件/向量库），用到时检索装回。容量理论无限、是当前主流方向；代价是「想起来」变成概率事件——检索没命中，就是忘了。命中率就是记忆力。</div>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 上下文预算沙盘<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">四类内容抢一个窗口。把「对话历史」拉爆窗口，切换三种策略，看下面五条<b>谈判关键事实</b>各自的命运——裁剪算术全部实算。</p>
+          <div class="lab-ctrls">
+            <button type="button" class="fk on" id="ce-w8">窗口 8k</button>
+            <button type="button" class="fk" id="ce-w32">窗口 32k</button>
+            <span style="color:var(--ink-3);font-size:12px">（token 数为设定值，示意口径）</span>
+          </div>
+          <div class="lab-ctrls">
+            <label>提示+工具 <output id="ce-sys-o">1200</output> <input type="range" id="ce-sys" min="200" max="4000" step="100" value="1200"></label>
+            <label>记忆摘要 <output id="ce-mem-o">800</output> <input type="range" id="ce-mem" min="0" max="4000" step="100" value="800"></label>
+            <label>检索结果 <output id="ce-rag-o">1500</output> <input type="range" id="ce-rag" min="0" max="6000" step="100" value="1500"></label>
+            <label>对话历史 <output id="ce-hist-o">9000</output> <input type="range" id="ce-hist" min="0" max="30000" step="500" value="9000"></label>
+          </div>
+          <div id="ce-bar" style="display:flex;height:18px;border:1px solid var(--hairline);border-radius:4px;overflow:hidden;margin:8px 0 2px"></div>
+          <div style="font-size:11.5px;color:var(--ink-3);margin-bottom:6px" id="ce-legend"></div>
+          <div class="lab-ctrls">
+            <button type="button" class="fk on" id="ce-slide">滑动窗口</button>
+            <button type="button" class="fk" id="ce-sum">摘要压缩</button>
+            <button type="button" class="fk" id="ce-ext">外部记忆</button>
+            <label id="ce-rate-l" style="display:none">命中率 <output id="ce-rate-o">70</output>% <input type="range" id="ce-rate" min="30" max="95" step="5" value="70"></label>
+            <button type="button" class="fk" id="ce-re">↻ 重抽</button>
+          </div>
+          <div class="ag-log" id="ce-facts"></div>
+          <div class="tp-stats"><span>总需求 <b id="ce-need">—</b>t</span><span>窗口 <b id="ce-win">—</b>t</span><span id="ce-note" style="color:var(--ink-3)"></span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>裁剪与压缩为真算术（滑窗按新旧顺序砍、压缩按 5:1、外部记忆按命中率逐条伯努利抽样——按「↻ 重抽」体验概率）；token 数为设定值非真分词；摘要失真以固定概率示意（真实失真不可约成单一数字）；五条事实按新旧位置分布在历史中。核心观察：<b>滑窗丢整段、摘要丢细节、外部记忆丢概率</b>——三种「忘法」不同，排查时问的第一句应是「它用的哪种策略」。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p class="dim">挂点预留（合规层冻结中，2026-07-18 起另行规划）。</p></div>
+      </div>
+    </details>
     <div class="wire"><span>给上下文供料的两大来源 ▼</span></div>
 
     <details class="mod" id="mod-rag">
@@ -1630,6 +1676,40 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
           <div class="lab-prompt" id="pr-view" style="max-height:300px;overflow-y:auto;white-space:pre-wrap"></div>
           <div class="tp-stats"><span>工具清单占用 <b id="pr-sch">—</b> 字符 ≈ <b id="pr-tok">—</b> token</span><span>占 8k 窗口 <b id="pr-pct">—</b>%</span><span id="pr-note" style="color:var(--ink-3)"></span></div>
           <div class="lab-honest"><b>诚实标注（R5）：</b>报文由浏览器现场 <code>JSON</code> 拼装、长度实算；形态为<b>结构等价的通用示意</b>——各家字段名不同（OpenAI <code>tools</code>、Anthropic <code>tool_use</code>、MCP JSON-RPC）。「幕②模型输出」是预写样本：真实调用由模型逐 token 生成，这正是参数幻觉的来源、也是宿主必须校验 schema 的理由。token 为估算（中文 1 字≈1 token、ASCII 约 4 字符 1 token），不同分词器结果有别。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p class="dim">挂点预留（合规层冻结中，2026-07-18 起另行规划）。</p></div>
+      </div>
+    </details>
+    <div class="wire"><span>一个 Agent 不够用的时候 ▼</span></div>
+
+    <details class="mod" id="mod-orch">
+      <summary><span class="m-caret">▶</span><span class="m-name">多智能体编排</span><span class="m-en">MULTI-AGENT · ORCHESTRATION · 🔬 LAB</span><span class="m-shape">单体 → 流水线 → 主从：消息 × 账单 × 误差</span></summary>
+      <div class="m-body">
+        <p>任务复杂了，工程冲动是「多雇几个」。三种基本拓扑就是三种组织形式：<b>单体</b>（一人全干到底）、<b>流水线</b>(专家接力）、<b>主从</b>（orchestrator 拆解分派、worker 干活、主控验收）。要紧的事实：Agent 之间<b>不共享上下文</b>——对方只知道你消息里告诉它的。每一次交接 = 一次上下文重建 + 一笔 token 账单 + 一个误差注入点。</p>
+        <p class="dim">「协作税」三项：通信开销（消息本身吃 token）、误差放大（上游一个字，下游一封信）、一致性难题（谁的版本为准）。什么时候值得交税：任务可清晰分段、单窗口装不下、或需要角色隔离（审查者不该被起草者的草稿带偏）。多智能体不是默认更强——是用账单换结构。</p>
+        <div class="forks"><span class="flab">分叉 · 拓扑</span>
+          <button class="fk on" data-v="a">单体 Agent ✓</button>
+          <button class="fk" data-v="b">流水线</button>
+          <button class="fk" data-v="c">主从 orchestrator</button>
+        </div>
+        <div class="fkb on" data-v="a">一个模型带全部工具跑到底。上下文完整（自己干过什么、原文长什么样都在手里）、最便宜；受限于单窗口容量与单一视角。<b>默认起点：不够用再拆</b>。</div>
+        <div class="fkb" data-v="b">A 做完交 B、B 交 C，像工序接力。各专其职、每段上下文小；但交接只传摘要不传原件时，下游<b>无从核对</b>——上游的错顺流放大。</div>
+        <div class="fkb" data-v="c">主控拆解任务、分派 worker、验收汇总。有制度化的纠错机会（验收步）；最贵——每次分派与汇报都是完整往返，且主控自身成为单点瓶颈。</div>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 编排剧场<span class="demo-tag">G2 级 · 剧本预写</span></div>
+          <p class="dim" style="margin:4px 0 0">同一任务——「审《服务合作合同》违约金条款，把结论发给张律师」——在三种拓扑下逐步播放。勾选 ⚠ 在检索步注入同一个错误，看三种结构<b>谁有机会发现</b>。</p>
+          <div class="lab-ctrls">
+            <button type="button" class="fk on" id="oc-a">单体</button>
+            <button type="button" class="fk" id="oc-b">流水线</button>
+            <button type="button" class="fk" id="oc-c">主从</button>
+            <label><input type="checkbox" id="oc-err"> ⚠ 注入错误（10% 误作 1%）</label>
+            <button type="button" class="fk" id="oc-next">下一步 →</button>
+            <button type="button" class="fk" id="oc-re">↻ 重演</button>
+          </div>
+          <div class="ag-log" id="oc-log"></div>
+          <div class="tp-stats"><span>步数 <b id="oc-step">0</b></span><span>token 账单累计 <b id="oc-tok">0</b>t</span><span id="oc-note" style="color:var(--ink-3)"></span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>剧本预写（同 Agent 沙盘原则：真 agent 每步由模型实时生成，无法离线复刻；结局是「结构给了谁纠错机会」的演示，<b>不是必然</b>——单体的自纠靠原文恰好在自己上下文里，主从的拦截靠主控恰好要求附引文）。token 账单按各步消息长度实算累加。教学点一句话：<b>谁手里有原件，谁才可能纠错</b>——拓扑决定原件在谁手里。</div>
         </div>
 
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p class="dim">挂点预留（合规层冻结中，2026-07-18 起另行规划）。</p></div>
@@ -2094,7 +2174,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
       <div class="lg" style="border-color:var(--p2)"><b>✅ 可解释性 → 已建（v0.9）</b>Ⅱ 平面新模块「可解释性：打开黑箱」：探针/特征分解/回路三进路、现状边界、「算法解释权」朱批。</div>
       <div class="lg" style="border-color:var(--p6)"><b>✅ 具身智能与机器人 → 已建（v0.24）</b>PLANE Ⅵ 新模块「具身智能与 VLA」：三分叉（端到端/分层/仿真优先）、数据瓶颈与频率鸿沟、机械臂追点实验室、产品责任朱批。</div>
       <div class="lg" style="border-color:var(--p6)"><b>✅ 世界模型 → 已建（v0.24）</b>PLANE Ⅵ 新模块「世界模型」：三分叉（视频顺带学/潜空间预测/混合引擎）、误差复利命门、弹球预言家实验室、归责朱批。</div>
-      <div class="lg" style="border-style:dashed"><b>⏳ Agent 系统学（登记 2026-07-18，未建）</b>2025–26 工业重心：工具协议（function calling / MCP 报文级）、上下文工程（记忆·压缩·预算分配）、多智能体编排（拓扑与错误放大）、沙箱与权限。挂点：Ⅳ 平面扩建约 3 模块，现有「工具与 Agent」模块不动。</div>
+      <div class="lg" style="border-color:var(--p4)"><b>✅ Agent 系统学 → 已建（v0.28–v0.29）</b>Ⅳ 平面扩建三模块：工具协议（#mod-proto，报文显微镜）、上下文工程（#mod-ctxeng，预算沙盘）、多智能体编排（#mod-orch，编排剧场）。沙箱与权限并入现有「护栏」与「Agent 循环」表述，未单开模块。</div>
       <div class="lg" style="border-style:dashed"><b>⏳ RL 新范式：可验证奖励与推理模型训练侧（登记 2026-07-18，未建）</b>RLVR、长思维链怎么练出来、为何数学/代码先突破、奖励黑客。挂点：Ⅰ 平面「偏好优化」旁新模块（与 Ⅲ「测试时算力」互为训练/推理两面）。</div>
       <div class="lg" style="border-style:dashed"><b>⏳ 合成数据与蒸馏（登记 2026-07-18，未建）</b>数据墙、教师-学生、蒸馏与数据配比的下半场。挂点：Ⅰ 平面「语料池与配比」旁新模块。</div>
       <div class="lg" style="border-style:dashed"><b>登记簿现状：首批八项已全部落地（各条 ✅ 注明去处）；2026-07-18 重心转向技术深化后新登记三项（⏳），按用户排期扩建。</b>本清单永久开放——发现新空白（如脑机接口、群体智能）随时登记；它不是待办清单，是这张蓝图的抗震制度。</div>
@@ -2103,7 +2183,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.28 · 2026-07-18。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.29 · 2026-07-18。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
@@ -4166,6 +4246,152 @@ function paintScene(cv, fine) {
   $('pr-nat').addEventListener('click', () => { mode = 'nat'; $('pr-nat').classList.add('on'); $('pr-mcp').classList.remove('on'); draw(); });
   $('pr-mcp').addEventListener('click', () => { mode = 'mcp'; $('pr-mcp').classList.add('on'); $('pr-nat').classList.remove('on'); draw(); });
   draw();
+})();
+
+/* ============ 🔬 上下文预算沙盘 · 上下文工程（v0.29，照 LAB-SPECS S11 施工） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('ce-bar')) return;
+  /* 五条谈判关键事实：按「距今新旧」分布在历史里（0=最老 1=最新） */
+  const FACTS = [
+    { pos: 0.05, t: '付款期已让步为 45 天' },
+    { pos: 0.20, t: '对方拒绝 10% 违约金上限' },
+    { pos: 0.45, t: '交付日推迟到 9 月 30 日' },
+    { pos: 0.70, t: '保密期延长为 5 年' },
+    { pos: 0.90, t: '争议解决改为仲裁' },
+  ];
+  let W = 8192, mode = 'slide', seed = 7;
+  const rnd = () => { seed = (seed * 1103515245 + 12345) >>> 0; return (seed >>> 16) / 32768; };
+  const segColors = ['color-mix(in srgb, var(--ink) 55%, transparent)', 'color-mix(in srgb, var(--ink) 40%, transparent)',
+    'color-mix(in srgb, var(--ink) 26%, transparent)', 'color-mix(in srgb, var(--ink) 14%, transparent)'];
+  const segNames = ['提示+工具', '记忆', '检索', '历史'];
+  function draw(redraw) {
+    if (!redraw) seed = (seed + 13) >>> 0; /* 拖滑杆不换随机命运，点重抽才换 */
+    const sys = +$('ce-sys').value, mem = +$('ce-mem').value, rag = +$('ce-rag').value, hist = +$('ce-hist').value;
+    ['sys', 'mem', 'rag', 'hist'].forEach(k => $('ce-' + k + '-o').textContent = $('ce-' + k).value);
+    $('ce-rate-o').textContent = $('ce-rate').value;
+    $('ce-rate-l').style.display = mode === 'ext' ? '' : 'none';
+    const F = sys + mem + rag;
+    let histEff, note, facts;
+    if (mode === 'slide') {
+      const kept = Math.max(0, W - F);
+      histEff = Math.min(hist, kept);
+      const dropFrac = hist > 0 ? Math.max(0, (hist - histEff) / hist) : 0;
+      note = dropFrac > 0 ? `历史被砍最老 ${Math.round(dropFrac * 100)}%（${hist - histEff}t 滑出窗外）` : '全部装下，无需裁剪';
+      facts = FACTS.map(f => f.pos >= dropFrac ? ['✓', '在窗内'] : ['✕', '已滑出窗外——模型此刻看不见']);
+    } else if (mode === 'sum') {
+      histEff = Math.ceil(hist / 5);
+      const fit = F + histEff <= W;
+      note = `历史 ${hist}t 压成 ${histEff}t（5:1）` + (fit ? '' : '——压完仍超窗，还得叠加滑窗');
+      facts = FACTS.map(() => rnd() < 0.25 ? ['≈', '摘要中失真（数字/口径走样，且会逐轮累积）'] : ['✓', '摘要保真（这一轮）']);
+    } else {
+      histEff = 300; /* 窗口内只留指针与检索回来的少量条目 */
+      const rate = +$('ce-rate').value / 100;
+      note = `历史移出窗外（占位 ${histEff}t），关键事实靠检索装回`;
+      facts = FACTS.map(() => rnd() < rate ? ['✓', '检索命中，已装回窗口'] : ['✕', '检索未命中——这次「忘」了']);
+    }
+    const need = F + (mode === 'slide' ? hist : histEff);
+    /* 预算条：段宽按窗口占比，溢出部分画不下、用文字报数 */
+    const segs = [sys, mem, rag, histEff];
+    let html = '', used = 0;
+    segs.forEach((v, i) => {
+      const w = Math.max(0, Math.min(v, W - used)) / W * 100; used += v;
+      if (w > 0) html += `<i style="display:block;width:${w}%;background:${segColors[i]}" title="${segNames[i]} ${v}t"></i>`;
+    });
+    $('ce-bar').innerHTML = html;
+    $('ce-legend').textContent = segNames.map((n, i) => n + ' ' + segs[i] + 't').join(' · ') + (F > W ? '　⚠ 固定部分已超窗' : '');
+    $('ce-facts').innerHTML = FACTS.map((f, i) => `<div class="ag-e${facts[i][0] === '✓' ? ' act' : ''}"><b>${facts[i][0]}</b>${f.t}<span style="color:var(--ink-3)">　${facts[i][1]}</span></div>`).join('');
+    $('ce-need').textContent = need; $('ce-win').textContent = W; $('ce-note').textContent = note;
+  }
+  const setW = (w, on, off) => { W = w; $(on).classList.add('on'); $(off).classList.remove('on'); draw(true); };
+  $('ce-w8').addEventListener('click', () => setW(8192, 'ce-w8', 'ce-w32'));
+  $('ce-w32').addEventListener('click', () => setW(32768, 'ce-w32', 'ce-w8'));
+  const setMode = m => { mode = m; ['ce-slide', 'ce-sum', 'ce-ext'].forEach(id => $(id).classList.toggle('on', id === 'ce-' + m)); draw(); };
+  $('ce-slide').addEventListener('click', () => setMode('slide'));
+  $('ce-sum').addEventListener('click', () => setMode('sum'));
+  $('ce-ext').addEventListener('click', () => setMode('ext'));
+  $('ce-re').addEventListener('click', () => draw());
+  ['ce-sys', 'ce-mem', 'ce-rag', 'ce-hist', 'ce-rate'].forEach(id => $(id).addEventListener('input', () => draw(true)));
+  draw(true);
+})();
+
+/* ============ 🔬 编排剧场 · 多智能体（v0.29，照 LAB-SPECS S12 施工） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('oc-log')) return;
+  const estTok = s => { let c = 0, o = 0; for (const ch of s) (ch >= '一' && ch <= '鿿') ? c++ : o++; return c + Math.ceil(o / 4); };
+  /* 剧本（预写，页内已声明）：w=谁 t=消息 act=行动步 warn=错误相关 */
+  const SC = {
+    a: { ok: [
+      ['Agent', '任务：审《服务合作合同》违约金条款，结论发张律师。先检索原文。'],
+      ['工具', 'searchContracts("违约金") → 第六条：违约金为合同总额的百分之十。原文段落随结果回填进我的上下文。', 1],
+      ['Agent', '交叉核对：第二条单集八千元 × 项目清单，总额与 10% 违约金量级自洽。'],
+      ['工具', 'sendMail(张律师, "违约金上限 = 合同总额 10%，与费用条款一致") → 已发送。', 1],
+      ['Agent', '完成。全程一个上下文：原文、核对、结论都在同一箱行李里。'],
+    ], err: [
+      ['Agent', '任务：审违约金条款，结论发张律师。先检索原文。'],
+      ['工具', '⚠ 检索摘取时把「百分之十」误作「百分之一」（注入的错误）——但原文段落照常回填。', 1, 1],
+      ['Agent', '交叉核对：结论 1% 与上下文里的原文「百分之十」对不上——发现矛盾，改回 10%。（自纠有机会：原件在我手里）'],
+      ['工具', 'sendMail(张律师, "违约金上限 = 10%") → 已发送，结论正确。', 1],
+      ['Agent', '完成。'],
+    ] },
+    b: { ok: [
+      ['检索员 A', 'searchContracts 完成。给 B 交摘要：「违约金 = 总额 10%」。（只交摘要不交原件——交接处上下文重建）', 1],
+      ['分析员 B', '我只知道 A 告诉我的。基于摘要起草结论：上限 10%。'],
+      ['文书员 C', '收到 B 的结论，准备邮件。'],
+      ['工具', 'sendMail(张律师) → 已发送。', 1],
+      ['—', '完成。账单 = 三份独立上下文 + 两次交接。'],
+    ], err: [
+      ['检索员 A', '⚠ 摘要笔误写成「1%」（注入的错误）；原件没有随摘要交接。', 1, 1],
+      ['分析员 B', '我手里只有摘要，无从核对——按 1% 起草结论。'],
+      ['文书员 C', '收到结论，准备邮件。'],
+      ['工具', '⚠ sendMail → 错误结论已抵达张律师邮箱，全程无人发现。', 1, 1],
+      ['—', '完成（带着错）。上游一个字，下游一封信。'],
+    ] },
+    c: { ok: [
+      ['主控', '拆解：①检索 ②分析 ③发送。派 worker-1 检索，要求附原文引文。'],
+      ['worker-1', '检索完成，汇报：摘要「10%」+ 原文引文。', 1],
+      ['主控', '验收①：摘要与引文一致 ✓。派 worker-2 分析。'],
+      ['worker-2', '结论：上限 = 总额 10%，汇报。'],
+      ['主控', '验收②：结论与引文一致 ✓。派 worker-3 发送。'],
+      ['worker-3', 'sendMail(张律师) → 已发送，汇报。', 1],
+      ['主控', '汇总归档。最稳，也最贵：每次分派与汇报都是完整往返。'],
+    ], err: [
+      ['主控', '拆解任务。派 worker-1 检索，要求附原文引文。'],
+      ['worker-1', '⚠ 汇报摘要写成「1%」（注入的错误），但按要求附了原文引文「百分之十」。', 1, 1],
+      ['主控', '验收①：摘要与引文不符——退回重查。（拦截靠的是「要求附原件」这条制度）'],
+      ['worker-1', '复查更正：10%。重新汇报。', 1],
+      ['主控', '验收通过。派 worker-2 分析 → 结论 10%；验收②通过；派 worker-3。'],
+      ['worker-3', 'sendMail → 已发送，结论正确。汇报。', 1],
+      ['主控', '汇总归档。错被拦下了——代价是步数与账单最高。'],
+    ] },
+  };
+  let topo = 'a', pos = 0, tok = 0;
+  const script = () => SC[topo][$('oc-err').checked ? 'err' : 'ok'];
+  const total = s => s.reduce((a, st) => a + estTok(st[1]), 0);
+  function reset() {
+    pos = 0; tok = 0;
+    $('oc-log').innerHTML = ''; $('oc-step').textContent = '0'; $('oc-tok').textContent = '0'; $('oc-note').textContent = '';
+  }
+  function step() {
+    const sc = script();
+    if (pos >= sc.length) return;
+    const [w, t, act] = sc[pos];
+    tok += estTok(t); pos++;
+    $('oc-log').insertAdjacentHTML('beforeend', `<div class="ag-e${act ? ' act' : ''}"><b>${w}</b>${t}</div>`);
+    $('oc-step').textContent = pos; $('oc-tok').textContent = tok;
+    if (pos >= sc.length) {
+      const base = total(SC.a[$('oc-err').checked ? 'err' : 'ok']);
+      $('oc-note').textContent = topo === 'a' ? '（单体即基线）' : `单体同任务 ≈ ${base}t，本拓扑 ×${(tok / base).toFixed(1)}`;
+    }
+  }
+  const setTopo = k => { topo = k; ['a', 'b', 'c'].forEach(x => $('oc-' + x).classList.toggle('on', x === k)); reset(); };
+  $('oc-a').addEventListener('click', () => setTopo('a'));
+  $('oc-b').addEventListener('click', () => setTopo('b'));
+  $('oc-c').addEventListener('click', () => setTopo('c'));
+  $('oc-next').addEventListener('click', step);
+  $('oc-re').addEventListener('click', reset);
+  $('oc-err').addEventListener('change', reset);
 })();
 
 /* ============ 🗼 系统全景导航仪（v0.26，接替 v0.19 图文联动） ============
