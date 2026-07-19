@@ -388,7 +388,7 @@
 
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.29.1 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.30 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
@@ -698,6 +698,11 @@
       <!-- 质检回炉：评估不过关退回微调 -->
       <polyline points="374,876 374,918 611,918 611,878" fill="none" stroke="var(--p1)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr1)" opacity="0.75"/>
       <text x="492" y="938" font-size="12" text-anchor="middle" class="dim3">评估不过关 → 回炉微调</text>
+      <!-- 扩建芯片（v0.30 路线二）：合成数据挂语料库旁、可验证RL挂RLHF下，皆可点直达 -->
+      <g font-size="9.5" class="mono">
+        <g class="pt" data-go="sy-bars"><rect x="44" y="822" width="64" height="18" rx="4" fill="none" stroke="var(--p1)" stroke-width="1"/><text x="76" y="835" text-anchor="middle" class="dim2">合成数据</text></g>
+        <g class="pt" data-go="rv-dist"><rect x="471" y="884" width="64" height="18" rx="4" fill="none" stroke="var(--p1)" stroke-width="1"/><text x="503" y="897" text-anchor="middle" class="dim2">可验证RL</text></g>
+      </g>
     </g>
 
     <!-- ════ 0 硬件基座（地基） ════ -->
@@ -785,6 +790,38 @@
         </div>
 
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p>著作权（NYT v. OpenAI 案系）、公开个人信息的处理边界（PIPL 27 条）、欧盟 TDM 例外与 opt-out——全部埋在这一格。<span class="ref">详见索引地图 L1「数据采集」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>人写的数据快见底了——另一条供料线 ▼</span></div>
+
+    <details class="mod" id="mod-syn">
+      <summary><span class="m-caret">▶</span><span class="m-name">合成数据与蒸馏</span><span class="m-en">SYNTHETIC DATA · DISTILLATION · 🔬 LAB</span><span class="m-shape">教师模型 → 生成语料 → 学生模型</span></summary>
+      <div class="m-body">
+        <p>人写的高质量文本是有限的，而模型的胃口按数量级增长——这就是「数据墙」。下半场的答案是让模型自己造粮：<b>合成数据</b>（强模型批量生成教材式文本、题目与解答，喂给下一代）与<b>蒸馏</b>（学生模型直接学教师模型的输出——不只学答案，还可以学整条思维链）。公开配方里的教科书案例：DeepSeek-R1 用强化学习练出的大模型生成约 80 万条推理样本，蒸馏进小模型——小模型不跑强化学习也长出思考能力（据其论文）。</p>
+        <p class="dim">两道阴影：①<b>近亲繁殖</b>——模型反复吃自己产出的数据，分布会尖峰化、长尾表达逐代灭绝（model collapse，有公开论文实证；下面实验室亲手演）；②配比问题回归——合成数据占多少，是新的「配方即能力」。蒸馏还有一条法律灰区（服务条款禁止蒸馏 vs 业界实际盛行）——技术侧先讲清，合规侧冻结待另立项目。</p>
+        <div class="forks"><span class="flab">分叉 · 造数据的路线</span>
+          <button class="fk on" data-v="a">教材式合成 ✓</button>
+          <button class="fk" data-v="b">思维链蒸馏 ✓</button>
+          <button class="fk" data-v="c">自我博弈</button>
+        </div>
+        <div class="fkb on" data-v="a">强模型按主题批量写「教科书级」文本再喂给下一代（Phi 系列公开路线，据其论文）。干净、可控、可定向补短板；上限受教师能力约束——学生很难超过教材的作者。</div>
+        <div class="fkb" data-v="b">教师生成带完整推理过程的样本，学生用普通 SFT 学习（R1 → 各尺寸小模型的路线）。便宜高效、效果惊人；但学生学到的是「思考的轨迹」而非「探索的能力」——照着棋谱学棋，没下过真对局。</div>
+        <div class="fkb" data-v="c">模型自己出题、自己解、机器判卷后把对的收进语料，闭环自我改进（与下一格「可验证奖励」互为咬合齿轮）。理论上限最高；最依赖可验证域——判不了对错的领域闭环转不起来。</div>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 近亲繁殖模拟器<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">20 种「表达方式」的分布（含长尾）。每传一代 = 模型吃自己的产出再吐出来（真重采样）。看熵掉、长尾灭绝——再拖「真人数据混入」看工程解法。</p>
+          <div class="lab-ctrls">
+            <button type="button" class="fk" id="sy-step">传一代</button>
+            <button type="button" class="fk" id="sy-10">连传 10 代</button>
+            <button type="button" class="fk" id="sy-reset">↻ 重置</button>
+            <label>真人数据混入 <output id="sy-mix-o">0</output>% <input type="range" id="sy-mix" min="0" max="50" step="5" value="0"></label>
+          </div>
+          <div id="sy-bars" style="display:flex;align-items:flex-end;gap:2px;height:110px;padding:6px 4px;background:var(--surface);border:1px solid var(--hairline);border-radius:4px"></div>
+          <div class="tp-stats"><span>第 <b id="sy-gen">0</b> 代</span><span>多样性（熵）<b id="sy-ent">—</b> bit</span><span>已灭绝表达 <b id="sy-dead">0</b>/20</span><span id="sy-note" style="color:var(--ink-3)"></span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>重采样（每代 N=400 次多项式抽样）与熵 <code>H = −Σ p·log₂p</code> 为实算；20 桶是「表达方式」的抽象、轻度锐化（^1.1，模拟模型偏好高频）为教学设定。机制与 model collapse 公开论文（递归诅咒）同族，量化细节为教学版。两个自查：混入 0% 连传十代，熵明显下降、长尾逐个归零；混入 40% 再传，熵稳住——<b>坍缩不是宿命，是配比问题</b>。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p class="dim">挂点预留（合规层冻结中，2026-07-18 起另行规划）。</p></div>
       </div>
     </details>
     <div class="wire"><span>原始文本 ▼</span></div>
@@ -972,6 +1009,39 @@
         </div>
 
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p>「模型应当持有什么价值观」在此写进损失函数——《生成式AI暂行办法》第 4 条的技术落点，法律离算法最近的一格。上面实验室里你的八次点击，就是这个法定要求在微观处的样子。<span class="ref">索引地图 L3「RLHF」</span></p></div>
+      </div>
+    </details>
+    <div class="wire"><span>品味给分之外——奖励的新来源 ▼</span></div>
+
+    <details class="mod" id="mod-rlvr">
+      <summary><span class="m-caret">▶</span><span class="m-name">可验证奖励与推理训练</span><span class="m-en">RLVR · REASONING RL · 🔬 LAB</span><span class="m-shape">奖励来源：人类品味 → 机器判卷</span></summary>
+      <div class="m-body">
+        <p>上一格 RLHF 的奖励来自<b>学出来的品味打分器</b>——它天生可被讨好（你在那格实验室亲手见过「空洞奉承」骗高分）。新范式换了奖励来源：挑<b>答案能被机器判对错的任务</b>——数学对答案、代码跑测试、逻辑可形式验证。奖励从「品味」变成「判卷」：<b>不可讨好、不知疲倦、可以无限出题刷题</b>。模型在这种强化循环里自己长出长思维链——先想后答、自我检查、走回头路——这就是「推理模型」（o1 / R1 一类）训练侧的故事，与 Ⅲ 平面「测试时算力」互为一体两面：训练侧教会思考，推理侧买时间思考。</p>
+        <p class="dim">两个直接推论：①为什么数学和代码<b>先</b>突破——因为只有它们有便宜的判卷机；法律意见、文书这类「好坏难机判」的领域，红利来得慢、且多靠从可验证域<b>迁移</b>过来的思考习惯。②判卷机也有缝：奖励黑客换了形式——钻测试用例的空子（硬编码骗过测试）、答案对而过程错。奖励设计永远是攻防。</p>
+        <div class="forks"><span class="flab">分叉 · 奖励从哪来</span>
+          <button class="fk" data-v="a">RLHF 品味打分器</button>
+          <button class="fk on" data-v="b">RLVR 可验证奖励 ✓</button>
+          <button class="fk" data-v="c">过程奖励与混合</button>
+        </div>
+        <div class="fkb" data-v="a">人类偏好训练的 reward model（上一格）。通用——任何领域都能比较好坏；代价是可被讨好、带标注者品味偏差。仍是对话质量对齐的主力。</div>
+        <div class="fkb on" data-v="b">规则判卷：答案匹配 / 测试通过 / 形式验证。不可讨好、可大规模自动出题；只覆盖可验证域。DeepSeek-R1 公开论文展示了「几乎纯 RLVR 也能长出推理」的路线（据其论文）。</div>
+        <div class="fkb" data-v="c">过程奖励模型（给每一步推理打分而非只看结果）、AI 判官（用模型判模型）、以及各家保密的混合配方——目标是把可验证域学到的思考习惯泛化到判不了卷的领域（据公开论文与报道，配方细节外界不可知）。</div>
+        <div class="lab">
+          <div class="lab-head">🔬 实验室 · 判卷机 vs 品味机<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">同一道题（37×24 = ?）、四种作答风格、一个真策略梯度循环。选一种奖励机制按「训练」，看策略分布往哪边漂——<b>奖励函数决定模型长成什么样</b>。</p>
+          <div class="lab-ctrls">
+            <button type="button" class="fk on" id="rv-taste">品味机（打分器）</button>
+            <button type="button" class="fk" id="rv-grade">判卷机（对答案）</button>
+            <button type="button" class="fk" id="rv-step">训练一轮</button>
+            <button type="button" class="fk" id="rv-10">训练 10 轮</button>
+            <button type="button" class="fk" id="rv-reset">↻ 重置</button>
+          </div>
+          <div class="ag-log" id="rv-dist"></div>
+          <div class="tp-stats"><span>第 <b id="rv-round">0</b> 轮</span><span>当前占优 <b id="rv-top">—</b></span><span id="rv-note" style="color:var(--ink-3)"></span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>策略更新为真算法（<code>p = softmax(θ)</code>，每轮 <code>θ_i += lr·p_i·(r_i − r̄)</code>——期望形式的策略梯度，免抽样噪声的教学版）；品味机打分 <code>r = 3·长度 + 3·自信 + 4·格式</code> 为教学构造的真算式（要点在「它看不见对错」，真实打分器的弱点同构）；判卷机 = 答案匹配 ×10。四种作答为预置样本非真模型生成。自查：品味机训十轮，冠军是「格式华丽但答案错」——reward hacking 实锤；换判卷机重置再训，冠军变成答案正确的风格。</div>
+        </div>
+
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p class="dim">挂点预留（合规层冻结中，2026-07-18 起另行规划）。</p></div>
       </div>
     </details>
     <div class="wire"><span>对齐后的模型 ▼</span></div>
@@ -2179,15 +2249,15 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
       <div class="lg" style="border-color:var(--p6)"><b>✅ 具身智能与机器人 → 已建（v0.24）</b>PLANE Ⅵ 新模块「具身智能与 VLA」：三分叉（端到端/分层/仿真优先）、数据瓶颈与频率鸿沟、机械臂追点实验室、产品责任朱批。</div>
       <div class="lg" style="border-color:var(--p6)"><b>✅ 世界模型 → 已建（v0.24）</b>PLANE Ⅵ 新模块「世界模型」：三分叉（视频顺带学/潜空间预测/混合引擎）、误差复利命门、弹球预言家实验室、归责朱批。</div>
       <div class="lg" style="border-color:var(--p4)"><b>✅ Agent 系统学 → 已建（v0.28–v0.29）</b>Ⅳ 平面扩建三模块：工具协议（#mod-proto，报文显微镜）、上下文工程（#mod-ctxeng，预算沙盘）、多智能体编排（#mod-orch，编排剧场）。沙箱与权限并入现有「护栏」与「Agent 循环」表述，未单开模块。</div>
-      <div class="lg" style="border-style:dashed"><b>⏳ RL 新范式：可验证奖励与推理模型训练侧（登记 2026-07-18，未建）</b>RLVR、长思维链怎么练出来、为何数学/代码先突破、奖励黑客。挂点：Ⅰ 平面「偏好优化」旁新模块（与 Ⅲ「测试时算力」互为训练/推理两面）。</div>
-      <div class="lg" style="border-style:dashed"><b>⏳ 合成数据与蒸馏（登记 2026-07-18，未建）</b>数据墙、教师-学生、蒸馏与数据配比的下半场。挂点：Ⅰ 平面「语料池与配比」旁新模块。</div>
-      <div class="lg" style="border-style:dashed"><b>登记簿现状：首批八项已全部落地（各条 ✅ 注明去处）；2026-07-18 重心转向技术深化后新登记三项（⏳），按用户排期扩建。</b>本清单永久开放——发现新空白（如脑机接口、群体智能）随时登记；它不是待办清单，是这张蓝图的抗震制度。</div>
+      <div class="lg" style="border-color:var(--p1)"><b>✅ RL 新范式 → 已建（v0.30）</b>Ⅰ 平面新模块「可验证奖励与推理训练」（#mod-rlvr）：奖励从品味到判卷、为何数学/代码先突破、判卷机 vs 品味机实验室（真策略梯度看 reward hacking）。</div>
+      <div class="lg" style="border-color:var(--p1)"><b>✅ 合成数据与蒸馏 → 已建（v0.30）</b>Ⅰ 平面新模块（#mod-syn）：数据墙、三分叉（教材式/思维链蒸馏/自我博弈）、近亲繁殖模拟器实验室（真重采样看分布坍缩与真人数据托底）。</div>
+      <div class="lg" style="border-style:dashed"><b>登记簿现状：先后登记的十一项已全部落地（各条 ✅ 注明去处）——路线二「新版图」三项于 2026-07-18/19 两日建成。</b>本清单永久开放——发现新空白（如脑机接口、群体智能）随时登记；它不是待办清单，是这张蓝图的抗震制度。</div>
     </div>
   </section>
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.29.1 · 2026-07-18。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.30 · 2026-07-19。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
       分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
     </div>
@@ -4396,6 +4466,89 @@ function paintScene(cv, fine) {
   $('oc-next').addEventListener('click', step);
   $('oc-re').addEventListener('click', reset);
   $('oc-err').addEventListener('change', reset);
+})();
+
+/* ============ 🔬 近亲繁殖模拟器 · 合成数据（v0.30，照 LAB-SPECS S14 施工） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('sy-bars')) return;
+  /* 20 种「表达方式」的初始分布（含长尾）——归一化后作 p0 */
+  const RAW = [10, 9, 8, 7, 6, 5, 4, 3, 3, 2, 2, 2, 1.5, 1.5, 1, 1, 1, 0.8, 0.6, 0.4];
+  const sum = a => a.reduce((x, y) => x + y, 0);
+  const P0 = RAW.map(v => v / sum(RAW));
+  let p, gen, seed;
+  const rnd = () => { seed = (seed * 1103515245 + 12345) >>> 0; return (seed >>> 16) / 32768; };
+  function reset() { p = P0.slice(); gen = 0; seed = 42; draw(); }
+  function step() {
+    /* 一代 = 从当前分布多项式抽 N 次（模型吃自己的产出）+ 轻度锐化（偏好高频，教学设定）+ 按滑杆混入真人分布 */
+    const N = 400, counts = new Array(20).fill(0);
+    const cum = []; let c = 0;
+    p.forEach(v => { c += v; cum.push(c); });
+    for (let i = 0; i < N; i++) { const r = rnd(); counts[cum.findIndex(cv => r <= cv)]++; }
+    let q = counts.map(v => Math.pow(v / N, 1.1));
+    const qs = sum(q); q = q.map(v => qs > 0 ? v / qs : 0);
+    const m = +$('sy-mix').value / 100;
+    p = q.map((v, i) => (1 - m) * v + m * P0[i]);
+    const ps = sum(p); p = p.map(v => v / ps);
+    gen++; draw();
+  }
+  function draw() {
+    $('sy-mix-o').textContent = $('sy-mix').value;
+    const mx = Math.max(...p, 0.001);
+    $('sy-bars').innerHTML = p.map(v =>
+      `<i style="flex:1;display:block;height:${Math.max(1, v / mx * 100)}%;background:color-mix(in srgb, var(--p1) ${v < 0.001 ? 8 : 55}%, transparent);border-radius:2px 2px 0 0" title="${(v * 100).toFixed(1)}%"></i>`).join('');
+    const H = -p.reduce((a, v) => a + (v > 0 ? v * Math.log2(v) : 0), 0);
+    const dead = p.filter(v => v < 0.001).length;
+    $('sy-gen').textContent = gen; $('sy-ent').textContent = H.toFixed(2); $('sy-dead').textContent = dead;
+    $('sy-note').textContent = gen === 0 ? '初始：多样且有长尾' : (dead >= 8 ? '长尾大面积灭绝——分布已尖峰化' : (+$('sy-mix').value >= 30 && gen >= 5 ? '真人数据在托底' : ''));
+  }
+  $('sy-step').addEventListener('click', step);
+  $('sy-10').addEventListener('click', () => { for (let i = 0; i < 10; i++) step(); });
+  $('sy-reset').addEventListener('click', reset);
+  $('sy-mix').addEventListener('input', draw);
+  reset();
+})();
+
+/* ============ 🔬 判卷机 vs 品味机 · 可验证奖励（v0.30，照 LAB-SPECS S13 施工） ============ */
+(function () {
+  const $ = id => document.getElementById(id);
+  if (!$('rv-dist')) return;
+  /* 四种作答风格（预置样本）：特征值为教学构造；37×24 = 888 */
+  const S = [
+    { n: 'A · 简短正确', ex: '「= 888。」', len: 0.1, conf: 0.2, fmt: 0.2, ok: 1 },
+    { n: 'B · 冗长自信但答案错', ex: '「这题非常简单，我百分百确定，经严谨计算答案是 902。」', len: 0.9, conf: 1.0, fmt: 0.3, ok: 0 },
+    { n: 'C · 格式华丽但答案错', ex: '「【解题报告】步骤一…步骤二…∴ 答案 = 868 ✅」', len: 0.7, conf: 0.6, fmt: 1.0, ok: 0 },
+    { n: 'D · 步骤真实且正确', ex: '「37×24 = 37×20 + 37×4 = 740 + 148 = 888」', len: 0.5, conf: 0.4, fmt: 0.6, ok: 1 },
+  ];
+  let th, round, mode = 'taste';
+  const reward = s => mode === 'taste' ? 3 * s.len + 3 * s.conf + 4 * s.fmt : s.ok * 10;
+  const softmax = t => { const m = Math.max(...t); const e = t.map(v => Math.exp(v - m)); const z = e.reduce((a, b) => a + b, 0); return e.map(v => v / z); };
+  function reset() { th = [0, 0, 0, 0]; round = 0; draw(); }
+  function step() {
+    /* 期望形式的策略梯度（教学版）：θ_i += lr · p_i · (r_i − r̄) */
+    const p = softmax(th), r = S.map(reward), rb = p.reduce((a, v, i) => a + v * r[i], 0);
+    for (let i = 0; i < 4; i++) th[i] += 0.35 * p[i] * (r[i] - rb);
+    round++; draw();
+  }
+  function draw() {
+    const p = softmax(th), r = S.map(reward);
+    $('rv-dist').innerHTML = S.map((s, i) =>
+      `<div class="ag-e${s.ok ? ' act' : ''}"><b>${s.n}</b>${s.ex}<span style="color:var(--ink-3)">　奖励 ${r[i].toFixed(1)}</span>
+        <div style="height:8px;background:var(--surface-2);border-radius:4px;margin-top:5px;overflow:hidden"><i style="display:block;height:100%;width:${(p[i] * 100).toFixed(1)}%;background:color-mix(in srgb, var(--p1) 55%, transparent)"></i></div>
+        <span style="font-family:var(--mono);font-size:10.5px;color:var(--ink-2)">p = ${(p[i] * 100).toFixed(1)}%</span></div>`).join('');
+    const top = p.indexOf(Math.max(...p));
+    $('rv-round').textContent = round; $('rv-top').textContent = round === 0 ? '—' : S[top].n.slice(0, 1);
+    $('rv-note').textContent = round === 0 ? '' :
+      (mode === 'taste' && top === 2 ? '训出了「装模作样」——reward hacking 实锤' :
+       mode === 'grade' && S[top].ok ? '训出了「真会算」' : '');
+  }
+  const setMode = m => { mode = m; $('rv-taste').classList.toggle('on', m === 'taste'); $('rv-grade').classList.toggle('on', m === 'grade'); reset(); };
+  $('rv-taste').addEventListener('click', () => setMode('taste'));
+  $('rv-grade').addEventListener('click', () => setMode('grade'));
+  $('rv-step').addEventListener('click', step);
+  $('rv-10').addEventListener('click', () => { for (let i = 0; i < 10; i++) step(); });
+  $('rv-reset').addEventListener('click', reset);
+  reset();
 })();
 
 /* ============ 🗼 系统全景导航仪（v0.26，接替 v0.19 图文联动） ============
