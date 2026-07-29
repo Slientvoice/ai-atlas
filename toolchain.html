@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工业现场 · LLM 开发工具链版图</title>
+<style>
+  /* ===== 🏗️ 工业现场（活页，现场 v1 · 盘点基准日 2026-07-29）=====
+     定位：蓝图讲解剖学（器官与数据流），本页讲工地（同一条生产线上业界实际在用的工具）。
+     活页机制同谱系页：盘点基准日 + 独立版本号 + 过期整页换新，不动主线版本。
+     衔接机制：同一坐标系（七平面色 R3 复用）+ 每个工具回链蓝图讲它原理的模块锚点。
+     收录标准：只收「业界当下实际大规模在用」的——这是导航不是名录（地图不是台账）。 */
+
+  /* ===== 风格令牌 v2「克制工程风」（照抄全站 :root 三段式） ===== */
+  :root {
+    --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
+    --ink: #16181d; --ink-2: #4b5158; --ink-3: #858b93;
+    --hairline: #e1e4e8; --seal: #b0392e;
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
+    --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
+    --shadow: 0 2px 10px rgba(22,24,29,0.07);
+    --dot: rgba(22,24,29,0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page: #0f1114; --surface: #16181c; --surface-2: #1d2024; --ink: #e8eaed; --ink-2: #b0b4ba;
+      --ink-3: #7d828a; --hairline: #262a2f; --seal: #e0705e; --shadow: 0 2px 10px rgba(0,0,0,0.4);
+      --dot: rgba(232,234,237,0.055);
+      --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
+  }
+  :root[data-theme="dark"] { --page: #0f1114; --surface: #16181c; --surface-2: #1d2024; --ink: #e8eaed;
+    --ink-2: #b0b4ba; --ink-3: #7d828a; --hairline: #262a2f; --seal: #e0705e; --shadow: 0 2px 10px rgba(0,0,0,0.4);
+    --dot: rgba(232,234,237,0.055);
+    --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
+  :root[data-theme="light"] { --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3; --ink: #16181d;
+    --ink-2: #4b5158; --ink-3: #858b93; --hairline: #e1e4e8; --seal: #b0392e; --shadow: 0 2px 10px rgba(22,24,29,0.07);
+    --dot: rgba(22,24,29,0.05);
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--page); color: var(--ink); font-family: var(--sans); line-height: 1.75; font-size: 15px;
+    -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  code { font-family: var(--mono); font-size: 0.92em; }
+
+  header { padding: 44px 0 22px; border-bottom: 1px solid var(--hairline);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px); background-size: 22px 22px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; color: var(--ink-3); }
+  .eyebrow b { color: var(--ink-2); font-weight: 700; }
+  .eyebrow a { color: var(--ink-3); text-decoration: none; }
+  .eyebrow a:hover, .eyebrow a:focus-visible { color: var(--ink); outline: none; }
+  h1 { font-size: clamp(30px, 5vw, 44px); margin: 10px 0 6px; letter-spacing: 0.005em; }
+  .sub { color: var(--ink-2); max-width: 46em; margin: 0; }
+  .sub b { color: var(--ink); }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .meta i { font-style: normal; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em;
+    color: var(--ink-2); background: var(--surface); border: 1px solid var(--hairline); border-radius: 4px; padding: 3px 9px; }
+  .meta i.hot { color: var(--seal); border-color: color-mix(in srgb, var(--seal) 45%, var(--hairline)); }
+
+  /* 生产线总览图 */
+  .lineview { margin: 22px 0 4px; overflow-x: auto; background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 6px;
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px); background-size: 18px 18px; }
+  .lineview svg { display: block; min-width: 900px; width: 100%; height: auto; }
+  .chip { cursor: pointer; }
+  .chip rect { transition: stroke 0.14s; }
+  .chip:hover rect, .chip:focus-visible rect { stroke: var(--ink-2); }
+  .beltdash { stroke-dasharray: 4 8; animation: flow 2.6s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -12; } }
+  @media (prefers-reduced-motion: reduce) { .beltdash { animation: none; } }
+
+  .notice { margin-top: 22px; border: 1px dashed var(--p4); border-radius: 6px; background: var(--surface);
+    padding: 12px 16px; font-size: 13px; color: var(--ink-2); }
+  .notice b { color: var(--ink); }
+  .notice p { margin: 4px 0; }
+
+  /* 工位分区 */
+  section.st { margin-top: 40px; }
+  section.st h2 { font-size: 19px; margin: 0 0 4px; border-left: 3px solid var(--tc, var(--hairline)); padding-left: 12px; }
+  section.st h2 .stc { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--tc, var(--ink-3));
+    font-weight: 700; margin-right: 8px; vertical-align: 2px; }
+  .stageintro { color: var(--ink-2); font-size: 14px; max-width: 46em; margin: 6px 0 14px; padding-left: 15px; }
+  .stageintro a { color: var(--tc); text-decoration: none; border-bottom: 1px dashed color-mix(in srgb, var(--tc) 55%, transparent); }
+  .stageintro a:hover, .stageintro a:focus-visible { border-bottom-style: solid; outline: none; }
+
+  .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 760px) { .tools { grid-template-columns: 1fr; } }
+  .tool { background: var(--surface); border: 1px solid var(--hairline); border-left: 2px solid var(--tc, var(--hairline));
+    border-radius: 6px; padding: 12px 15px 13px; }
+  .tool.flash { animation: toolflash 1.6s ease-out; }
+  @keyframes toolflash { 0% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--tc) 60%, transparent); }
+    100% { box-shadow: 0 0 0 3px transparent; } }
+  @media (prefers-reduced-motion: reduce) { .tool.flash { animation: none; border-color: var(--tc); } }
+  .tool .th { display: flex; align-items: baseline; gap: 9px; }
+  .tool .th code { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .tool .role { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--tc); font-weight: 700; }
+  .tool .src { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--ink-3); cursor: help; }
+  .tool p { margin: 5px 0 0; font-size: 13.5px; color: var(--ink-2); }
+  .tool p b { color: var(--ink); }
+  .tool .map { font-size: 12.5px; color: var(--ink-3); margin-top: 8px; border-top: 1px dashed var(--hairline); padding-top: 7px; }
+  .tool .map a { color: var(--tc); text-decoration: none; border-bottom: 1px dashed color-mix(in srgb, var(--tc) 55%, transparent); }
+  .tool .map a:hover, .tool .map a:focus-visible { border-bottom-style: solid; outline: none; }
+
+  footer { border-top: 1px solid var(--hairline); margin-top: 52px; padding: 22px 0 60px; color: var(--ink-3); font-size: 13px; }
+  footer .sn { color: var(--seal); }
+  footer .refs { font-size: 12px; margin-top: 10px; }
+  footer .refs a { color: var(--ink-3); }
+  .build { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-3); margin-top: 14px;
+    border-top: 1px dashed var(--hairline); padding-top: 12px; }
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow"><b>AI-ATLAS</b> // LOOSE-LEAF · 活页 · <a href="index.html">← 门户</a> · <a href="blueprint.html">📐 蓝图</a></div>
+    <h1>工业现场</h1>
+    <p class="sub">蓝图讲的是<b>解剖学</b>——器官与数据流；这一页讲<b>工地</b>：同一条生产线上，业界此刻实际在用什么工具、它站在哪个工位、解决什么问题。每个工具都回链蓝图里讲它原理的模块——先懂原理，工具名就只是「原理的产品化」。</p>
+    <div class="meta">
+      <i>现场 v1</i><i class="hot">盘点基准日 2026-07-29</i><i>活页 · 过期整页换新</i><i>独立于主线版本号</i>
+    </div>
+
+    <!-- FIG.T0 生产线总览：六工位 = 七平面在「开发流程」维度上的投影（平面色 R3 复用）。
+         点击工位或工具名直达条目（data-t 跳转，同蓝图 data-go 精神）。 -->
+    <div class="lineview">
+      <svg viewBox="0 0 980 216" role="img" aria-label="LLM 开发生产线总览：地基与内核、训练车间、权重集散地、推理机房、组装车间、质检站六个工位，各挂业界主力工具，点击直达条目">
+        <defs>
+          <marker id="fa" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6.5" orient="auto">
+            <path d="M0 0 L10 4 L0 8 z" fill="var(--ink-3)"/>
+          </marker>
+        </defs>
+        <g font-family="var(--mono)" font-size="8.5" fill="var(--ink-3)" letter-spacing="0.12em">
+          <text x="80" y="42" text-anchor="middle">ST.00</text>
+          <text x="244" y="42" text-anchor="middle">ST.01</text>
+          <text x="408" y="42" text-anchor="middle">ST.02</text>
+          <text x="572" y="42" text-anchor="middle">ST.03</text>
+          <text x="736" y="42" text-anchor="middle">ST.04</text>
+          <text x="900" y="42" text-anchor="middle">ST.QC</text>
+        </g>
+        <!-- 工位箱（可点击跳到分区） -->
+        <g class="chip" data-t="s0" tabindex="0" role="button" aria-label="跳到地基与内核">
+          <rect x="14" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p0) 9%, var(--surface))" stroke="var(--p0)" stroke-width="1.6"/>
+          <text x="80" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">地基与内核</text>
+        </g>
+        <g class="chip" data-t="s1" tabindex="0" role="button" aria-label="跳到训练车间">
+          <rect x="178" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p1) 9%, var(--surface))" stroke="var(--p1)" stroke-width="1.6"/>
+          <text x="244" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">训练车间</text>
+        </g>
+        <g class="chip" data-t="s2" tabindex="0" role="button" aria-label="跳到权重集散地">
+          <rect x="342" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p2) 9%, var(--surface))" stroke="var(--p2)" stroke-width="1.6"/>
+          <text x="408" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">权重集散地</text>
+        </g>
+        <g class="chip" data-t="s3" tabindex="0" role="button" aria-label="跳到推理机房">
+          <rect x="506" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p3) 9%, var(--surface))" stroke="var(--p3)" stroke-width="1.6"/>
+          <text x="572" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">推理机房</text>
+        </g>
+        <g class="chip" data-t="s4" tabindex="0" role="button" aria-label="跳到组装车间">
+          <rect x="670" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p4) 9%, var(--surface))" stroke="var(--p4)" stroke-width="1.6"/>
+          <text x="736" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">组装车间</text>
+        </g>
+        <g class="chip" data-t="sqc" tabindex="0" role="button" aria-label="跳到质检站">
+          <rect x="834" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p1) 9%, var(--surface))" stroke="var(--p1)" stroke-width="1.6" stroke-dasharray="6 4"/>
+          <text x="900" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">质检站</text>
+        </g>
+        <!-- 工位间流向 -->
+        <g stroke="var(--ink-3)" stroke-width="1.8">
+          <line x1="148" y1="67" x2="172" y2="67" marker-end="url(#fa)"/>
+          <line x1="312" y1="67" x2="336" y2="67" marker-end="url(#fa)"/>
+          <line x1="476" y1="67" x2="500" y2="67" marker-end="url(#fa)"/>
+          <line x1="640" y1="67" x2="664" y2="67" marker-end="url(#fa)"/>
+          <line x1="804" y1="67" x2="828" y2="67" marker-end="url(#fa)"/>
+        </g>
+        <!-- 传送带 -->
+        <line class="beltdash" x1="10" y1="98" x2="970" y2="98" stroke="var(--ink-3)" stroke-width="2" opacity="0.45"/>
+        <!-- 工具芯片（只挂头牌，地图不是台账；点击直达条目） -->
+        <g font-family="var(--mono)" font-size="9.5">
+          <g class="chip" data-t="t-cuda" tabindex="0"><rect x="14" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="80" y="125" text-anchor="middle" fill="var(--ink-2)">CUDA</text></g>
+          <g class="chip" data-t="t-triton" tabindex="0"><rect x="14" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="80" y="149" text-anchor="middle" fill="var(--ink-2)">Triton</text></g>
+          <g class="chip" data-t="t-nccl" tabindex="0"><rect x="14" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="80" y="173" text-anchor="middle" fill="var(--ink-2)">NCCL</text></g>
+          <g class="chip" data-t="t-pytorch" tabindex="0"><rect x="178" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="244" y="125" text-anchor="middle" fill="var(--ink-2)">PyTorch</text></g>
+          <g class="chip" data-t="t-megatron" tabindex="0"><rect x="178" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="244" y="149" text-anchor="middle" fill="var(--ink-2)">Megatron·DeepSpeed</text></g>
+          <g class="chip" data-t="t-trl" tabindex="0"><rect x="178" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="244" y="173" text-anchor="middle" fill="var(--ink-2)">TRL · verl</text></g>
+          <g class="chip" data-t="t-hf" tabindex="0"><rect x="342" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="408" y="125" text-anchor="middle" fill="var(--ink-2)">HuggingFace Hub</text></g>
+          <g class="chip" data-t="t-fmt" tabindex="0"><rect x="342" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="408" y="149" text-anchor="middle" fill="var(--ink-2)">safetensors · GGUF</text></g>
+          <g class="chip" data-t="t-modelscope" tabindex="0"><rect x="342" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="408" y="173" text-anchor="middle" fill="var(--ink-2)">ModelScope 魔搭</text></g>
+          <g class="chip" data-t="t-vllm" tabindex="0"><rect x="506" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="572" y="125" text-anchor="middle" fill="var(--ink-2)">vLLM</text></g>
+          <g class="chip" data-t="t-sglang" tabindex="0"><rect x="506" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="572" y="149" text-anchor="middle" fill="var(--ink-2)">SGLang</text></g>
+          <g class="chip" data-t="t-llamacpp" tabindex="0"><rect x="506" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="572" y="173" text-anchor="middle" fill="var(--ink-2)">llama.cpp · Ollama</text></g>
+          <g class="chip" data-t="t-langgraph" tabindex="0"><rect x="670" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="736" y="125" text-anchor="middle" fill="var(--ink-2)">LangGraph</text></g>
+          <g class="chip" data-t="t-mcp" tabindex="0"><rect x="670" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="736" y="149" text-anchor="middle" fill="var(--ink-2)">MCP</text></g>
+          <g class="chip" data-t="t-llamaindex" tabindex="0"><rect x="670" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="736" y="173" text-anchor="middle" fill="var(--ink-2)">LlamaIndex · Dify</text></g>
+          <g class="chip" data-t="t-harness" tabindex="0"><rect x="834" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="900" y="125" text-anchor="middle" fill="var(--ink-2)">lm-eval · OpenCompass</text></g>
+          <g class="chip" data-t="t-wandb" tabindex="0"><rect x="834" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="900" y="149" text-anchor="middle" fill="var(--ink-2)">W&amp;B</text></g>
+          <g class="chip" data-t="t-arena" tabindex="0"><rect x="834" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="900" y="173" text-anchor="middle" fill="var(--ink-2)">LMArena</text></g>
+        </g>
+        <text x="490" y="203" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--ink-3)" letter-spacing="0.14em">FIG.T0 · PRODUCTION LINE · 点击工位或工具名直达条目 · 示意</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="notice">
+    <p>🏗️ <b>读法与来源</b>：六个工位 = 蓝图七平面在「开发流程」维度上的投影，工位颜色沿用平面色（质检站属 Ⅰ 训练管线的「评估·红队」环节，虚线框示意）。</p>
+    <p><b>来源标注</b>：<code>◉</code> = 盘点日联网核实（官方文档或多方独立报道）；<code>◐</code> = 起草模型训练知识（截止 2026-01），盘点日未逐条复核。全部<span style="color:var(--seal)">未经人工核验（R5）</span>，工具版图变化快，以各家官方文档为准。</p>
+    <p><b>收录标准</b>：只收业界当下实际大规模在用的头部工具，刻意不求全——这是导航，不是名录。朱批挂点预留（合规层冻结中，2026-07-18 起另行规划）。</p>
+  </div>
+
+  <section class="st" id="s0" style="--tc: var(--p0)">
+    <h2><span class="stc">ST.00</span>地基与内核</h2>
+    <p class="stageintro">蓝图 <a href="blueprint.html#pl0">PLANE 0</a> 讲了 GPU 为什么快、内存墙卡在哪；工地上这一层的通用语言是 CUDA——以及绕开手写 CUDA 的新路。</p>
+    <div class="tools">
+      <div class="tool" id="t-cuda">
+        <div class="th"><code>CUDA</code><span class="role">GPU 编程平台</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>NVIDIA 的 GPU 编程语言与运行时——想让 GPU 干活，最终都要有人把计算写成它认识的样子。</p>
+        <p><b>为什么绕不开：</b>十几年生态积累是 NVIDIA 最深的护城河：框架、算子库、驱动全绑在它身上。「买不到卡就寸步难行」说的一半是硬件，另一半就是它。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-gpu">0 · 为什么是 GPU</a> · <a href="blueprint.html#mod-roof">0 · 屋顶线模型</a></p>
+      </div>
+      <div class="tool" id="t-triton">
+        <div class="th"><code>Triton</code><span class="role">内核语言</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>OpenAI 开源的「用 Python 写 GPU 内核」语言；PyTorch 2 的编译器 <code>torch.compile</code> 就用它生成算子。</p>
+        <p><b>为什么重要：</b>把写高性能内核的门槛从「CUDA 专家」降到「熟练 Python」，也是打破 CUDA 独占的关键一环。FlashAttention 这类手工内核正是它的用武之地。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-gpu">0 · 为什么是 GPU</a> · <a href="blueprint.html#mod-attn">Ⅱ · 注意力</a></p>
+      </div>
+      <div class="tool" id="t-nccl">
+        <div class="th"><code>NCCL</code><span class="role">通信库</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>多卡多机之间同步梯度与激活的通信库——蓝图「互联与集群」讲的 AllReduce，工程上就是调它。</p>
+        <p><b>为什么重要：</b>千卡训练的神经系统；它一卡顿，整个集群一起等（这就是互联带宽写进屋顶线的原因）。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-net">0 · 互联与集群</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="st" id="s1" style="--tc: var(--p1)">
+    <h2><span class="stc">ST.01</span>训练车间</h2>
+    <p class="stageintro">对应蓝图 <a href="blueprint.html#pl1">Ⅰ 训练管线</a> 整条传送带。PyTorch 是全部上层建筑的地板；预训练靠并行框架把模型切上千卡；后训练（SFT / 偏好优化 / RLVR）有自己的一套家伙什。</p>
+    <div class="tools">
+      <div class="tool" id="t-pytorch">
+        <div class="th"><code>PyTorch</code><span class="role">深度学习框架</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>定义模型、自动求导、驱动 GPU 的基础框架——你在「迷你训练场」里手写的反向传播，它帮业界自动做。</p>
+        <p><b>地位：</b>研究与工业的双料默认；Llama、Qwen、DeepSeek 的训练代码都建在它上面（TensorFlow 时代已经过去 ◐）。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-train">Ⅰ · 预训练循环</a> · <a href="blueprint.html#mod-block">Ⅱ · Block 总装</a></p>
+      </div>
+      <div class="tool" id="t-megatron">
+        <div class="th"><code>Megatron-LM</code> + <code>DeepSpeed</code><span class="role">千卡并行</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>把一个装不进单卡的模型切开训练：Megatron-LM（NVIDIA）管张量/流水并行的「切法」，DeepSpeed（微软）的 ZeRO 管显存的「省法」，PyTorch 原生的 FSDP 是后起的官方选项。</p>
+        <p><b>为什么重要：</b>蓝图「互联与集群」讲的 3D 并行不是纸上概念，工程上就是这几家的组合拳。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-net">0 · 互联与集群</a> · <a href="blueprint.html#mod-train">Ⅰ · 预训练循环</a></p>
+      </div>
+      <div class="tool" id="t-trl">
+        <div class="th"><code>TRL</code><span class="role">后训练库</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>Hugging Face 的后训练全家桶：SFT、DPO、PPO、GRPO 一个库全有——业界公认的教科书式参考实现。</p>
+        <p><b>为什么重要：</b>你在蓝图学过的 SFT 损失掩码、偏好优化、可验证奖励，它每一样都有开箱即用的 Trainer。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-sft">Ⅰ · 监督微调 SFT</a> · <a href="blueprint.html#mod-rlvr">Ⅰ · 可验证奖励</a></p>
+      </div>
+      <div class="tool" id="t-verl">
+        <div class="th"><code>verl</code><span class="role">RL 训练框架</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>字节跳动开源的大规模 RL 后训练框架（HybridFlow 论文的开源版）——RLVR 时代训推理模型的主力装备之一，同赛道还有 OpenRLHF。</p>
+        <p><b>为什么重要：</b>RL 训练要同时伺候「生成」（推理引擎）和「更新」（训练框架）两套系统，verl 的本事是把两者高效缝合——rollout 常直接挂 vLLM/SGLang，训练与推理两张版图在这里握手。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-rlvr">Ⅰ · 可验证奖励与推理训练</a></p>
+      </div>
+      <div class="tool" id="t-lf">
+        <div class="th"><code>LLaMA-Factory</code><span class="role">微调工作台</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>一站式微调台：选模型、选方法（LoRA / SFT / DPO…）、点运行——把后训练做成了带界面的流水线。</p>
+        <p><b>为什么重要：</b>中文社区的入门首选；很多「我微调了一个自己的模型」的故事从这里开始。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-sft">Ⅰ · 监督微调 SFT</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="st" id="s2" style="--tc: var(--p2)">
+    <h2><span class="stc">ST.02</span>权重集散地</h2>
+    <p class="stageintro">蓝图里「权重冻结」之后，模型变成一个文件。这一站讲文件住在哪、什么格式、怎么分发——开放权重生态的物流系统。</p>
+    <div class="tools">
+      <div class="tool" id="t-hf">
+        <div class="th"><code>Hugging Face Hub</code><span class="role">模型集散地</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>「模型的 GitHub」：权重、数据集、在线演示都托管在上面，是开放权重生态的地基。</p>
+        <p><b>为什么重要：</b>谱系页讲的开放度阶梯，物流环节全在这里发生——一个模型「开放」与否，最终体现为它在 Hub 上放出了什么。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#pl2">Ⅱ · 模型本体</a> · 延伸：<a href="genealogy.html">🧬 谱系 · 开放度阶梯</a></p>
+      </div>
+      <div class="tool" id="t-transformers">
+        <div class="th"><code>Transformers</code><span class="role">模型加载库</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>Hugging Face 的标准库：Hub 上任何模型都按同一套接口加载、推理、微调——<code>from_pretrained</code> 一行搞定。</p>
+        <p><b>为什么重要：</b>「换模型不换代码」的抽象层。模型架构千变万化，接口只有一个。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-block">Ⅱ · Block 总装</a></p>
+      </div>
+      <div class="tool" id="t-fmt">
+        <div class="th"><code>safetensors</code> &amp; <code>GGUF</code><span class="role">权重文件格式</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>权重的两大文件格式：safetensors（HF 标准，只存数字不藏代码——取代了能夹带恶意代码的 pickle）；GGUF（llama.cpp 生态的格式，一个文件塞下整个量化模型）。</p>
+        <p><b>为什么重要：</b>格式即生态门票——发权重必发 safetensors，进端侧必转 GGUF。附一个安全侧写：pickle 反序列化漏洞曾是模型供应链的真实攻击面。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a></p>
+      </div>
+      <div class="tool" id="t-modelscope">
+        <div class="th"><code>ModelScope 魔搭</code><span class="role">国内集散地</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>阿里的模型社区：国内访问 Hugging Face 不稳时的主镜像与首发地，Qwen 系全量在此。</p>
+        <p><b>为什么重要：</b>网络与合规双重原因，国内工程实践常以它为默认源。</p>
+        <p class="map">延伸阅读：<a href="genealogy.html">🧬 谱系 · 国内梯队</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="st" id="s3" style="--tc: var(--p3)">
+    <h2><span class="stc">ST.03</span>推理机房</h2>
+    <p class="stageintro">对应蓝图 <a href="blueprint.html#pl3">Ⅲ 推理服务</a>。你学过 KV Cache、连续批处理、投机解码、量化——这里的每台引擎，就是同一批概念的不同打包方式。</p>
+    <div class="tools">
+      <div class="tool" id="t-vllm">
+        <div class="th"><code>vLLM</code><span class="role">推理引擎</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>生产级推理引擎的事实标准。它带给全行业两件礼物：PagedAttention（把 KV Cache 当虚拟内存分页管理）和连续批处理。</p>
+        <p><b>地位（2026-07 核实）：</b>硬件支持最广、社区最大；Hugging Face 自家的 TGI 已进维护模式，其推理端点默认改用 vLLM。通用负载选它不会错。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-kv">Ⅲ · KV 缓存</a> · <a href="blueprint.html#mod-pd">Ⅲ · Prefill / Decode</a></p>
+      </div>
+      <div class="tool" id="t-sglang">
+        <div class="th"><code>SGLang</code><span class="role">推理引擎</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>与 vLLM 并驾的另一台发动机：RadixAttention 把多请求间的公共前缀（系统提示词、多轮历史）自动复用，结构化输出（强制 JSON 等）也做得深。</p>
+        <p><b>地位（2026-07 核实）：</b>多轮对话、Agent 循环、RAG 这类「前缀重复率高」的负载上常反超 vLLM——你在论坛看到它，多半就是这些场景；DeepSeek 等模型发布时官方适配。同赛道还有量化见长的 LMDeploy。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-kv">Ⅲ · KV 缓存</a> · <a href="blueprint.html#mod-ctx">Ⅳ · 上下文拼装</a> · <a href="blueprint.html#mod-sample">Ⅲ · 采样</a></p>
+      </div>
+      <div class="tool" id="t-trt">
+        <div class="th"><code>TensorRT-LLM</code><span class="role">推理引擎</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>NVIDIA 亲儿子：把模型编译成榨干自家 GPU 的推理引擎，延迟与吞吐常是天花板。</p>
+        <p><b>取舍：</b>上限最高、门槛也最高——换模型要重编译，是「灵活性换性能」的极端选项。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a> · <a href="blueprint.html#mod-gpu">0 · 为什么是 GPU</a></p>
+      </div>
+      <div class="tool" id="t-llamacpp">
+        <div class="th"><code>llama.cpp</code><span class="role">端侧推理</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>传奇个人开源项目（Georgi Gerganov 发起）：纯 C/C++ 实现，让大模型跑在笔记本、手机甚至树莓派上；GGUF 格式的老家。</p>
+        <p><b>为什么重要：</b>「推理不一定要机房」的证明，整个本地模型生态的地基。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a></p>
+      </div>
+      <div class="tool" id="t-ollama">
+        <div class="th"><code>Ollama</code><span class="role">本地运行器</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>给 llama.cpp 套上极简外壳：<code>ollama run qwen3</code> 一条命令，在自己电脑跑开放权重模型。</p>
+        <p><b>为什么重要：</b>本地跑模型的第一入口；隐私敏感的场景（比如法务文档）想「不出本机」过一遍模型，这是最低门槛的方案。图形界面档还有 LM Studio。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a> · 延伸：<a href="genealogy.html">🧬 谱系 · 开放度阶梯</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="st" id="s4" style="--tc: var(--p4)">
+    <h2><span class="stc">ST.04</span>组装车间</h2>
+    <p class="stageintro">对应蓝图 <a href="blueprint.html#pl4">Ⅳ 系统组装</a>。Agent 循环、RAG、工具协议在蓝图里是概念；工地上，它们叫 LangGraph、LlamaIndex、MCP。</p>
+    <div class="tools">
+      <div class="tool" id="t-langgraph">
+        <div class="th"><code>LangChain / LangGraph</code><span class="role">Agent 编排</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>LangChain 是最早的「LLM 应用乐高」；如今重心已移到 LangGraph——把 Agent 工作流写成显式状态机（图），每一步可查、可控、可回放。</p>
+        <p><b>地位（2026-07 核实）：</b>有状态生产工作流的默认选项，受监管行业尤其偏爱它「每一步都留痕」的性格——这一点你作为法务应该会心一笑。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-orch">Ⅳ · 多智能体编排</a> · <a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a></p>
+      </div>
+      <div class="tool" id="t-mcp">
+        <div class="th"><code>MCP</code><span class="role">工具协议</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>不是库，是协议——你已在蓝图「工具协议」模块学过它的报文。2024-11 由 Anthropic 发布，十八个月内 OpenAI、微软、谷歌、亚马逊全部接入；OpenAI 甚至弃用了自家 Assistants API 转向 MCP 路线。</p>
+        <p><b>为什么重要：</b>「工具接入从 N×M 变 N+M」从提案变成了业界公约数；各家 Agent SDK（Claude Agent SDK、OpenAI Agents SDK 等）原生支持。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-proto">Ⅳ · 工具协议</a>（含报文显微镜实验室）</p>
+      </div>
+      <div class="tool" id="t-llamaindex">
+        <div class="th"><code>LlamaIndex</code><span class="role">RAG 框架</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>RAG 起家的框架：文档解析、切分、索引、检索问答，这条链的纵深业界最深。</p>
+        <p><b>为什么重要：</b>你在 RAG 实验室亲手做过的切分与检索，它是工业化版本——「文档问答为主、Agent 为辅」的应用首选。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-rag">Ⅳ · RAG</a></p>
+      </div>
+      <div class="tool" id="t-dify">
+        <div class="th"><code>Dify</code><span class="role">低代码平台</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>开源低代码 LLM 应用平台：拖拽画布搭 RAG 机器人和工作流，不写代码就能上线。</p>
+        <p><b>为什么重要：</b>「会用 ≠ 会写」的中间地带，国内企业内部工具的常见底座；同赛道还有字节的扣子（Coze）。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a></p>
+      </div>
+      <div class="tool" id="t-obs">
+        <div class="th"><code>Langfuse / LangSmith</code><span class="role">可观测性</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>Agent 的行车记录仪：记录每次调用的完整轨迹——提示词、工具调用、token 数、延迟、成本，出错能回放。</p>
+        <p><b>为什么重要：</b>蓝图讲过多智能体的「协作税」；不装记录仪，生产系统里的错误根本无从归因。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-orch">Ⅳ · 多智能体编排</a>（编排剧场实验室的「日志」就是它的雏形）</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="st" id="sqc" style="--tc: var(--p1)">
+    <h2><span class="stc">ST.QC</span>质检站</h2>
+    <p class="stageintro">对应蓝图 <a href="blueprint.html#mod-eval">Ⅰ · 评估·红队·发布</a>。跑分、盲测、训练心电图——模型出厂前后的一切体检。</p>
+    <div class="tools">
+      <div class="tool" id="t-harness">
+        <div class="th"><code>lm-evaluation-harness</code> &amp; <code>OpenCompass</code><span class="role">跑分器</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>自动评测的两大标准框架：lm-evaluation-harness（EleutherAI，学界通行）与 OpenCompass（上海 AI 实验室，国内体系）——几百个基准一键跑。</p>
+        <p><b>清醒剂：</b>蓝图「评估·红队」讲过基准的局限——工具再顺手，数据污染与刷榜的坑还在（回看污染检测器实验室）。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-eval">Ⅰ · 评估·红队·发布</a></p>
+      </div>
+      <div class="tool" id="t-wandb">
+        <div class="th"><code>Weights &amp; Biases</code><span class="role">训练监控</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>炼丹师的心电图：损失曲线、梯度、显存实时上报到仪表盘，训练跑飞了第一时间看见。</p>
+        <p><b>为什么重要：</b>蓝图预训练循环里那条「损失下降曲线」，工业界就是在它上面盯的；一次千卡训练几百万美元，盯梢就是省钱。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-train">Ⅰ · 预训练循环</a></p>
+      </div>
+      <div class="tool" id="t-arena">
+        <div class="th"><code>LMArena</code><span class="role">人类盲测</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
+        <p>两个匿名模型同题竞答、人类投票选优的天梯榜（原 Chatbot Arena）——Elo 分是业界最难刷的榜。</p>
+        <p><b>清醒剂：</b>自动基准会被污染，人类盲测难作弊——但有偏好偏差：投票者偏爱长答案和漂亮格式，你在 RLHF 标注间见过这个毛病的训练版。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-eval">Ⅰ · 评估·红队·发布</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="st" id="sdev" style="--tc: var(--ink-3)">
+    <h2><span class="stc">ST.DEV</span>你手边的工具</h2>
+    <p class="stageintro">不在模型生产线上，但在每个技术人员的手边——本站本身，就是用这一格里的工具建成的。</p>
+    <div class="tools">
+      <div class="tool" id="t-git">
+        <div class="th"><code>Git &amp; GitHub</code><span class="role">版本管理</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>代码的版本台账与协作广场：每次改动可追溯、可回滚、可署名——你已经在用（本站两个仓库就住在上面）。</p>
+        <p><b>为什么放在这：</b>它是技术世界的公证处，也是一切开源工具的分发地。台账、留痕、可回滚——对法务来说这套逻辑毫不陌生。</p>
+        <p class="map">实践现场：本站私有档案仓 + 公开站点仓的双仓流水线</p>
+      </div>
+      <div class="tool" id="t-ide">
+        <div class="th"><code>Claude Code / Cursor / Copilot</code><span class="role">AI 结对编程</span><span class="src" title="盘点日联网核实">◉</span></div>
+        <p>终端或编辑器里的 AI 工程师：读整个仓库、改代码、跑命令、修测试——本质是一个装上了工具协议的 Agent 循环。</p>
+        <p><b>为什么放在这：</b>本站 45 个实验室全部由这种方式结对建成——你此刻就站在这条生产线上，而且是甲方。</p>
+        <p class="map">原理在蓝图：<a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a> · <a href="blueprint.html#mod-proto">Ⅳ · 工具协议</a></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>本页遵循「诚实简化」原则；<span class="sn">工具版图变化以季度计，本页断言以盘点基准日为准、未经人工核验，选型请以各家官方文档为准。</span>合规内容不构成法律意见；朱批挂点预留（合规层冻结中）。</p>
+    <p class="refs">盘点日主要核实来源：<a href="https://www.yottalabs.ai/post/best-llm-inference-engines-in-2026-vllm-tensorrt-llm-tgi-and-sglang-compared">Yotta Labs 推理引擎横评</a> · <a href="https://particula.tech/blog/sglang-vs-vllm-inference-engine-comparison">Particula SGLang/vLLM 架构对比</a> · <a href="https://www.spheron.network/blog/rlhf-training-infrastructure-verl-openrlhf-trl-gpu-cloud/">Spheron RLHF 框架三分格局</a> · <a href="https://github.com/verl-project/verl">verl（GitHub）</a> · <a href="https://www.langchain.com/resources/ai-agent-frameworks">LangChain Agent 框架年度盘点</a> · <a href="https://guptadeepak.com/tools/top-10-mcp-frameworks-2026/">MCP 采纳时间线</a></p>
+    <div class="build">FIELD SHEET v1 · 盘点基准日 2026-07-29 · 6 STATIONS · 22 TOOLS · 主线 v0.30 时代 · STYLE rev2</div>
+  </footer>
+</div>
+
+<script>
+/* 芯片跳转：与蓝图 data-go 同一精神——图是导航。点工位/工具芯片 → 滚到条目并闪一下。 */
+document.querySelectorAll('.chip').forEach(el => {
+  const go = () => {
+    const t = document.getElementById(el.dataset.t);
+    if (!t) return;
+    const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    t.scrollIntoView({ behavior: rm ? 'auto' : 'smooth', block: 'center' });
+    if (t.classList.contains('tool')) {
+      t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash');
+      setTimeout(() => t.classList.remove('flash'), 1700);
+    }
+  };
+  el.addEventListener('click', go);
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+});
+</script>
