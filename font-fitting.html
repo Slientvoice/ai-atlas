@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>字体试衣间 · Windows/Mac 同装对照</title>
+<style>
+  /* ===== 👔 字体试衣间（试样页，2026-07-31）=====
+     目的：让用户在 Mac 与 Windows 上打开同一网址，亲眼对照三件事：
+       ① 中文正文：系统字体（苹方/雅黑，两端长相不同）vs 自托管 Noto Sans SC（两端一致）
+       ② 标题混排：西文衬线候选（Source Serif 4 / Spectral）× 中文黑体——Claude 客户端高级感的开源复刻
+       ③ 体积与代价（页脚如实交代）
+     机制：Google Fonts 官方按 unicode-range 预切片（101 片×2 字重共 4.5MB 入仓），
+     浏览器只按页面实际用字下载其中少数片。字体文件自托管于 fonts/，OFL/SIL 开源授权。
+     ⚠ 本页须部署到 Pages 后查看（Artifact 预览的 CSP 禁外部资源且无 fonts/ 目录，字体不生效）。
+     拍板后：中文方案写进全站 --sans 令牌 + 西文候选进标题层，本页使命完成即删。 */
+  @import url(fonts/noto-sc.css);
+  @import url(fonts/latin.css);
+
+  :root {
+    --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
+    --ink: #16181d; --ink-2: #4b5158; --ink-3: #858b93;
+    --hairline: #e1e4e8; --seal: #b0392e;
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
+    --sys: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+    --noto: "Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
+    --dot: rgba(22,24,29,0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page: #0f1114; --surface: #16181c; --surface-2: #1d2024; --ink: #e8eaed; --ink-2: #b0b4ba;
+      --ink-3: #7d828a; --hairline: #262a2f; --seal: #e0705e; --dot: rgba(232,234,237,0.055);
+      --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
+  }
+  :root[data-theme="dark"] { --page: #0f1114; --surface: #16181c; --surface-2: #1d2024; --ink: #e8eaed;
+    --ink-2: #b0b4ba; --ink-3: #7d828a; --hairline: #262a2f; --seal: #e0705e; --dot: rgba(232,234,237,0.055);
+    --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
+  :root[data-theme="light"] { --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3; --ink: #16181d;
+    --ink-2: #4b5158; --ink-3: #858b93; --hairline: #e1e4e8; --seal: #b0392e; --dot: rgba(22,24,29,0.05);
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--page); color: var(--ink); font-family: var(--sys); line-height: 1.75; font-size: 15px;
+    -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px 60px; }
+
+  header { padding: 40px 0 20px; border-bottom: 1px solid var(--hairline);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px); background-size: 22px 22px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; color: var(--ink-3); }
+  h1 { font-size: clamp(26px, 4.5vw, 38px); margin: 8px 0 6px; }
+  .sub { color: var(--ink-2); max-width: 46em; margin: 0; }
+  .sub b { color: var(--ink); }
+
+  h2 { font-size: 17px; margin: 36px 0 10px; font-family: var(--mono); letter-spacing: 0.08em; color: var(--ink-2); }
+  h2::before { content: "// "; color: var(--ink-3); font-weight: 400; }
+
+  .sp { background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; margin: 12px 0; overflow: hidden; }
+  .sp .tag { display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.13em; color: var(--ink-3);
+    border-bottom: 1px solid var(--hairline); background: var(--surface-2); padding: 6px 14px; }
+  .sp .tag b { color: var(--ink-2); }
+  .sp .tag .pick { color: var(--p1); font-weight: 700; }
+  .sp .bd { padding: 14px 18px 16px; }
+  .sp p { margin: 6px 0; }
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
+
+  /* 三套试穿衣架 */
+  .w-sys  { font-family: var(--sys); }
+  .w-noto { font-family: var(--noto); }
+  .w-ss4  { font-family: "Source Serif 4", var(--noto); }
+  .w-spec { font-family: "Spectral", var(--noto); }
+
+  /* 标题混排样衣 */
+  .hero-sp .eb { font-size: 12px; letter-spacing: 0.16em; color: var(--ink-3); }
+  .hero-sp .tt { font-size: clamp(28px, 5vw, 42px); font-weight: 700; line-height: 1.25; margin: 4px 0; }
+  .hero-sp .en { font-size: 17px; color: var(--ink-2); font-style: italic; }
+  .hero-sp .nums { margin-top: 8px; font-size: 20px; color: var(--ink-2); letter-spacing: 0.04em; }
+  .hero-sp .nums b { font-size: 26px; color: var(--p2); }
+
+  .note { margin-top: 26px; border: 1px dashed var(--p4); border-radius: 6px; background: var(--surface);
+    padding: 12px 16px; font-size: 13px; color: var(--ink-2); }
+  .note b { color: var(--ink); }
+  .note p { margin: 4px 0; }
+  .note code { font-family: var(--mono); font-size: 0.92em; }
+</style>
+
+<header>
+  <div class="wrap" style="padding-bottom:0">
+    <div class="eyebrow">AI-ATLAS // FITTING ROOM · 字体试衣间 · 2026-07-31</div>
+    <h1>同一网址，两台机器，见分晓</h1>
+    <p class="sub">请分别在 <b>Mac</b> 和 <b>Windows</b> 上打开本页对照：第一节看「中文正文两端不一致」的病能不能根治；第二节挑西文衬线——Claude 客户端那种「衬线英文 × 黑体中文」混排气质的开源复刻。</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <h2>第一节 · 中文正文——系统字体 vs 自托管 Noto Sans SC</h2>
+  <p style="color:var(--ink-2); font-size:13.5px">左右两段文字内容完全相同。<b>左边</b>随系统走：Mac 显示苹方、Windows 显示微软雅黑——你说的「明显有差别」就是它。<b>右边</b>用自托管的思源黑体（Noto Sans SC）：任何系统、任何设备，长相分毫不差。</p>
+  <div class="duo">
+    <div class="sp">
+      <div class="tag"><span><b>A · 现状</b> SYSTEM STACK</span><span>Mac=苹方 / Win=雅黑</span></div>
+      <div class="bd w-sys">
+        <p>一个以真实技术结构为线索的 AI 认知与合规站点：先看懂机器如何炼成、如何运转，法律义务以「朱批」钉在它实际发生的技术环节上。</p>
+        <p>训练侧从 RLHF 走到 RLVR，推理侧 vLLM 与 SGLang 并驾——H100 × 8 卡、80GB HBM3，损失从 ln(V)≈11.8 落到 2.3。数字 0123456789 与标点「引号」（括号）、破折号——的灰度与间距，请两端对照。</p>
+      </div>
+    </div>
+    <div class="sp">
+      <div class="tag"><span><b>B · 方案</b> NOTO SANS SC · 自托管</span><span class="pick">两端一致 ✓</span></div>
+      <div class="bd w-noto">
+        <p>一个以真实技术结构为线索的 AI 认知与合规站点：先看懂机器如何炼成、如何运转，法律义务以「朱批」钉在它实际发生的技术环节上。</p>
+        <p>训练侧从 RLHF 走到 RLVR，推理侧 vLLM 与 SGLang 并驾——H100 × 8 卡、80GB HBM3，损失从 ln(V)≈11.8 落到 2.3。数字 0123456789 与标点「引号」（括号）、破折号——的灰度与间距，请两端对照。</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>第二节 · 标题混排——西文衬线两候选（中文都是黑体）</h2>
+  <p style="color:var(--ink-2); font-size:13.5px">同一段门户标题排三遍：第一件是现状（全黑体），后两件给英文、数字、年份换上开源衬线——中文不动。这正是 Claude 客户端「Anthropic Serif 混排中文」的合法复刻路线。</p>
+
+  <div class="sp hero-sp">
+    <div class="tag"><span><b>样衣 0 · 现状</b> 全黑体（无西文衬线）</span><span>BASELINE</span></div>
+    <div class="bd w-noto">
+      <div class="eb">AI-ATLAS // DWG. PORTAL-01 · FIELD SHEET</div>
+      <div class="tt">AI 合规全景地图</div>
+      <div class="en">Attention Is All You Need — 从一句话，到一座工厂（2017–2026）</div>
+      <div class="nums"><b>7</b> PLANES · <b>45</b> MODULES · <b>45</b> LABS · v0.31</div>
+    </div>
+  </div>
+
+  <div class="sp hero-sp">
+    <div class="tag"><span><b>样衣 1 · Source Serif 4</b> × 黑体</span><span>稳重书卷 · 最接近 Anthropic Serif 的工作马气质</span></div>
+    <div class="bd w-ss4">
+      <div class="eb">AI-ATLAS // DWG. PORTAL-01 · FIELD SHEET</div>
+      <div class="tt">AI 合规全景地图</div>
+      <div class="en">Attention Is All You Need — 从一句话，到一座工厂（2017–2026）</div>
+      <div class="nums"><b>7</b> PLANES · <b>45</b> MODULES · <b>45</b> LABS · v0.31</div>
+    </div>
+  </div>
+
+  <div class="sp hero-sp">
+    <div class="tag"><span><b>样衣 2 · Spectral</b> × 黑体</span><span>锋利现代 · 更冷更利的当代衬线</span></div>
+    <div class="bd w-spec">
+      <div class="eb">AI-ATLAS // DWG. PORTAL-01 · FIELD SHEET</div>
+      <div class="tt">AI 合规全景地图</div>
+      <div class="en">Attention Is All You Need — 从一句话，到一座工厂（2017–2026）</div>
+      <div class="nums"><b>7</b> PLANES · <b>45</b> MODULES · <b>45</b> LABS · v0.31</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <p>👔 <b>试衣须知（如实交代）</b></p>
+    <p>① <b>体积</b>：中文字体两字重共 101 片 4.5MB 入仓，但浏览器按 <code>unicode-range</code> 只下载页面实际用到的片——普通一页首次加载约几百 KB，之后有缓存；西文两候选合计 556KB。全部 SIL/OFL 开源授权，自托管不受 CDN 存亡影响。</p>
+    <p>② <b>诚实边界</b>：自托管统一的是「字体本身」；Mac 与 Windows 的抗锯齿渲染引擎仍有细微差别，低分辨率 Windows 屏上任何网页字体都会比雅黑略柔——请重点看整体气质是否一致，而非逐像素。</p>
+    <p>③ <b>Anthropic Serif 本尊</b>：Anthropic 自研定制字体，仅授权自家产品；网上的「免费下载」皆属盗版，不碰。样衣 1/2 是气质相近的开源替身。</p>
+    <p>④ <b>Artifact 预览看不到效果</b>（平台安全策略禁外部资源），本页必须部署到正式站后查看。拍板后：中文方案进全站正文令牌，西文候选进标题层，本页即删。</p>
+  </div>
+</div>
