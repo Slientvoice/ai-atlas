@@ -4,7 +4,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI 合规全景地图 · 门户</title>
 <style>
-  /* ===== 风格令牌 v2「克制工程风」：冷白优先 · 锐角 · mono 扩权（2026-07-12 用户拍板采纳 = 全站正式规范，规范文本见 PROJECT.md §6） ===== */
+  /* ===== 🗺️ 门户「橱窗档」正式版（试样稿 v1→v2 用户拍板，2026-07-30 转正 = v0.31）=====
+     门面语言：整页做成一张正式工程图——图框+四角角规线 / 坐标纸大字开场 / FIG.00 全系统立面图
+     （第一眼时刻）/ 大数字行 / 页脚图签栏。旧门户存档 archive-home-v0.30.html。
+     纪律：令牌与 R3 颜色即语法完全沿用风格规范 v2，不新增任何色相（--grid 仅为 ink 低透明度派生）。 */
+
+  /* ===== 风格令牌 v2「克制工程风」（规范文本见 PROJECT.md §6） ===== */
   :root {
     --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
     --ink: #16181d; --ink-2: #4b5158; --ink-3: #858b93;
@@ -14,40 +19,72 @@
     --mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
     --shadow: 0 2px 10px rgba(22,24,29,0.07);
     --dot: rgba(22,24,29,0.05);
+    --grid: rgba(22,24,29,0.038);
   }
   @media (prefers-color-scheme: dark) {
     :root { --page: #0f1114; --surface: #16181c; --surface-2: #1d2024; --ink: #e8eaed; --ink-2: #b0b4ba;
       --ink-3: #7d828a; --hairline: #262a2f; --seal: #e0705e; --shadow: 0 2px 10px rgba(0,0,0,0.4);
-      --dot: rgba(232,234,237,0.055);
+      --dot: rgba(232,234,237,0.055); --grid: rgba(232,234,237,0.05);
       --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
   }
   :root[data-theme="dark"] { --page: #0f1114; --surface: #16181c; --surface-2: #1d2024; --ink: #e8eaed;
     --ink-2: #b0b4ba; --ink-3: #7d828a; --hairline: #262a2f; --seal: #e0705e; --shadow: 0 2px 10px rgba(0,0,0,0.4);
-    --dot: rgba(232,234,237,0.055);
+    --dot: rgba(232,234,237,0.055); --grid: rgba(232,234,237,0.05);
     --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
   :root[data-theme="light"] { --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3; --ink: #16181d;
     --ink-2: #4b5158; --ink-3: #858b93; --hairline: #e1e4e8; --seal: #b0392e; --shadow: 0 2px 10px rgba(22,24,29,0.07);
-    --dot: rgba(22,24,29,0.05);
+    --dot: rgba(22,24,29,0.05); --grid: rgba(22,24,29,0.038);
     --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300; }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   body { background: var(--page); color: var(--ink); font-family: var(--sans); line-height: 1.75; font-size: 15px;
-    -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; }
-  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+    -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; padding: 16px; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 24px; }
 
-  /* 页头：点阵坐标纸 */
-  header { padding: 48px 0 10px;
-    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
-    background-size: 22px 22px; border-bottom: 1px solid var(--hairline); padding-bottom: 26px; }
-  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; color: var(--ink-3); }
+  /* ===== 图框：整页一张工程图（图框 + 四角角规线） ===== */
+  .sheet { position: relative; border: 1px solid var(--hairline); background: var(--page); }
+  .reg { position: absolute; width: 15px; height: 15px; opacity: 0.55; pointer-events: none;
+    background:
+      linear-gradient(var(--ink-3), var(--ink-3)) center / 1px 100% no-repeat,
+      linear-gradient(var(--ink-3), var(--ink-3)) center / 100% 1px no-repeat; }
+  .reg.tl { top: -8px; left: -8px; } .reg.tr { top: -8px; right: -8px; }
+  .reg.bl { bottom: -8px; left: -8px; } .reg.br { bottom: -8px; right: -8px; }
+
+  /* ===== 开场：坐标纸上的大字与立面图 ===== */
+  header { padding: 64px 0 0; border-bottom: 1px solid var(--hairline);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--ink-3); }
   .eyebrow b { color: var(--ink-2); font-weight: 700; }
-  h1 { font-size: clamp(30px, 5vw, 44px); margin: 10px 0 6px; letter-spacing: 0.005em; }
-  .sub { color: var(--ink-2); max-width: 46em; margin: 0; }
+  h1 { font-size: clamp(40px, 7vw, 72px); line-height: 1.14; margin: 14px 0 10px; letter-spacing: 0.01em; font-weight: 700; text-wrap: balance; }
+  /* 生成中的光标：LLM 逐 token 吐字的意象，全站唯一的动态签名点 */
+  .caret { display: inline-block; width: 0.14em; height: 0.82em; background: var(--seal);
+    margin-left: 0.12em; vertical-align: -0.06em; animation: caret 1.15s steps(2, start) infinite; }
+  @keyframes caret { to { visibility: hidden; } }
+  .sub { color: var(--ink-2); max-width: 44em; margin: 0 0 8px; font-size: 15.5px; }
   .sub b { color: var(--ink); }
   .seal-w { color: var(--seal); }
 
-  /* ===== 卡片体系：锐角 + 发丝线 ===== */
+  /* 立面图：FIG.00 全系统正视示意（窄屏横向滚动，不压缩标注字号） */
+  .elev { margin-top: 30px; overflow-x: auto; }
+  .elev svg { display: block; min-width: 780px; width: 100%; height: auto; }
+
+  /* 大数字行：底衬回页面色，把坐标纸压在身后 */
+  .strip { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--hairline);
+    background: var(--page); }
+  .strip .st { padding: 18px 24px 20px; border-left: 1px solid var(--hairline); }
+  .strip .st:first-child { border-left: none; }
+  .strip b { display: block; font-family: var(--mono); font-weight: 600; font-size: clamp(28px, 3.8vw, 42px);
+    line-height: 1.1; letter-spacing: -0.01em; }
+  .strip span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--ink-3); }
+  @media (max-width: 640px) { .strip { grid-template-columns: 1fr 1fr; }
+    .strip .st:nth-child(3) { border-left: none; border-top: 1px solid var(--hairline); }
+    .strip .st:nth-child(4) { border-top: 1px solid var(--hairline); } }
+
+  /* ===== 卡片体系：沿用正式版（锐角 + 发丝线） ===== */
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
   a.card, a.hero { display: block; text-decoration: none; color: inherit; background: var(--surface);
     border: 1px solid var(--hairline); border-top: 2px solid var(--ac, var(--hairline)); border-radius: 6px;
@@ -58,31 +95,33 @@
   .card h2, .hero h2 { font-size: 20px; margin: 4px 0 4px; }
   .card p, .hero p { margin: 0; font-size: 13.5px; color: var(--ink-2); }
 
-  /* 缩略图横带：示意图（演示与说明，不复刻页面） */
   .thumb { position: relative; background: var(--surface-2); border-bottom: 1px solid var(--hairline);
     background-image: radial-gradient(var(--dot) 1px, transparent 1px); background-size: 16px 16px; }
   .thumb svg { display: block; width: 100%; height: auto; }
-  .thumb .fig { position: absolute; top: 7px; right: 11px; font-family: var(--mono); font-size: 9px;
-    letter-spacing: 0.14em; color: var(--ink-3); font-style: normal; }
+  /* 图版化：FIG 标签为图版标贴（描边小贴片），缩略图配取景角标——与页头图纸语言对齐 */
+  .thumb .fig { position: absolute; top: 7px; right: 9px; font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.14em; color: var(--ink-3); font-style: normal;
+    background: var(--surface); border: 1px solid var(--hairline); padding: 1px 7px 2px; }
+  .thumb::before, .thumb::after { content: ""; position: absolute; width: 8px; height: 8px;
+    pointer-events: none; opacity: 0.4; }
+  .thumb::before { top: 5px; left: 5px; border-top: 1px solid var(--ink-3); border-left: 1px solid var(--ink-3); }
+  .thumb::after { bottom: 5px; right: 5px; border-bottom: 1px solid var(--ink-3); border-right: 1px solid var(--ink-3); }
   a.card:hover .thumb svg .hl, a.hero:hover .thumb svg .hl { filter: brightness(1.1); }
   .card .tx { padding: 12px 16px 16px; }
 
-  /* 线稿图标（Notion/Lucide 式）：单色描边，取卡片强调色 */
   .ico { width: 20px; height: 20px; vertical-align: -3.5px; margin-right: 7px;
     fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   h2 .ico { color: var(--ac); }
   .card-wide .ico { color: var(--ac); width: 18px; height: 18px; vertical-align: -3px; margin-right: 2px; }
   .stats .ico { width: 14px; height: 14px; vertical-align: -2.5px; stroke-width: 2; color: var(--ink-3); margin: 0; }
 
-  /* 主线大卡 */
-  a.hero { margin-top: 26px; display: grid; grid-template-columns: 46% 1fr; align-items: stretch; }
+  a.hero { margin-top: 14px; display: grid; grid-template-columns: 46% 1fr; align-items: stretch; }
   .hero .thumb { border-bottom: none; border-right: 1px solid var(--hairline); }
   .hero .thumb svg { height: 100%; }
   .hero .tx { padding: 22px 26px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
   .hero .stats { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin-top: 12px; letter-spacing: 0.06em; }
   .hero .stats b { color: var(--p2); font-size: 15px; }
 
-  /* 看板细横幅 */
   .card-wide { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;
     background: var(--surface); border: 1px solid var(--hairline); border-left: 2px solid var(--ac, var(--hairline));
     border-radius: 6px; padding: 11px 16px; margin-top: 14px; font-size: 13.5px; transition: border-color 0.14s; }
@@ -94,23 +133,22 @@
   .card-wide .lights i { width: 8px; height: 8px; border-radius: 2px; display: block; }
   @media (max-width: 640px) { .card-wide .cw-d { display: none; } }
 
-  /* ===== 动效：默认静止，悬停所在卡时才运行（无悬停设备保持常动） ===== */
+  /* ===== 动效：卡片默认静止悬停才动（无悬停设备常动）；开场立面图为环境级慢速常动 ===== */
   .gear { animation: spin 12s linear infinite; transform-box: fill-box; transform-origin: center; }
+  .gear.slowgear { animation-duration: 26s; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .blink { animation: blink 2.2s ease-in-out infinite; }
   .blink2 { animation: blink 2.2s ease-in-out infinite 0.7s; }
   .blink3 { animation: blink 2.2s ease-in-out infinite 1.4s; }
   @keyframes blink { 0%,100% { opacity: 0.25; } 50% { opacity: 1; } }
   .beltdash { stroke-dasharray: 4 8; animation: flow 1.2s linear infinite; }
+  .beltdash.slowbelt { animation-duration: 2.6s; }
   @keyframes flow { to { stroke-dashoffset: -12; } }
-  /* 巡线元素（箭头）：CSS 运动路径，路径写在元素行内 style 的 offset-path 里 */
   .mv { offset-rotate: auto; animation: travel 3.4s linear infinite; }
   .mv.slow { animation-duration: 6s; }
   @keyframes travel { from { offset-distance: 0%; } to { offset-distance: 100%; } }
-  /* 主线单箭头：训练→（入塔隐没）→出塔→推理，触及模块边框即止，循环重播 */
   .mv.hero1 { animation: herotravel 4.6s linear infinite; }
   @keyframes herotravel {
-    /* 分段变色：训练段用训练绿，出塔后换推理紫（平面色即语法） */
     0%   { offset-distance: 0%;   opacity: 1; fill: var(--p1); }
     28%  { offset-distance: 28%;  opacity: 1; fill: var(--p1); }
     29%  { offset-distance: 29%;  opacity: 0; fill: var(--p1); }
@@ -119,194 +157,374 @@
     100% { offset-distance: 100%; opacity: 1; fill: var(--p3); }
   }
   @media (hover: hover) {
-    .gear, .blink, .blink2, .blink3, .beltdash, .mv { animation-play-state: paused; }
+    a .gear, a .blink, a .blink2, a .blink3, a .beltdash, a .mv { animation-play-state: paused; }
     a:hover .gear, a:hover .blink, a:hover .blink2, a:hover .blink3, a:hover .beltdash, a:hover .mv,
     a:focus-visible .gear, a:focus-visible .blink, a:focus-visible .blink2, a:focus-visible .blink3,
     a:focus-visible .beltdash, a:focus-visible .mv { animation-play-state: running; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .gear, .blink, .blink2, .blink3, .beltdash, .mv { animation: none; }
+    .gear, .blink, .blink2, .blink3, .beltdash, .mv, .caret { animation: none; }
     .mv { display: none; }
     a.card, a.hero, .card-wide { transition: none; }
   }
 
-  section h3 { font-size: 16px; margin: 40px 0 8px; font-family: var(--mono); letter-spacing: 0.08em; color: var(--ink-2); }
-  section h3::before { content: "// "; color: var(--ink-3); font-weight: 400; }
+  h3.sec { font-size: 16px; margin: 44px 0 8px; font-family: var(--mono); letter-spacing: 0.08em; color: var(--ink-2); font-weight: 700; }
+  h3.sec::before { content: "// "; color: var(--ink-3); font-weight: 400; }
+  h3.sec i { font-style: normal; font-size: 10px; letter-spacing: 0.16em; color: var(--ink-3); margin-left: 10px; }
   .route p { margin: 6px 0; font-size: 14px; color: var(--ink-2); }
   .route .rn { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-right: 8px; letter-spacing: 0.08em; }
 
-  footer { border-top: 1px solid var(--hairline); margin-top: 48px; padding: 22px 0 60px; color: var(--ink-3); font-size: 13px; }
+  /* ===== 页脚：诚实条款 + 图签栏（工程图标题栏，信息即结构） ===== */
+  footer { border-top: 1px solid var(--hairline); margin-top: 48px; padding: 22px 0 46px; color: var(--ink-3); font-size: 13px; }
   footer .sn { color: var(--seal); }
-  .build { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-3); margin-top: 14px;
-    border-top: 1px dashed var(--hairline); padding-top: 12px; }
-
-  .note { margin-top: 30px; border: 1px dashed var(--p4); border-radius: 6px; background: var(--surface);
-    padding: 12px 16px; font-size: 13px; color: var(--ink-2); }
-  .note b { color: var(--ink); }
+  .tblock { display: grid; grid-template-columns: 2fr 1.2fr 1fr; border: 1px solid var(--hairline);
+    margin-top: 18px; background: var(--surface); }
+  .tblock .tb { padding: 8px 14px 9px; border-left: 1px solid var(--hairline); border-top: 1px solid var(--hairline); }
+  .tblock .tb:nth-child(-n+3) { border-top: none; }
+  .tblock .tb:nth-child(3n+1) { border-left: none; }
+  .tblock .tl2 { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; color: var(--ink-3); }
+  .tblock .tv { display: block; font-family: var(--mono); font-size: 12px; color: var(--ink); margin-top: 2px; letter-spacing: 0.03em; }
+  @media (max-width: 640px) { .tblock { grid-template-columns: 1fr 1fr; }
+    .tblock .tb:nth-child(-n+3) { border-top: 1px solid var(--hairline); }
+    .tblock .tb:nth-child(-n+2) { border-top: none; }
+    .tblock .tb:nth-child(3n+1) { border-left: 1px solid var(--hairline); }
+    .tblock .tb:nth-child(2n+1) { border-left: none; } }
 
   @media (max-width: 860px) {
+    body { padding: 8px; }
+    .wrap { padding: 0 16px; }
+    header { padding-top: 44px; }
     .grid { grid-template-columns: 1fr; }
     a.hero { grid-template-columns: 1fr; }
     .hero .thumb { border-right: none; border-bottom: 1px solid var(--hairline); }
   }
 </style>
 
-<header>
-  <div class="wrap">
-    <div class="eyebrow"><b>AI-ATLAS</b> // 技术为经 · 合规为纬</div>
-    <h1>AI 合规全景地图</h1>
-    <p class="sub">一个以<b>真实技术结构</b>为线索的 AI 认知与合规站点：先看懂机器如何炼成、如何运转、如何被组装成产品，<span class="seal-w">法律义务以「朱批」钉在它实际发生的技术环节上</span>。由一位法务人员与 AI 结对建造，既是学习的过程，也是学习的产物。</p>
-  </div>
-</header>
+<div class="sheet">
+  <i class="reg tl"></i><i class="reg tr"></i><i class="reg bl"></i><i class="reg br"></i>
 
-<div class="wrap">
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><b>AI-ATLAS</b> // DWG. PORTAL-01 · 技术为经 · 合规为纬</div>
+      <h1>AI 合规全景地图<span class="caret" aria-hidden="true"></span></h1>
+      <p class="sub">一个以<b>真实技术结构</b>为线索的 AI 认知与合规站点：先看懂机器如何炼成、如何运转、如何被组装成产品，<span class="seal-w">法律义务以「朱批」钉在它实际发生的技术环节上</span>。由一位法务人员与 AI 结对建造，既是学习的过程，也是学习的产物。</p>
 
-  <!-- ===== 主线大卡：系统总览示意（演示用，非页面复刻） ===== -->
-  <a class="hero" href="blueprint.html" style="--ac:var(--p2)">
-    <div class="thumb"><i class="fig">FIG.01</i><svg viewBox="0 0 440 240" role="img" aria-label="系统总览示意：训练→模型塔→推理，运行于硬件基座，组装层包裹，朱批钉在环节上">
-      <line class="beltdash" x1="0" y1="112" x2="24" y2="112" stroke="var(--ink-3)" stroke-width="2.5" opacity="0.6"/>
-      <line class="beltdash" x1="416" y1="112" x2="440" y2="112" stroke="var(--ink-3)" stroke-width="2.5" opacity="0.6"/>
-      <rect x="24" y="26" width="392" height="160" rx="6" fill="none" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="6 5"/>
-      <text x="38" y="47" font-size="10" fill="var(--ink-3)" font-family="var(--mono)">组装层</text>
-      <g class="gear">
-        <circle cx="384" cy="54" r="11" fill="none" stroke="var(--ink-2)" stroke-width="2.5"/>
-        <line x1="384" y1="39" x2="384" y2="69" stroke="var(--ink-2)" stroke-width="2.5"/>
-        <line x1="369" y1="54" x2="399" y2="54" stroke="var(--ink-2)" stroke-width="2.5"/>
-        <line x1="374" y1="44" x2="394" y2="64" stroke="var(--ink-2)" stroke-width="2.5"/>
-        <line x1="374" y1="64" x2="394" y2="44" stroke="var(--ink-2)" stroke-width="2.5"/>
-      </g>
-      <circle cx="384" cy="54" r="3.5" fill="var(--surface)" stroke="var(--ink-2)" stroke-width="2"/>
-      <rect x="56" y="92" width="72" height="40" rx="3" fill="color-mix(in srgb, var(--p1) 10%, var(--surface))" stroke="var(--p1)" stroke-width="1.6"/>
-      <text x="92" y="117" text-anchor="middle" font-size="12" fill="var(--ink-2)">训练</text>
-      <path d="M128 112 h56" stroke="var(--p1)" stroke-width="2.5" opacity="0.75"/>
-      <g class="hl">
-        <rect x="184" y="66" width="72" height="26" rx="3" fill="color-mix(in srgb, var(--p2) 28%, var(--surface))" stroke="var(--p2)" stroke-width="1.6"/>
-        <rect x="184" y="99" width="72" height="26" rx="3" fill="color-mix(in srgb, var(--p2) 28%, var(--surface))" stroke="var(--p2)" stroke-width="1.6"/>
-        <rect x="184" y="132" width="72" height="26" rx="3" fill="color-mix(in srgb, var(--p2) 28%, var(--surface))" stroke="var(--p2)" stroke-width="1.6"/>
-        <text x="220" y="116" text-anchor="middle" font-size="10.5" fill="var(--ink-2)" font-family="var(--mono)">×N 层</text>
-      </g>
-      <path d="M256 112 h56" stroke="var(--p3)" stroke-width="2.5" opacity="0.75"/>
-      <rect x="312" y="92" width="72" height="40" rx="3" fill="color-mix(in srgb, var(--p3) 10%, var(--surface))" stroke="var(--p3)" stroke-width="1.6"/>
-      <text x="348" y="117" text-anchor="middle" font-size="12" fill="var(--ink-2)">推理</text>
-      <line x1="220" y1="66" x2="220" y2="50" stroke="var(--ink)" stroke-width="2"/>
-      <circle cx="220" cy="46" r="4.5" fill="var(--p4)" class="blink"/>
-      <!-- 朱批印章：盖在训练环节上（微倾，似手工钤印） -->
-      <line x1="156" y1="150" x2="156" y2="128" stroke="var(--seal)" stroke-width="1.2" stroke-dasharray="3 3"/>
-      <g transform="rotate(-5 156 161)">
-        <rect x="132" y="150" width="48" height="22" rx="3" fill="color-mix(in srgb, var(--seal) 10%, var(--surface))" stroke="var(--seal)" stroke-width="1.6"/>
-        <text x="156" y="166" text-anchor="middle" font-size="11.5" fill="var(--seal)" font-weight="700" letter-spacing="2">朱批</text>
-      </g>
-      <rect x="24" y="200" width="392" height="26" rx="3" fill="color-mix(in srgb, var(--p0) 8%, var(--surface))" stroke="var(--p0)" stroke-width="1.6"/>
-      <text x="220" y="218" text-anchor="middle" font-size="10.5" fill="var(--ink-2)" font-family="var(--mono)">硬件基座 · GPU × HBM × 互联</text>
-      <line x1="120" y1="186" x2="120" y2="200" stroke="var(--ink-3)" stroke-width="1.5"/>
-      <line x1="320" y1="186" x2="320" y2="200" stroke="var(--ink-3)" stroke-width="1.5"/>
-      <!-- 单箭头巡演：训练→入塔隐没→出塔→推理→重播（锚点止于 306，箭尖恰触推理边框 312） -->
-      <polygon class="mv hero1" points="-3,-4 6,0 -3,4" fill="var(--p1)" style="offset-path: path('M128 112 H306')"/>
-    </svg></div>
-    <div class="tx">
-      <span class="tag">MAINLINE · 主线 · 从这里开始</span>
-      <h2><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg>LLM 系统蓝图</h2>
-      <p>通用工程结构图：真实术语、可切换的技术分叉、张量形状——内嵌可实操的真算法实验室，包括在你浏览器里现场训练一个语言模型。</p>
-      <div class="stats"><b>7</b> PLANES · <b>40</b> MODULES · <b>40</b> LABS <svg class="ico" viewBox="0 0 24 24"><path d="M10 2v6.5L4.6 17.8A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.8-3.2L14 8.5V2"/><path d="M8.5 2h7"/><path d="M7.2 15h9.6"/></svg></div>
+      <!-- FIG.00 全系统立面图：整站的第一眼时刻。发丝线工程制图语言：引出线标注、尺寸线、
+           地基剖面纹——各平面只以「色样方块」点色，主体保持墨线（R3：不为装饰新增色相）。 -->
+      <div class="elev">
+        <svg viewBox="0 0 1040 292" role="img" aria-label="全系统立面示意：训练管线送出冻结权重进入模型塔，经推理服务与护栏闸抵达世界；一切运行于硬件基座之上，组装层包裹运行时；朱批钉在训练环节上">
+          <defs>
+            <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse">
+              <path d="M0 8 L8 0" stroke="var(--ink-3)" stroke-width="1" opacity="0.35" fill="none"/>
+            </pattern>
+            <marker id="mA" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6.5" orient="auto">
+              <path d="M0 0 L10 4 L0 8 z" fill="var(--ink-2)"/>
+            </marker>
+            <marker id="mA1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6.5" orient="auto">
+              <path d="M0 0 L10 4 L0 8 z" fill="var(--p1)"/>
+            </marker>
+            <marker id="mA3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6.5" orient="auto">
+              <path d="M0 0 L10 4 L0 8 z" fill="var(--p3)"/>
+            </marker>
+          </defs>
+
+          <!-- 顶部标注行：色样方块 + 引出线（虚点线垂落到部件） -->
+          <g font-family="var(--mono)" font-size="10.5" fill="var(--ink-2)">
+            <rect x="134" y="32" width="7" height="7" fill="var(--p1)"/>
+            <text x="148" y="40"><tspan font-weight="700">Ⅰ</tspan> 训练管线</text>
+            <rect x="432" y="32" width="7" height="7" fill="var(--p2)"/>
+            <text x="446" y="40"><tspan font-weight="700">Ⅱ</tspan> 模型本体</text>
+            <rect x="600" y="32" width="7" height="7" fill="var(--p3)"/>
+            <text x="614" y="40"><tspan font-weight="700">Ⅲ</tspan> 推理服务</text>
+            <rect x="738" y="32" width="7" height="7" fill="var(--p5)"/>
+            <text x="752" y="40"><tspan font-weight="700">Ⅴ</tspan> 多模态</text>
+            <rect x="926" y="32" width="7" height="7" fill="var(--p6)"/>
+            <text x="940" y="40"><tspan font-weight="700">Ⅵ</tspan> 世界</text>
+          </g>
+          <g stroke="var(--ink-3)" stroke-width="1" stroke-dasharray="1 4" stroke-linecap="round">
+            <line x1="190" y1="48" x2="190" y2="148"/>
+            <line x1="496" y1="48" x2="496" y2="120"/>
+            <line x1="650" y1="48" x2="650" y2="142"/>
+            <line x1="782" y1="48" x2="782" y2="116"/>
+            <line x1="966" y1="48" x2="966" y2="162"/>
+          </g>
+
+          <!-- Ⅳ 组装层：包裹运行时的虚线框，右上一枚慢齿轮 -->
+          <rect x="360" y="88" width="560" height="136" rx="4" fill="none" stroke="var(--ink-3)" stroke-width="1.4" stroke-dasharray="6 5"/>
+          <g font-family="var(--mono)" font-size="10" fill="var(--ink-2)">
+            <rect x="372" y="97" width="7" height="7" fill="var(--p4)"/>
+            <text x="385" y="105"><tspan font-weight="700">Ⅳ</tspan> 组装层</text>
+          </g>
+          <g class="gear slowgear">
+            <circle cx="895" cy="107" r="8" fill="none" stroke="var(--ink-2)" stroke-width="2"/>
+            <line x1="895" y1="96" x2="895" y2="118" stroke="var(--ink-2)" stroke-width="2"/>
+            <line x1="884" y1="107" x2="906" y2="107" stroke="var(--ink-2)" stroke-width="2"/>
+            <line x1="887" y1="99" x2="903" y2="115" stroke="var(--ink-2)" stroke-width="2"/>
+            <line x1="887" y1="115" x2="903" y2="99" stroke="var(--ink-2)" stroke-width="2"/>
+          </g>
+          <circle cx="895" cy="107" r="2.6" fill="var(--surface)" stroke="var(--ink-2)" stroke-width="1.6"/>
+
+          <!-- Ⅰ 训练管线：三站传送带 + 支腿 + 慢速流动虚线 -->
+          <g fill="var(--surface)" stroke="var(--p1)" stroke-width="1.6">
+            <rect x="96" y="152" width="56" height="28" rx="3" fill="color-mix(in srgb, var(--p1) 9%, var(--surface))"/>
+            <rect x="176" y="152" width="64" height="28" rx="3" fill="color-mix(in srgb, var(--p1) 9%, var(--surface))"/>
+            <rect x="264" y="152" width="52" height="28" rx="3" fill="color-mix(in srgb, var(--p1) 9%, var(--surface))"/>
+          </g>
+          <g font-size="10.5" fill="var(--ink-2)" text-anchor="middle">
+            <text x="124" y="170">语料</text>
+            <text x="208" y="170">预训练</text>
+            <text x="290" y="170">对齐</text>
+          </g>
+          <line x1="152" y1="166" x2="170" y2="166" stroke="var(--p1)" stroke-width="1.8" marker-end="url(#mA1)"/>
+          <line x1="240" y1="166" x2="258" y2="166" stroke="var(--p1)" stroke-width="1.8" marker-end="url(#mA1)"/>
+          <line class="beltdash slowbelt" x1="84" y1="192" x2="330" y2="192" stroke="var(--ink-3)" stroke-width="2" opacity="0.55"/>
+          <g stroke="var(--ink-3)" stroke-width="1.2">
+            <line x1="120" y1="194" x2="120" y2="224"/>
+            <line x1="300" y1="194" x2="300" y2="224"/>
+          </g>
+
+          <!-- 朱批：钤在训练环节上（微倾），虚线垂落到管线 -->
+          <line x1="238" y1="122" x2="238" y2="148" stroke="var(--seal)" stroke-width="1.1" stroke-dasharray="3 3"/>
+          <g transform="rotate(-5 238 110)">
+            <rect x="214" y="100" width="48" height="20" rx="3" fill="color-mix(in srgb, var(--seal) 10%, var(--surface))" stroke="var(--seal)" stroke-width="1.5"/>
+            <text x="238" y="114.5" text-anchor="middle" font-size="11" fill="var(--seal)" font-weight="700" letter-spacing="2">朱批</text>
+          </g>
+
+          <!-- 冻结权重出带入塔 -->
+          <line x1="320" y1="166" x2="424" y2="166" stroke="var(--p1)" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#mA1)"/>
+          <text x="368" y="159" font-family="var(--mono)" font-size="8.5" fill="var(--ink-3)" text-anchor="middle" letter-spacing="0.1em">冻结权重</text>
+
+          <!-- Ⅱ 模型塔：三层堆叠 + 顶冠 + 指示灯 + ×N 尺寸线 -->
+          <g fill="color-mix(in srgb, var(--p2) 12%, var(--surface))" stroke="var(--p2)" stroke-width="1.6">
+            <rect x="432" y="196" width="96" height="24" rx="2"/>
+            <rect x="432" y="168" width="96" height="24" rx="2"/>
+            <rect x="432" y="140" width="96" height="24" rx="2"/>
+          </g>
+          <polygon points="440,136 520,136 506,122 454,122" fill="var(--surface)" stroke="var(--ink-2)" stroke-width="1.5"/>
+          <line x1="466" y1="122" x2="466" y2="115" stroke="var(--ink-2)" stroke-width="1.5"/>
+          <circle cx="466" cy="111" r="3.5" fill="var(--p4)" class="blink"/>
+          <g stroke="var(--ink-3)" stroke-width="1">
+            <line x1="548" y1="140" x2="548" y2="220"/>
+            <line x1="542" y1="140" x2="554" y2="140"/>
+            <line x1="542" y1="220" x2="554" y2="220"/>
+          </g>
+          <text x="558" y="184" font-family="var(--mono)" font-size="9.5" fill="var(--ink-3)">×N</text>
+
+          <!-- 塔 → 推理服务 -->
+          <line x1="532" y1="182" x2="592" y2="182" stroke="var(--p3)" stroke-width="1.8" marker-end="url(#mA3)"/>
+
+          <!-- Ⅲ 推理服务：主箱 + KV 缓存 -->
+          <rect x="600" y="146" width="116" height="74" rx="3" fill="color-mix(in srgb, var(--p3) 8%, var(--surface))" stroke="var(--p3)" stroke-width="1.6"/>
+          <text x="658" y="172" text-anchor="middle" font-size="11" fill="var(--ink-2)">推理服务</text>
+          <rect x="620" y="186" width="52" height="16" rx="8" fill="var(--surface)" stroke="var(--p3)" stroke-width="1.4"/>
+          <text x="646" y="197.5" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--ink-3)">KV</text>
+
+          <!-- Ⅴ 多模态：侧挂卡，虚线插入主流 -->
+          <rect x="744" y="120" width="76" height="40" rx="3" fill="color-mix(in srgb, var(--p5) 8%, var(--surface))" stroke="var(--p5)" stroke-width="1.6"/>
+          <text x="782" y="144" text-anchor="middle" font-size="10.5" fill="var(--ink-2)">多模态</text>
+          <line x1="782" y1="160" x2="782" y2="178" stroke="var(--p5)" stroke-width="1.4" stroke-dasharray="3 3"/>
+
+          <!-- 出口主流：推理 → 护栏闸 → 世界 -->
+          <line x1="716" y1="182" x2="906" y2="182" stroke="var(--ink-2)" stroke-width="1.8"/>
+          <g stroke="var(--ink-2)" stroke-width="1.8">
+            <line x1="914" y1="148" x2="914" y2="222"/>
+            <line x1="924" y1="148" x2="924" y2="222"/>
+            <line x1="908" y1="148" x2="930" y2="148"/>
+          </g>
+          <text x="919" y="140" text-anchor="middle" font-family="var(--mono)" font-size="8.5" fill="var(--ink-3)" letter-spacing="0.1em">护栏闸</text>
+          <line x1="930" y1="182" x2="944" y2="182" stroke="var(--ink-2)" stroke-width="1.8" marker-end="url(#mA)"/>
+
+          <!-- Ⅵ 世界：经纬圆 -->
+          <circle cx="972" cy="190" r="24" fill="color-mix(in srgb, var(--p6) 8%, var(--surface))" stroke="var(--p6)" stroke-width="1.6"/>
+          <ellipse cx="972" cy="190" rx="10" ry="24" fill="none" stroke="var(--p6)" stroke-width="1" opacity="0.6"/>
+          <line x1="948" y1="190" x2="996" y2="190" stroke="var(--p6)" stroke-width="1" opacity="0.6"/>
+
+          <!-- PLANE 0 硬件基座 + 地基剖面纹 -->
+          <rect x="40" y="224" width="960" height="26" rx="2" fill="color-mix(in srgb, var(--p0) 8%, var(--surface))" stroke="var(--p0)" stroke-width="1.6"/>
+          <text x="520" y="241.5" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink-2)">PLANE 0 · 硬件基座 — GPU × HBM × 互联</text>
+          <rect x="40" y="252" width="960" height="9" fill="url(#hatch)"/>
+
+          <!-- 底部尺寸线：立面图身份签名 -->
+          <g stroke="var(--ink-3)" stroke-width="1">
+            <line x1="40" y1="266" x2="40" y2="282"/>
+            <line x1="1000" y1="266" x2="1000" y2="282"/>
+            <line x1="40" y1="274" x2="388" y2="274"/>
+            <line x1="652" y1="274" x2="1000" y2="274"/>
+          </g>
+          <text x="520" y="278" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--ink-3)" letter-spacing="0.16em">FIG.00 · SYSTEM ELEVATION · 示意 · NOT TO SCALE</text>
+        </svg>
+      </div>
     </div>
-  </a>
 
-  <!-- ===== 三张等宽卡 ===== -->
-  <div class="grid">
-    <a class="card" href="thread.html" style="--ac:var(--p5)">
-      <div class="thumb"><i class="fig">FIG.02</i><svg viewBox="0 0 300 110" role="img" aria-label="旅程示意：一句话沿曲线依次经过切词、注意、护栏，抵达回答">
-        <path d="M20 68 C42 44 63 34 85 38 C110 43 126 60 150 64 C174 68 196 40 215 34 C236 28 262 42 280 52" fill="none" stroke="var(--p5)" stroke-width="2.5" class="hl"/>
-        <circle cx="20" cy="68" r="5" fill="var(--p5)"/>
-        <g fill="var(--surface)" stroke="var(--p5)" stroke-width="1.6">
-          <circle cx="85" cy="38" r="4.5"/>
-          <circle cx="150" cy="64" r="4.5"/>
-          <circle cx="215" cy="34" r="4.5"/>
-        </g>
-        <circle cx="280" cy="52" r="5" fill="var(--p5)" opacity="0.55"/>
-        <g font-size="10" fill="var(--ink-3)" text-anchor="middle">
-          <text x="22" y="90">一句话</text>
-          <text x="85" y="22">切词</text>
-          <text x="150" y="86">注意</text>
-          <text x="215" y="18">护栏</text>
-          <text x="278" y="74">回答</text>
-        </g>
-        <polygon class="mv slow" points="-3,-4.5 7,0 -3,4.5" fill="var(--p5)"
-          style="offset-path: path('M20 68 C42 44 63 34 85 38 C110 43 126 60 150 64 C174 68 196 40 215 34 C236 28 262 42 280 52')"/>
-      </svg></div>
-      <div class="tx">
-        <span class="tag">INTRO · 入门 · 给非技术访客</span>
-        <h2><svg class="ico" viewBox="0 0 24 24"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h7a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h7"/></svg>一句话的旅程</h2>
-        <p>滚动叙事：一句真实的话流过 AI 的全部七层——按下回车之后的三秒，放慢一万倍讲给你听。</p>
-      </div>
-    </a>
+    <!-- 大数字行：一眼读出站点体量 -->
+    <div class="strip" aria-label="站点体量">
+      <div class="st"><b>7</b><span>PLANES · 平面</span></div>
+      <div class="st"><b>45</b><span>MODULES · 模块</span></div>
+      <div class="st"><b>45</b><span>LABS · 实验室</span></div>
+      <div class="st"><b>v0.31</b><span>BUILD · 2026-07-30</span></div>
+    </div>
+  </header>
 
-    <a class="card" href="index-map.html" style="--ac:var(--p0)">
-      <div class="thumb"><i class="fig">FIG.03</i><svg viewBox="0 0 300 110" role="img" aria-label="目录示意：分层节点网格，其中一格为朱批合规挂点">
-        <g fill="none" stroke-width="1.6" class="hl">
-          <rect x="16" y="22" width="60" height="20" rx="2" stroke="var(--p1)"/><rect x="84" y="22" width="60" height="20" rx="2" stroke="var(--p1)"/><rect x="152" y="22" width="60" height="20" rx="2" stroke="var(--p1)"/><rect x="220" y="22" width="60" height="20" rx="2" stroke="var(--p1)"/>
-          <rect x="16" y="52" width="60" height="20" rx="2" stroke="var(--p2)"/><rect x="84" y="52" width="60" height="20" rx="2" stroke="var(--p2)"/><rect x="152" y="52" width="60" height="20" rx="2" stroke="var(--p2)"/><rect x="220" y="52" width="60" height="20" rx="2" stroke="var(--p2)"/>
-          <rect x="16" y="82" width="60" height="20" rx="2" stroke="var(--p3)"/><rect x="84" y="82" width="60" height="20" rx="2" stroke="var(--p3)"/><rect x="220" y="82" width="60" height="20" rx="2" stroke="var(--p3)"/>
-        </g>
-        <rect x="152" y="82" width="60" height="20" rx="2" fill="color-mix(in srgb, var(--seal) 12%, transparent)" stroke="var(--seal)" stroke-width="1.6" class="blink"/>
-        <text x="182" y="96" text-anchor="middle" font-size="10.5" fill="var(--seal)" font-weight="700">朱批</text>
-        <g stroke="var(--ink-3)">
-          <line x1="76" y1="32" x2="84" y2="32"/><line x1="144" y1="32" x2="152" y2="32"/><line x1="212" y1="32" x2="220" y2="32"/>
-          <line x1="76" y1="62" x2="84" y2="62"/><line x1="144" y1="62" x2="152" y2="62"/><line x1="212" y1="62" x2="220" y2="62"/>
-          <line x1="76" y1="92" x2="84" y2="92"/><line x1="212" y1="92" x2="220" y2="92"/>
-          <line x1="46" y1="42" x2="46" y2="52"/><line x1="46" y1="72" x2="46" y2="82"/>
-        </g>
-      </svg></div>
-      <div class="tx">
-        <span class="tag">INDEX · 目录 · 按需查阅</span>
-        <h2><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.4 4.6-4.6 2.4 2.4-4.6z"/></svg>索引地图</h2>
-        <p>七层 28 节点的全目录：每个技术环节的人话解释、上下游关联、精选学习范例链接，与全部 28 条合规挂点。</p>
-      </div>
-    </a>
+  <div class="wrap">
 
-    <a class="card" href="genealogy.html" style="--ac:var(--p4)">
-      <div class="thumb"><i class="fig">FIG.04</i><svg viewBox="0 0 300 110" role="img" aria-label="谱系示意：开放度阶梯，各家模型按档位落座">
+    <h3 class="sec">图版索引<i>PLATES</i></h3>
+
+    <!-- ===== 主线大卡：系统总览示意 ===== -->
+    <a class="hero" href="blueprint.html" style="--ac:var(--p2)">
+      <div class="thumb"><i class="fig">FIG.01</i><svg viewBox="0 0 440 240" role="img" aria-label="系统总览示意：训练→模型塔→推理，运行于硬件基座，组装层包裹，朱批钉在环节上">
+        <line class="beltdash" x1="0" y1="112" x2="24" y2="112" stroke="var(--ink-3)" stroke-width="2.5" opacity="0.6"/>
+        <line class="beltdash" x1="416" y1="112" x2="440" y2="112" stroke="var(--ink-3)" stroke-width="2.5" opacity="0.6"/>
+        <rect x="24" y="26" width="392" height="160" rx="6" fill="none" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="6 5"/>
+        <text x="38" y="47" font-size="10" fill="var(--ink-3)" font-family="var(--mono)">组装层</text>
+        <g class="gear">
+          <circle cx="384" cy="54" r="11" fill="none" stroke="var(--ink-2)" stroke-width="2.5"/>
+          <line x1="384" y1="39" x2="384" y2="69" stroke="var(--ink-2)" stroke-width="2.5"/>
+          <line x1="369" y1="54" x2="399" y2="54" stroke="var(--ink-2)" stroke-width="2.5"/>
+          <line x1="374" y1="44" x2="394" y2="64" stroke="var(--ink-2)" stroke-width="2.5"/>
+          <line x1="374" y1="64" x2="394" y2="44" stroke="var(--ink-2)" stroke-width="2.5"/>
+        </g>
+        <circle cx="384" cy="54" r="3.5" fill="var(--surface)" stroke="var(--ink-2)" stroke-width="2"/>
+        <rect x="56" y="92" width="72" height="40" rx="3" fill="color-mix(in srgb, var(--p1) 10%, var(--surface))" stroke="var(--p1)" stroke-width="1.6"/>
+        <text x="92" y="117" text-anchor="middle" font-size="12" fill="var(--ink-2)">训练</text>
+        <path d="M128 112 h56" stroke="var(--p1)" stroke-width="2.5" opacity="0.75"/>
         <g class="hl">
-          <rect x="16" y="22" width="268" height="18" rx="3" fill="none" stroke="var(--p1)" stroke-width="1.6" stroke-dasharray="4 4"/>
-          <rect x="16" y="46" width="268" height="18" rx="3" fill="color-mix(in srgb, var(--p6) 13%, transparent)" stroke="var(--p6)" stroke-width="1.6"/>
-          <rect x="16" y="70" width="268" height="18" rx="3" fill="color-mix(in srgb, var(--p2) 13%, transparent)" stroke="var(--p2)" stroke-width="1.6"/>
-          <rect x="16" y="94" width="268" height="12" rx="3" fill="color-mix(in srgb, var(--ink-3) 18%, transparent)"/>
+          <rect x="184" y="66" width="72" height="26" rx="3" fill="color-mix(in srgb, var(--p2) 28%, var(--surface))" stroke="var(--p2)" stroke-width="1.6"/>
+          <rect x="184" y="99" width="72" height="26" rx="3" fill="color-mix(in srgb, var(--p2) 28%, var(--surface))" stroke="var(--p2)" stroke-width="1.6"/>
+          <rect x="184" y="132" width="72" height="26" rx="3" fill="color-mix(in srgb, var(--p2) 28%, var(--surface))" stroke="var(--p2)" stroke-width="1.6"/>
+          <text x="220" y="116" text-anchor="middle" font-size="10.5" fill="var(--ink-2)" font-family="var(--mono)">×N 层</text>
         </g>
-        <text x="26" y="35" font-size="9.5" fill="var(--ink-3)" font-family="var(--mono)">L4 全开放（空缺）</text>
-        <text x="270" y="59" font-size="9.5" fill="var(--p6)" text-anchor="end" font-family="var(--mono)">L2</text>
-        <text x="270" y="83" font-size="9.5" fill="var(--p2)" text-anchor="end" font-family="var(--mono)">L1</text>
-        <text x="270" y="104" font-size="9" fill="var(--ink-3)" text-anchor="end" font-family="var(--mono)">L0 封闭</text>
-        <circle cx="46" cy="55" r="4.5" fill="var(--p6)"/><circle cx="66" cy="55" r="4.5" fill="var(--p6)"/><circle cx="86" cy="55" r="4.5" fill="var(--p6)"/><circle cx="106" cy="55" r="4.5" fill="var(--p6)" class="blink"/>
-        <circle cx="46" cy="79" r="4.5" fill="var(--p2)"/><circle cx="66" cy="79" r="4.5" fill="var(--p2)"/>
-        <circle cx="46" cy="100" r="4.5" fill="var(--ink-3)"/><circle cx="66" cy="100" r="4.5" fill="var(--ink-3)"/><circle cx="86" cy="100" r="4.5" fill="var(--ink-3)"/><circle cx="106" cy="100" r="4.5" fill="var(--ink-3)"/><circle cx="126" cy="100" r="4.5" fill="var(--ink-3)"/>
+        <path d="M256 112 h56" stroke="var(--p3)" stroke-width="2.5" opacity="0.75"/>
+        <rect x="312" y="92" width="72" height="40" rx="3" fill="color-mix(in srgb, var(--p3) 10%, var(--surface))" stroke="var(--p3)" stroke-width="1.6"/>
+        <text x="348" y="117" text-anchor="middle" font-size="12" fill="var(--ink-2)">推理</text>
+        <line x1="220" y1="66" x2="220" y2="50" stroke="var(--ink)" stroke-width="2"/>
+        <circle cx="220" cy="46" r="4.5" fill="var(--p4)" class="blink"/>
+        <line x1="156" y1="150" x2="156" y2="128" stroke="var(--seal)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <g transform="rotate(-5 156 161)">
+          <rect x="132" y="150" width="48" height="22" rx="3" fill="color-mix(in srgb, var(--seal) 10%, var(--surface))" stroke="var(--seal)" stroke-width="1.6"/>
+          <text x="156" y="166" text-anchor="middle" font-size="11.5" fill="var(--seal)" font-weight="700" letter-spacing="2">朱批</text>
+        </g>
+        <rect x="24" y="200" width="392" height="26" rx="3" fill="color-mix(in srgb, var(--p0) 8%, var(--surface))" stroke="var(--p0)" stroke-width="1.6"/>
+        <text x="220" y="218" text-anchor="middle" font-size="10.5" fill="var(--ink-2)" font-family="var(--mono)">硬件基座 · GPU × HBM × 互联</text>
+        <line x1="120" y1="186" x2="120" y2="200" stroke="var(--ink-3)" stroke-width="1.5"/>
+        <line x1="320" y1="186" x2="320" y2="200" stroke="var(--ink-3)" stroke-width="1.5"/>
+        <polygon class="mv hero1" points="-3,-4 6,0 -3,4" fill="var(--p1)" style="offset-path: path('M128 112 H306')"/>
       </svg></div>
       <div class="tx">
-        <span class="tag">LOOSE-LEAF · 活页 · 读懂业界</span>
-        <h2><svg class="ico" viewBox="0 0 24 24"><path d="M6 3v12.5"/><circle cx="6" cy="18.5" r="2.5"/><circle cx="18" cy="5.5" r="2.5"/><path d="M18 8a8 8 0 0 1-8 8H8"/></svg>模型门派谱系</h2>
-        <p>开放度五层阶梯 + 十一家大模型在蓝图分叉路口的选择对照——学完蓝图，读懂业界（盘点基准日 2026-07）。</p>
+        <span class="tag">MAINLINE · 主线 · 从这里开始</span>
+        <h2><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg>LLM 系统蓝图</h2>
+        <p>通用工程结构图：真实术语、可切换的技术分叉、张量形状——内嵌可实操的真算法实验室，包括在你浏览器里现场训练一个语言模型。</p>
+        <!-- 撤掉与页头大数字行重复的 7/45/45 计数，改推旗舰实验室（同屏同数字出现两次=设计噪音） -->
+        <div class="stats"><svg class="ico" viewBox="0 0 24 24"><path d="M10 2v6.5L4.6 17.8A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.8-3.2L14 8.5V2"/><path d="M8.5 2h7"/><path d="M7.2 15h9.6"/></svg> 旗舰实验室：<b>迷你训练场</b> · 投机解码 · RLHF 标注间</div>
       </div>
     </a>
-  </div>
 
-  <!-- ===== 看板细横幅 ===== -->
-  <a class="card-wide" href="progress.html" style="--ac:var(--p3)">
-    <span class="lights"><i class="blink" style="background:var(--p1)"></i><i class="blink2" style="background:var(--p2)"></i><i class="blink3" style="background:var(--seal)"></i></span>
-    <b><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 进度看板</b><span class="cw-d">建设实况：模块亮灯图 · 分线进度 · 版本时间线（面向关心建设过程的访客）</span><span class="cw-a">→</span>
-  </a>
+    <!-- ===== 三张等宽卡 ===== -->
+    <div class="grid">
+      <a class="card" href="thread.html" style="--ac:var(--p5)">
+        <div class="thumb"><i class="fig">FIG.02</i><svg viewBox="0 0 300 110" role="img" aria-label="旅程示意：一句话沿曲线依次经过切词、注意、护栏，抵达回答">
+          <path d="M20 68 C42 44 63 34 85 38 C110 43 126 60 150 64 C174 68 196 40 215 34 C236 28 262 42 280 52" fill="none" stroke="var(--p5)" stroke-width="2.5" class="hl"/>
+          <circle cx="20" cy="68" r="5" fill="var(--p5)"/>
+          <g fill="var(--surface)" stroke="var(--p5)" stroke-width="1.6">
+            <circle cx="85" cy="38" r="4.5"/>
+            <circle cx="150" cy="64" r="4.5"/>
+            <circle cx="215" cy="34" r="4.5"/>
+          </g>
+          <circle cx="280" cy="52" r="5" fill="var(--p5)" opacity="0.55"/>
+          <g font-size="10" fill="var(--ink-3)" text-anchor="middle">
+            <text x="22" y="90">一句话</text>
+            <text x="85" y="22">切词</text>
+            <text x="150" y="86">注意</text>
+            <text x="215" y="18">护栏</text>
+            <text x="278" y="74">回答</text>
+          </g>
+          <polygon class="mv slow" points="-3,-4.5 7,0 -3,4.5" fill="var(--p5)"
+            style="offset-path: path('M20 68 C42 44 63 34 85 38 C110 43 126 60 150 64 C174 68 196 40 215 34 C236 28 262 42 280 52')"/>
+        </svg></div>
+        <div class="tx">
+          <span class="tag">INTRO · 入门 · 给非技术访客</span>
+          <h2><svg class="ico" viewBox="0 0 24 24"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h7a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h7"/></svg>一句话的旅程</h2>
+          <p>滚动叙事：一句真实的话流过 AI 的全部七层——按下回车之后的三秒，放慢一万倍讲给你听。</p>
+        </div>
+      </a>
 
-  <section>
-    <h3>建议的走法</h3>
+      <a class="card" href="index-map.html" style="--ac:var(--p0)">
+        <div class="thumb"><i class="fig">FIG.03</i><svg viewBox="0 0 300 110" role="img" aria-label="目录示意：分层节点网格，其中一格为朱批合规挂点">
+          <g fill="none" stroke-width="1.6" class="hl">
+            <rect x="16" y="22" width="60" height="20" rx="2" stroke="var(--p1)"/><rect x="84" y="22" width="60" height="20" rx="2" stroke="var(--p1)"/><rect x="152" y="22" width="60" height="20" rx="2" stroke="var(--p1)"/><rect x="220" y="22" width="60" height="20" rx="2" stroke="var(--p1)"/>
+            <rect x="16" y="52" width="60" height="20" rx="2" stroke="var(--p2)"/><rect x="84" y="52" width="60" height="20" rx="2" stroke="var(--p2)"/><rect x="152" y="52" width="60" height="20" rx="2" stroke="var(--p2)"/><rect x="220" y="52" width="60" height="20" rx="2" stroke="var(--p2)"/>
+            <rect x="16" y="82" width="60" height="20" rx="2" stroke="var(--p3)"/><rect x="84" y="82" width="60" height="20" rx="2" stroke="var(--p3)"/><rect x="220" y="82" width="60" height="20" rx="2" stroke="var(--p3)"/>
+          </g>
+          <rect x="152" y="82" width="60" height="20" rx="2" fill="color-mix(in srgb, var(--seal) 12%, transparent)" stroke="var(--seal)" stroke-width="1.6" class="blink"/>
+          <text x="182" y="96" text-anchor="middle" font-size="10.5" fill="var(--seal)" font-weight="700">朱批</text>
+          <g stroke="var(--ink-3)">
+            <line x1="76" y1="32" x2="84" y2="32"/><line x1="144" y1="32" x2="152" y2="32"/><line x1="212" y1="32" x2="220" y2="32"/>
+            <line x1="76" y1="62" x2="84" y2="62"/><line x1="144" y1="62" x2="152" y2="62"/><line x1="212" y1="62" x2="220" y2="62"/>
+            <line x1="76" y1="92" x2="84" y2="92"/><line x1="212" y1="92" x2="220" y2="92"/>
+            <line x1="46" y1="42" x2="46" y2="52"/><line x1="46" y1="72" x2="46" y2="82"/>
+          </g>
+        </svg></div>
+        <div class="tx">
+          <span class="tag">INDEX · 目录 · 按需查阅</span>
+          <h2><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.4 4.6-4.6 2.4 2.4-4.6z"/></svg>索引地图</h2>
+          <p>七层 28 节点的全目录：每个技术环节的人话解释、上下游关联、精选学习范例链接，与全部 28 条合规挂点。</p>
+        </div>
+      </a>
+
+      <a class="card" href="genealogy.html" style="--ac:var(--p4)">
+        <div class="thumb"><i class="fig">FIG.04</i><svg viewBox="0 0 300 110" role="img" aria-label="谱系示意：开放度阶梯，各家模型按档位落座">
+          <g class="hl">
+            <rect x="16" y="22" width="268" height="18" rx="3" fill="none" stroke="var(--p1)" stroke-width="1.6" stroke-dasharray="4 4"/>
+            <rect x="16" y="46" width="268" height="18" rx="3" fill="color-mix(in srgb, var(--p6) 13%, transparent)" stroke="var(--p6)" stroke-width="1.6"/>
+            <rect x="16" y="70" width="268" height="18" rx="3" fill="color-mix(in srgb, var(--p2) 13%, transparent)" stroke="var(--p2)" stroke-width="1.6"/>
+            <rect x="16" y="94" width="268" height="12" rx="3" fill="color-mix(in srgb, var(--ink-3) 18%, transparent)"/>
+          </g>
+          <text x="26" y="35" font-size="9.5" fill="var(--ink-3)" font-family="var(--mono)">L4 全开放（空缺）</text>
+          <text x="270" y="59" font-size="9.5" fill="var(--p6)" text-anchor="end" font-family="var(--mono)">L2</text>
+          <text x="270" y="83" font-size="9.5" fill="var(--p2)" text-anchor="end" font-family="var(--mono)">L1</text>
+          <text x="270" y="104" font-size="9" fill="var(--ink-3)" text-anchor="end" font-family="var(--mono)">L0 封闭</text>
+          <circle cx="46" cy="55" r="4.5" fill="var(--p6)"/><circle cx="66" cy="55" r="4.5" fill="var(--p6)"/><circle cx="86" cy="55" r="4.5" fill="var(--p6)"/><circle cx="106" cy="55" r="4.5" fill="var(--p6)" class="blink"/>
+          <circle cx="46" cy="79" r="4.5" fill="var(--p2)"/><circle cx="66" cy="79" r="4.5" fill="var(--p2)"/>
+          <circle cx="46" cy="100" r="4.5" fill="var(--ink-3)"/><circle cx="66" cy="100" r="4.5" fill="var(--ink-3)"/><circle cx="86" cy="100" r="4.5" fill="var(--ink-3)"/><circle cx="106" cy="100" r="4.5" fill="var(--ink-3)"/><circle cx="126" cy="100" r="4.5" fill="var(--ink-3)"/>
+        </svg></div>
+        <div class="tx">
+          <span class="tag">LOOSE-LEAF · 活页 · 读懂业界</span>
+          <h2><svg class="ico" viewBox="0 0 24 24"><path d="M6 3v12.5"/><circle cx="6" cy="18.5" r="2.5"/><circle cx="18" cy="5.5" r="2.5"/><path d="M18 8a8 8 0 0 1-8 8H8"/></svg>模型门派谱系</h2>
+          <p>开放度五层阶梯 + 十一家大模型在蓝图分叉路口的选择对照——学完蓝图，读懂业界（盘点基准日 2026-07）。</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- ===== 工业现场细横幅（活页第二页；2026-07-30 转正时补上门户入口——此前该页无站内入口） ===== -->
+    <a class="card-wide" href="toolchain.html" style="--ac:var(--p1)">
+      <b><svg class="ico" viewBox="0 0 24 24"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M8 16h.01"/><path d="M12 16h.01"/><path d="M16 16h.01"/></svg> 工业现场</b><span class="cw-d">活页：LLM 开发工具链版图——六工位 22 个业界头部工具，每件回链蓝图讲它原理的模块（盘点基准日 2026-07-29）</span><span class="cw-a">→</span>
+    </a>
+
+    <!-- ===== 看板细横幅 ===== -->
+    <a class="card-wide" href="progress.html" style="--ac:var(--p3)">
+      <span class="lights"><i class="blink" style="background:var(--p1)"></i><i class="blink2" style="background:var(--p2)"></i><i class="blink3" style="background:var(--seal)"></i></span>
+      <b><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 进度看板</b><span class="cw-d">建设实况：模块亮灯图 · 分线进度 · 版本时间线（面向关心建设过程的访客）</span><span class="cw-a">→</span>
+    </a>
+
+    <h3 class="sec">建议的走法<i>ROUTES</i></h3>
     <div class="route">
       <p><span class="rn">初来</span>先走《一句话的旅程》建立整体感（十分钟），再进蓝图从 PLANE 0 地基读起。</p>
       <p><span class="rn">进阶</span>直接进蓝图，只读模块折叠标题过一遍全图，第二遍展开细读、第三遍玩实验室——重点推荐「迷你训练场」与「投机解码」。</p>
-      <p><span class="rn">延伸</span>学完蓝图去《模型门派谱系》：各家在你刚学过的分叉路口上怎么选，一张表读懂业界格局。</p>
+      <p><span class="rn">延伸</span>学完蓝图去《模型门派谱系》看各家在分叉路口上怎么选，再去《工业现场》看同一条生产线上业界实际在用的工具——原理与工地对上号。</p>
       <p><span class="rn">法务同行</span>沿朱红色的「朱批」走：它们只出现在义务实际发生的技术环节上——这正是本站与法条检索工具的不同之处。</p>
     </div>
-  </section>
 
-  <footer>
-    <div class="wrap" style="padding:0">
-      <p>本站遵循「诚实简化」原则：所有实验室标明真算法与教学简化的边界；<span class="sn">技术内容由 AI 起草、处于持续人工核验中，标注「示意 / 据报道 / 研究观点」处请对照权威来源。</span>合规内容不构成法律意见。</p>
-      <div class="build">BUILD v0.30 · 2026-07-19 · 7 PLANES · 45 MODULES · 45 LABS · STYLE rev2</div>
-    </div>
-  </footer>
+    <footer>
+      <div class="wrap" style="padding:0">
+        <p>本站遵循「诚实简化」原则：所有实验室标明真算法与教学简化的边界；<span class="sn">技术内容由 AI 起草、处于持续人工核验中，标注「示意 / 据报道 / 研究观点」处请对照权威来源。</span>合规内容不构成法律意见。</p>
+        <div class="tblock" role="table" aria-label="图签栏">
+          <div class="tb"><span class="tl2">PROJECT · 项目</span><span class="tv">AI COMPLIANCE ATLAS · 技术为经 合规为纬</span></div>
+          <div class="tb"><span class="tl2">SHEET · 图号</span><span class="tv">PORTAL · DWG-01</span></div>
+          <div class="tb"><span class="tl2">REV · 版本</span><span class="tv">v0.31 · STYLE rev2</span></div>
+          <div class="tb"><span class="tl2">DRAWN · 建造</span><span class="tv">法务 × CLAUDE · 结对</span></div>
+          <div class="tb"><span class="tl2">SCALE · 比例</span><span class="tv">示意 · NOT TO SCALE</span></div>
+          <div class="tb"><span class="tl2">DATE · 日期</span><span class="tv">2026-07-30</span></div>
+        </div>
+      </div>
+    </footer>
+  </div>
 </div>
