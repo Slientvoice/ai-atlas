@@ -1,0 +1,4 @@
+interface:
+  display_name: "Atlas Flow Design"
+  short_description: "在网站中复用 Atlas Flow 玻璃工程界面和 o > _ 字符流体动效"
+  default_prompt: "Use $atlas-flow-design to apply the Atlas Flow visual system while preserving the project content and behavior."
