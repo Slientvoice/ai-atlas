@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>模型门派谱系</title>
+<meta name="description" content="截至 2026-09-17，十一家模型家族的代表型号、架构、推理、多模态、权重与许可证对照；附官方模型卡与许可原文。">
+<title>模型门派谱系 · 2026-09-17 · AI Atlas</title>
+<script>document.documentElement.classList.add('js');</script>
 <style>
   :root {
     --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
@@ -27,7 +30,7 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   body { background: var(--page); color: var(--ink); font-family: var(--sans); line-height: 1.75; font-size: 15px; -webkit-font-smoothing: antialiased; }
-  .wrap { max-width: 1020px; margin: 0 auto; padding: 46px 20px 60px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 46px 20px 60px; }
   .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; color: var(--ink-3); }
   h1 { font-size: clamp(30px, 5vw, 42px); margin: 8px 0 4px; }
   .sub { color: var(--ink-2); max-width: 46em; }
@@ -59,20 +62,21 @@
 
   /* ===== 门派矩阵（一家一行，点行展开详情） ===== */
   .mtx-scroll { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 6px; background: var(--surface); margin-top: 14px; }
-  table { border-collapse: collapse; min-width: 920px; width: 100%; font-size: 13px; }
+  table { border-collapse: collapse; min-width: 1080px; width: 100%; font-size: 13px; }
   th, td { padding: 9px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; text-align: left; }
   thead th { font-size: 13px; background: var(--surface-2); white-space: nowrap; }
   td { color: var(--ink-2); }
   td sup { font-size: 10px; color: var(--ink-3); margin-left: 1px; }
   tr.fam { cursor: pointer; }
   tr.fam:hover td, tr.fam:hover th { background: color-mix(in srgb, var(--ink-3) 6%, transparent); }
-  tr.fam th { font-weight: 600; color: var(--ink); white-space: nowrap; border-right: 1px solid var(--hairline); }
+  tr.fam th { font-weight: 600; color: var(--ink); min-width: 190px; border-right: 1px solid var(--hairline); }
   tr.fam th .car { display: inline-block; color: var(--ink-3); font-size: 11px; margin-right: 5px; transition: transform 0.15s; }
   tr.fam.open th .car { transform: rotate(90deg); }
   td.opn { white-space: nowrap; font-weight: 600; }
   td.opn .ob { font-family: var(--mono); font-size: 11.5px; border-radius: 6px; padding: 2px 8px; font-weight: 700;
     border: 1px solid var(--oc, var(--ink-3)); color: var(--oc, var(--ink-2)); background: color-mix(in srgb, var(--oc, var(--ink-3)) 9%, transparent); }
-  tr.det { display: none; }
+  tr.det { display: table-row; }
+  .js tr.det { display: none; }
   tr.det.on { display: table-row; }
   tr.det > td { background: color-mix(in srgb, var(--ink-3) 4%, transparent); font-size: 13px; padding: 12px 16px 14px; }
   tr.det .bio { margin: 0 0 8px; color: var(--ink-2); max-width: 62em; }
@@ -102,131 +106,255 @@
   .links a:hover, .links a:focus-visible { border-color: var(--ink-2); outline: none; }
   .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 2px; }
   footer { margin-top: 40px; border-top: 1px solid var(--hairline); padding-top: 16px; font-size: 12.5px; color: var(--ink-3); }
+  .family-toggle { border: 0; padding: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; line-height: 1.6; }
+  .family-toggle:focus-visible, a:focus-visible, .mtx-scroll:focus-visible { outline: 2px solid var(--p0); outline-offset: 4px; }
+  .model-name { display: block; font-size: 11.5px; font-weight: 400; color: var(--ink-2); margin: 5px 0 0 16px; max-width: 190px; }
+  .status { display: inline-block; font-size: 10px; color: var(--p4); border: 1px solid currentColor; border-radius: 3px; padding: 0 4px; margin-left: 4px; }
+  .small { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 5px; }
+  .sources { border-top: 1px dashed var(--hairline); margin: 12px 0 0; padding-top: 9px; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .sources a, .rd a { text-underline-offset: 3px; }
+  tr.det dl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+  tr.det dl div { min-width: 0; }
+  tr.det dt { margin-bottom: 3px; color: var(--ink-3); }
+  tr.fam { scroll-margin-top: 18px; }
+  .snapshot-status { margin-top: 8px; font-size: 12px; }
+  .snapshot-status.stale { color: var(--seal); font-weight: 600; }
+  .chip { text-decoration: none; }
+  .scope-note { margin: 12px 0 0; color: var(--ink-3); font-size: 12.5px; }
+  @media (prefers-reduced-motion: reduce) { tr.fam th .car { transition: none; } }
 </style>
-
-<div class="wrap">
-  <div class="eyebrow">AI COMPLIANCE ATLAS · 活页 · 谱系 v2</div>
+</head>
+<body>
+<main class="wrap">
+  <div class="eyebrow">AI COMPLIANCE ATLAS · 活页 · 谱系 v3</div>
   <h1>模型门派谱系</h1>
-  <p class="sub">十一家大模型的差别，大部分不是神秘配方，而是在<a href="blueprint.html">工程蓝图</a>教过的那些「分叉路口」上各自选了不同的岔。本页两张图：先看<b>开放度阶梯</b>（谁开源、开到哪一层），再看<b>门派矩阵</b>（每家在各路口的选择，点某一家展开小传与详情）。</p>
+  <p class="sub">十一家模型家族，在<a href="blueprint.html">工程蓝图</a>的分叉路口上怎样选择？先看<b>权重与许可</b>，再用<b>门派矩阵</b>对照架构、后训练、推理和多模态。每一行限定到具体型号，展开即可查看变化、能力边界与官方来源。</p>
 
   <div class="loose">
-    <span class="lt">📎 活页机制 · 盘点基准日 2026-07-12</span>
-    与主线蓝图讲「不变的原理」不同，本页是<b>商业格局快照，保质期以月计</b>——过期整页换新（谱系独立编号 v1、v2……），不影响主线版本。
-    全部内容由 AI 起草、<b>未经人工核验</b>（规则 R5）；起草者为 Claude（Anthropic）——<b>评述自家门派存在利益相关</b>，措辞已尽量中性，读者自行折扣。
-    <div class="legend"><b>来源标注</b><span>◉ 官方论文 / 技术报告 / 官方宣称</span><span>◐ 媒体报道或行业共识</span><span>○ 传闻或推断——引用前必核</span></div>
+    <span class="lt">📎 活页快照 · 盘点基准日 <time datetime="2026-09-17">2026-09-17</time></span>
+    本页按当日可查的<b>官方发布、模型卡、开发文档和许可证</b>更新，独立编号，不改变主线蓝图版本。型号与服务会继续变化；产品可用性、开放权重和预览状态分别标注。
+    <div class="legend"><b>阅读口径</b><span>◉ 官方资料支持，非独立实测</span><span>未披露 = 本次所列资料未提供足够细节</span><span>Preview / 受限访问 ≠ 全面开放</span></div>
+    <div class="snapshot-status" id="snapshot-status">建议每 30 天复核；本次由 AI 检索整理，尚未经人工与法律审校。</div>
   </div>
 
-  <h2>开放度阶梯 · 「开源」其实分五层</h2>
-  <p class="sub" style="font-size:13.5px">一个模型 = <b>权重</b>（炼好的结果）+ <b>训练代码</b>（怎么炼的）+ <b>数据</b>（用什么炼的），三样可以分开给。业界说的「开源模型」九成只给了第一样——严格说叫「开放权重」。从上往下，越往下越封闭：</p>
+  <h2>开放情况 · 权重、许可与复现材料分开看</h2>
+  <p class="sub" style="font-size:13.5px">「能下载」回答能否自行部署；「许可证」决定授权条件；训练代码、数据和报告则影响可复现程度。三者不能压成一个排名，同一家公司也可能同时提供多种路线。以下只归类本页列出的具体型号。</p>
   <div class="ladder">
     <div class="rung" style="--lc:var(--p1)">
-      <div class="lv">L4 全开放<small>权重+代码+数据</small></div>
-      <div class="rd"><p>从零可复刻。<b>商业公司无一做到</b>——训练数据永不公开，这本身就是合规信号：数据是最大法律风险所在。</p>
-        <div class="chips"><span class="chip ghost">（空缺——学术代表：AI2 OLMo、Pythia）</span></div></div>
-    </div>
-    <div class="rung" style="--lc:var(--p1)">
-      <div class="lv">L3 方法透明<small>权重+详尽报告/部分代码</small></div>
-      <div class="rd"><p>不止给结果，还告诉你怎么炼的（方法大体可复现），但数据配方仍不公开。</p>
-        <div class="chips"><span class="chip">DeepSeek</span><span class="chip side">（论文与代码开放度为商业旗舰中最高<sup>◉</sup>，故单列此层；权重许可为宽松 MIT）</span></div></div>
-    </div>
-    <div class="rung" style="--lc:var(--p6)">
-      <div class="lv">L2 开放权重<small>宽松许可（MIT / Apache）</small></div>
-      <div class="rd"><p>权重可下载，商用几乎无束缚：改、卖、闭源衍生都行。</p>
-        <div class="chips"><span class="chip">Qwen<sup>◉</sup></span><span class="chip">GLM<sup>◐</sup></span><span class="chip">Kimi（改良 MIT，附署名条款<sup>◐</sup>）</span><span class="chip side">gpt-oss（OpenAI 小分支<sup>◉</sup>）</span><span class="chip side">Grok-1（旧版<sup>◉</sup>）</span></div></div>
+      <div class="lv">开放权重<small>标准许可</small></div>
+      <div class="rd"><p>这些型号公开了权重，并标明 MIT 或 Apache 2.0。使用时仍须遵守对应许可；这不代表训练数据、完整训练流程或所有同家族模型均开放。</p>
+        <div class="chips"><a class="chip" href="#deepseek">DeepSeek V4.1 Flash · MIT</a><a class="chip" href="#hunyuan">Hy4 preview · Apache 2.0</a><a class="chip" href="#glm">GLM-5.3-Flash · MIT</a><a class="chip side" href="#qwen">Qwen3.8-27B · Apache 2.0</a><a class="chip side" href="#google">Gemma 4 · Apache 2.0</a><a class="chip side" href="#openai">gpt-oss · Apache 2.0</a></div></div>
     </div>
     <div class="rung" style="--lc:var(--p2)">
-      <div class="lv">L1 开放权重<small>限制性许可</small></div>
-      <div class="rd"><p>权重可下载、可私有化部署与微调，但许可证带条件：用途限制、超大用户另谈、地域排除等——<b>许可证逐条审查是法务作业</b>。</p>
-        <div class="chips"><span class="chip">Llama（超大用户条款<sup>◉</sup>）</span><span class="chip">混元（含地域排除条款<sup>◐</sup>）</span><span class="chip side">Gemma（Google 小分支，自订许可<sup>◉</sup>）</span></div></div>
+      <div class="lv">开放权重<small>自定义许可</small></div>
+      <div class="rd"><p>下列型号也可获取权重，但许可包含各自的商业条件。Qwen、Kimi、GLM 的条款和触发门槛并不相同，详情行附原文。</p>
+        <div class="chips"><a class="chip" href="#qwen">Qwen3.8-2.4T-A95B</a><a class="chip" href="#kimi">Kimi K3</a><a class="chip" href="#glm">GLM-5.3</a><a class="chip side" href="#meta">Llama 4</a></div></div>
     </div>
     <div class="rung" style="--lc:var(--ink-3)">
-      <div class="lv">L0 完全封闭<small>仅 API 租用</small></div>
-      <div class="rd"><p>模型是黑盒，数据进它机房；能不能用、怎么用，全看服务条款。</p>
-        <div class="chips"><span class="chip">GPT 旗舰</span><span class="chip">Claude</span><span class="chip">Gemini 旗舰</span><span class="chip">Grok 旗舰</span><span class="chip">豆包</span></div></div>
+      <div class="lv">托管服务<small>本次未见权重发布</small></div>
+      <div class="rd"><p>通过产品或 API 使用下列型号；公开的服务文档不等于权重授权。同一家的开放权重支线应单独判断。</p>
+        <div class="chips"><a class="chip" href="#openai">GPT-6 Astra</a><a class="chip" href="#anthropic">Claude Fable 5.1</a><a class="chip" href="#google">Gemini 3.8 Flash</a><a class="chip" href="#xai">Grok 4.6</a><a class="chip" href="#meta">Muse Spark 1.3</a><a class="chip" href="#bytedance">Seed2.1</a></div></div>
     </div>
   </div>
 
-  <h2>门派矩阵 · 十一家 × 六个路口</h2>
-  <p class="sub" style="font-size:13.5px">列 = 蓝图教过的分叉路口；<b>点任意一家的行</b>展开小传与算力/数据/安全/商业四维详情。开放度徽章对应上方阶梯层级。</p>
-  <div class="mtx-scroll"><table id="famtable">
-    <thead><tr><th>门派</th><th>架构骨干</th><th>对齐路线</th><th>慢思考</th><th>多模态</th><th>开放度</th><th>辖区</th></tr></thead>
+  <h2 id="matrix-title">门派矩阵 · 十一家 × 六个观察面</h2>
+  <p class="sub" id="matrix-help" style="font-size:13.5px">点击一家展开资料；也可用 Tab 选中门派按钮，再按 Enter 或空格。宽表可左右滚动。<b>型号并列不代表性能排名</b>；文字 / 图像 / 音频 / 视频均区分输入与输出，工具能力另行说明。</p>
+  <div class="mtx-scroll" tabindex="0" role="region" aria-labelledby="matrix-title" aria-describedby="matrix-help"><table id="famtable">
+    <thead><tr><th scope="col">门派 / 本次代表型号</th><th scope="col">架构骨干</th><th scope="col">后训练公开信息</th><th scope="col">推理控制</th><th scope="col">输入 → 输出</th><th scope="col">权重与许可</th><th scope="col">获取方式</th></tr></thead>
     <tbody>
-      <tr class="fam"><th><span class="car">▶</span>OpenAI · GPT</th><td>保密；MoE 为推断<sup>○</sup></td><td>RLHF 开创者<sup>◉</sup></td><td>o 系开创，并入统一路由<sup>◉</sup></td><td>原生全模态：文图音同网<sup>◉</sup></td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">🔒 L0</span></td><td>美</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：GPT-5 系 ◉</span><br>把「大力出奇迹」从假说变成产业的公司：GPT 系列证明规模定律，o 系列开创「先想后答」。如今产品优先，架构细节自 GPT-4 起全面保密；另有 gpt-oss 小型开源分支（宽松许可）<sup>◉</sup>。</p>
-        <dl><dt>算力底座</dt><dd>英伟达 + 微软云；超级数据中心计划<sup>◐</sup></dd><dt>数据姿态</dt><dd>网络+授权+合成；多起版权诉讼在身<sup>◐</sup></dd><dt>安全主张</dt><dd>部署前「准备度框架」<sup>◉</sup></dd><dt>商业形态</dt><dd>超级应用 + API，消费者第一<sup>◉</sup></dd></dl></td></tr>
+      <tr class="fam" id="openai">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-openai"><span class="car" aria-hidden="true">▶</span>OpenAI · GPT<span class="model-name">GPT-6 Astra</span></button></th>
+        <td>未披露完整架构</td><td>未披露完整配方</td><td>low → max<br>五档 effort</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>API / 产品</td>
+      </tr>
+      <tr class="det" id="detail-openai"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>本次以 GPT-6 Astra 为代表：官方定位覆盖复杂推理、编码、计算机使用与研究。产品中的语音、生图等能力，需核对相应模型或工具，不能合并为 Astra 的原生输出。</p>
+        <dl><div><dt>可核实规格</dt><dd>上下文 1,050,000 tokens，最大输出 128,000；支持函数调用与结构化输出。</dd></div>
+<div><dt>推理方式</dt><dd>reasoning.effort 提供 low、medium、high、xhigh、max；档位不应直接与其他厂商的同名档位比较。</dd></div>
+<div><dt>开放支线</dt><dd>gpt-oss-120b / 20b 另行发布开放权重，采用 Apache 2.0；不能据此推断 GPT 旗舰的权重开放。</dd></div>
+<div><dt>资料边界</dt><dd>Astra 模型页将音频和视频列为不支持；本页不推测其参数规模或是否采用 MoE。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://developers.openai.com/api/docs/models/gpt-6-astra" target="_blank" rel="noopener noreferrer">Astra 模型文档 ↗</a><a href="https://developers.openai.com/api/docs/models/all" target="_blank" rel="noopener noreferrer">官方模型目录 / gpt-oss ↗</a></p>
+      </td></tr>
 
-      <tr class="fam"><th><span class="car">▶</span>Anthropic · Claude</th><td>保密<sup>○</sup></td><td>宪法式 AI / RLAIF<sup>◉</sup></td><td>扩展思考：同一模型可开关<sup>◉</sup></td><td>图像理解为主，不做生图<sup>◉</sup></td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">🔒 L0</span></td><td>美</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：Claude 4.5 → 5 代（Fable/Mythos 分级）◉</span><br>从 OpenAI 分出、把「安全」写进公司章程的一派：宪法式对齐与可解释性研究是招牌，产品线克制，主攻企业与写代码场景。<b>利益相关：本页起草者即出自此门。</b></p>
-        <dl><dt>算力底座</dt><dd>多云并用 + 定制芯片合作<sup>◐</sup></dd><dt>数据姿态</dt><dd>书籍语料诉讼已达成大额和解<sup>◐</sup></dd><dt>安全主张</dt><dd>责任扩展政策 RSP + 可解释性最重注<sup>◉</sup></dd><dt>商业形态</dt><dd>企业与开发者，代码场景标杆<sup>◉</sup></dd></dl></td></tr>
+      <tr class="fam" id="anthropic">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-anthropic"><span class="car" aria-hidden="true">▶</span>Anthropic · Claude<span class="model-name">Fable 5.1 / Mythos 5.1</span></button></th>
+        <td>未披露完整架构</td><td>发布系统卡与对齐评估；完整配方未披露</td><td>自适应思考<br>始终启用</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>Fable 一般可用<br>Mythos 受限访问</td>
+      </tr>
+      <tr class="det" id="detail-anthropic"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>9 月 1 日发布 Fable 5.1 / Mythos 5.1。官方说明二者是同一模型、采用不同的安全保护设置：Fable 一般可用，Mythos 通过受信任访问计划提供。</p>
+        <dl><div><dt>可核实规格</dt><dd>Fable 5.1：1M 上下文、128K 最大输出，支持图文输入。</dd></div>
+<div><dt>推理方式</dt><dd>Fable 5.1 的 adaptive thinking 始终启用，用 effort 调节深度；旧页“统一可开关”的说法不再适用。</dd></div>
+<div><dt>同族分工</dt><dd>Opus 5、Sonnet 5、Haiku 4.5 仍在官方目录中，能力、思考机制与获取条件逐型号核对。</dd></div>
+<div><dt>资料边界</dt><dd>安全保护设置的区别不应画成两套不同的底层架构；官方系统卡也不等于独立安全认证。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://www.anthropic.com/claude-fable-and-mythos-5-1" target="_blank" rel="noopener noreferrer">5.1 官方发布与系统卡入口 ↗</a><a href="https://platform.claude.com/docs/en/models/fable-5-1/overview" target="_blank" rel="noopener noreferrer">Fable 5.1 规格 ↗</a></p>
+      </td></tr>
 
-      <tr class="fam"><th><span class="car">▶</span>Google · Gemini</th><td>MoE（官方提及）<sup>◉</sup></td><td>RLHF 系，公开细节少<sup>◐</sup></td><td>thinking 档位<sup>◉</sup></td><td>原生多模态从头训练，最激进<sup>◉</sup></td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">🔒 L0</span></td><td>美</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：Gemini 3 ◉</span><br>发明 Transformer 的老钱世家（2017 年那篇论文出自它家），被 ChatGPT 打醒后合并 DeepMind 全力反攻。独门武器是全链路自有：自研 TPU、搜索与 YouTube 数据、安卓与办公分发；另有 Gemma 开源小模型线（自订许可）<sup>◉</sup>。</p>
-        <dl><dt>算力底座</dt><dd>自研 TPU 全链路——十一家中唯一<sup>◉</sup></dd><dt>数据姿态</dt><dd>搜索生态 + YouTube 独有资产<sup>◐</sup></dd><dt>安全主张</dt><dd>前沿安全框架<sup>◉</sup></dd><dt>商业形态</dt><dd>生态捆绑：搜索 / 办公 / 安卓<sup>◉</sup></dd></dl></td></tr>
+      <tr class="fam" id="google">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-google"><span class="car" aria-hidden="true">▶</span>Google · Gemini<span class="model-name">Gemini 3.8 Flash</span></button></th>
+        <td>沿用 3.7 Flash 基础；详见模型卡依赖链</td><td>当前卡引用前代训练资料</td><td>可配置 thinking</td><td>文、图、音、视频 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>Gemini 产品 / API<br>Gemma 另有权重</td>
+      </tr>
+      <tr class="det" id="detail-google"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>9 月更新的 Gemini 3.8 Flash 模型卡列出多模态输入与文字输出。Gemini 3.8 Live / Live Extended Thinking 是另行发布的实时语音模型，不与 Flash 的输出模态混写。</p>
+        <dl><div><dt>可核实规格</dt><dd>Flash 支持最多 1M 输入上下文与 64K 输出；模型卡将架构说明追溯至 3.7 Flash 及其前代。</dd></div>
+<div><dt>实时语音支线</dt><dd>9 月 15 日的 3.8 Live 系列面向实时语音交互；选型时分别核对 Live 与 Flash 接口。</dd></div>
+<div><dt>开放支线</dt><dd>Gemma 4 已采用 Apache 2.0，含 Dense 与 MoE 型号；旧页对整个 Gemma 系列的自定义许可标签已更新。</dd></div>
+<div><dt>资料边界</dt><dd>不同 Gemma 4 尺寸的音频支持不同；不能把一家公司的图像、语音、视频生成能力视为同一个模型。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://deepmind.google/models/model-cards/gemini-3-8-flash/" target="_blank" rel="noopener noreferrer">Gemini 3.8 Flash 模型卡 ↗</a><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-8-live-gemini-3-8-live-extended-thinking/" target="_blank" rel="noopener noreferrer">3.8 Live 发布 ↗</a><a href="https://ai.google.dev/gemma/docs/core/model_card_4" target="_blank" rel="noopener noreferrer">Gemma 4 模型卡与许可 ↗</a></p>
+      </td></tr>
 
-      <tr class="fam"><th><span class="car">▶</span>xAI · Grok</th><td>Grok-1 曾开源 MoE<sup>◉</sup>；新旗舰保密<sup>○</sup></td><td>RLHF；尺度定位刻意宽松<sup>◐</sup></td><td>3 代起 Think 模式<sup>◉</sup></td><td>图文理解 + 生图<sup>◐</sup></td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">🔒 L0</span></td><td>美</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：Grok 4 系 ◉</span><br>最年轻也最激进：靠创纪录速度自建超大算力集群追赶，独家使用 X（推特）实时数据。安全尺度刻意放宽既是卖点也是雷区——出过广为报道的失控事故<sup>◐</sup>。</p>
-        <dl><dt>算力底座</dt><dd>自建超大集群，建设速度著称<sup>◐</sup></dd><dt>数据姿态</dt><dd>X 平台实时数据独家<sup>◉</sup></dd><dt>安全主张</dt><dd>「求真」定位刻意宽松；有公开事故<sup>◐</sup></dd><dt>商业形态</dt><dd>订阅捆绑 X<sup>◉</sup></dd></dl></td></tr>
+      <tr class="fam" id="xai">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-xai"><span class="car" aria-hidden="true">▶</span>xAI · Grok<span class="model-name">Grok 4.6</span></button></th>
+        <td>未披露完整架构</td><td>更新 SFT 轨迹<br>+ 智能体 RL</td><td>low / medium /<br>high / xhigh</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>API / Grok Build<br>合作开发工具</td>
+      </tr>
+      <tr class="det" id="detail-xai"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>8 月 12 日发布 Grok 4.6，当前开发文档署名 SpaceXAI。重点转向长任务、编码与工具调用；发布说明披露了追加预训练、重生成监督轨迹和智能体强化学习。</p>
+        <dl><div><dt>可核实规格</dt><dd>当前文档列出 500K 上下文；四档推理强度，默认 high。</dd></div>
+<div><dt>工具与模态</dt><dd>网页 / X 搜索、代码执行属于工具能力；Grok 4.6 的图文输入、文字输出应与语音和 Imagine 产品区分。</dd></div>
+<div><dt>获取方式</dt><dd>官方文档列出 API、Grok Build、Cursor 与模型网关；产品接入不等同于权重可下载。</dd></div>
+<div><dt>资料边界</dt><dd>旧 Grok-1 的架构或许可不能外推至 4.6，本次不沿用“宽松安全尺度”等无直接证据的评价。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://docs.x.ai/developers/grok-4-6" target="_blank" rel="noopener noreferrer">Grok 4.6 开发文档 ↗</a><a href="https://x.ai/news/grok-4-6" target="_blank" rel="noopener noreferrer">Grok 4.6 发布与训练说明 ↗</a></p>
+      </td></tr>
 
-      <tr class="fam"><th><span class="car">▶</span>DeepSeek</th><td>细粒度 MoE + MLA，论文全公开<sup>◉</sup></td><td>GRPO（R1 论文）<sup>◉</sup></td><td>R1 = 开源推理代表作<sup>◉</sup></td><td>文本为主，多模态另线探索<sup>◉</sup></td><td class="opn" style="--oc:var(--p1)"><span class="ob">🔓 L3·MIT</span></td><td>中 · 已备案</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：V3.x + R1 系 ◉</span><br>量化基金养出的研究组，2025 年初用 R1 证明「花小钱也能上牌桌」，一度震动美股。全线开放权重（MIT）、论文毫无保留，工程降本招法（MLA、FP8、细粒度 MoE——蓝图 MoE 模块讲的就是它）被全行业抄作业。出海方向受多国政府限制<sup>◐</sup>。</p>
-        <dl><dt>算力底座</dt><dd>管制芯片约束下的极致工程效率<sup>◐</sup></dd><dt>数据姿态</dt><dd>公开语料+合成；被指蒸馏他家输出<sup>○</sup></dd><dt>安全主张</dt><dd>安全文档相对薄；境内内容过滤<sup>◐</sup></dd><dt>商业形态</dt><dd>低价 API + 开源引流<sup>◉</sup></dd></dl></td></tr>
+      <tr class="fam" id="deepseek">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-deepseek"><span class="car" aria-hidden="true">▶</span>DeepSeek<span class="model-name">V4.1 Flash / V4 Pro</span></button></th>
+        <td>Flash：MoE<br>CED + CSA2</td><td>Flash：SFT → RL<br>→ 在策略蒸馏</td><td>Flash：1–100<br>推理强度</td><td>V4.1 Flash：<br>文字、图像 → 文字</td><td class="opn" style="--oc:var(--p1)"><span class="ob">MIT</span></td><td>权重 / API</td>
+      </tr>
+      <tr class="det" id="detail-deepseek"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>9 月 10 日发布 V4.1 Flash：从旧页的 V3 / R1 与“文本为主”，更新到原生视觉理解和新架构。V4 Pro 属于另一条在用型号，不能把 Flash 的规格直接套到 Pro。</p>
+        <dl><div><dt>架构变化</dt><dd>Flash 使用因果编解码结构（CED）、压缩稀疏注意力 CSA2，并结合 MoE 与 Engram 条件记忆。</dd></div>
+<div><dt>规格口径</dt><dd>模型卡列出 552B 主干、1M 上下文；预填充 / 解码激活量不同。主干参数不等于包含记忆模块在内的文件总参数。</dd></div>
+<div><dt>开放情况</dt><dd>V4.1 Flash 模型卡明确代码与权重采用 MIT，并公开推理与部署说明；这不表示完整训练数据已发布。</dd></div>
+<div><dt>API 变化</dt><dd>最新 Flash API 名为 deepseek-flash；旧 V4 Flash / Vision Exp 已退役，其兼容别名暂时路由到 V4.1 Flash。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash" target="_blank" rel="noopener noreferrer">V4.1 Flash 模型卡 / MIT 入口 ↗</a><a href="https://api-docs.deepseek.com/updates/" target="_blank" rel="noopener noreferrer">官方 API 更新日志 ↗</a></p>
+      </td></tr>
 
-      <tr class="fam"><th><span class="car">▶</span>Meta · Llama</th><td>3 代 Dense<sup>◉</sup>；4 代转 MoE<sup>◉</sup></td><td>SFT + DPO + RLHF 混合<sup>◉</sup></td><td>截至基准日无旗舰推理版<sup>◐</sup></td><td>4 代原生多模态<sup>◉</sup></td><td class="opn" style="--oc:var(--p2)"><span class="ob">🔑 L1</span></td><td>美</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：Llama 4 系 ◉</span><br>开放权重路线的旗手——蓝图全站数字例锚定的正是它家 Llama-3。「不卖模型、开源换生态」养活了全球开源社区；许可证附条件（超大用户须另行授权等<sup>◉</sup>）故居 L1。4 代口碑波折后重金重组超级智能实验室，开源承诺出现摇摆<sup>◐</sup>。</p>
-        <dl><dt>算力底座</dt><dd>自建 GPU 集群（数十万卡级宣称）<sup>◐</sup></dd><dt>数据姿态</dt><dd>公开网络+自家社交平台；亦有书籍诉讼<sup>◐</sup></dd><dt>安全主张</dt><dd>开源安全工具链（Guard 系）<sup>◉</sup></dd><dt>商业形态</dt><dd>不卖模型，开源换生态<sup>◉</sup></dd></dl></td></tr>
+      <tr class="fam" id="meta">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-meta"><span class="car" aria-hidden="true">▶</span>Meta · Muse / Llama<span class="model-name">Muse Spark 1.3 / Llama 4</span></button></th>
+        <td>按产品线区分；不由 Llama 推断 Muse</td><td>Spark 强调长任务与编码；完整配方未列</td><td>Spark：多模态推理<br>与智能体工作流</td><td>Spark：视频、图像、文档理解</td><td class="opn" style="--oc:var(--p2)"><span class="ob">双路线</span></td><td>Spark API 公开预览<br>Llama 权重</td>
+      </tr>
+      <tr class="det" id="detail-meta"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>Meta 已同时提供 Muse 与 Llama 路线。当前开发者页以 Muse Spark 1.3、Muse Code 和 Meta Model API 为入口；不能继续用“只开源、不卖模型”概括整个家族。</p>
+        <dl><div><dt>本次更新</dt><dd>Spark 1.3 强调长任务编码与原生多模态感知；官方开发者页将其 API 服务标为 public preview。</dd></div>
+<div><dt>产品边界</dt><dd>Muse Image 与 Muse Voice Transcribe 单列；不能把这些产品的生成或转写能力都算作 Spark 的原生输出。</dd></div>
+<div><dt>开放支线</dt><dd>Llama 4 可获取权重，采用 Llama 4 Community License，含使用政策及额外商业条款；不属于 MIT / Apache。</dd></div>
+<div><dt>资料边界</dt><dd>模型卡、产品入口与权重许可分别判断。蓝图中用于教学的 Llama 3 数值例不因此自动替换。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://ai.meta.com/llama" target="_blank" rel="noopener noreferrer">Meta 开发者模型与产品目录 ↗</a><a href="https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Llama 4 官方权重与许可 ↗</a></p>
+      </td></tr>
 
-      <tr class="fam"><th><span class="car">▶</span>阿里 · Qwen</th><td>Dense 与 MoE 双线并出<sup>◉</sup></td><td>多阶段 RLHF / GRPO 系<sup>◉</sup></td><td>混合思考，可开关<sup>◉</sup></td><td>全家桶：VL / Audio / Omni<sup>◉</sup></td><td class="opn" style="--oc:var(--p6)"><span class="ob">🔓 L2·Apache</span></td><td>中 · 已备案</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：Qwen3 系 ◉</span><br>国内开源代表：从小尺寸到旗舰几乎全开源、许可证宽松（多为 Apache 2.0），全球下载量与衍生模型数常年霸榜<sup>◐</sup>。商业闭环押在阿里云上。</p>
-        <dl><dt>算力底座</dt><dd>阿里云自有基础设施<sup>◉</sup></dd><dt>数据姿态</dt><dd>中文语料深耕 + 电商生态<sup>◐</sup></dd><dt>安全主张</dt><dd>境内备案合规体系内<sup>◉</sup></dd><dt>商业形态</dt><dd>云捆绑（阿里云）<sup>◉</sup></dd></dl></td></tr>
+      <tr class="fam" id="qwen">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-qwen"><span class="car" aria-hidden="true">▶</span>阿里 · Qwen<span class="model-name">Qwen3.8-Max / 2.4T-A95B</span></button></th>
+        <td>MoE + Gated DeltaNet<br>/ Gated Attention</td><td>已发布后训练权重；本卡未列完整配方</td><td>可调 effort；<br>托管版另支持非思考</td><td>Max 服务：视觉输入<br>2.4T 权重：文本</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分型号</span></td><td>Max API<br>2.4T / 27B 等权重</td>
+      </tr>
+      <tr class="det" id="detail-qwen"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>Qwen3.8 首次开放 Max 级权重 Qwen3.8-2.4T-A95B。官方明确：托管 Qwen3.8-Max 基于这些权重，但额外提供视觉输入、非思考模式及默认 1M 上下文；二者不是完全相同的交付物。</p>
+        <dl><div><dt>架构与窗口</dt><dd>2.4T 总参数、95B 激活；线性注意力与门控注意力混合。权重原生窗口为 262,144，可扩展至 1,010,000 tokens。</dd></div>
+<div><dt>Max 级许可</dt><dd>Qwen3.8-Max License 含署名要求；从事 MaaS 或 AI Work Assistant 业务且关联主体连续 12 个月总收入超过 5,000 万美元时，商业使用需另获许可，内部使用有定义与例外。</dd></div>
+<div><dt>同族不同许可</dt><dd>Qwen3.8-27B 为 Apache 2.0；Flash-Next 标注 Qwen Community License 1.0。不能给全部 Qwen 型号统一贴 Apache 标签。</dd></div>
+<div><dt>资料边界</dt><dd>托管版的视觉输入、工具和默认上下文设置，不自动随开放权重下载；部署时核对模型卡与服务说明。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B" target="_blank" rel="noopener noreferrer">2.4T-A95B 模型卡 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/blob/207bd685a7e3696cfaff12ded7c6a7ea0f88c996/LICENSE" target="_blank" rel="noopener noreferrer">Max 级许可证 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-27B" target="_blank" rel="noopener noreferrer">27B 模型卡 / Apache 2.0 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-Flash-Next" target="_blank" rel="noopener noreferrer">Flash-Next 模型卡 / 许可 ↗</a></p>
+      </td></tr>
 
-      <tr class="fam"><th><span class="car">▶</span>月之暗面 · Kimi</th><td>K2 万亿级细粒度 MoE<sup>◉</sup></td><td>RL 推理路线论文公开（K1.5）<sup>◉</sup></td><td>K1.5 起推理线<sup>◉</sup></td><td>视觉理解版本<sup>◐</sup></td><td class="opn" style="--oc:var(--p6)"><span class="ob">🔓 L2·改MIT</span></td><td>中 · 已备案</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：K2 系 ◉</span><br>以「超长上下文」出圈起家（最早把两百万字上下文做成卖点<sup>◐</sup>），2025 年转向开源巨型 MoE：K2 万亿参数开源，被视为 DeepSeek 之后开放路线的第二记重拳<sup>◐</sup>。许可为改良 MIT（超大规模部署附署名条款<sup>◐</sup>）。</p>
-        <dl><dt>算力底座</dt><dd>租用为主的混合算力<sup>◐</sup></dd><dt>数据姿态</dt><dd>中文深耕；长文本数据见长<sup>◐</sup></dd><dt>安全主张</dt><dd>境内备案合规体系内<sup>◉</sup></dd><dt>商业形态</dt><dd>C 端助手 + API + 开源引流<sup>◐</sup></dd></dl></td></tr>
+      <tr class="fam" id="kimi">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-kimi"><span class="car" aria-hidden="true">▶</span>月之暗面 · Kimi<span class="model-name">K3 / K2.8 Preview</span></button></th>
+        <td>K3：2.8T MoE<br>KDA + 门控 MLA</td><td>K3：大规模 RL<br>与合成训练数据</td><td>low / high / max<br>注意产品路由</td><td>K3：原生视觉理解</td><td class="opn" style="--oc:var(--p2)"><span class="ob">自定义许可</span></td><td>K3 权重 / API<br>K2.8：Code 预览</td>
+      </tr>
+      <tr class="det" id="detail-kimi"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>K3 权重于 7 月 27 日发布，采用 Kimi K3 License；9 月 11 日的 K2.8 Preview 上线 Kimi Code。版本号、发布时间与使用入口并非一条简单递增序列。</p>
+        <dl><div><dt>K3 技术路线</dt><dd>2.8T MoE，1M 上下文；采用 Kimi Delta Attention 与门控 MLA 的混合注意力、Attention Residuals。</dd></div>
+<div><dt>Code 路由变化</dt><dd>Kimi Code 的模型 ID 仍为 kimi-for-coding；文档称关闭 thinking 时，K3 系列与 K2.8 Preview 请求路由到 K2.8 Preview。</dd></div>
+<div><dt>许可条件</dt><dd>K3 对 MaaS 业务及关联主体连续 12 个月总收入超过 2,000 万美元的商业使用要求另行协议；另有大规模产品署名条款，内部使用与官方渠道适用例外见原文。</dd></div>
+<div><dt>资料边界</dt><dd>K3 的开放权重与 K2.8 Preview 的 Code 可用状态分别记录；不将后者写成已开放权重的 K3 升级包。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://www.kimi.com/news/kimi-k3-open-source" target="_blank" rel="noopener noreferrer">K3 权重发布与技术说明 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">K3 许可证 ↗</a><a href="https://www.kimi.com/code/docs/kimi-code/whats-new.html" target="_blank" rel="noopener noreferrer">Kimi Code 模型更新与路由说明 ↗</a></p>
+      </td></tr>
 
-      <tr class="fam"><th><span class="car">▶</span>智谱 · GLM</th><td>GLM-4.5 系 MoE<sup>◉</sup></td><td>RLHF 系多阶段<sup>◐</sup></td><td>混合推理可开关<sup>◉</sup></td><td>GLM-4V 视觉线<sup>◉</sup></td><td class="opn" style="--oc:var(--p6)"><span class="ob">🔓 L2·MIT</span></td><td>中 · 已备案</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：GLM-4.5+ 系 ◐</span><br>学院派创业（清华 KEG 实验室出身），国内最早对标 GPT 的一批；从 ChatGLM-6B 起的开源谱系养活了早期中文开源社区<sup>◉</sup>。新旗舰许可转向 MIT<sup>◐</sup>，agentic（智能体）路线主打；资本市场进程活跃<sup>◐</sup>。</p>
-        <dl><dt>算力底座</dt><dd>多云租用 + 国产芯片适配<sup>◐</sup></dd><dt>数据姿态</dt><dd>中英双语路线起家<sup>◉</sup></dd><dt>安全主张</dt><dd>境内备案合规体系内<sup>◉</sup></dd><dt>商业形态</dt><dd>ToB + API + 开源生态<sup>◐</sup></dd></dl></td></tr>
+      <tr class="fam" id="glm">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-glm"><span class="car" aria-hidden="true">▶</span>智谱 · GLM<span class="model-name">GLM-5.3 / 5.3-Flash</span></button></th>
+        <td>Flash：稀疏 + 线性<br>注意力、mHC</td><td>5.3 沿用 5.2 基座<br>Flash 重新预训练</td><td>low / high / max</td><td>5.3：文本<br>Flash：原生图文</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分型号</span></td><td>权重 / API<br>AutoClaw</td>
+      </tr>
+      <tr class="det" id="detail-glm"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>GLM-5.3 的更新主要来自后训练；5.3-Flash 则使用新基座，是 GLM-5 系列首个原生多模态模型。名称接近，但架构、输入能力和许可都应分开记录。</p>
+        <dl><div><dt>Flash 架构</dt><dd>320B 总参数、18B 激活，混合稀疏 / 线性注意力与 mHC；官方披露使用 30T-token 多模态预训练语料。</dd></div>
+<div><dt>推理控制</dt><dd>5.3 与 5.3-Flash 模型卡均提供 low、high、max 三档 reasoning_effort，默认 max。</dd></div>
+<div><dt>两份许可证</dt><dd>5.3-Flash 为 MIT。5.3 自定义许可要求：运营 MaaS 且关联主体连续 12 个月总收入超过 100 亿美元时，商业使用前须通过 Z.AI 安全审查。</dd></div>
+<div><dt>资料边界</dt><dd>上述为发布方规格与许可摘要；不沿用“GLM 全线 MIT”，也不以 Flash 的视觉能力代替 5.3 的文本规格。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://huggingface.co/zai-org/GLM-5.3" target="_blank" rel="noopener noreferrer">GLM-5.3 模型卡 ↗</a><a href="https://huggingface.co/zai-org/GLM-5.3/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GLM-5.3 许可证 ↗</a><a href="https://huggingface.co/zai-org/GLM-5.3-Flash" target="_blank" rel="noopener noreferrer">GLM-5.3-Flash 模型卡 ↗</a><a href="https://huggingface.co/zai-org/GLM-5.3-Flash/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Flash MIT 许可证 ↗</a></p>
+      </td></tr>
 
-      <tr class="fam"><th><span class="car">▶</span>字节 · 豆包</th><td>保密<sup>○</sup></td><td>保密；RLHF 系推断<sup>○</sup></td><td>思考版<sup>◐</sup></td><td>生成侧强：图像/视频一族<sup>◐</sup></td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">🔒 L0</span></td><td>中 · 已备案</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：豆包大模型系 ◐</span><br>靠抖音系分发的消费者巨头，国内 C 端用户量第一梯队<sup>◐</sup>；2024 年发起大模型价格战（API 降价九成级<sup>◐</sup>）。模型本体封闭——十一家里姿态最像 GPT：产品先行、细节保密。</p>
-        <dl><dt>算力底座</dt><dd>火山引擎自家云<sup>◉</sup></dd><dt>数据姿态</dt><dd>抖音系内容生态<sup>◐</sup></dd><dt>安全主张</dt><dd>境内备案合规体系内<sup>◉</sup></dd><dt>商业形态</dt><dd>C 端超级应用 + 云捆绑（火山引擎）<sup>◉</sup></dd></dl></td></tr>
+      <tr class="fam" id="bytedance">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-bytedance"><span class="car" aria-hidden="true">▶</span>字节 · 豆包 / Seed<span class="model-name">Seed2.1 Pro / Turbo</span></button></th>
+        <td>本次发布页未列完整架构</td><td>本次发布页未列完整配方</td><td>推理与多步骤<br>任务执行</td><td>视觉、视频理解<br>支持代码 / 文本任务</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>豆包 / TRAE<br>火山引擎</td>
+      </tr>
+      <tr class="det" id="detail-bytedance"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>6 月 23 日发布 Seed2.1 Pro / Turbo，重点是通用智能体、代码工程和多模态理解。豆包是产品入口，Seed 是模型线；产品中的图像或视频生成要另外核对具体模型。</p>
+        <dl><div><dt>本次变化</dt><dd>官方发布强调规划、文件处理、跨工具执行，以及从理解需求到编码、调试、验证的完整任务。</dd></div>
+<div><dt>多模态边界</dt><dd>Seed2.1 增强视觉、空间推理与长视频理解；这里的“理解”不等于模型原生输出视频。</dd></div>
+<div><dt>获取方式</dt><dd>发布说明列出豆包、TRAE 与火山引擎等入口；本次资料未提供 Seed2.1 的权重发布。</dd></div>
+<div><dt>资料边界</dt><dd>不把字节持有的内容平台直接写成训练数据来源，也不根据其他 Seed 型号推断 2.1 的参数规模。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://seed.bytedance.com/zh/blog/seed2-1-officially-released-advancing-ai-productivity" target="_blank" rel="noopener noreferrer">Seed2.1 官方中文发布 ↗</a><a href="https://seed.bytedance.com/en/seed2_1" target="_blank" rel="noopener noreferrer">Seed2.1 产品页 / 模型卡入口 ↗</a></p>
+      </td></tr>
 
-      <tr class="fam"><th><span class="car">▶</span>腾讯 · 混元</th><td>MoE<sup>◉</sup></td><td>RLHF 系<sup>◐</sup></td><td>T1 推理线<sup>◐</sup></td><td>特色在生成侧：图像/视频/3D 开源多条线<sup>◉</sup></td><td class="opn" style="--oc:var(--p2)"><span class="ob">🔑 L1</span></td><td>中 · 已备案</td></tr>
-      <tr class="det"><td colspan="7"><p class="bio"><span class="fl">旗舰（基准日）：混元大模型系 ◐</span><br>主战场在微信/QQ 生态内嵌<sup>◐</sup>；开源姿态积极（图像、视频、3D 多条线开源<sup>◉</sup>），但语言旗舰许可证附条件（含地域排除条款<sup>◐</sup>）——L1 与 L2 的区别正是它与 DeepSeek 的区别，是「法务读许可证」的现成教学样本。</p>
-        <dl><dt>算力底座</dt><dd>腾讯云自有基础设施<sup>◉</sup></dd><dt>数据姿态</dt><dd>微信/QQ 生态与内容平台<sup>◐</sup></dd><dt>安全主张</dt><dd>境内备案合规体系内<sup>◉</sup></dd><dt>商业形态</dt><dd>生态内嵌 + 云捆绑（腾讯云）<sup>◉</sup></dd></dl></td></tr>
+      <tr class="fam" id="hunyuan">
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-hunyuan"><span class="car" aria-hidden="true">▶</span>腾讯 · 混元 / Hy<span class="model-name">Hy4 preview <span class="status">预览</span></span></button></th>
+        <td>MoE + Gated DSA<br>IndexCache + iHC</td><td>扩展预训练与后训练；专家任务数据</td><td>推理与长任务能力<br>档位依接口核对</td><td>语言 / 编码主线<br>生成模型另列</td><td class="opn" style="--oc:var(--p1)"><span class="ob">Apache 2.0</span></td><td>预览权重 / API<br>腾讯产品</td>
+      </tr>
+      <tr class="det" id="detail-hunyuan"><td colspan="7">
+        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-09-17</span><br>8 月 28 日发布并开放 Hy4 preview：旧页以 T1 和历史地域限制概括混元，已不适用于该型号。当前 Hy4-preview 仓库明确采用 Apache 2.0。</p>
+        <dl><div><dt>可核实规格</dt><dd>主干 770B、每 token 激活 49B，1M 上下文；另有 MTP 层，不能与主干统计混用。</dd></div>
+<div><dt>架构路线</dt><dd>Gated DSA 稀疏注意力、IndexCache 跨层复用索引，iHC 扩展层间信息流。</dd></div>
+<div><dt>开放情况</dt><dd>本次核对的是 Hy4 preview 权重与其 Apache 2.0 文件；图像、视频、3D 等其他混元仓库仍须分别核对。</dd></div>
+<div><dt>发布状态</dt><dd>仍保留 preview 标签。官方说明与 CodeBuddy、WorkBuddy 等产品协同，模型能力和产品工作流应分开比较。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://www.tencent.com/zh-cn/tencent-releases-and-open-sources-tencent-hy4-preview/" target="_blank" rel="noopener noreferrer">Hy4 preview 官方发布 ↗</a><a href="https://github.com/Tencent-Hunyuan/Hy4-preview/blob/main/README_CN.md" target="_blank" rel="noopener noreferrer">Hy4 preview 技术说明 ↗</a><a href="https://huggingface.co/tencent/Hy4-preview/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Hy4 preview Apache 2.0 ↗</a></p>
+      </td></tr>
     </tbody>
   </table></div>
-  <p class="rowlink">列的出处：架构 → <a href="blueprint.html#mod-moe">蓝图 Ⅱ·MoE</a> · 对齐 → <a href="blueprint.html#pl1">Ⅰ·偏好优化</a> · 慢思考 → <a href="blueprint.html#mod-ttc">Ⅲ·测试时算力</a> · 多模态 → <a href="blueprint.html#mod-vlm">Ⅴ·VLM</a> · 详情行内的算力/数据 → <a href="blueprint.html#mod-net">0·互联与集群</a>、<a href="blueprint.html#mod-corpus">Ⅰ·语料池</a></p>
+  <p class="rowlink">回看原理：<a href="blueprint.html#mod-moe">Ⅱ·MoE</a> · <a href="blueprint.html#pl1">Ⅰ·后训练与偏好优化</a> · <a href="blueprint.html#mod-ttc">Ⅲ·测试时算力</a> · <a href="blueprint.html#mod-vlm">Ⅴ·视觉理解</a> · <a href="blueprint.html#mod-corpus">Ⅰ·训练语料</a></p>
 
-  <div class="seal-note"><div class="sh">⚖ 朱批 · 选型即合规决策（AI 起草，待用户法律审校）</div>
+  <div class="seal-note"><div class="sh">⚖ 朱批 · 选型时核对什么</div>
     <ol>
-      <li><b>开放度阶梯即尽调地图</b>：L0 看服务条款与数据出境，L1 逐条审许可证（用途/规模/地域条款），L2 之后重心转向输出侧责任与安全评估——层级不同，法务作业清单不同。</li>
-      <li><b>境内备案状态</b>决定能否面向公众提供服务（生成式 AI 管理暂行办法的备案要求）；美系模型的境内使用需另行设计合规路径。</li>
-      <li><b>美系模型双向审视</b>：既看数据跨境与内容合规，也要注意出口管制条线的反向波及。</li>
-      <li><b>「数据姿态」是供应商风险信号源</b>：训练数据诉讼与和解直接映射到侵权连带与合同保证条款的谈判点。</li>
+      <li><b>锁定交付物</b>：记录具体模型、快照或权重版本；托管 API、产品路由和下载权重的能力可能不同。</li>
+      <li><b>按型号读许可</b>：保留许可原文，核对使用、再分发、署名及商业条件。上表只是摘要，不替代完整条款或法律审校。</li>
+      <li><b>按实际部署核对服务与数据条件</b>：服务地区、数据保留、训练用途、访问资格及适用监管要求，不能由公司国别或“开源”标签推出。</li>
+      <li><b>用任务评测能力</b>：本页未做独立性能测试；参数量、上下文上限和厂商榜单不构成质量或安全保证。</li>
     </ol>
   </div>
-
-  <div class="others"><b>脚注 · 未入列玩家（谱系 v3 视需要扩列）：</b>
-    MiniMax、阶跃星辰、百度文心、讯飞星火、面壁 MiniCPM（端侧）……境内备案模型的共同点：合规采购路径短，但出海时同样面临反向审查。</div>
-
-  <div class="links">
-    <a href="index.html"><svg class="ico" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg> 返回门户</a>
-    <a href="blueprint.html"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线）</a>
-    <a href="progress.html"><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 进度看板</a>
-  </div>
-
-  <footer>模型门派谱系 · 活页 v2 · 盘点基准日 2026-07-12 · 全部断言按来源三级标注，未经人工核验（R5）。本页过期即整页换新，不追补丁。</footer>
-</div>
-
+  <div class="others"><b>范围说明：</b>保留原有十一家供纵向比较，本页不是全市场榜单。MiniMax、阶跃星辰、文心、星火、MiniCPM 等未列入，不代表其能力或采购可行性判断。<p class="scope-note">本次更新：具体型号与预览状态、输入输出模态、逐型号许可和官方来源；移除未经逐项核验的“已备案”、训练数据归属、传闻架构及绝对化排名。</p></div>
+  <nav class="links" aria-label="相关页面">
+    <a href="index.html">← 返回门户</a><a href="blueprint.html">工程蓝图（主线）</a><a href="progress.html">进度看板</a>
+  </nav>
+  <footer>模型门派谱系 · 活页 v3 · 盘点基准日 2026-09-17 · AI 检索整理 / 人工与法律审校待完成。官方来源就近列于各家详情；后续发布、许可变更与服务调整可能使本快照过期。</footer>
+</main>
 <script>
-/* 门派行 ⇄ 详情行：点行展开（详情行紧跟其后，colspan 全宽） */
-document.querySelectorAll('#famtable tr.fam').forEach(function (row) {
-  row.addEventListener('click', function () {
-    var det = row.nextElementSibling;
-    if (!det || !det.classList.contains('det')) return;
-    var on = det.classList.toggle('on');
+(function () {
+  function expand(row, on) {
     row.classList.toggle('open', on);
+    row.nextElementSibling.classList.toggle('on', on);
+    row.querySelector('.family-toggle').setAttribute('aria-expanded', String(on));
+  }
+  document.querySelectorAll('#famtable tr.fam').forEach(function (row) {
+    expand(row, false);
+    row.addEventListener('click', function (event) {
+      if (event.target.closest('a')) return;
+      expand(row, !row.classList.contains('open'));
+    });
   });
-});
+  function openLinkedFamily() {
+    var row = document.getElementById(location.hash.slice(1));
+    if (row && row.classList.contains('fam')) expand(row, true);
+  }
+  window.addEventListener('hashchange', openLinkedFamily);
+  document.querySelectorAll('.chip[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      var row = document.getElementById(link.getAttribute('href').slice(1));
+      if (row && row.classList.contains('fam')) expand(row, true);
+    });
+  });
+  openLinkedFamily();
+  var age = Math.floor((Date.now() - Date.UTC(2026, 8, 17)) / 86400000);
+  if (age > 30) {
+    var status = document.getElementById('snapshot-status');
+    status.textContent = '快照待复核：距盘点已 ' + age + ' 天，请以详情中的官方最新资料为准。AI 整理内容仍待人工与法律审校。';
+    status.classList.add('stale');
+  }
+}());
 </script>
+</body>
+</html>

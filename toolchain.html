@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="LLM 工业现场：六工位与开发工作台，30 个工具链条目，逐条连接原理、能力边界与官方来源。2026-09-18 盘点。">
 <title>工业现场 · LLM 开发工具链版图</title>
 <style>
-  /* ===== 🏗️ 工业现场（活页，现场 v1 · 盘点基准日 2026-07-29）=====
-     定位：蓝图讲解剖学（器官与数据流），本页讲工地（同一条生产线上业界实际在用的工具）。
-     活页机制同谱系页：盘点基准日 + 独立版本号 + 过期整页换新，不动主线版本。
-     衔接机制：同一坐标系（七平面色 R3 复用）+ 每个工具回链蓝图讲它原理的模块锚点。
-     收录标准：只收「业界当下实际大规模在用」的——这是导航不是名录（地图不是台账）。 */
+  /* 工业现场 v2 · 2026-09-18 · 六工位与开发工作台，逐条附官方来源。 */
 
   /* ===== 风格令牌 v2「克制工程风」（照抄全站 :root 三段式） ===== */
   :root {
@@ -107,21 +105,48 @@
   footer .refs a { color: var(--ink-3); }
   .build { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-3); margin-top: 14px;
     border-top: 1px dashed var(--hairline); padding-top: 12px; }
-</style>
 
-<header>
+  h3 { margin: 0; font-size: 15px; overflow-wrap: anywhere; }
+  a:focus-visible { outline: 2px solid var(--p0); outline-offset: 4px; border-radius: 2px; }
+  .tool .th { flex-wrap: wrap; gap: 3px 9px; }
+  .tool { min-width: 0; scroll-margin-top: 24px; }
+  .tool:target { box-shadow: 0 0 0 2px var(--tc); }
+  .st { scroll-margin-top: 24px; }
+  .tool .sources { font-size: 12px; margin-top: 8px; }
+  .sources a, .notice a, .insights a, .routes a { color: var(--ink-2); text-underline-offset: 3px; }
+  .sources a { display: inline-block; margin-right: 9px; }
+  .station-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .station-nav a { color: var(--ink-2); font-size: 12px; text-decoration: none; padding: 5px 10px;
+    border: 1px solid var(--hairline); border-radius: 4px; background: var(--surface); }
+  .station-nav a:hover { border-color: var(--ink-3); }
+  .linehint { margin: 6px 0 0; font-size: 11px; color: var(--ink-3); }
+  .insights { margin: 26px 0; }
+  .insights h2 { font-size: 18px; margin: 0 0 10px; }
+  .insight-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+  .insight-grid article { border-top: 2px solid var(--hairline); padding-top: 10px; }
+  .insight-grid h3 { font-size: 14px; }
+  .insight-grid p { font-size: 13px; color: var(--ink-2); margin: 5px 0; }
+  .routes { background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; padding: 12px 16px; }
+  .routes summary { cursor: pointer; font-size: 14px; font-weight: 600; }
+  .routes ul { padding-left: 20px; margin: 10px 0 0; font-size: 13px; color: var(--ink-2); }
+  .routes li + li { margin-top: 7px; }
+  .stage-note { font-size: 13px; color: var(--ink-2); border-left: 2px solid var(--hairline); padding: 7px 12px; margin-bottom: 14px; }
+  .stage-note a { color: var(--tc); text-underline-offset: 3px; }
+  .st-count { font-size: 11px; font-weight: 400; color: var(--ink-3); white-space: nowrap; margin-left: 8px; }
+  .snapshot-warning { color: var(--seal); }
+  @media (max-width: 760px) { .insight-grid { grid-template-columns: 1fr; gap: 8px; } }
+  @media (max-width: 400px) { .wrap { padding: 0 16px; } .tool { padding: 12px; } }
+</style>
+</head>
+<body>
+<header id="top">
   <div class="wrap">
     <div class="eyebrow"><b>AI-ATLAS</b> // LOOSE-LEAF · 活页 · <a href="index.html">← 门户</a> · <a href="blueprint.html">📐 蓝图</a></div>
     <h1>工业现场</h1>
-    <p class="sub">蓝图讲的是<b>解剖学</b>——器官与数据流；这一页讲<b>工地</b>：同一条生产线上，业界此刻实际在用什么工具、它站在哪个工位、解决什么问题。每个工具都回链蓝图里讲它原理的模块——先懂原理，工具名就只是「原理的产品化」。</p>
-    <div class="meta">
-      <i>现场 v1</i><i class="hot">盘点基准日 2026-07-29</i><i>活页 · 过期整页换新</i><i>独立于主线版本号</i>
-    </div>
-
-    <!-- FIG.T0 生产线总览：六工位 = 七平面在「开发流程」维度上的投影（平面色 R3 复用）。
-         点击工位或工具名直达条目（data-t 跳转，同蓝图 data-go 精神）。 -->
-    <div class="lineview">
-      <svg viewBox="0 0 980 216" role="img" aria-label="LLM 开发生产线总览：地基与内核、训练车间、权重集散地、推理机房、组装车间、质检站六个工位，各挂业界主力工具，点击直达条目">
+    <p class="sub">蓝图讲<b>器官与数据流</b>，这里看<b>工具如何把模型变成产品</b>。沿着六个工位，辨认硬件栈、训练框架、权重、推理服务、Agent 组装与评测；从每张卡片回到原理，也能直接查官方资料。</p>
+    <div class="meta"><i>现场 v2</i><i class="hot">盘点基准日 <time datetime="2026-09-18">2026-09-18</time></i><i>6 工位 + 开发工作台</i><i>30 条目 · 44 个官方来源</i></div>
+    <nav class="station-nav" aria-label="工位导航"><a href="#s0">ST.00 · 地基与内核</a><a href="#s1">ST.01 · 训练车间</a><a href="#s2">ST.02 · 权重集散地</a><a href="#s3">ST.03 · 推理机房</a><a href="#s4">ST.04 · 组装车间</a><a href="#sqc">ST.QC · 质检站</a><a href="#sdev">ST.DEV · 你手边的工具</a></nav>
+    <div class="lineview">      <svg viewBox="0 0 980 216" role="group" aria-label="LLM 开发生产线总览：地基与内核、训练车间、权重集散地、推理机房、组装车间、质检站六个工位，各列代表条目，使用链接直达详情">
         <defs>
           <marker id="fa" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6.5" orient="auto">
             <path d="M0 0 L10 4 L0 8 z" fill="var(--ink-3)"/>
@@ -136,30 +161,30 @@
           <text x="900" y="42" text-anchor="middle">ST.QC</text>
         </g>
         <!-- 工位箱（可点击跳到分区） -->
-        <g class="chip" data-t="s0" tabindex="0" role="button" aria-label="跳到地基与内核">
+        <a class="chip" href="#s0" aria-label="跳到地基与内核">
           <rect x="14" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p0) 9%, var(--surface))" stroke="var(--p0)" stroke-width="1.6"/>
           <text x="80" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">地基与内核</text>
-        </g>
-        <g class="chip" data-t="s1" tabindex="0" role="button" aria-label="跳到训练车间">
+        </a>
+        <a class="chip" href="#s1" aria-label="跳到训练车间">
           <rect x="178" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p1) 9%, var(--surface))" stroke="var(--p1)" stroke-width="1.6"/>
           <text x="244" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">训练车间</text>
-        </g>
-        <g class="chip" data-t="s2" tabindex="0" role="button" aria-label="跳到权重集散地">
+        </a>
+        <a class="chip" href="#s2" aria-label="跳到权重集散地">
           <rect x="342" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p2) 9%, var(--surface))" stroke="var(--p2)" stroke-width="1.6"/>
           <text x="408" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">权重集散地</text>
-        </g>
-        <g class="chip" data-t="s3" tabindex="0" role="button" aria-label="跳到推理机房">
+        </a>
+        <a class="chip" href="#s3" aria-label="跳到推理机房">
           <rect x="506" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p3) 9%, var(--surface))" stroke="var(--p3)" stroke-width="1.6"/>
           <text x="572" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">推理机房</text>
-        </g>
-        <g class="chip" data-t="s4" tabindex="0" role="button" aria-label="跳到组装车间">
+        </a>
+        <a class="chip" href="#s4" aria-label="跳到组装车间">
           <rect x="670" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p4) 9%, var(--surface))" stroke="var(--p4)" stroke-width="1.6"/>
           <text x="736" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">组装车间</text>
-        </g>
-        <g class="chip" data-t="sqc" tabindex="0" role="button" aria-label="跳到质检站">
+        </a>
+        <a class="chip" href="#sqc" aria-label="跳到质检站">
           <rect x="834" y="50" width="132" height="34" rx="3" fill="color-mix(in srgb, var(--p1) 9%, var(--surface))" stroke="var(--p1)" stroke-width="1.6" stroke-dasharray="6 4"/>
           <text x="900" y="71" text-anchor="middle" font-size="12" fill="var(--ink-2)">质检站</text>
-        </g>
+        </a>
         <!-- 工位间流向 -->
         <g stroke="var(--ink-3)" stroke-width="1.8">
           <line x1="148" y1="67" x2="172" y2="67" marker-end="url(#fa)"/>
@@ -170,273 +195,334 @@
         </g>
         <!-- 传送带 -->
         <line class="beltdash" x1="10" y1="98" x2="970" y2="98" stroke="var(--ink-3)" stroke-width="2" opacity="0.45"/>
-        <!-- 工具芯片（只挂头牌，地图不是台账；点击直达条目） -->
+        <!-- 工具芯片（列出代表条目；点击直达条目） -->
         <g font-family="var(--mono)" font-size="9.5">
-          <g class="chip" data-t="t-cuda" tabindex="0"><rect x="14" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="80" y="125" text-anchor="middle" fill="var(--ink-2)">CUDA</text></g>
-          <g class="chip" data-t="t-triton" tabindex="0"><rect x="14" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="80" y="149" text-anchor="middle" fill="var(--ink-2)">Triton</text></g>
-          <g class="chip" data-t="t-nccl" tabindex="0"><rect x="14" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="80" y="173" text-anchor="middle" fill="var(--ink-2)">NCCL</text></g>
-          <g class="chip" data-t="t-pytorch" tabindex="0"><rect x="178" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="244" y="125" text-anchor="middle" fill="var(--ink-2)">PyTorch</text></g>
-          <g class="chip" data-t="t-megatron" tabindex="0"><rect x="178" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="244" y="149" text-anchor="middle" fill="var(--ink-2)">Megatron·DeepSpeed</text></g>
-          <g class="chip" data-t="t-trl" tabindex="0"><rect x="178" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="244" y="173" text-anchor="middle" fill="var(--ink-2)">TRL · verl</text></g>
-          <g class="chip" data-t="t-hf" tabindex="0"><rect x="342" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="408" y="125" text-anchor="middle" fill="var(--ink-2)">HuggingFace Hub</text></g>
-          <g class="chip" data-t="t-fmt" tabindex="0"><rect x="342" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="408" y="149" text-anchor="middle" fill="var(--ink-2)">safetensors · GGUF</text></g>
-          <g class="chip" data-t="t-modelscope" tabindex="0"><rect x="342" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="408" y="173" text-anchor="middle" fill="var(--ink-2)">ModelScope 魔搭</text></g>
-          <g class="chip" data-t="t-vllm" tabindex="0"><rect x="506" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="572" y="125" text-anchor="middle" fill="var(--ink-2)">vLLM</text></g>
-          <g class="chip" data-t="t-sglang" tabindex="0"><rect x="506" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="572" y="149" text-anchor="middle" fill="var(--ink-2)">SGLang</text></g>
-          <g class="chip" data-t="t-llamacpp" tabindex="0"><rect x="506" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="572" y="173" text-anchor="middle" fill="var(--ink-2)">llama.cpp · Ollama</text></g>
-          <g class="chip" data-t="t-langgraph" tabindex="0"><rect x="670" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="736" y="125" text-anchor="middle" fill="var(--ink-2)">LangGraph</text></g>
-          <g class="chip" data-t="t-mcp" tabindex="0"><rect x="670" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="736" y="149" text-anchor="middle" fill="var(--ink-2)">MCP</text></g>
-          <g class="chip" data-t="t-llamaindex" tabindex="0"><rect x="670" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="736" y="173" text-anchor="middle" fill="var(--ink-2)">LlamaIndex · Dify</text></g>
-          <g class="chip" data-t="t-harness" tabindex="0"><rect x="834" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="900" y="125" text-anchor="middle" fill="var(--ink-2)">lm-eval · OpenCompass</text></g>
-          <g class="chip" data-t="t-wandb" tabindex="0"><rect x="834" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="900" y="149" text-anchor="middle" fill="var(--ink-2)">W&amp;B</text></g>
-          <g class="chip" data-t="t-arena" tabindex="0"><rect x="834" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="900" y="173" text-anchor="middle" fill="var(--ink-2)">LMArena</text></g>
+          <a class="chip" href="#t-cuda" aria-label="查看 CUDA"><rect x="14" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="80" y="125" text-anchor="middle" fill="var(--ink-2)">CUDA</text></a>
+          <a class="chip" href="#t-triton" aria-label="查看 Triton"><rect x="14" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="80" y="149" text-anchor="middle" fill="var(--ink-2)">Triton</text></a>
+          <a class="chip" href="#t-nccl" aria-label="查看 NCCL"><rect x="14" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="80" y="173" text-anchor="middle" fill="var(--ink-2)">NCCL</text></a>
+          <a class="chip" href="#t-pytorch" aria-label="查看 PyTorch"><rect x="178" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="244" y="125" text-anchor="middle" fill="var(--ink-2)">PyTorch</text></a>
+          <a class="chip" href="#t-megatron" aria-label="查看 Megatron·DeepSpeed"><rect x="178" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="244" y="149" text-anchor="middle" fill="var(--ink-2)">Megatron·DeepSpeed</text></a>
+          <a class="chip" href="#t-trl" aria-label="查看 TRL · verl"><rect x="178" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="244" y="173" text-anchor="middle" fill="var(--ink-2)">TRL · verl</text></a>
+          <a class="chip" href="#t-hf" aria-label="查看 HuggingFace Hub"><rect x="342" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="408" y="125" text-anchor="middle" fill="var(--ink-2)">HuggingFace Hub</text></a>
+          <a class="chip" href="#t-fmt" aria-label="查看 safetensors · GGUF"><rect x="342" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="408" y="149" text-anchor="middle" fill="var(--ink-2)">safetensors · GGUF</text></a>
+          <a class="chip" href="#t-modelscope" aria-label="查看 ModelScope 魔搭"><rect x="342" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="408" y="173" text-anchor="middle" fill="var(--ink-2)">ModelScope 魔搭</text></a>
+          <a class="chip" href="#t-vllm" aria-label="查看 vLLM"><rect x="506" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="572" y="125" text-anchor="middle" fill="var(--ink-2)">vLLM</text></a>
+          <a class="chip" href="#t-sglang" aria-label="查看 SGLang"><rect x="506" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="572" y="149" text-anchor="middle" fill="var(--ink-2)">SGLang</text></a>
+          <a class="chip" href="#t-llamacpp" aria-label="查看 llama.cpp · Ollama"><rect x="506" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="572" y="173" text-anchor="middle" fill="var(--ink-2)">llama.cpp · Ollama</text></a>
+          <a class="chip" href="#t-langgraph" aria-label="查看 LangGraph"><rect x="670" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="736" y="125" text-anchor="middle" fill="var(--ink-2)">LangChain · LangGraph</text></a>
+          <a class="chip" href="#t-mcp" aria-label="查看 MCP 与 A2A"><rect x="670" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="736" y="149" text-anchor="middle" fill="var(--ink-2)">MCP / A2A</text></a>
+          <a class="chip" href="#t-llamaindex" aria-label="查看 LlamaIndex · Dify"><rect x="670" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="736" y="173" text-anchor="middle" fill="var(--ink-2)">LlamaIndex · Dify</text></a>
+          <a class="chip" href="#t-harness" aria-label="查看 lm-eval · OpenCompass"><rect x="834" y="112" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="900" y="125" text-anchor="middle" fill="var(--ink-2)">lm-eval · OpenCompass</text></a>
+          <a class="chip" href="#t-wandb" aria-label="查看 W&amp;B"><rect x="834" y="136" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="900" y="149" text-anchor="middle" fill="var(--ink-2)">W&amp;B</text></a>
+          <a class="chip" href="#t-arena" aria-label="查看 Arena"><rect x="834" y="160" width="132" height="18" rx="3" fill="var(--surface)" stroke="var(--hairline)"/><text x="900" y="173" text-anchor="middle" fill="var(--ink-2)">Arena</text></a>
         </g>
         <text x="490" y="203" text-anchor="middle" font-family="var(--mono)" font-size="9" fill="var(--ink-3)" letter-spacing="0.14em">FIG.T0 · PRODUCTION LINE · 点击工位或工具名直达条目 · 示意</text>
-      </svg>
-    </div>
+      </svg></div>
+    <p class="linehint">图中列出代表条目；窄屏可横向查看，也可直接使用上方工位导航。</p>
   </div>
 </header>
-
-<div class="wrap">
-
+<main class="wrap">
   <div class="notice">
-    <p>🏗️ <b>读法与来源</b>：六个工位 = 蓝图七平面在「开发流程」维度上的投影，工位颜色沿用平面色（质检站属 Ⅰ 训练管线的「评估·红队」环节，虚线框示意）。</p>
-    <p><b>来源标注</b>：<code>◉</code> = 盘点日联网核实（官方文档或多方独立报道）；<code>◐</code> = 起草模型训练知识（截止 2026-01），盘点日未逐条复核。全部<span style="color:var(--seal)">未经人工核验（R5）</span>，工具版图变化快，以各家官方文档为准。</p>
-    <p><b>收录标准</b>：只收业界当下实际大规模在用的头部工具，刻意不求全——这是导航，不是名录。朱批挂点预留（合规层冻结中，2026-07-18 起另行规划）。</p>
+    <p><b>读法：</b>六工位按开发流程划分，颜色对应蓝图七平面；主线 28 条，加开发工作台 2 条，共 30 条。成组介绍的工具、协议和平台按一条计算。</p>
+    <p><b>资料范围：</b>各条目已于盘点日查阅官方文档或仓库，来源就近列出；“使用边界”和下方观察是据此做的工程归纳。本页未进行独立性能测试，未经人工复核；功能支持以具体版本为准。</p>
+    <p class="snapshot-warning" id="snapshot-warning" hidden>这份快照距盘点日已超过 90 天，使用前请重新核对各条目的官方文档与维护状态。</p>
   </div>
-
-  <section class="st" id="s0" style="--tc: var(--p0)">
-    <h2><span class="stc">ST.00</span>地基与内核</h2>
-    <p class="stageintro">蓝图 <a href="blueprint.html#pl0">PLANE 0</a> 讲了 GPU 为什么快、内存墙卡在哪；工地上这一层的通用语言是 CUDA——以及绕开手写 CUDA 的新路。</p>
-    <div class="tools">
-      <div class="tool" id="t-cuda">
-        <div class="th"><code>CUDA</code><span class="role">GPU 编程平台</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>NVIDIA 的 GPU 编程语言与运行时——想让 GPU 干活，最终都要有人把计算写成它认识的样子。</p>
-        <p><b>为什么绕不开：</b>十几年生态积累是 NVIDIA 最深的护城河：框架、算子库、驱动全绑在它身上。「买不到卡就寸步难行」说的一半是硬件，另一半就是它。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-gpu">0 · 为什么是 GPU</a> · <a href="blueprint.html#mod-roof">0 · 屋顶线模型</a></p>
-      </div>
-      <div class="tool" id="t-triton">
-        <div class="th"><code>Triton</code><span class="role">内核语言</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>OpenAI 开源的「用 Python 写 GPU 内核」语言；PyTorch 2 的编译器 <code>torch.compile</code> 就用它生成算子。</p>
-        <p><b>为什么重要：</b>把写高性能内核的门槛从「CUDA 专家」降到「熟练 Python」，也是打破 CUDA 独占的关键一环。FlashAttention 这类手工内核正是它的用武之地。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-gpu">0 · 为什么是 GPU</a> · <a href="blueprint.html#mod-attn">Ⅱ · 注意力</a></p>
-      </div>
-      <div class="tool" id="t-nccl">
-        <div class="th"><code>NCCL</code><span class="role">通信库</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>多卡多机之间同步梯度与激活的通信库——蓝图「互联与集群」讲的 AllReduce，工程上就是调它。</p>
-        <p><b>为什么重要：</b>千卡训练的神经系统；它一卡顿，整个集群一起等（这就是互联带宽写进屋顶线的原因）。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-net">0 · 互联与集群</a></p>
-      </div>
+  <section class="insights" aria-labelledby="insights-title">
+    <h2 id="insights-title">这次盘点，看三处变化</h2>
+    <div class="insight-grid">
+      <article><h3>01 · 硬件决定可选路径</h3><p><a href="#t-rocm">ROCm</a> 补齐 AMD 计算栈；<a href="#t-trt">TensorRT-LLM</a> 已采用 PyTorch 原生架构。先查硬件与模型支持，再谈性能。</p></article>
+      <article><h3>02 · 训练与推理接成循环</h3><p><a href="#t-trl">TRL</a>、<a href="#t-verl">verl</a> 将生成采样接入后训练。推理引擎也参与训练，权重同步和后端兼容成为配方的一部分。</p></article>
+      <article><h3>03 · Agent 按层组装与验收</h3><p><a href="#t-mcp">MCP / A2A</a> 负责连接，<a href="#t-agent-sdk">SDK</a> 负责执行；还要用<a href="#t-agent-eval">任务评测</a>检查结果，并用轨迹定位失败。</p></article>
     </div>
   </section>
+  <details class="routes">
+    <summary>从任务入场：本地运行、微调、Agent 应用</summary>
+    <ul>
+      <li><b>先在本机运行：</b><a href="#s2">核对模型与权重格式</a> → <a href="#t-llamacpp">llama.cpp</a> / <a href="#t-ollama">Ollama</a> → 检查内存、上下文和执行位置。</li>
+      <li><b>做一个微调实验：</b><a href="#t-lf">LlamaFactory / PEFT</a> 或 <a href="#t-trl">TRL</a> → <a href="#t-wandb">记录配置与产物</a> → <a href="#t-harness">固定评测集验证</a>；资源不够时再设计分布式训练。</li>
+      <li><b>交付 Agent 应用：</b><a href="#s4">选择编排层与执行 SDK</a> → 接模型、数据和工具 → <a href="#t-obs">接入观测</a> → 用自己的任务集验收，必要时参考<a href="#t-agent-eval">公开基准</a>。</li>
+    </ul>
+  </details>
 
-  <section class="st" id="s1" style="--tc: var(--p1)">
-    <h2><span class="stc">ST.01</span>训练车间</h2>
-    <p class="stageintro">对应蓝图 <a href="blueprint.html#pl1">Ⅰ 训练管线</a> 整条传送带。PyTorch 是全部上层建筑的地板；预训练靠并行框架把模型切上千卡；后训练（SFT / 偏好优化 / RLVR）有自己的一套家伙什。</p>
-    <div class="tools">
-      <div class="tool" id="t-pytorch">
-        <div class="th"><code>PyTorch</code><span class="role">深度学习框架</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>定义模型、自动求导、驱动 GPU 的基础框架——你在「迷你训练场」里手写的反向传播，它帮业界自动做。</p>
-        <p><b>地位：</b>研究与工业的双料默认；Llama、Qwen、DeepSeek 的训练代码都建在它上面（TensorFlow 时代已经过去 ◐）。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-train">Ⅰ · 预训练循环</a> · <a href="blueprint.html#mod-block">Ⅱ · Block 总装</a></p>
-      </div>
-      <div class="tool" id="t-megatron">
-        <div class="th"><code>Megatron-LM</code> + <code>DeepSpeed</code><span class="role">千卡并行</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>把一个装不进单卡的模型切开训练：Megatron-LM（NVIDIA）管张量/流水并行的「切法」，DeepSpeed（微软）的 ZeRO 管显存的「省法」，PyTorch 原生的 FSDP 是后起的官方选项。</p>
-        <p><b>为什么重要：</b>蓝图「互联与集群」讲的 3D 并行不是纸上概念，工程上就是这几家的组合拳。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-net">0 · 互联与集群</a> · <a href="blueprint.html#mod-train">Ⅰ · 预训练循环</a></p>
-      </div>
-      <div class="tool" id="t-trl">
-        <div class="th"><code>TRL</code><span class="role">后训练库</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>Hugging Face 的后训练全家桶：SFT、DPO、PPO、GRPO 一个库全有——业界公认的教科书式参考实现。</p>
-        <p><b>为什么重要：</b>你在蓝图学过的 SFT 损失掩码、偏好优化、可验证奖励，它每一样都有开箱即用的 Trainer。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-sft">Ⅰ · 监督微调 SFT</a> · <a href="blueprint.html#mod-rlvr">Ⅰ · 可验证奖励</a></p>
-      </div>
-      <div class="tool" id="t-verl">
-        <div class="th"><code>verl</code><span class="role">RL 训练框架</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>字节跳动开源的大规模 RL 后训练框架（HybridFlow 论文的开源版）——RLVR 时代训推理模型的主力装备之一，同赛道还有 OpenRLHF。</p>
-        <p><b>为什么重要：</b>RL 训练要同时伺候「生成」（推理引擎）和「更新」（训练框架）两套系统，verl 的本事是把两者高效缝合——rollout 常直接挂 vLLM/SGLang，训练与推理两张版图在这里握手。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-rlvr">Ⅰ · 可验证奖励与推理训练</a></p>
-      </div>
-      <div class="tool" id="t-lf">
-        <div class="th"><code>LLaMA-Factory</code><span class="role">微调工作台</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>一站式微调台：选模型、选方法（LoRA / SFT / DPO…）、点运行——把后训练做成了带界面的流水线。</p>
-        <p><b>为什么重要：</b>中文社区的入门首选；很多「我微调了一个自己的模型」的故事从这里开始。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-sft">Ⅰ · 监督微调 SFT</a></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="st" id="s2" style="--tc: var(--p2)">
-    <h2><span class="stc">ST.02</span>权重集散地</h2>
-    <p class="stageintro">蓝图里「权重冻结」之后，模型变成一个文件。这一站讲文件住在哪、什么格式、怎么分发——开放权重生态的物流系统。</p>
-    <div class="tools">
-      <div class="tool" id="t-hf">
-        <div class="th"><code>Hugging Face Hub</code><span class="role">模型集散地</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>「模型的 GitHub」：权重、数据集、在线演示都托管在上面，是开放权重生态的地基。</p>
-        <p><b>为什么重要：</b>谱系页讲的开放度阶梯，物流环节全在这里发生——一个模型「开放」与否，最终体现为它在 Hub 上放出了什么。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#pl2">Ⅱ · 模型本体</a> · 延伸：<a href="genealogy.html">🧬 谱系 · 开放度阶梯</a></p>
-      </div>
-      <div class="tool" id="t-transformers">
-        <div class="th"><code>Transformers</code><span class="role">模型加载库</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>Hugging Face 的标准库：Hub 上任何模型都按同一套接口加载、推理、微调——<code>from_pretrained</code> 一行搞定。</p>
-        <p><b>为什么重要：</b>「换模型不换代码」的抽象层。模型架构千变万化，接口只有一个。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-block">Ⅱ · Block 总装</a></p>
-      </div>
-      <div class="tool" id="t-fmt">
-        <div class="th"><code>safetensors</code> &amp; <code>GGUF</code><span class="role">权重文件格式</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>权重的两大文件格式：safetensors（HF 标准，只存数字不藏代码——取代了能夹带恶意代码的 pickle）；GGUF（llama.cpp 生态的格式，一个文件塞下整个量化模型）。</p>
-        <p><b>为什么重要：</b>格式即生态门票——发权重必发 safetensors，进端侧必转 GGUF。附一个安全侧写：pickle 反序列化漏洞曾是模型供应链的真实攻击面。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a></p>
-      </div>
-      <div class="tool" id="t-modelscope">
-        <div class="th"><code>ModelScope 魔搭</code><span class="role">国内集散地</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>阿里的模型社区：国内访问 Hugging Face 不稳时的主镜像与首发地，Qwen 系全量在此。</p>
-        <p><b>为什么重要：</b>网络与合规双重原因，国内工程实践常以它为默认源。</p>
-        <p class="map">延伸阅读：<a href="genealogy.html">🧬 谱系 · 国内梯队</a></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="st" id="s3" style="--tc: var(--p3)">
-    <h2><span class="stc">ST.03</span>推理机房</h2>
-    <p class="stageintro">对应蓝图 <a href="blueprint.html#pl3">Ⅲ 推理服务</a>。你学过 KV Cache、连续批处理、投机解码、量化——这里的每台引擎，就是同一批概念的不同打包方式。</p>
-    <div class="tools">
-      <div class="tool" id="t-vllm">
-        <div class="th"><code>vLLM</code><span class="role">推理引擎</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>生产级推理引擎的事实标准。它带给全行业两件礼物：PagedAttention（把 KV Cache 当虚拟内存分页管理）和连续批处理。</p>
-        <p><b>地位（2026-07 核实）：</b>硬件支持最广、社区最大；Hugging Face 自家的 TGI 已进维护模式，其推理端点默认改用 vLLM。通用负载选它不会错。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-kv">Ⅲ · KV 缓存</a> · <a href="blueprint.html#mod-pd">Ⅲ · Prefill / Decode</a></p>
-      </div>
-      <div class="tool" id="t-sglang">
-        <div class="th"><code>SGLang</code><span class="role">推理引擎</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>与 vLLM 并驾的另一台发动机：RadixAttention 把多请求间的公共前缀（系统提示词、多轮历史）自动复用，结构化输出（强制 JSON 等）也做得深。</p>
-        <p><b>地位（2026-07 核实）：</b>多轮对话、Agent 循环、RAG 这类「前缀重复率高」的负载上常反超 vLLM——你在论坛看到它，多半就是这些场景；DeepSeek 等模型发布时官方适配。同赛道还有量化见长的 LMDeploy。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-kv">Ⅲ · KV 缓存</a> · <a href="blueprint.html#mod-ctx">Ⅳ · 上下文拼装</a> · <a href="blueprint.html#mod-sample">Ⅲ · 采样</a></p>
-      </div>
-      <div class="tool" id="t-trt">
-        <div class="th"><code>TensorRT-LLM</code><span class="role">推理引擎</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>NVIDIA 亲儿子：把模型编译成榨干自家 GPU 的推理引擎，延迟与吞吐常是天花板。</p>
-        <p><b>取舍：</b>上限最高、门槛也最高——换模型要重编译，是「灵活性换性能」的极端选项。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a> · <a href="blueprint.html#mod-gpu">0 · 为什么是 GPU</a></p>
-      </div>
-      <div class="tool" id="t-llamacpp">
-        <div class="th"><code>llama.cpp</code><span class="role">端侧推理</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>传奇个人开源项目（Georgi Gerganov 发起）：纯 C/C++ 实现，让大模型跑在笔记本、手机甚至树莓派上；GGUF 格式的老家。</p>
-        <p><b>为什么重要：</b>「推理不一定要机房」的证明，整个本地模型生态的地基。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a></p>
-      </div>
-      <div class="tool" id="t-ollama">
-        <div class="th"><code>Ollama</code><span class="role">本地运行器</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>给 llama.cpp 套上极简外壳：<code>ollama run qwen3</code> 一条命令，在自己电脑跑开放权重模型。</p>
-        <p><b>为什么重要：</b>本地跑模型的第一入口；隐私敏感的场景（比如法务文档）想「不出本机」过一遍模型，这是最低门槛的方案。图形界面档还有 LM Studio。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a> · 延伸：<a href="genealogy.html">🧬 谱系 · 开放度阶梯</a></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="st" id="s4" style="--tc: var(--p4)">
-    <h2><span class="stc">ST.04</span>组装车间</h2>
-    <p class="stageintro">对应蓝图 <a href="blueprint.html#pl4">Ⅳ 系统组装</a>。Agent 循环、RAG、工具协议在蓝图里是概念；工地上，它们叫 LangGraph、LlamaIndex、MCP。</p>
-    <div class="tools">
-      <div class="tool" id="t-langgraph">
-        <div class="th"><code>LangChain / LangGraph</code><span class="role">Agent 编排</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>LangChain 是最早的「LLM 应用乐高」；如今重心已移到 LangGraph——把 Agent 工作流写成显式状态机（图），每一步可查、可控、可回放。</p>
-        <p><b>地位（2026-07 核实）：</b>有状态生产工作流的默认选项，受监管行业尤其偏爱它「每一步都留痕」的性格——这一点你作为法务应该会心一笑。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-orch">Ⅳ · 多智能体编排</a> · <a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a></p>
-      </div>
-      <div class="tool" id="t-mcp">
-        <div class="th"><code>MCP</code><span class="role">工具协议</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>不是库，是协议——你已在蓝图「工具协议」模块学过它的报文。2024-11 由 Anthropic 发布，十八个月内 OpenAI、微软、谷歌、亚马逊全部接入；OpenAI 甚至弃用了自家 Assistants API 转向 MCP 路线。</p>
-        <p><b>为什么重要：</b>「工具接入从 N×M 变 N+M」从提案变成了业界公约数；各家 Agent SDK（Claude Agent SDK、OpenAI Agents SDK 等）原生支持。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-proto">Ⅳ · 工具协议</a>（含报文显微镜实验室）</p>
-      </div>
-      <div class="tool" id="t-llamaindex">
-        <div class="th"><code>LlamaIndex</code><span class="role">RAG 框架</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>RAG 起家的框架：文档解析、切分、索引、检索问答，这条链的纵深业界最深。</p>
-        <p><b>为什么重要：</b>你在 RAG 实验室亲手做过的切分与检索，它是工业化版本——「文档问答为主、Agent 为辅」的应用首选。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-rag">Ⅳ · RAG</a></p>
-      </div>
-      <div class="tool" id="t-dify">
-        <div class="th"><code>Dify</code><span class="role">低代码平台</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>开源低代码 LLM 应用平台：拖拽画布搭 RAG 机器人和工作流，不写代码就能上线。</p>
-        <p><b>为什么重要：</b>「会用 ≠ 会写」的中间地带，国内企业内部工具的常见底座；同赛道还有字节的扣子（Coze）。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a></p>
-      </div>
-      <div class="tool" id="t-obs">
-        <div class="th"><code>Langfuse / LangSmith</code><span class="role">可观测性</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>Agent 的行车记录仪：记录每次调用的完整轨迹——提示词、工具调用、token 数、延迟、成本，出错能回放。</p>
-        <p><b>为什么重要：</b>蓝图讲过多智能体的「协作税」；不装记录仪，生产系统里的错误根本无从归因。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-orch">Ⅳ · 多智能体编排</a>（编排剧场实验室的「日志」就是它的雏形）</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="st" id="sqc" style="--tc: var(--p1)">
-    <h2><span class="stc">ST.QC</span>质检站</h2>
-    <p class="stageintro">对应蓝图 <a href="blueprint.html#mod-eval">Ⅰ · 评估·红队·发布</a>。跑分、盲测、训练心电图——模型出厂前后的一切体检。</p>
-    <div class="tools">
-      <div class="tool" id="t-harness">
-        <div class="th"><code>lm-evaluation-harness</code> &amp; <code>OpenCompass</code><span class="role">跑分器</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>自动评测的两大标准框架：lm-evaluation-harness（EleutherAI，学界通行）与 OpenCompass（上海 AI 实验室，国内体系）——几百个基准一键跑。</p>
-        <p><b>清醒剂：</b>蓝图「评估·红队」讲过基准的局限——工具再顺手，数据污染与刷榜的坑还在（回看污染检测器实验室）。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-eval">Ⅰ · 评估·红队·发布</a></p>
-      </div>
-      <div class="tool" id="t-wandb">
-        <div class="th"><code>Weights &amp; Biases</code><span class="role">训练监控</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>炼丹师的心电图：损失曲线、梯度、显存实时上报到仪表盘，训练跑飞了第一时间看见。</p>
-        <p><b>为什么重要：</b>蓝图预训练循环里那条「损失下降曲线」，工业界就是在它上面盯的；一次千卡训练几百万美元，盯梢就是省钱。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-train">Ⅰ · 预训练循环</a></p>
-      </div>
-      <div class="tool" id="t-arena">
-        <div class="th"><code>LMArena</code><span class="role">人类盲测</span><span class="src" title="起草模型知识（截止 2026-01），盘点日未逐条复核">◐</span></div>
-        <p>两个匿名模型同题竞答、人类投票选优的天梯榜（原 Chatbot Arena）——Elo 分是业界最难刷的榜。</p>
-        <p><b>清醒剂：</b>自动基准会被污染，人类盲测难作弊——但有偏好偏差：投票者偏爱长答案和漂亮格式，你在 RLHF 标注间见过这个毛病的训练版。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-eval">Ⅰ · 评估·红队·发布</a></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="st" id="sdev" style="--tc: var(--ink-3)">
-    <h2><span class="stc">ST.DEV</span>你手边的工具</h2>
-    <p class="stageintro">不在模型生产线上，但在每个技术人员的手边——本站本身，就是用这一格里的工具建成的。</p>
-    <div class="tools">
-      <div class="tool" id="t-git">
-        <div class="th"><code>Git &amp; GitHub</code><span class="role">版本管理</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>代码的版本台账与协作广场：每次改动可追溯、可回滚、可署名——你已经在用（本站两个仓库就住在上面）。</p>
-        <p><b>为什么放在这：</b>它是技术世界的公证处，也是一切开源工具的分发地。台账、留痕、可回滚——对法务来说这套逻辑毫不陌生。</p>
-        <p class="map">实践现场：本站私有档案仓 + 公开站点仓的双仓流水线</p>
-      </div>
-      <div class="tool" id="t-ide">
-        <div class="th"><code>Claude Code / Cursor / Copilot</code><span class="role">AI 结对编程</span><span class="src" title="盘点日联网核实">◉</span></div>
-        <p>终端或编辑器里的 AI 工程师：读整个仓库、改代码、跑命令、修测试——本质是一个装上了工具协议的 Agent 循环。</p>
-        <p><b>为什么放在这：</b>本站 45 个实验室全部由这种方式结对建成——你此刻就站在这条生产线上，而且是甲方。</p>
-        <p class="map">原理在蓝图：<a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a> · <a href="blueprint.html#mod-proto">Ⅳ · 工具协议</a></p>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <p>本页遵循「诚实简化」原则；<span class="sn">工具版图变化以季度计，本页断言以盘点基准日为准、未经人工核验，选型请以各家官方文档为准。</span>合规内容不构成法律意见；朱批挂点预留（合规层冻结中）。</p>
-    <p class="refs">盘点日主要核实来源：<a href="https://www.yottalabs.ai/post/best-llm-inference-engines-in-2026-vllm-tensorrt-llm-tgi-and-sglang-compared">Yotta Labs 推理引擎横评</a> · <a href="https://particula.tech/blog/sglang-vs-vllm-inference-engine-comparison">Particula SGLang/vLLM 架构对比</a> · <a href="https://www.spheron.network/blog/rlhf-training-infrastructure-verl-openrlhf-trl-gpu-cloud/">Spheron RLHF 框架三分格局</a> · <a href="https://github.com/verl-project/verl">verl（GitHub）</a> · <a href="https://www.langchain.com/resources/ai-agent-frameworks">LangChain Agent 框架年度盘点</a> · <a href="https://guptadeepak.com/tools/top-10-mcp-frameworks-2026/">MCP 采纳时间线</a></p>
-    <div class="build">FIELD SHEET v1 · 盘点基准日 2026-07-29 · 6 STATIONS · 22 TOOLS · 主线 v0.30 时代 · STYLE rev2</div>
-  </footer>
+<section class="st" id="s0" style="--tc: var(--p0)" aria-labelledby="s0-title">
+<h2 id="s0-title"><span class="stc">ST.00</span>地基与内核<span class="st-count">4 条目</span></h2>
+<p class="stageintro">从 GPU、内存与互联出发，选择能在目标硬件上运行的编译器、算子库和通信栈。对应蓝图 <a href="blueprint.html#pl0">PLANE 0</a>。</p>
+<div class="tools">
+<article class="tool" id="t-cuda" aria-labelledby="t-cuda-title">
+  <div class="th"><h3 id="t-cuda-title">CUDA</h3><span class="role">GPU 平台</span></div>
+  <p>NVIDIA GPU 的并行计算平台：编译工具链、运行时、数学库与分析工具共同把模型计算落到设备上。</p>
+  <p><b>使用边界：</b>CUDA 是一套软硬件生态。驱动、Toolkit、GPU 架构与框架构建版本需要匹配；更换加速器时，先核对支持矩阵。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-gpu">0 · 为什么是 GPU</a> · <a href="blueprint.html#mod-roof">0 · 屋顶线模型</a></p>
+  <p class="sources">官方来源：<a href="https://docs.nvidia.com/cuda/" target="_blank" rel="noopener noreferrer">CUDA 官方文档 ↗</a></p>
+</article>
+<article class="tool" id="t-rocm" aria-labelledby="t-rocm-title">
+  <div class="th"><h3 id="t-rocm-title">AMD ROCm</h3><span class="role">GPU 平台</span></div>
+  <p>AMD 的 GPU 计算软件栈，包含 HIP 编程接口、编译器、数学库与 RCCL 通信库，连接 PyTorch 等框架。</p>
+  <p><b>本次补入：</b>官方已有 vLLM、SGLang 等推理部署入口。选型要同时核对 GPU 型号、操作系统与框架版本，不能仅凭“支持 AMD”判断可运行。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-gpu">0 · 为什么是 GPU</a> · <a href="blueprint.html#mod-roof">0 · 屋顶线模型</a></p>
+  <p class="sources">官方来源：<a href="https://rocm.docs.amd.com/en/latest/" target="_blank" rel="noopener noreferrer">ROCm 与兼容性入口 ↗</a></p>
+</article>
+<article class="tool" id="t-triton" aria-labelledby="t-triton-title">
+  <div class="th"><h3 id="t-triton-title">Triton</h3><span class="role">内核语言 / 编译器</span></div>
+  <p>用接近 Python 的语言编写 GPU 内核，控制数据块、访存和计算，适合定制矩阵运算、融合算子与注意力内核。</p>
+  <p><b>使用边界：</b>仍需理解并行与内存布局，并针对目标设备测量。这一项目与 NVIDIA 的 Triton Inference Server 是不同工具。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-gpu">0 · 为什么是 GPU</a> · <a href="blueprint.html#mod-attn">Ⅱ · 注意力</a></p>
+  <p class="sources">官方来源：<a href="https://triton-lang.org/main/index.html" target="_blank" rel="noopener noreferrer">Triton 文档 ↗</a></p>
+</article>
+<article class="tool" id="t-nccl" aria-labelledby="t-nccl-title">
+  <div class="th"><h3 id="t-nccl-title">NCCL</h3><span class="role">GPU 通信库</span></div>
+  <p>为 NVIDIA GPU 提供 AllReduce、AllGather、ReduceScatter 等集合通信，以及点对点通信；根据互联拓扑组织传输。</p>
+  <p><b>使用边界：</b>它承担“交换张量”，训练框架负责如何切模型与调度。多机效果还取决于网络、拓扑和进程配置；AMD 栈对应查看 RCCL。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-net">0 · 互联与集群</a></p>
+  <p class="sources">官方来源：<a href="https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/overview.html" target="_blank" rel="noopener noreferrer">NCCL 概览 ↗</a></p>
+</article>
 </div>
-
+</section>
+<section class="st" id="s1" style="--tc: var(--p1)" aria-labelledby="s1-title">
+<h2 id="s1-title"><span class="stc">ST.01</span>训练车间<span class="st-count">5 条目</span></h2>
+<p class="stageintro">从前向、反向与优化器到分布式训练、微调和强化学习。对应蓝图 <a href="blueprint.html#pl1">Ⅰ 训练管线</a>。</p>
+<div class="tools">
+<article class="tool" id="t-pytorch" aria-labelledby="t-pytorch-title">
+  <div class="th"><h3 id="t-pytorch-title">PyTorch / FSDP2</h3><span class="role">训练框架</span></div>
+  <p>PyTorch 提供张量、自动微分与模型模块；其分布式能力支撑单机实验到多机训练。</p>
+  <p><b>当前重点：</b>FSDP2 用 <code>fully_shard</code> 与 DTensor 按参数分片，减少每个设备保存的模型状态。代价是额外通信，分片与检查点策略需一起设计。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-train">Ⅰ · 预训练循环</a> · <a href="blueprint.html#mod-block">Ⅱ · Block 总装</a></p>
+  <p class="sources">官方来源：<a href="https://docs.pytorch.org/docs/2.14/distributed.fsdp.fully_shard.html" target="_blank" rel="noopener noreferrer">PyTorch FSDP2 ↗</a></p>
+</article>
+<article class="tool" id="t-megatron" aria-labelledby="t-megatron-title">
+  <div class="th"><h3 id="t-megatron-title">Megatron / DeepSpeed</h3><span class="role">分布式训练</span></div>
+  <p>Megatron Core 是可组合的训练组件库，Megatron-LM 提供参考训练实现；DeepSpeed 则提供 ZeRO 等内存与训练优化。</p>
+  <p><b>如何区分：</b>Megatron 的张量、流水线、专家等并行与 DeepSpeed 的状态分片解决不同问题，可按框架集成情况选择。两者无需固定捆绑；FSDP2 也是分片训练路径。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-net">0 · 互联与集群</a> · <a href="blueprint.html#mod-train">Ⅰ · 预训练循环</a></p>
+  <p class="sources">官方来源：<a href="https://github.com/NVIDIA/Megatron-LM" target="_blank" rel="noopener noreferrer">Megatron-LM / Core ↗</a><a href="https://www.deepspeed.ai/tutorials/zero/" target="_blank" rel="noopener noreferrer">DeepSpeed ZeRO ↗</a></p>
+</article>
+<article class="tool" id="t-trl" aria-labelledby="t-trl-title">
+  <div class="th"><h3 id="t-trl-title">TRL</h3><span class="role">后训练库</span></div>
+  <p>围绕 Transformers 组织 SFT、DPO、GRPO 等训练器，并集成 PEFT、DeepSpeed 与 vLLM，便于从一个后训练实验开始。</p>
+  <p><b>当前重点：</b>官方文档已将蒸馏和异步训练纳入版图；部分训练器仍在 Experimental 区。实现前核对所装版本，文档 main 分支与稳定包可能不同。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-sft">Ⅰ · 监督微调 SFT</a> · <a href="blueprint.html#mod-rlvr">Ⅰ · 可验证奖励</a></p>
+  <p class="sources">官方来源：<a href="https://huggingface.co/docs/trl/index" target="_blank" rel="noopener noreferrer">TRL 训练器与实验功能 ↗</a></p>
+</article>
+<article class="tool" id="t-verl" aria-labelledby="t-verl-title">
+  <div class="th"><h3 id="t-verl-title">verl</h3><span class="role">分布式后训练</span></div>
+  <p>基于 HybridFlow 的强化学习训练框架，协调策略更新、奖励计算与 rollout（生成采样），可组合 FSDP、Megatron、vLLM、SGLang 等后端。</p>
+  <p><b>当前重点：</b>同步与异步 rollout、训练到推理端的权重同步成为关键工程环节。算法、奖励函数、后端版本与资源配置共同决定效果。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-rlvr">Ⅰ · 可验证奖励与推理训练</a></p>
+  <p class="sources">官方来源：<a href="https://verl.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer">verl 文档 ↗</a></p>
+</article>
+<article class="tool" id="t-lf" aria-labelledby="t-lf-title">
+  <div class="th"><h3 id="t-lf-title">LlamaFactory / PEFT</h3><span class="role">微调入口 / 适配库</span></div>
+  <p>LlamaFactory 提供 CLI 与 Web UI，将模型、数据模板和 SFT、偏好训练等配方接起来；PEFT 提供 LoRA 等参数高效适配方法。</p>
+  <p><b>使用边界：</b>图形界面减少配置负担，仍需检查数据质量、聊天模板、显存与模型支持。适配器依赖基座版本，训练和分发还要遵循对应模型许可。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-sft">Ⅰ · 监督微调 SFT</a></p>
+  <p class="sources">官方来源：<a href="https://github.com/hiyouga/LlamaFactory" target="_blank" rel="noopener noreferrer">LlamaFactory ↗</a><a href="https://huggingface.co/docs/peft/index" target="_blank" rel="noopener noreferrer">PEFT ↗</a></p>
+</article>
+</div>
+</section>
+<section class="st" id="s2" style="--tc: var(--p2)" aria-labelledby="s2-title">
+<h2 id="s2-title"><span class="stc">ST.02</span>权重集散地<span class="st-count">4 条目</span></h2>
+<p class="stageintro">这一站区分托管平台、模型实现与文件格式。下载到权重后，还要找到匹配的运行环境。对应蓝图 <a href="blueprint.html#pl2">Ⅱ 模型本体</a>。</p>
+<div class="tools">
+<article class="tool" id="t-hf" aria-labelledby="t-hf-title">
+  <div class="th"><h3 id="t-hf-title">Hugging Face Hub</h3><span class="role">模型 / 数据托管</span></div>
+  <p>以版本化仓库分发模型、数据集与应用，模型卡记录用途、评测和许可；下载权重与调用 Inference Providers 是不同的使用路径。</p>
+  <p><b>当前重点：</b>Hub 使用 Xet 做文件分块与去重；新加入的 Buckets 面向可变、非版本化的存储。可下载不等于可任意商用，应核对发布者与模型卡。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#pl2">Ⅱ · 模型本体</a> · 延伸：<a href="genealogy.html">🧬 谱系 · 权重许可与获取方式</a></p>
+  <p class="sources">官方来源：<a href="https://huggingface.co/docs/hub/index" target="_blank" rel="noopener noreferrer">Hub 官方文档 ↗</a></p>
+</article>
+<article class="tool" id="t-transformers" aria-labelledby="t-transformers-title">
+  <div class="th"><h3 id="t-transformers-title">Transformers</h3><span class="role">模型定义与加载</span></div>
+  <p>提供模型架构、分词与预处理、权重加载、生成和训练接口，连接文本、图像、音频、视频等模型与上下游框架。</p>
+  <p><b>使用边界：</b>统一接口以已支持的架构为前提。新模型可能需要特定版本或自定义代码；成功加载也不代表高并发服务已经配置完成。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-block">Ⅱ · Block 总装</a></p>
+  <p class="sources">官方来源：<a href="https://huggingface.co/docs/transformers/index" target="_blank" rel="noopener noreferrer">Transformers 文档 ↗</a></p>
+</article>
+<article class="tool" id="t-fmt" aria-labelledby="t-fmt-title">
+  <div class="th"><h3 id="t-fmt-title">safetensors / GGUF</h3><span class="role">权重文件格式</span></div>
+  <p>safetensors 以张量数据格式避免 pickle 的反序列化执行风险，并支持高效加载；GGUF 在 llama.cpp 生态中承载模型张量与元数据，常见于量化分发。</p>
+  <p><b>使用边界：</b>文件格式不保证模型质量、许可或仓库代码可信。量化类型、模型架构与运行器必须匹配，GGUF 也不等于所有模型的通用运行包。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a></p>
+  <p class="sources">官方来源：<a href="https://huggingface.co/docs/safetensors/index" target="_blank" rel="noopener noreferrer">safetensors ↗</a><a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener noreferrer">llama.cpp / GGUF ↗</a></p>
+</article>
+<article class="tool" id="t-modelscope" aria-labelledby="t-modelscope-title">
+  <div class="th"><h3 id="t-modelscope-title">ModelScope 魔搭</h3><span class="role">模型社区 / SDK</span></div>
+  <p>提供模型发布、下载与 SDK，包含 pipeline 推理、训练和评估接口，是获取模型与配套实现的一条路径。</p>
+  <p><b>使用边界：</b>按官方发布账号、仓库版本与模型卡核对内容。它有自己的社区与工具，不能概括为 Hugging Face 的镜像；同名模型也要核对文件和版本。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#pl2">Ⅱ · 模型本体</a> · 延伸：<a href="genealogy.html">🧬 模型门派谱系</a></p>
+  <p class="sources">官方来源：<a href="https://github.com/modelscope/modelscope" target="_blank" rel="noopener noreferrer">ModelScope 官方仓库 ↗</a></p>
+</article>
+</div>
+</section>
+<section class="st" id="s3" style="--tc: var(--p3)" aria-labelledby="s3-title">
+<h2 id="s3-title"><span class="stc">ST.03</span>推理机房<span class="st-count">5 条目</span></h2>
+<p class="stageintro">把权重变成可调用的服务；同时衡量首 token 延迟、生成速度、并发、显存和成本。对应蓝图 <a href="blueprint.html#pl3">Ⅲ 推理与服务</a>。</p>
+<p class="stage-note"><b>维护状态：</b>Hugging Face TGI 已进入维护模式，官方建议新部署评估 vLLM、SGLang 或本地推理引擎；现有部署是否迁移仍应核对功能与运维成本。<a href="https://huggingface.co/docs/text-generation-inference/index" target="_blank" rel="noopener noreferrer">TGI 官方说明 ↗</a></p>
+<div class="tools">
+<article class="tool" id="t-vllm" aria-labelledby="t-vllm-title">
+  <div class="th"><h3 id="t-vllm-title">vLLM</h3><span class="role">推理 / 服务引擎</span></div>
+  <p>以 PagedAttention、连续批处理等机制管理推理资源，提供模型服务接口；现有能力涵盖前缀缓存、结构化输出、量化与多种并行策略。</p>
+  <p><b>当前重点：</b>预填充与解码分离、推测解码、工具与推理输出解析都进入服务层。不同硬件、模型和后端的功能支持并不一致，选型以实际负载压测。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-kv">Ⅲ · KV 缓存</a> · <a href="blueprint.html#mod-pd">Ⅲ · Prefill / Decode</a></p>
+  <p class="sources">官方来源：<a href="https://github.com/vllm-project/vllm" target="_blank" rel="noopener noreferrer">vLLM 官方仓库 ↗</a></p>
+</article>
+<article class="tool" id="t-sglang" aria-labelledby="t-sglang-title">
+  <div class="th"><h3 id="t-sglang-title">SGLang</h3><span class="role">推理 / 服务框架</span></div>
+  <p>面向语言与多模态模型的服务框架，RadixAttention 与前缀缓存复用请求中的公共内容，支持从单设备到分布式部署。</p>
+  <p><b>使用边界：</b>官方列出多类加速器与强化学习集成。前缀复用可能有利于多轮或 Agent 负载，但缓存命中率、调度和模型会改变收益；不能直接断言比 vLLM 快。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-kv">Ⅲ · KV 缓存</a> · <a href="blueprint.html#mod-ctx">Ⅳ · 上下文拼装</a> · <a href="blueprint.html#mod-sample">Ⅲ · 采样</a></p>
+  <p class="sources">官方来源：<a href="https://docs.sglang.io/" target="_blank" rel="noopener noreferrer">SGLang 文档 ↗</a></p>
+</article>
+<article class="tool" id="t-trt" aria-labelledby="t-trt-title">
+  <div class="th"><h3 id="t-trt-title">TensorRT-LLM</h3><span class="role">NVIDIA 推理栈</span></div>
+  <p>NVIDIA 面向自家 GPU 的推理库，当前采用 PyTorch 原生架构，并提供高层 Python LLM API，覆盖多 GPU、多节点与量化等能力。</p>
+  <p><b>更新认知：</b>“换模型都要先编译 TensorRT engine”已无法描述当前架构。能否使用某种精度或优化，仍取决于模型、GPU 与功能支持矩阵。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a> · <a href="blueprint.html#mod-gpu">0 · 为什么是 GPU</a></p>
+  <p class="sources">官方来源：<a href="https://nvidia.github.io/TensorRT-LLM/overview.html" target="_blank" rel="noopener noreferrer">TensorRT-LLM 架构概览 ↗</a></p>
+</article>
+<article class="tool" id="t-llamacpp" aria-labelledby="t-llamacpp-title">
+  <div class="th"><h3 id="t-llamacpp-title">llama.cpp</h3><span class="role">跨硬件推理</span></div>
+  <p>C/C++ 模型推理实现，支持 CPU、Metal、CUDA、HIP、Vulkan 等后端，以及量化、CPU/GPU 混合执行和服务接口。</p>
+  <p><b>当前重点：</b>覆盖语言与受支持的视觉语言模型，也能部署到服务器。可运行的模型、上下文长度和并发，仍受内存、量化与后端能力约束。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a></p>
+  <p class="sources">官方来源：<a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener noreferrer">llama.cpp 与后端列表 ↗</a></p>
+</article>
+<article class="tool" id="t-ollama" aria-labelledby="t-ollama-title">
+  <div class="th"><h3 id="t-ollama-title">Ollama</h3><span class="role">模型运行与服务入口</span></div>
+  <p>通过应用、CLI 和 API 管理模型与对话，既能在本机运行下载的模型，也可调用 Ollama 的云端模型。</p>
+  <p><b>关键区别：</b>带 <code>:cloud</code> 等云路由的模型由远端执行。需要本地处理时，应选择本地模型并核对云功能和外接工具的设置；“在电脑里打开”不能证明推理发生在本机。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-quant">Ⅲ · 量化</a> · 延伸：<a href="genealogy.html">🧬 谱系 · 权重许可与获取方式</a></p>
+  <p class="sources">官方来源：<a href="https://docs.ollama.com/cloud" target="_blank" rel="noopener noreferrer">Ollama 本地 / 云端路径 ↗</a></p>
+</article>
+</div>
+</section>
+<section class="st" id="s4" style="--tc: var(--p4)" aria-labelledby="s4-title">
+<h2 id="s4-title"><span class="stc">ST.04</span>组装车间<span class="st-count">6 条目</span></h2>
+<p class="stageintro">把模型、检索、工具、状态和执行环境连接成应用。框架、协议、SDK 与托管平台各有职责。对应蓝图 <a href="blueprint.html#pl4">Ⅳ 系统组装</a>。</p>
+<div class="tools">
+<article class="tool" id="t-langgraph" aria-labelledby="t-langgraph-title">
+  <div class="th"><h3 id="t-langgraph-title">LangChain / LangGraph</h3><span class="role">Agent 编排</span></div>
+  <p>LangChain 提供模型与工具集成及高层 Agent 接口；LangGraph 提供更底层的有状态图执行、持久化和人工介入能力。</p>
+  <p><b>当前关系：</b>LangChain 的 Agent 构建在 LangGraph 之上；Deep Agents 再提供文件系统、上下文管理等配套能力。按需要控制的层级选用，持久化与恢复需要正确配置。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-orch">Ⅳ · 多智能体编排</a> · <a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a></p>
+  <p class="sources">官方来源：<a href="https://docs.langchain.com/oss/python/langchain/overview" target="_blank" rel="noopener noreferrer">LangChain 与分层关系 ↗</a><a href="https://docs.langchain.com/oss/python/langgraph/overview" target="_blank" rel="noopener noreferrer">LangGraph ↗</a></p>
+</article>
+<article class="tool" id="t-mcp" aria-labelledby="t-mcp-title">
+  <div class="th"><h3 id="t-mcp-title">MCP / A2A</h3><span class="role">连接与协作协议</span></div>
+  <p>MCP 规范应用如何接入外部工具、资源和提示；A2A 让独立 Agent 发现彼此、委派任务与交换结果。两者解决不同层次的互操作。</p>
+  <p><b>使用边界：</b>协议并不提供完整 Agent 运行时，也不会自动决定授权和信任。OpenAI Assistants API 的官方迁移方向是 Responses API，MCP 是其中可用的工具连接方式。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-proto">Ⅳ · 工具协议</a>（含报文显微镜实验室）</p>
+  <p class="sources">官方来源：<a href="https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro" target="_blank" rel="noopener noreferrer">MCP ↗</a><a href="https://a2a-protocol.org/latest/" target="_blank" rel="noopener noreferrer">A2A 与 MCP ↗</a><a href="https://developers.openai.com/api/docs/assistants/migration" target="_blank" rel="noopener noreferrer">Assistants 迁移说明 ↗</a></p>
+</article>
+<article class="tool" id="t-agent-sdk" aria-labelledby="t-agent-sdk-title">
+  <div class="th"><h3 id="t-agent-sdk-title">OpenAI Agents SDK / Claude Agent SDK</h3><span class="role">Agent 执行 SDK</span></div>
+  <p>OpenAI Agents SDK 在应用中运行 Agent 循环，组织工具、交接和追踪；Claude Agent SDK 将 Claude Code 的工具、循环与上下文管理提供为 Python / TypeScript 库。</p>
+  <p><b>本次补入：</b>SDK 适合将执行逻辑接入自己的产品。部署、状态与权限仍需配置；各厂商的托管 Agent 服务是另一种运行方式，不能与 SDK 混为一项。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-orch">Ⅳ · 多智能体编排</a> · <a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a></p>
+  <p class="sources">官方来源：<a href="https://developers.openai.com/api/docs/guides/agents/sdk" target="_blank" rel="noopener noreferrer">OpenAI Agents SDK ↗</a><a href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank" rel="noopener noreferrer">Claude Agent SDK ↗</a></p>
+</article>
+<article class="tool" id="t-llamaindex" aria-labelledby="t-llamaindex-title">
+  <div class="th"><h3 id="t-llamaindex-title">LlamaIndex</h3><span class="role">数据与 Agent 框架</span></div>
+  <p>组织数据接入、解析、索引、检索与问答，也提供事件驱动的 Workflows 和 Agent，把 RAG 管线作为工具接入更长的任务。</p>
+  <p><b>使用边界：</b>文档解析、检索质量与引用正确性要分别评估。开源框架与 LlamaCloud 等托管服务有不同的部署和数据处理路径。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-rag">Ⅳ · RAG</a></p>
+  <p class="sources">官方来源：<a href="https://developers.llamaindex.ai/python/framework/" target="_blank" rel="noopener noreferrer">LlamaIndex 框架文档 ↗</a></p>
+</article>
+<article class="tool" id="t-dify" aria-labelledby="t-dify-title">
+  <div class="th"><h3 id="t-dify-title">Dify</h3><span class="role">可视化应用平台</span></div>
+  <p>以可视化工作流连接模型、知识库、工具与 Agent，可选择自托管或云服务，并提供应用发布与观测入口。</p>
+  <p><b>使用边界：</b>上线仍需要配置凭据、数据接入与运行环境。仓库采用附加条件的 Apache 2.0 许可，包含多租户服务及前端标识限制，部署前应阅读许可原文。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a></p>
+  <p class="sources">官方来源：<a href="https://github.com/langgenius/dify" target="_blank" rel="noopener noreferrer">Dify 官方仓库 ↗</a><a href="https://github.com/langgenius/dify/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Dify 许可 ↗</a></p>
+</article>
+<article class="tool" id="t-obs" aria-labelledby="t-obs-title">
+  <div class="th"><h3 id="t-obs-title">Langfuse / LangSmith</h3><span class="role">观测与应用评估</span></div>
+  <p>收集模型、检索和工具调用轨迹，将延迟、成本、反馈与评估数据连接起来。Langfuse 支持 OpenTelemetry；LangSmith 支持多种框架与部署方式。</p>
+  <p><b>使用边界：</b>能看到什么取决于埋点、采样和保留配置。有轨迹便于定位故障，但重跑仍受模型随机性和外部工具状态影响。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-orch">Ⅳ · 多智能体编排</a>（编排剧场实验室的「日志」就是它的雏形）</p>
+  <p class="sources">官方来源：<a href="https://langfuse.com/docs" target="_blank" rel="noopener noreferrer">Langfuse ↗</a><a href="https://docs.langchain.com/langsmith/observability" target="_blank" rel="noopener noreferrer">LangSmith Observability ↗</a></p>
+</article>
+</div>
+</section>
+<section class="st" id="sqc" style="--tc: var(--p1)" aria-labelledby="sqc-title">
+<h2 id="sqc-title"><span class="stc">ST.QC</span>质检站<span class="st-count">4 条目</span></h2>
+<p class="stageintro">分别检查模型答题、任务完成、用户偏好与运行表现。它们互相补充，分数不能直接互换。对应蓝图 <a href="blueprint.html#mod-eval">Ⅰ 评估·红队·发布</a>。</p>
+<div class="tools">
+<article class="tool" id="t-harness" aria-labelledby="t-harness-title">
+  <div class="th"><h3 id="t-harness-title">lm-evaluation-harness / OpenCompass</h3><span class="role">自动评测框架</span></div>
+  <p>前者提供可复用的语言模型任务与评估后端；后者组织模型、数据集、提示模板和评测流程，也支持主观评价与代码任务。</p>
+  <p><b>如何读结果：</b>同时记录模型与数据版本、提示模板、few-shot 设置、推理预算和评分方法。框架能统一流程，不能消除数据污染或评判模型的偏差。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-eval">Ⅰ · 评估·红队·发布</a></p>
+  <p class="sources">官方来源：<a href="https://github.com/EleutherAI/lm-evaluation-harness" target="_blank" rel="noopener noreferrer">lm-evaluation-harness ↗</a><a href="https://opencompass.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer">OpenCompass ↗</a></p>
+</article>
+<article class="tool" id="t-agent-eval" aria-labelledby="t-agent-eval-title">
+  <div class="th"><h3 id="t-agent-eval-title">SWE-bench / Terminal-Bench</h3><span class="role">Agent 任务评测</span></div>
+  <p>SWE-bench 以真实仓库问题检验代码修复；Terminal-Bench 在可执行环境中考察终端任务，报告完成率，并展示成本等指标。</p>
+  <p><b>本次补入：</b>任务成绩属于“模型 + Agent 实现 + 工具环境”的组合。比较时固定数据子集、环境、预算与重试次数；不同版本的榜单不可直接拼成模型排名。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-eval">Ⅰ · 评估·红队·发布</a></p>
+  <p class="sources">官方来源：<a href="https://www.swebench.com/" target="_blank" rel="noopener noreferrer">SWE-bench ↗</a><a href="https://www.tbench.ai/" target="_blank" rel="noopener noreferrer">Terminal-Bench ↗</a></p>
+</article>
+<article class="tool" id="t-wandb" aria-labelledby="t-wandb-title">
+  <div class="th"><h3 id="t-wandb-title">Weights &amp; Biases</h3><span class="role">实验与模型管理</span></div>
+  <p>W&B Models 记录实验配置与指标，管理数据、模型版本和产物关系，并支持超参数搜索与协作。</p>
+  <p><b>如何使用：</b>把训练曲线、评测结果与对应检查点绑定，才能追溯哪组设置有效。指标采集、告警与上传范围需要配置，监控记录不等于质量通过。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-train">Ⅰ · 预训练循环</a></p>
+  <p class="sources">官方来源：<a href="https://docs.wandb.ai/models" target="_blank" rel="noopener noreferrer">W&amp;B Models ↗</a></p>
+</article>
+<article class="tool" id="t-arena" aria-labelledby="t-arena-title">
+  <div class="th"><h3 id="t-arena-title">Arena（LMArena）</h3><span class="role">人类偏好评测</span></div>
+  <p>通过匿名成对比较收集用户偏好；文本偏好榜使用 Bradley–Terry 模型聚合投票，并提供风格控制等方法。</p>
+  <p><b>如何读结果：</b>偏好得分反映特定用户与问题分布，不等于事实正确率或任务完成率。选型时结合样本量、不确定性及自己的任务集，避免把盲测称为“无法刷榜”。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-eval">Ⅰ · 评估·红队·发布</a></p>
+  <p class="sources">官方来源：<a href="https://arena.ai/faq" target="_blank" rel="noopener noreferrer">Arena 方法说明 ↗</a></p>
+</article>
+</div>
+</section>
+<section class="st" id="sdev" style="--tc: var(--ink-3)" aria-labelledby="sdev-title">
+<h2 id="sdev-title"><span class="stc">ST.DEV</span>你手边的工具<span class="st-count">2 条目</span></h2>
+<p class="stageintro">贯穿所有工位的开发工作台：记录改动、协作审查，让 Agent 的产出成为可检查的工程结果。</p>
+<div class="tools">
+<article class="tool" id="t-git" aria-labelledby="t-git-title">
+  <div class="th"><h3 id="t-git-title">Git / GitHub</h3><span class="role">版本管理与协作</span></div>
+  <p>Git 在本地记录提交与分支；GitHub 提供远程仓库、Pull Request 等协作入口。代码、配置与评测方案可以在同一套版本记录中关联。</p>
+  <p><b>使用边界：</b>提交历史帮助追溯和回退，但不自动证明作者身份或内容正确。大权重、数据与运行产物应结合合适的存储方案管理。</p>
+  <p class="map">工程实践：<a href="progress.html">本站建设台账</a> · <a href="https://github.com/Slientvoice/ai-atlas">站点仓库</a></p>
+  <p class="sources">官方来源：<a href="https://docs.github.com/en/get-started/using-git/about-git" target="_blank" rel="noopener noreferrer">Git 与 GitHub 的区别 ↗</a></p>
+</article>
+<article class="tool" id="t-ide" aria-labelledby="t-ide-title">
+  <div class="th"><h3 id="t-ide-title">Claude Code / Codex / Cursor / Copilot</h3><span class="role">编程 Agent</span></div>
+  <p>这些工具通过终端、编辑器或云任务读取仓库、规划修改、编辑文件与运行检查；部分入口还能在分支上继续工作并创建 Pull Request。</p>
+  <p><b>使用边界：</b>具体权限、执行环境和仓库可见范围随产品入口而异。选择时核对本地或云端执行方式，并用差异审查、测试与实际运行验证结果。</p>
+  <p class="map">原理在蓝图：<a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a> · <a href="blueprint.html#mod-proto">Ⅳ · 工具协议</a></p>
+  <p class="sources">官方来源：<a href="https://code.claude.com/docs/en/overview" target="_blank" rel="noopener noreferrer">Claude Code ↗</a><a href="https://learn.chatgpt.com/docs/codex/cli" target="_blank" rel="noopener noreferrer">Codex CLI ↗</a><a href="https://cursor.com/docs" target="_blank" rel="noopener noreferrer">Cursor ↗</a><a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent" target="_blank" rel="noopener noreferrer">Copilot cloud agent ↗</a></p>
+</article>
+</div>
+</section>
+<footer>
+  <p><span class="sn">现场 v2 · 2026-09-18 快照。</span>本页按问题与工位组织代表项目；平台、框架、协议与模型许可分别判断。公开基准与厂商功能介绍不构成本页的性能排名。</p>
+  <p class="refs">本次逐条复查并链接 44 个官方来源；网页与 main / latest 文档会继续变化。旧版本记录见 <a href="progress.html">建设台账</a>。<a href="#top">返回页首 ↑</a></p>
+  <div class="build">FIELD SHEET v2 · 2026-09-18 · 6 STATIONS + DEV · 30 ENTRIES · STYLE rev2</div>
+</footer>
+</main>
 <script>
-/* 芯片跳转：与蓝图 data-go 同一精神——图是导航。点工位/工具芯片 → 滚到条目并闪一下。 */
-document.querySelectorAll('.chip').forEach(el => {
-  const go = () => {
-    const t = document.getElementById(el.dataset.t);
-    if (!t) return;
-    const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    t.scrollIntoView({ behavior: rm ? 'auto' : 'smooth', block: 'center' });
-    if (t.classList.contains('tool')) {
-      t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash');
-      setTimeout(() => t.classList.remove('flash'), 1700);
-    }
-  };
-  el.addEventListener('click', go);
-  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+// Native fragment links work without JavaScript, preserve history, and support Enter.
+// Flash is only a progressive enhancement, including repeated clicks on the same link.
+function highlightTarget() {
+  const target = document.getElementById(location.hash.slice(1));
+  if (!target || !target.classList.contains('tool')) return;
+  target.classList.remove('flash');
+  void target.offsetWidth;
+  target.classList.add('flash');
+}
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', () => requestAnimationFrame(highlightTarget));
 });
+window.addEventListener('hashchange', highlightTarget);
+document.querySelectorAll('.tool').forEach(card => {
+  card.addEventListener('animationend', () => card.classList.remove('flash'));
+});
+highlightTarget();
+const snapshotAge = Date.now() - Date.UTC(2026, 8, 18);
+document.getElementById('snapshot-warning').hidden = snapshotAge <= 90 * 86400000;
 </script>
+</body>
+</html>
