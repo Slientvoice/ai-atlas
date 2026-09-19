@@ -65,7 +65,7 @@
   .legend .cell { pointer-events: none; }
 
   .vlist { border-left: 2px solid var(--hairline); padding-left: 18px; }
-  .v { margin: 10px 0; position: relative; font-size: 14px; color: var(--ink-2); }
+  .v { margin: 10px 0; position: relative; font-size: 14px; color: var(--ink-2); overflow-wrap: anywhere; }
   .v::before { content: ""; position: absolute; left: -23px; top: 7px; width: 8px; height: 8px; border-radius: 50%;
     background: var(--ink-3); }
   .v.done::before { background: var(--p1); }
@@ -75,16 +75,31 @@
 
   footer { margin-top: 40px; border-top: 1px solid var(--hairline); padding-top: 16px; font-size: 12.5px; color: var(--ink-3); }
 </style>
+<link rel="stylesheet" href="./assets/site-navigation.css">
+<script type="module" src="./assets/site-navigation.mjs"></script>
 
+
+<!-- atlas-navigation:start -->
+<div id="atlas-top"></div>
+<nav class="atlas-site-nav" aria-label="全站导航" data-atlas-static>
+<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="./index.html" aria-label="AI Atlas 首页">AI—ATLAS <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">项目进度</span></div>
+    <div class="atlas-nav-actions" aria-label="浏览历史与首页">
+      <button type="button" data-atlas-back disabled title="没有可返回的站内记录"><span aria-hidden="true">←</span> 后退</button>
+      <button type="button" data-atlas-forward disabled title="没有可前进的站内记录">前进 <span aria-hidden="true">→</span></button>
+      <a class="atlas-nav-home" href="./index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v10h5v-6h4v6h5V10" /></svg>返回首页</a>
+    </div>
+    <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu"><a href="./index.html">首页<span aria-hidden="true">→</span></a><a href="./blueprint.html">工程蓝图<span aria-hidden="true">→</span></a><a href="./toolchain.html">工业现场<span aria-hidden="true">→</span></a><a href="./genealogy.html">模型门派谱系<span aria-hidden="true">→</span></a><a href="./thread.html">一句话的旅程<span aria-hidden="true">→</span></a><a href="./index-map.html">索引地图<span aria-hidden="true">→</span></a><a href="./progress.html" aria-current="page">项目进度<span aria-hidden="true">·</span></a><a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>
+</nav>
+<!-- atlas-navigation:end -->
 <div class="wrap">
   <div class="eyebrow">AI COMPLIANCE ATLAS · 项目进度看板</div>
   <h1>哪里亮了，哪里还没亮</h1>
   <p class="sub">数据驱动的进度实况：下方所有数字与亮灯由同一份数据表计算，每个版本更新一次。口径与权重公开写在总进度条下方——数字可以被质疑，但不会被粉饰。</p>
   <div class="links">
-    <a href="index.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg> 门户首页 ↗</a>
-    <a href="blueprint.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线）↗</a>
-    <a href="thread.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h7a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h7"/></svg> 叙事版（入门）↗</a>
-    <a href="index-map.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.4 4.6-4.6 2.4 2.4-4.6z"/></svg> 索引地图（目录）↗</a>
+    <a href="index.html"><svg class="ico" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg> 返回首页 →</a>
+    <a href="blueprint.html"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线）→</a>
+    <a href="thread.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h7a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h7"/></svg> 叙事版（入门）→</a>
+    <a href="index-map.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.4 4.6-4.6 2.4 2.4-4.6z"/></svg> 索引地图（目录）→</a>
   </div>
 
   <div class="hero-bar">
@@ -116,7 +131,7 @@
 <script>
 /* ======== 唯一数据源：每个版本只改这里 ======== */
 const DATA = {
-  updated: '2026-09-18 · 现场 v2 / 谱系 v3 / 主线 v0.32.2',
+  updated: '2026-09-19 · 门户与导航 v0.33 / 现场 v2 / 谱系 v3',
   // depth: 0=登记未建 1=G1骨架 3=G3实验室
   planes: [
     { code: '0 物理基座', pc: 'var(--p0)', mods: [['为什么是GPU 🔬', 3], ['存储层级与内存墙 🔬', 3], ['屋顶线模型 🔬', 3], ['数字格式 🔬', 3], ['互联与集群 🔬', 3]] },
@@ -179,7 +194,8 @@ const DATA = {
     ['v0.32.1', '2026-08-03', '✨ 门户环境交互修整：字符场改为逐玻璃模块独立生成，随内容滚动并在模块圆角边界内裁切，不再覆盖模块间背景；全局流体光场速度微调加快', 'done'],
     ['v0.32.2', '2026-08-04', '✨ 门户动效层级修整：暗色「每个结论，都该说明它凭什么成立」核验模块不再挂载字符场；轨迹与点击扩散仅保留在适合承载氛围动效的浅色玻璃模块', 'done'],
     ['谱系 v3', '2026-09-17', '🧬 联网核对十一家代表型号：区分托管服务、开放权重与预览状态；以逐型号许可替换公司级开放度排名，更新推理与多模态边界，补充 29 个官方来源链接；移除未经核验的备案与传闻断言，加入键盘展开和快照过期提示；同步门户入口', 'done'],
-    ['现场 v2', '2026-09-18', '🏗️ 联网复查工业现场：六工位与开发工作台共 30 个条目，附 44 个官方来源；补充 ROCm、Agent SDK、SWE-bench / Terminal-Bench，厘清 MCP / A2A、Ollama 本地与云端、TensorRT-LLM 架构及 Arena 评测口径；增加任务入口、原生锚点导航与快照过期提示，同步门户统计并修正静态门户的站内相对链接', 'now'],
+    ['现场 v2', '2026-09-18', '🏗️ 联网复查工业现场：六工位与开发工作台共 30 个条目，附 44 个官方来源；补充 ROCm、Agent SDK、SWE-bench / Terminal-Bench，厘清 MCP / A2A、Ollama 本地与云端、TensorRT-LLM 架构及 Arena 评测口径；增加任务入口、原生锚点导航与快照过期提示，同步门户统计并修正静态门户的站内相对链接', 'done'],
+    ['v0.33', '2026-09-19', '门户与全站导航：首屏加入七平面系统概览与三个大入口，增加原创交互模型剖面；定位调整为技术为主、法律合规为辅；全站统一后退、前进、返回首页与页面目录，站内跳转保留在当前标签页，修复蓝图深链接落位；移除索引地图旧旗舰候选存档；首页源码、导航规范与构建发布说明纳入公开仓库', 'now'],
     ['v1.0', '待定', '核验版：用户主导的 学习→审核→反馈→其他模型修改 循环 · 朱批统一调整 · 部署上线', 'todo'],
   ],
   weights: { skeleton: 0.35, labs: 0.35, hooks: 0.20, registry: 0.10 },

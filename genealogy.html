@@ -123,8 +123,22 @@
   .scope-note { margin: 12px 0 0; color: var(--ink-3); font-size: 12.5px; }
   @media (prefers-reduced-motion: reduce) { tr.fam th .car { transition: none; } }
 </style>
+<link rel="stylesheet" href="./assets/site-navigation.css">
+<script type="module" src="./assets/site-navigation.mjs"></script>
 </head>
 <body>
+<!-- atlas-navigation:start -->
+<div id="atlas-top"></div>
+<nav class="atlas-site-nav" aria-label="全站导航" data-atlas-static>
+<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="./index.html" aria-label="AI Atlas 首页">AI—ATLAS <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">模型门派谱系</span></div>
+    <div class="atlas-nav-actions" aria-label="浏览历史与首页">
+      <button type="button" data-atlas-back disabled title="没有可返回的站内记录"><span aria-hidden="true">←</span> 后退</button>
+      <button type="button" data-atlas-forward disabled title="没有可前进的站内记录">前进 <span aria-hidden="true">→</span></button>
+      <a class="atlas-nav-home" href="./index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v10h5v-6h4v6h5V10" /></svg>返回首页</a>
+    </div>
+    <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu"><a href="./index.html">首页<span aria-hidden="true">→</span></a><a href="./blueprint.html">工程蓝图<span aria-hidden="true">→</span></a><a href="./toolchain.html">工业现场<span aria-hidden="true">→</span></a><a href="./genealogy.html" aria-current="page">模型门派谱系<span aria-hidden="true">·</span></a><a href="./thread.html">一句话的旅程<span aria-hidden="true">→</span></a><a href="./index-map.html">索引地图<span aria-hidden="true">→</span></a><a href="./progress.html">项目进度<span aria-hidden="true">→</span></a><a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>
+</nav>
+<!-- atlas-navigation:end -->
 <main class="wrap">
   <div class="eyebrow">AI COMPLIANCE ATLAS · 活页 · 谱系 v3</div>
   <h1>模型门派谱系</h1>
@@ -318,7 +332,7 @@
   </div>
   <div class="others"><b>范围说明：</b>保留原有十一家供纵向比较，本页不是全市场榜单。MiniMax、阶跃星辰、文心、星火、MiniCPM 等未列入，不代表其能力或采购可行性判断。<p class="scope-note">本次更新：具体型号与预览状态、输入输出模态、逐型号许可和官方来源；移除未经逐项核验的“已备案”、训练数据归属、传闻架构及绝对化排名。</p></div>
   <nav class="links" aria-label="相关页面">
-    <a href="index.html">← 返回门户</a><a href="blueprint.html">工程蓝图（主线）</a><a href="progress.html">进度看板</a>
+    <a href="index.html">返回首页</a><a href="blueprint.html">工程蓝图（主线）</a><a href="progress.html">进度看板</a>
   </nav>
   <footer>模型门派谱系 · 活页 v3 · 盘点基准日 2026-09-17 · AI 检索整理 / 人工与法律审校待完成。官方来源就近列于各家详情；后续发布、许可变更与服务调整可能使本快照过期。</footer>
 </main>

@@ -241,7 +241,22 @@
   }
   .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 2px; }
 </style>
+<link rel="stylesheet" href="./assets/site-navigation.css">
+<script type="module" src="./assets/site-navigation.mjs"></script>
 
+
+<!-- atlas-navigation:start -->
+<div id="atlas-top"></div>
+<nav class="atlas-site-nav" aria-label="全站导航" data-atlas-static>
+<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="./index.html" aria-label="AI Atlas 首页">AI—ATLAS <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">一句话的旅程</span></div>
+    <div class="atlas-nav-actions" aria-label="浏览历史与首页">
+      <button type="button" data-atlas-back disabled title="没有可返回的站内记录"><span aria-hidden="true">←</span> 后退</button>
+      <button type="button" data-atlas-forward disabled title="没有可前进的站内记录">前进 <span aria-hidden="true">→</span></button>
+      <a class="atlas-nav-home" href="./index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v10h5v-6h4v6h5V10" /></svg>返回首页</a>
+    </div>
+    <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu"><a href="./index.html">首页<span aria-hidden="true">→</span></a><a href="./blueprint.html">工程蓝图<span aria-hidden="true">→</span></a><a href="./toolchain.html">工业现场<span aria-hidden="true">→</span></a><a href="./genealogy.html">模型门派谱系<span aria-hidden="true">→</span></a><a href="./thread.html" aria-current="page">一句话的旅程<span aria-hidden="true">·</span></a><a href="./index-map.html">索引地图<span aria-hidden="true">→</span></a><a href="./progress.html">项目进度<span aria-hidden="true">→</span></a><a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>
+</nav>
+<!-- atlas-navigation:end -->
 <header class="prologue">
   <div class="eyebrow">AI COMPLIANCE ATLAS · v0.2 细线原型 · 主线长卷</div>
   <h1>一句话的旅程</h1>
@@ -465,8 +480,8 @@
   </div>
   <p>七层全部到齐——其中数据层与对齐层以「溯源」方式汇入，因为你的话在运行时并不真的流经它们：那是这颗大脑<b>被制造时</b>的故事。这条细线此后会逐站加深：把示意动画换成可以上手拨弄的真交互（第 5 站 RAG 第一个动工），而线本身，就是网站的主页。</p>
   <div class="ep-links">
-    <a href="blueprint.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线 · 通用结构与技术分叉）↗</a>
-    <a href="index-map.html" target="_blank" rel="noopener">索引地图（v0.1 · 28 节点全目录）↗</a>
+    <a href="blueprint.html"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线 · 通用结构与技术分叉）→</a>
+    <a href="index-map.html">索引地图（v0.1 · 28 节点全目录）→</a>
   </div>
   <p style="font-size:12.5px;color:var(--ink-3)">本页为叙事版（入门向），已归档保留；站点主线为工程蓝图。</p>
 </section>

@@ -167,16 +167,6 @@
   .rule h3 { font-family: var(--serif); font-size: 18px; margin: 6px 0 6px; }
   .rule p { margin: 0; font-size: 14px; color: var(--ink-2); }
 
-  /* ---------- next / flagship ---------- */
-  .next-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
-  .next-card {
-    background: var(--surface-2); border: 1px dashed var(--ink-3);
-    border-radius: 6px; padding: 18px 20px;
-  }
-  .next-card h3 { font-family: var(--serif); font-size: 18px; margin: 0 0 6px; }
-  .next-card p { margin: 0; font-size: 14px; color: var(--ink-2); }
-  .next-card .tag { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.1em; }
-
   footer {
     margin-top: 56px; border-top: 1px solid var(--hairline);
     padding: 26px 0 48px; color: var(--ink-3); font-size: 13px;
@@ -275,7 +265,22 @@
     .node, .panel, .backdrop, .chip, .ex-item { transition: none; }
   }
 </style>
+<link rel="stylesheet" href="./assets/site-navigation.css">
+<script type="module" src="./assets/site-navigation.mjs"></script>
 
+
+<!-- atlas-navigation:start -->
+<div id="atlas-top"></div>
+<nav class="atlas-site-nav" aria-label="全站导航" data-atlas-static>
+<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="./index.html" aria-label="AI Atlas 首页">AI—ATLAS <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">索引地图</span></div>
+    <div class="atlas-nav-actions" aria-label="浏览历史与首页">
+      <button type="button" data-atlas-back disabled title="没有可返回的站内记录"><span aria-hidden="true">←</span> 后退</button>
+      <button type="button" data-atlas-forward disabled title="没有可前进的站内记录">前进 <span aria-hidden="true">→</span></button>
+      <a class="atlas-nav-home" href="./index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v10h5v-6h4v6h5V10" /></svg>返回首页</a>
+    </div>
+    <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu"><a href="./index.html">首页<span aria-hidden="true">→</span></a><a href="./blueprint.html">工程蓝图<span aria-hidden="true">→</span></a><a href="./toolchain.html">工业现场<span aria-hidden="true">→</span></a><a href="./genealogy.html">模型门派谱系<span aria-hidden="true">→</span></a><a href="./thread.html">一句话的旅程<span aria-hidden="true">→</span></a><a href="./index-map.html" aria-current="page">索引地图<span aria-hidden="true">·</span></a><a href="./progress.html">项目进度<span aria-hidden="true">→</span></a><a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>
+</nav>
+<!-- atlas-navigation:end -->
 <header class="hero">
   <canvas id="mesh" aria-hidden="true"></canvas>
   <div class="hero-inner">
@@ -340,19 +345,6 @@
         <p>① AI 起草必须附来源；② 与至少一个权威范例或官方文档对照；③ 定期请有技术背景的朋友（或第二个 AI）抽查。每个节点标注「最后核验日期」，未核验默认存疑。</p></div>
       <div class="rule"><div class="rid">R6 · 技术选型</div><h3>纯静态，能借不造</h3>
         <p>纯 HTML/SVG/Canvas 静态站，无后端无数据库；一节点一文件；GitHub Pages 或 Cloudflare Pages 免费托管。交互首选原生 SVG+JS；开源范例（注意许可证）能改造就不重造。</p></div>
-    </div>
-  </section>
-
-  <section>
-    <div class="sec-head"><span class="no">§4</span><h2>规划存档 · 当年的旗舰图候选</h2></div>
-    <p class="sec-note">✅ 本节保留为项目最初的规划存档：下面三张图（连同另外三十五个实验室）已在主线<a href="blueprint.html" style="color:inherit;font-weight:700">「LLM 系统蓝图」</a>中全部建成——当年按「学习价值 × 市面空缺 × 合规密度」的排序，被建设过程验证是对的。</p>
-    <div class="next-grid">
-      <div class="next-card"><div class="tag">候选 A · L5</div><h3>RAG 全链路动画</h3>
-        <p>输入一个真实问题，动画走完切分 → 向量化 → 检索 → 拼装 → 生成的全过程，每站可点回上游节点。链条最完整、合规问题最密集、企业落地最普遍——旗舰首选。</p></div>
-      <div class="next-card"><div class="tag">候选 B · L2</div><h3>MoE 分诊台</h3>
-        <p>看一句话里的每个词元被「路由器」分给哪位专家。当前架构分岔的核心概念，市面上尚无好的中文交互版——差异化最强。</p></div>
-      <div class="next-card"><div class="tag">候选 C · L3</div><h3>RLHF 亲手标注</h3>
-        <p>访客亲自当十次标注员（二选一），实时看「奖励模型」的品味被自己的选择塑造。把「对齐」从名词变成体感——与法律价值观要求衔接最自然。</p></div>
     </div>
   </section>
 

@@ -385,16 +385,31 @@
   }
   .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 2px; }
 </style>
+<link rel="stylesheet" href="./assets/site-navigation.css">
+<script type="module" src="./assets/site-navigation.mjs"></script>
 
+
+<!-- atlas-navigation:start -->
+<div id="atlas-top"></div>
+<nav class="atlas-site-nav" aria-label="全站导航" data-atlas-static>
+<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="./index.html" aria-label="AI Atlas 首页">AI—ATLAS <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">工程蓝图</span></div>
+    <div class="atlas-nav-actions" aria-label="浏览历史与首页">
+      <button type="button" data-atlas-back disabled title="没有可返回的站内记录"><span aria-hidden="true">←</span> 后退</button>
+      <button type="button" data-atlas-forward disabled title="没有可前进的站内记录">前进 <span aria-hidden="true">→</span></button>
+      <a class="atlas-nav-home" href="./index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v10h5v-6h4v6h5V10" /></svg>返回首页</a>
+    </div>
+    <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu"><a href="./index.html">首页<span aria-hidden="true">→</span></a><a href="./blueprint.html" aria-current="page">工程蓝图<span aria-hidden="true">·</span></a><a href="./toolchain.html">工业现场<span aria-hidden="true">→</span></a><a href="./genealogy.html">模型门派谱系<span aria-hidden="true">→</span></a><a href="./thread.html">一句话的旅程<span aria-hidden="true">→</span></a><a href="./index-map.html">索引地图<span aria-hidden="true">→</span></a><a href="./progress.html">项目进度<span aria-hidden="true">→</span></a><a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>
+</nav>
+<!-- atlas-navigation:end -->
 <header class="top">
   <div class="wrap">
     <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.30 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
     <div class="top-links">
-      <a href="progress.html" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 进度看板 ↗</a>
-      <a href="index-map.html" target="_blank" rel="noopener">索引地图 · 28 节点目录 ↗</a>
-      <a href="thread.html" target="_blank" rel="noopener">叙事版 · 一句话的旅程（入门）↗</a>
+      <a href="progress.html"><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 进度看板 →</a>
+      <a href="index-map.html">索引地图 · 28 节点目录 →</a>
+      <a href="thread.html">叙事版 · 一句话的旅程（入门）→</a>
     </div>
   </div>
 </header>
