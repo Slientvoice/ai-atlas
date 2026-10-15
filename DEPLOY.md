@@ -4,7 +4,7 @@
 
 - 公开仓库：`Slientvoice/ai-atlas`
 - 网站：https://slientvoice.github.io/ai-atlas/
-- 2026-09-19 核对的 GitHub Pages 来源：**`agent/add-atlas-flow-skill` 分支根目录 `/`**，legacy 分支发布模式。
+- 2026-10-15 核对的 GitHub Pages 来源：**`agent/add-atlas-flow-skill` 分支根目录 `/`**，legacy 分支发布模式。
 - 此分支名沿用既有设置；推送 `main` 不会更新当前站点。发布前用 `gh api repos/Slientvoice/ai-atlas/pages` 再核对配置。
 
 ## 构建与检查

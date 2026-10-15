@@ -403,9 +403,10 @@
 <!-- atlas-navigation:end -->
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.30 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.34 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
-    <p class="sub">一张<b>通用</b>的结构图：真实术语、真实分叉、真实形状——从业者在白板上讲原理的画法。五个平面加一层地基：权重如何炼成（Ⅰ）、模型本体长什么样（Ⅱ）、它如何被运行（Ⅲ）、如何被组装成系统（Ⅳ）、机器如何看见与生成图像声音（Ⅴ），以及托着这一切的物理基座（0）。每个模块可展开，分叉可切换，带 🔬 的模块内有可实操的实验室。宽屏下左侧常驻「系统全景图」——点部位直达模块、滚正文镜头跟随，全程知道自己在整机的哪里；页尾有「已知未覆盖清单」标明蓝图边界。</p>
+    <p class="sub">沿七个技术平面理解 AI：物理基座（0）、训练（Ⅰ）、模型本体（Ⅱ）、推理服务（Ⅲ）、系统组装（Ⅳ）、多模态（Ⅴ）、具身与世界模型（Ⅵ）。45 个模块与 45 个交互实验，逐层拆开机制、形状与工程代价。宽屏左侧的系统全景图可点击定位；每个模块可展开，分叉可切换。标准 Transformer 是教学起点，各家当前架构另行标注。</p>
+    <p class="sub" style="font-size:13px"><b>2026-10-15 更新：</b><a href="#mod-ssm">混合与稀疏架构</a> · <a href="#mod-pd">长上下文的推理成本</a> · <a href="#mod-ttc">相关错误与采样预算</a> · <a href="#mod-proto">MCP 2026-07-28 报文</a>。<a href="#review-sources">查看本轮来源与边界</a>。</p>
     <div class="top-links">
       <a href="progress.html"><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 进度看板 →</a>
       <a href="index-map.html">索引地图 · 28 节点目录 →</a>
@@ -771,7 +772,7 @@
       <code>B</code> 批大小 · <code>T</code> 序列长度 · <code>d</code> 隐藏维度 · <code>h</code> 注意力头数 · <code>d_h</code> 每头维度 · <code>V</code> 词表大小 · <code>N</code> 层数
     </div>
     <div class="lg"><b>数字例的锚定机型</b>
-      全页数字例默认取 <b>Llama-3-8B</b>（开源可查证）：<code>N=32, d=4096, h_q=32, h_kv=8, d_h=128, V≈128k</code>。别家模型数值不同、结构同构。
+      全页标准 Decoder / GQA 数字例取 <b>Llama-3-8B</b>（开放权重教学锚点）：<code>N=32, d=4096, h_q=32, h_kv=8, d_h=128, V≈128k</code>。混合注意力、稀疏路由与因果编解码架构需单独核算，不能直接套用。
     </div>
     <div class="lg"><b>分叉 chips</b>
       每个模块列出该处真实存在的技术路线（<b>✓ 标主流</b>），点击切换查看各路线的机理与权衡。平面颜色与索引地图层色对应；<span style="color:var(--seal)">朱红仍专属合规</span>。
@@ -781,7 +782,7 @@
   <!-- ================= PLANE I ================= -->
   <section class="plane" id="pl1" style="--pc:var(--p1)">
     <div class="pl-head"><span class="rn">PLANE Ⅰ</span><h2>训练管线 · 权重如何炼成</h2>
-      <p class="pl-q">这一平面回答：那几十亿个数字是怎么来的。它只发生一次（外加若干次后训练），产物是冻结的权重文件——之后的一切（Ⅱ Ⅲ Ⅳ）都只是使用它。</p></div>
+      <p class="pl-q">这一平面回答：权重中的数十亿个数字是怎么来的。预训练、继续训练与后训练可以多轮迭代；发布后的常规推理通常冻结权重。把历史或摘要写回上下文，是记忆管理，不等于重新训练。</p></div>
     <div class="pl-tools"><button data-plane="pl1">全部展开 / 收起</button></div>
 
     <details class="mod" id="mod-corpus">
@@ -876,11 +877,11 @@
         <p>在模型训练<b>之前</b>，先从语料统计出一部「切词法典」。它一旦定稿终身不改——模型看世界的颗粒度就此固定。词表大小 V 是第一个超参权衡：V 大 → 单 token 携带信息多、序列变短省算力，但 Embedding/LM Head 参数变大、稀有 token 训不充分。</p>
         <div class="forks"><span class="flab">分叉 · 算法</span>
           <button class="fk on" data-v="a">字节级 BPE ✓</button>
-          <button class="fk" data-v="b">SentencePiece/Unigram</button>
+          <button class="fk" data-v="b">Unigram / SentencePiece</button>
           <button class="fk" data-v="c">纯字符/字节级</button>
         </div>
         <div class="fkb on" data-v="a">Byte-Pair Encoding：从单字节起步，反复合并语料中最高频的相邻对，合并表即词表。任何字符串都可编码（未知词退化为字节），无 OOV 问题。GPT 系、Llama-3（tiktoken 风格，V=128k）均用。</div>
-        <div class="fkb" data-v="b">Unigram 语言模型法：先给一个大候选词表，迭代删除对似然损害最小的词。SentencePiece 实现，早期 Llama/T5 使用。与 BPE 效果接近，路线之争已基本收敛于字节级 BPE。</div>
+        <div class="fkb" data-v="b">Unigram 从候选词表出发，按语言模型目标逐步裁剪。SentencePiece 是实现框架，支持 BPE 与 Unigram，不能把两者画等号；例如 Llama 2 使用的是基于 SentencePiece 的 BPE。<a href="https://huggingface.co/docs/transformers/v5.3.0/en/model_doc/llama2" target="_blank" rel="noopener noreferrer">官方实现说明 ↗</a></div>
         <div class="fkb" data-v="c">不学合并、直接按字符或字节切：序列被拉长数倍、算力代价大，仅研究性架构使用。反向说明了为什么需要「子词」这个中间粒度。</div>
         <p class="dim">中文注记：同样内容中文通常比英文更费 token（词表以英文为主时尤甚）——计费与上下文长度的隐性不平等，法务审 API 合同时可留意。</p>
 
@@ -918,7 +919,7 @@
 损失:  L = −log p(真实下一token)             # 交叉熵，对全批取平均
 反向:  ∂L/∂θ                               # 每个参数对本次错误的「责任份额」
 更新:  θ ← θ − lr · AdamW(∂L/∂θ)            # 沿责任方向微调所有参数</code>
-        <p>损失曲线是唯一的仪表盘：它随 数据 × 参数 × 算力 按幂律可预测地下降（Scaling Laws），这是「大力出奇迹」的数学依据。Chinchilla 法则给出配比经验：算力最优时训练 token 数 ≈ 参数量 × 20。</p>
+        <p>损失曲线是训练的重要仪表，仍需配合验证集、下游任务与稳定性监测。Scaling Laws 描述特定条件下规模与损失的经验关系；Chinchilla 的约 20 tokens / 参数是特定训练算力预算下的历史经验，不是推理成本、多模态或所有架构的通用配方。</p>
         <details class="dv"><summary>展开：工程细节（学习率调度 / 显存账 / 容灾）</summary>
           <p>· 学习率不恒定：先 warmup 爬升再余弦衰减；梯度裁剪防爆炸。<br>
           · 显存经验法则：混合精度训练每参数约 16 字节（权重 2 + 梯度 2 + fp32 主副本 4 + Adam 动量 4 + 方差 4）——8B 模型仅训练态就 ≈128GB，必须多卡并行（详见索引地图 L0「集群与并行」）。<br>
@@ -929,9 +930,9 @@
           <button class="fk" data-v="b">掩码填空</button>
           <button class="fk" data-v="c">多 token 预测</button>
         </div>
-        <div class="fkb on" data-v="a">只预测「下一个 token」。生成天然顺手，GPT 系确立、当今几乎唯一主流。简单到令人不安——全部智能都从这一个游戏里涌现。</div>
+        <div class="fkb on" data-v="a">预测下一个 token 是因果语言模型常用的预训练目标；生成时可自回归继续序列。后训练、数据配方、多模态目标和运行系统同样影响能力，不能把完整产品能力都归因于一个目标。</div>
         <div class="fkb" data-v="b">随机遮住句中若干词让模型填空（BERT 时代，2018–2021 主流）。理解任务强但不会生成，已退出大模型主战场——一次完整的路线兴衰，值得作为案例研究。</div>
-        <div class="fkb" data-v="c">一次预测未来多个 token（DeepSeek-V3 采用 MTP）：训练信号更密、还能给推理加速当草稿。前沿改良，非主流默认。</div>
+        <div class="fkb" data-v="c">增加未来多个 token 的预测目标，既可提供训练信号，也可辅助推理解码。当前 Hy4 preview 单列 MTP 参数，DeepSeek V4.1 Flash 提供 DSpark 解码设计；训练辅助目标与实际服务加速收益分别核对。</div>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 迷你训练场：亲眼看一个模型学会说话<span class="demo-tag">G3 级 · 全站之巅</span></div>
@@ -999,7 +1000,7 @@
         </div>
         <div class="fkb on" data-v="a">两段式：先用偏好对训练一个「奖励模型」（学会人类品味的打分器），再用强化学习（PPO）让主模型在打分器上刷高分。ChatGPT 立身之法。缺点：贵、不稳、会被「钻空子」——模型学会讨好打分器而非真正变好（reward hacking，AI 谄媚的技术根源）。</div>
         <div class="fkb" data-v="b">Direct Preference Optimization：数学上证明可以跳过奖励模型，把偏好对直接写进一个闭式损失函数。一段式、稳定、便宜，开源社区主流。代价是失去了可复用的独立打分器。</div>
-        <div class="fkb" data-v="c">组相对策略优化：对同一题采样一组回答、按组内相对好坏给信号，配合「可自动判分的任务」（数学/代码）使用——DeepSeek-R1 推理能力的训练方法。前沿：把「人类偏好」换成了「可验证的对错」。</div>
+        <div class="fkb" data-v="c">组相对策略优化：对同一题采样一组回答，用组内相对奖励构造优化信号。GRPO 描述的是优化方法；RLVR 描述的是奖励来源，二者不是同义词。DeepSeek-R1 采用 GRPO，但不能据此认定奖励都来自规则验证。</div>
 
         <div class="lab" id="mod-rlhf-lab">
           <div class="lab-head">🔬 实验室 · 亲手训练一个打分器<span class="demo-tag">G3 级</span></div>
@@ -1031,15 +1032,15 @@
     <details class="mod" id="mod-rlvr">
       <summary><span class="m-caret">▶</span><span class="m-name">可验证奖励与推理训练</span><span class="m-en">RLVR · REASONING RL · 🔬 LAB</span><span class="m-shape">奖励来源：人类品味 → 机器判卷</span></summary>
       <div class="m-body">
-        <p>上一格 RLHF 的奖励来自<b>学出来的品味打分器</b>——它天生可被讨好（你在那格实验室亲手见过「空洞奉承」骗高分）。新范式换了奖励来源：挑<b>答案能被机器判对错的任务</b>——数学对答案、代码跑测试、逻辑可形式验证。奖励从「品味」变成「判卷」：<b>不可讨好、不知疲倦、可以无限出题刷题</b>。模型在这种强化循环里自己长出长思维链——先想后答、自我检查、走回头路——这就是「推理模型」（o1 / R1 一类）训练侧的故事，与 Ⅲ 平面「测试时算力」互为一体两面：训练侧教会思考，推理侧买时间思考。</p>
-        <p class="dim">两个直接推论：①为什么数学和代码<b>先</b>突破——因为只有它们有便宜的判卷机；法律意见、文书这类「好坏难机判」的领域，红利来得慢、且多靠从可验证域<b>迁移</b>过来的思考习惯。②判卷机也有缝：奖励黑客换了形式——钻测试用例的空子（硬编码骗过测试）、答案对而过程错。奖励设计永远是攻防。</p>
+        <p>可验证奖励（RLVR）用答案匹配、代码测试或形式验证提供训练信号，减少逐条人工标注的成本。可验证任务为推理训练提供了规模化反馈，但<b>测试通过不等于任务正确</b>：测试覆盖不足、环境漏洞和格式奖励仍可能被利用。训练侧优化策略，推理侧分配思考预算，两者共同影响结果。</p>
+        <p class="dim">数学与代码常能提供较便宜的自动反馈；开放式写作、法律意见等任务的质量较难压成单一判分规则。验证器的覆盖范围、数据质量与奖励设计，都决定可迁移的能力边界。</p>
         <div class="forks"><span class="flab">分叉 · 奖励从哪来</span>
           <button class="fk" data-v="a">RLHF 品味打分器</button>
           <button class="fk on" data-v="b">RLVR 可验证奖励 ✓</button>
           <button class="fk" data-v="c">过程奖励与混合</button>
         </div>
         <div class="fkb" data-v="a">人类偏好训练的 reward model（上一格）。通用——任何领域都能比较好坏；代价是可被讨好、带标注者品味偏差。仍是对话质量对齐的主力。</div>
-        <div class="fkb on" data-v="b">规则判卷：答案匹配 / 测试通过 / 形式验证。不可讨好、可大规模自动出题；只覆盖可验证域。DeepSeek-R1 公开论文展示了「几乎纯 RLVR 也能长出推理」的路线（据其论文）。</div>
+        <div class="fkb on" data-v="b">规则判卷：答案匹配 / 测试通过 / 形式验证。DeepSeek-R1-Zero 展示了不先做 SFT 的强化学习路线；最终 R1 使用冷启动数据与多阶段训练，二者应分开。验证器仍可能被钻空子。<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener noreferrer">R1 原论文 ↗</a></div>
         <div class="fkb" data-v="c">过程奖励模型（给每一步推理打分而非只看结果）、AI 判官（用模型判模型）、以及各家保密的混合配方——目标是把可验证域学到的思考习惯泛化到判不了卷的领域（据公开论文与报道，配方细节外界不可知）。</div>
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 判卷机 vs 品味机<span class="demo-tag">G3 级</span></div>
@@ -1064,6 +1065,7 @@
     <details class="mod" id="mod-eval">
       <summary><span class="m-caret">▶</span><span class="m-name">评估 · 红队 · 冻结发布</span><span class="m-en">EVAL · RED TEAM · RELEASE · 🔬 LAB</span><span class="m-shape">→ 权重文件（safetensors，数百 GB）</span></summary>
       <div class="m-body">
+        <p class="dim"><b>本轮补充 · 评测的是“模型 + 运行配置”。</b>除题集和污染风险，还应记录模型快照、harness（执行框架）、工具权限、思考档位、上下文与时间预算、采样次数及 pass@1 / avg@k 口径。<a href="https://huggingface.co/zai-org/GLM-5.3" target="_blank" rel="noopener noreferrer">GLM-5.3 模型卡</a>逐项披露了这些条件；厂商分数不能脱离配置比较。</p>
         <p>上线前三关：基准跑分（MMLU 等标准题库——注意「污染」问题：题目混进训练数据会虚高分数）、安全评估（拒答边界抽检）、红队（专家花式越狱，发现漏洞回炉）。全部通过后权重冻结，写入文件。此后模型本身不再学习——你与它的每次对话都不会改变这些数字（「它记住我了」是Ⅳ平面的工程幻觉）。</p>
         <details class="dv"><summary>扩建 · 评估科学：为什么 benchmark 数字要打折看（v0.9）</summary>
           <p><b>基准的三大陷阱：</b>① 污染——题目或其变体泄入训练集，分数测的是「背过」而非「会做」；② Goodhart 定律——一旦榜单成为目标，刷榜技巧就与真实好用脱钩（针对性微调可专门抬分）；③ 饱和——顶级模型分数挤在天花板附近，区分度失效，榜单只好不断换新题。<br>
@@ -1210,7 +1212,7 @@
           <button class="fk" data-v="d">MLA（前沿）</button>
         </div>
         <div class="fkb" data-v="a">Multi-Head：每个 <code>Q</code> 头配独享的 <code>K</code>、<code>V</code> 头（<code>h_kv = h_q = 32</code>）。表达力满配，但推理时 KV 缓存最肥（Ⅲ平面详算）。原版设计，大模型已少用。</div>
-        <div class="fkb on" data-v="b">Grouped-Query：多组 <code>Q</code> 头共享少量 <code>KV</code> 头（8B: <code>h_q=32</code>, <code>h_kv=8</code>，即 4 个 <code>Q</code> 头共用一套 <code>KV</code>）。KV 缓存直接 ÷4，质量几乎不掉。Llama-3、Qwen 等当今标配——架构决策被推理成本倒逼的典型案例。</div>
+        <div class="fkb on" data-v="b">Grouped-Query：多组 <code>Q</code> 头共享少量 <code>KV</code> 头（8B: <code>h_q=32</code>, <code>h_kv=8</code>，即 4 个 <code>Q</code> 头共用一套 <code>KV</code>）。KV 缓存直接 ÷4，质量几乎不掉。Llama-3 的具体配置——架构决策被推理成本倒逼的典型案例。</div>
         <div class="fkb" data-v="c">Multi-Query：极端版，全部 <code>Q</code> 头共用 1 套 <code>KV</code>（<code>h_kv=1</code>）。缓存最省、质量有可感损失，被 GQA 取代为主流折中。</div>
         <div class="fkb" data-v="d">Multi-head Latent Attention：不存 K、V 本身，存一个低秩压缩「潜向量」，用时再展开——缓存比 GQA 再小数倍。DeepSeek-V2/V3 的招牌创新，前沿方向。</div>
         <p class="dim">⚠ 复杂度 <code>O(T²)</code>：打分矩阵 <code>[B,h,T,T]</code> 随长度平方增长——「长上下文为什么贵」的数学根源。工程补丁 FlashAttention 不改数学，只改显存访问顺序（不再落盘整个 <code>T×T</code> 矩阵），是「同一公式、不同工程」的好例子。</p>
@@ -1349,8 +1351,9 @@
     <div class="wire"><span>本体讲完——两个望向本体之外与之内的附加模块 ▼</span></div>
 
     <details class="mod" id="mod-ssm">
-      <summary><span class="m-caret">▶</span><span class="m-name">架构地平线：非 Transformer</span><span class="m-en">BEYOND TRANSFORMER · SSM · 🔬 LAB</span><span class="m-shape"><code>O(T²)</code> 全回看 → O(1) 状态递推</span></summary>
+      <summary><span class="m-caret">▶</span><span class="m-name">架构地平线：稀疏、线性与混合</span><span class="m-en">HYBRID ARCHITECTURES · SSM · 🔬 LAB</span><span class="m-shape"><code>O(T²)</code> 全回看 → O(1) 状态递推</span></summary>
       <div class="m-body">
+        <p><b>2026-10 技术路标：</b><a href="genealogy.html#qwen">Qwen3.8</a>每组以 3 层 Gated DeltaNet 配 1 层 Gated Attention；<a href="genealogy.html#deepseek">DeepSeek V4.1 Flash</a>使用 CED 因果编解码与 CSA2 跨层缓存/索引复用；<a href="genealogy.html#hunyuan">Hy4 preview</a>以稀疏注意力与 IndexCache 降低开销。这些不是同一种“SSM”，也不能直接套用全注意力的显存公式。具体模型卡见各家详情。</p>
         <p>Transformer 不是终点——注意力那张 <code>O(T²)</code> 的账单（越长越贵、KV 缓存吃显存）一直在催生替代路线。最有力的挑战者是<b>状态空间模型</b>（SSM，代表作 Mamba）：不再「每个字回看全文」，而是维护一个<b>固定大小的状态</b>逐字递推——像人的工作记忆，而不是每说一个词都重读全文。生成时每步 O(1)、无 KV 缓存膨胀。</p>
         <p class="dim">代价：精确回忆远处细节的能力偏弱（状态是有损压缩）。现实折中是<b>混合架构</b>：多数层用 SSM、少数层保留注意力——多家实验室已有产品化尝试。另一条更远的线：扩散语言模型（整段并行去噪而非逐字生成，Ⅴ 平面思想搬回文本），潜在的速度革命，尚在早期商用探索。</p>
         <div class="forks"><span class="flab">分叉</span>
@@ -1363,7 +1366,7 @@
         <div class="fkb" data-v="b">线性复杂度、常数显存。长文档、端侧、流式场景吸引力大；精确检索类任务是短板。</div>
         <div class="fkb" data-v="c">「注意力负责精确回忆，SSM 负责便宜地记大概」——工程理性的产物，可能是中期主流形态。</div>
         <div class="fkb" data-v="d">把「逐字串行」这个根设定整个推翻。若成，Ⅲ 平面半数模块要重写——登记于此，防蓝图与行业脱钩。</div>
-        <p class="dim">对本站的意义：若架构更替，这张蓝图需要改的只有 Ⅱ 平面 Block 内部——分平面结构的抗震价值在此。</p>
+        <p class="dim">架构变化会同时影响 Ⅱ 平面的计算结构与 Ⅲ 平面的缓存、调度、推理内核。分平面有助于定位变化，但不能只改 Block 图而保留原来的全部成本估算。</p>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 两种记忆的对照<span class="demo-tag">G3 级</span></div>
@@ -1375,7 +1378,7 @@
           <div class="race-row"><span>注意力的可达度</span><div class="bar"><i id="sm-att"></i></div><span class="tv" id="sm-att-t">—</span></div>
           <div class="race-row"><span>SSM 状态中的残余</span><div class="bar"><i id="sm-ssm"></i></div><span class="tv" id="sm-ssm-t">—</span></div>
           <div class="viz-cap" id="sm-verdict"></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>SSM 残余按 a^(16−m) 实算（教学版单通道；真实 SSM 是多通道选择性状态，Mamba 的「选择性」让 a 随内容变化——但指数淡出的宿命同构）。注意力「等权可达」也是理想化（真注意力按相关性分配）。核心对照是真的：<b>精确回忆远处细节，注意力是天赋，SSM 是逆天</b>——也因此混合架构成了现实折中。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>SSM 残余按 a^(16−m) 实算（教学版单通道；真实选择性 SSM 的状态更新依赖内容，混合模型还会插入注意力层）。注意力「等权可达」也是理想化（真注意力按相关性分配）。本实验只比较<b>直接访问历史与固定状态压缩</b>；不能据此给真实模型的长程记忆能力排名，也不能把单通道衰减当成所有 SSM 的规律。</div>
         </div>
       </div>
     </details>
@@ -1413,22 +1416,22 @@
       <div class="m-body">
         <p>一次请求天然分两段，性格迥异：</p>
         <ul>
-          <li><b>Prefill</b>：把整段提示词一次性并行过全部 N 层（打满算力，<b>算力瓶颈</b>），同时为每层存下全部位置的 K、V——这就是首字延迟（TTFT）的主要来源。</li>
-          <li><b>Decode</b>：此后每生成一个 token，只前向<b>这一个</b>新位置（T=1），但要读取此前全部缓存——计算量很小、搬运量巨大（<b>显存带宽瓶颈</b>）。吐字速度（TPS）由带宽决定。</li>
+          <li><b>Prefill</b>：并行处理提示词，建立后续生成所需的状态。长输入常更偏算力受限；首 token 延迟（TTFT）还包含排队、调度、缓存命中和网络等因素。</li>
+          <li><b>Decode</b>：自回归生成时通常逐个处理新位置。单请求常受权重与 KV 读取带宽限制；上下文越长，缓存访问的影响可能越大。批量、稀疏性和内核实现也会改变瓶颈。</li>
         </ul>
-        <p class="dim">「AI 回答前顿一下、然后匀速吐字」的完整技术解释即此。两个瓶颈不同，也解释了为什么推理优化是独立于训练的一门工程。</p>
+        <p class="dim">两个阶段的瓶颈不同，因此有分离部署、连续批处理与前缀缓存等工程优化。下面只演示 batch=1 的简化成本，不代表在线 API 的实际速度。</p>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 首字延迟计算器<span class="demo-tag">G3 级</span></div>
-          <p class="dim" style="margin:4px 0 0">用屋顶线的真公式算给你看：贴进去的文档越长，第一个字等得越久（prefill 卡算力）；而之后的吐字速度雷打不动（decode 卡带宽）。按 H100 + 8B 模型理想值实算。</p>
+          <p class="dim" style="margin:4px 0 0">拖长提示词，同时观察 prefill 计算量与 decode 缓存读取量增长。按 H100 SXM + 8B FP16/BF16、标准 GQA 的理想值估算；“只搬权重”仅作为对照。</p>
           <div class="lab-ctrls">
             <label>① 提示词长度 <output id="pd-t-o">2048</output> token <input type="range" id="pd-t" min="7" max="17" value="11"></label>
-            <button type="button" class="fk" id="pd-run">▶ 播放这次请求（按真实比例缩放）</button>
+            <button type="button" class="fk" id="pd-run">▶ 播放估算（时间统一放大 3 倍）</button>
           </div>
           <div class="race-row"><span>Prefill（读题）</span><div class="bar"><i id="pd-p"></i></div><span class="tv" id="pd-p-t">—</span></div>
-          <div class="race-row"><span>Decode（作答 100 字）</span><div class="bar"><i id="pd-d"></i></div><span class="tv" id="pd-d-t">—</span></div>
-          <div class="tp-stats"><span>理论首字延迟 <b id="pd-ttft">—</b></span><span>理论吐字速度 <b id="pd-tps">—</b> token/s（与提示词长短无关）</span></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>公式实算（TTFT ≈ 2·P·T ÷ 峰值算力；每字 ≈ 权重字节 ÷ 带宽，取 H100/8B@fp16 理想值），播放动画按两者真实比例缩放。真实系统还有调度与网络开销、且长上下文时 KV 读取会拖慢 decode——理想值是下限。自查：把提示词从 2K 拖到 128K，看首字延迟涨了 64 倍而吐字速度纹丝不动——「贴长文档要多等」的物理根源。</div>
+          <div class="race-row"><span>Decode（生成 100 token）</span><div class="bar"><i id="pd-d"></i></div><span class="tv" id="pd-d-t">—</span></div>
+          <div class="tp-stats"><span>理想 prefill 耗时 <b id="pd-ttft">—</b></span><span>含 KV 读取 <b id="pd-tps">—</b> token/s</span><span>只搬权重对照 <b id="pd-weight">—</b> token/s</span><span>每步 KV 读取 <b id="pd-kv">—</b> GiB</span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>prefill ≈ max(2PT/F，权重字节/BW)；首个 decode 步 ≈（权重字节 + 2Nh_kv d_h T·字节数）/BW。32 层、8 个 KV 头、128 维、2 字节；F=989 TFLOP/s，BW=3.35 TB/s。省略注意力计算、实际带宽利用率、调度与网络；100 token 动画用首步速度近似。128K 仅用于成本外推，不代表 Llama-3-8B 原版支持该窗口。两阶段统一放大 3 倍，无截断；不是实测延迟。</div>
         </div>
       </div>
     </details>
@@ -1437,12 +1440,13 @@
     <details class="mod" open id="mod-kv">
       <summary><span class="m-caret">▶</span><span class="m-name">KV 缓存</span><span class="m-en">KV CACHE · 🔬 LAB</span><span class="m-shape">2 · N · <code>h_kv</code> · <code>d_h</code> · T · 字节数</span></summary>
       <div class="m-body">
+        <p class="dim"><b>公式适用范围：</b>下面计算的是全注意力 / GQA、所有层保留全部历史 KV 的情形。滑动窗口、MLA、量化缓存、跨层共享、CED 与线性注意力要另算；<a href="genealogy.html#deepseek">V4.1 Flash 的 CSA2 / CED</a>是当前实例。前缀缓存命中率也会改变多请求之间的实际占用。</p>
         <p>Decode 时每个新 token 都要对「此前所有位置」做注意力——若每次重算所有位置的 K、V，成本随长度平方爆炸。解法：算过一次就存显存里。代价是一笔精确可算的显存账：</p>
         <code class="fx">每 token 缓存 = 2 (K和V) × N层 × h_kv × d_h × 精度字节
-Llama-3-8B @fp16: 2 × 32 × 8 × 128 × 2 B = 128 KB/token
-→ 8K 上下文 ≈ 1 GB／每条并发请求</code>
+Llama-3-8B @fp16: 2 × 32 × 8 × 128 × 2 B = 128 KiB/token
+→ 8192 tokens ≈ 1 GiB／每条并发请求</code>
         <p>Ⅱ 平面 GQA 的红利在此兑现：<code>h_kv</code> 从 32 减到 8，这笔账直接 ÷4。<b>架构选择（Ⅱ）与服务成本（Ⅲ）通过这条公式咬合</b>——跨平面读图的第一个样本。</p>
-        <p class="dim">工程注记：PagedAttention（vLLM）把缓存按「页」管理如操作系统虚拟内存，消灭碎片，是开源推理引擎的核心创新。「无限长的记忆」在物理上不成立，根源即这笔账。</p>
+        <p class="dim">工程注记：PagedAttention（vLLM）把缓存按「页」管理如操作系统虚拟内存，减少内存碎片并支持共享，是推理引擎的重要优化。「无限长的记忆」在物理上不成立，根源即这笔账。</p>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 显存水位计算器<span class="demo-tag">G3 级</span></div>
@@ -1462,7 +1466,7 @@ Llama-3-8B @fp16: 2 × 32 × 8 × 128 × 2 B = 128 KB/token
           <div class="race-row"><span>权重占用</span><div class="bar"><i id="kv-w" style="background:var(--ink-3)"></i></div><span class="tv" id="kv-w-t">—</span></div>
           <div class="race-row"><span>KV 缓存占用</span><div class="bar"><i id="kv-c"></i></div><span class="tv" id="kv-c-t">—</span></div>
           <div class="viz-cap" id="kv-verdict"></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>全部按模块正文的公式实算（2 × 层数 × KV头 × 头维 × 长度 × 字节；8B: <code>N=32</code>,<code>h_kv=8</code>,<code>d_h=128</code>；70B: <code>N=80</code>,<code>h_kv=8</code>,<code>d_h=128</code>），对照 80GB 卡。省略了激活值等杂项占用——真实水位只会更高。自查：8B + FP16 + 128K 上下文 + 8 并发 ≈ 128GB 的 KV——比模型本身大八倍，这就是「长上下文贵在显存」的算术。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>全部按模块正文的公式实算（2 × 层数 × KV头 × 头维 × 长度 × 字节；8B: <code>N=32</code>,<code>h_kv=8</code>,<code>d_h=128</code>；70B: <code>N=80</code>,<code>h_kv=8</code>,<code>d_h=128</code>），采用十进制 GB 对照 80GB 标称容量；KiB / GiB 用于二进制换算。省略了激活值等杂项占用——真实水位只会更高。自查：8B + FP16 + 128K 上下文 + 8 并发 ≈ 137.4 GB（128 GiB）的 KV——约为 16 GB 权重的 8.6 倍，这就是「长上下文贵在显存」的算术。</div>
         </div>
       </div>
     </details>
@@ -1538,11 +1542,11 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
           <button class="fk" data-v="b">投机解码</button>
         </div>
         <div class="fkb on" data-v="a">Continuous batching：不同用户请求的 decode 步在同一批里混编，谁完成谁退出、新请求随时插队——GPU 始终满载。vLLM 等推理引擎的立身之本，也是 API 单价能持续下降的主要工程原因。</div>
-        <div class="fkb" data-v="b">Speculative decoding：让一个小「草稿模型」先猜 k 个 token，大模型<b>一次并行前向</b>验收（对的收下、错的从分歧处重来）。数学上可证与大模型逐字生成<b>分布完全一致</b>——不是近似，是免费加速。串行难题被「先猜后验」绕开的漂亮案例。</div>
+        <div class="fkb" data-v="b">Speculative decoding：让一个小「草稿模型」先猜 k 个 token，大模型<b>一次并行前向</b>验收（对的收下、错的从分歧处重来）。数学上可证与大模型逐字生成<b>分布完全一致</b>（在正确的接受 / 拒绝与重采样规则下）。是否加速还取决于接受率、草稿成本和硬件，低接受率也可能更慢。</div>
         <p class="dim">另有服务日志、限流、内容审计等运维层——法律上的「日志留存」义务落点在服务框架，见索引地图 L4「API 服务」。</p>
 
         <div class="lab">
-          <div class="lab-head">🔬 实验室 · 投机解码：免费午餐的数学证明<span class="demo-tag">G3 级</span></div>
+          <div class="lab-head">🔬 实验室 · 投机解码：分布等价与接受率<span class="demo-tag">G3 级</span></div>
           <p class="dim" style="margin:4px 0 0">投机解码的全部价值在一句话：无论草稿模型多烂，接受/拒绝规则保证最终输出<b>与大模型逐字生成的分布完全一致</b>。别信我，跑 2000 次自己看。</p>
           <div class="lab-ctrls"><label>① 草稿模型的水平：与大模型 <output id="sd-s-o">五成</output>相似 <input type="range" id="sd-s" min="0" max="100" value="50"></label>
             <button type="button" class="fk" id="sd-run">▶ 抽 2000 次</button></div>
@@ -1560,10 +1564,10 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <div class="wire"><span>推理不只是「跑得快」——还可以「想得久」▼</span></div>
 
     <details class="mod" id="mod-ttc">
-      <summary><span class="m-caret">▶</span><span class="m-name">推理模型与测试时算力</span><span class="m-en">REASONING · TEST-TIME COMPUTE · 🔬 LAB</span><span class="m-shape">思考 token ×10–100 → 质量↑</span></summary>
+      <summary><span class="m-caret">▶</span><span class="m-name">推理模型与测试时算力</span><span class="m-en">REASONING · TEST-TIME COMPUTE · 🔬 LAB</span><span class="m-shape">预算、策略、验证器 → 质量与成本</span></summary>
       <div class="m-body">
-        <p>2024–2025 的路线转折：让模型在作答前先生成大段<b>思维链</b>（可见或隐藏的中间推理 token）——自己列步骤、自查、回溯，然后才给答案。训练法接 Ⅰ 平面的 GRPO：用「可自动判分的任务」（数学、代码）做强化，模型自己学会了反思。效果是推理类任务的大幅跃升；代价是延迟与 token 消耗成倍到数十倍。</p>
-        <p>深层意义：这是<b>第二条 Scaling 曲线</b>——预训练把算力堆在「学」，这条路把算力堆在「想」。「思考预算」（thinking budget）从此成为产品旋钮：同一个模型，多想十倍就是另一个价、另一种能力。</p>
+        <p>推理模型把一部分计算预算用于作答前的中间推理与自检。长思考、并行采样和验证器择优，是不同的测试时算力分配方式；训练奖励与实际任务决定收益，<b>更多 token 不保证更正确</b>。</p>
+        <p>把预算从“学”延伸到“想”，产生了新的成本与延迟权衡。当前产品常提供 effort 或 thinking 设置，但这些不是跨厂商通用的算力单位；最大上下文也不等于思考预算。具体档位见<a href="genealogy.html">模型门派谱系</a>。</p>
         <div class="forks"><span class="flab">分叉 · 用算力换质量的方式</span>
           <button class="fk" data-v="a">直答</button>
           <button class="fk on" data-v="b">长思维链 ✓</button>
@@ -1573,16 +1577,18 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
         <div class="fkb on" data-v="b">o1 / DeepSeek-R1 / Claude 扩展思考路线：串行地想。注意思维链的<b>忠实性问题</b>：嘴上写的理由未必是真实的计算路径（接下方 Ⅱ「可解释性」）——把思维链当「心声证据」要打折。</div>
         <div class="fkb" data-v="c">同一题并行采样 N 个答案，用多数投票或验证器挑最好——「人多力量大」的机器版，适合有客观对错的任务。</div>
         <div class="lab">
-          <div class="lab-head">🔬 实验室 · 用算力买正确率的数学<span class="demo-tag">G3 级</span></div>
-          <p class="dim" style="margin:4px 0 0">「多想换多对」的一条真数学（并行采样 + 多数投票版）：同一道题独立答 N 次取多数——正确率按二项分布实算。拖两个滑杆，看质量曲线与账单一起涨。</p>
+          <div class="lab-head">🔬 实验室 · 多采样何时有效：独立与相关<span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">设问题只有两个候选答案，独立作答 N 次取多数；再加入“整组共享一次判断”的情况。拖动相关比例，看重复犯同一个错如何吃掉采样收益。</p>
           <div class="lab-ctrls">
             <label>单次作答正确率 <output id="tc-p-o">65%</output> <input type="range" id="tc-p" min="30" max="90" value="65"></label>
             <label>采样次数 N = <output id="tc-n-o">5</output> <input type="range" id="tc-n" min="0" max="6" value="2"></label>
+            <label>整组共享判断的比例 ρ = <output id="tc-r-o">40%</output> <input type="range" id="tc-r" min="0" max="100" value="40"></label>
           </div>
           <div class="race-row"><span>答 1 次</span><div class="bar"><i id="tc-one"></i></div><span class="tv" id="tc-one-t">—</span></div>
-          <div class="race-row"><span>答 N 次取多数</span><div class="bar"><i id="tc-maj"></i></div><span class="tv" id="tc-maj-t">—</span></div>
+          <div class="race-row"><span>完全独立采样</span><div class="bar"><i id="tc-independent"></i></div><span class="tv" id="tc-independent-t">—</span></div>
+          <div class="race-row"><span>含相关判断</span><div class="bar"><i id="tc-maj"></i></div><span class="tv" id="tc-maj-t">—</span></div>
           <div class="tp-stats"><span>正确率提升 <b id="tc-gain">—</b></span><span>算力账单 <b id="tc-cost">—</b>×</span><span id="tc-note" style="color:var(--ink-3)"></span></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>多数投票正确率按二项分布精确计算（假设各次作答独立、答错时不巧合地错成同一答案——理想化假设，真实增益略低）。两个自查：把单次正确率拖到 30%（低于一半）——多采样反而<b>越投越错</b>，测试时算力不是万灵药，底子太差时是放大器；正确率 65% 时从 1 → 31 次，提升越来越薄而账单线性涨——「思考预算」旋钮的经济学。长思维链是另一条串行路径，数学不同、直觉相通。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>二选一、奇数 N、等长回答。概率 ρ 下整组共享一个正确率 p 的判断；其余 1−ρ 情况各次独立。于是 P(多数正确)=ρp+(1−ρ)Σ[k&gt;N/2] C(N,k)p^k(1−p)^(N−k)。这是教学混合模型，ρ 不是某家模型的测量值。ρ=100% 时多采样无收益；p&lt;50% 时独立多数票放大错误。开放问答的多种错误答案、验证器选择与长思维链不适用此二项公式；N 倍账单也仅指等长采样的计算量。</div>
         </div>
 
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p>计费透明：用户为看不见的隐藏思考 token 付费——披露与计量争议的新场景；思维链的留存与取证价值/风险；监管算力口径的观察点：现行阈值按训练算力计，测试时算力尚在框架之外（口径演化中）。</p></div>
@@ -1599,7 +1605,7 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-ctx">
       <summary><span class="m-caret">▶</span><span class="m-name">上下文拼装</span><span class="m-en">CONTEXT ASSEMBLY · 🔬 LAB</span><span class="m-shape">多源文本 → 一串 token [T]</span></summary>
       <div class="m-body">
-        <p>模型每次前向只看见<b>一串 token</b>。你以为的「系统提示词 / 对话历史 / 检索资料 / 工具结果 / 用户输入」，在模型眼里是拼接成一条的同质序列——<b>数据与指令走同一条通道</b>。这句话是提示词注入的结构性根源：模型没有硬件级的「这段只是数据」标记，只有训练出来的习惯。</p>
+        <p>一次请求会把系统要求、对话、检索资料、工具结果及多模态内容组织成模型输入。角色与特殊 token 能区分消息，但<b>不能单凭这些标记形成可靠的权限隔离</b>。外部文档可能夹带指令；宿主需要保留来源、限制工具权限并独立校验动作。</p>
         <p class="dim">「记忆」也在这拼装：把历史摘要塞回上下文而已，权重从未改变（Ⅰ平面末格的呼应）。上下文工程（context engineering）已是一门显学。</p>
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 一次请求的解剖台<span class="demo-tag">G3 级</span></div>
@@ -1612,7 +1618,7 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
           </div>
           <div class="lab-prompt" id="ct-view" style="max-height:260px"></div>
           <div class="tp-stats"><span>拼装后总长 <b id="ct-len">—</b> 字</span><span id="ct-warn" style="color:var(--seal)"></span></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>拼装方式忠实于真实系统（各组件按固定次序连接成单一序列，长度实算）；内容为教学样本。核心观察：打开注入开关后，那句「忽略以上全部指令」在拼装结果里<b>没有任何技术上的特殊标记</b>——它就是 RAG 检索段落里的普通文字。模型分辨它靠的是训练出的习惯，不是硬件级的隔离——这是提示词注入屡禁不绝的结构性根源，也是护栏层（下下个模块）必须独立存在的理由。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>拼装方式忠实于真实系统（各组件按固定次序连接成单一序列，长度实算）；内容为教学样本。核心观察：打开注入开关后，那句「忽略以上全部指令」来自 RAG 段落，<b>应当被当作不可信数据</b>。本演示省略真实接口的角色封装与特殊 token，不能据此断言接口没有标记；标记本身也不能替代权限控制。</div>
         </div>
 
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p>注入导致越权输出的责任分配，取决于「谁拼装了上下文」——这一格的架构图就是责任链图。<span class="ref">索引地图 L5「提示词工程」</span></p></div>
@@ -1723,7 +1729,7 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-agent">
       <summary><span class="m-caret">▶</span><span class="m-name">工具调用与 Agent 循环</span><span class="m-en">TOOL USE · AGENT LOOP · 🔬 LAB</span><span class="m-shape">提议 → 宿主执行 → 结果回填 → 循环</span></summary>
       <div class="m-body">
-        <p>结构一句话说尽：模型输出「我想调用工具 X(参数Y)」的结构化文本 → <b>宿主程序</b>校验并执行 → 结果作为新上下文回填 → 再前向。循环到模型输出「完成」为止。模型全程只生产文本，<b>动手的永远是宿主</b>——harness 的权限清单即系统能力边界，也是责任分析的支点。MCP 等协议在标准化「工具如何声明与接入」。</p>
+        <p>结构一句话说尽：模型输出「我想调用工具 X(参数Y)」的结构化文本 → <b>宿主程序</b>校验并执行 → 结果作为新上下文回填 → 再前向。模型可以提议结束，但宿主还需检查交付物、任务状态与验证结果，并设置步数、时间和费用上限。模型全程只生产文本，<b>动手的永远是宿主</b>——harness 的权限清单即系统能力边界，也是责任分析的支点。MCP 等协议在标准化「工具如何声明与接入」。</p>
         <div class="lab">
           <div class="lab-head">🔬 实验室 · Agent 沙盘：人工确认点在哪救场<span class="demo-tag">G2 级 · 剧本预写</span></div>
           <p class="dim" style="margin:4px 0 0">两个任务剧本，逐步播放「观察 → 思考 → 行动」循环。第二个剧本会走到高危操作——届时<b>批准还是拒绝，由你点</b>。留意：无论你选哪个，日志都在记录。</p>
@@ -1744,19 +1750,19 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-proto">
       <summary><span class="m-caret">▶</span><span class="m-name">工具协议</span><span class="m-en">FUNCTION CALLING · MCP · 🔬 LAB</span><span class="m-shape">工具清单注入 → JSON 调用 ↔ 结果回填</span></summary>
       <div class="m-body">
-        <p>上一个模块讲循环，这里下到<b>报文层</b>：「接工具」的全部真相是四段文本的往返——①工具清单（名称/用途/参数 schema）作为文本注入上下文；②模型在该出手时生成一段结构化 JSON（工具名+参数）；③宿主解析、真正执行、把结果作为新消息拼回上下文；④模型读到结果继续作答。模型全程只做它唯一会做的事：预测下一个 token——<b>调用请求本身也是逐 token 生成的普通文本</b>，所以会有参数写错、编造不存在工具的「参数幻觉」，schema 校验必须在宿主侧。</p>
-        <p class="dim">另一笔账常被忽略：每接一个工具 = 向上下文注入一段 schema 文本。工具接得越多，预算被吃得越多、模型选错工具的概率也越高——「工具选择」本身就是模型的一次判断。下面实验室里拖一下滑杆，这笔账立刻可见。</p>
+        <p>工具调用分两个边界：模型根据可见的工具描述提出调用；<b>宿主程序</b>检查参数、权限与执行条件，调用工具后把结果回填。Function calling 定义模型接口的结构化输出；MCP 定义应用与工具服务器间的协议。模型不会直接替宿主执行 JSON-RPC，也不能仅凭生成了合法 JSON 就视为操作可靠。</p>
+        <p class="dim">工具描述会消耗模型上下文，但不必一次装入全部工具：宿主可先检索、筛选，再按需提供 schema。下面预算实验取“全部装入”的教学情形；MCP 网络报文与模型实际看到的上下文不应混算。</p>
         <div class="forks"><span class="flab">分叉 · 接入路线</span>
           <button class="fk on" data-v="a">原生 function calling ✓</button>
           <button class="fk" data-v="b">MCP 标准协议</button>
           <button class="fk" data-v="c">Computer Use</button>
         </div>
         <div class="fkb on" data-v="a">各家私有报文格式（OpenAI 的 tools、Anthropic 的 tool_use——字段名互不兼容），模型侧经专门微调学会输出结构化调用。成熟稳定、生态最广；代价是每接一家供应商就要改一次对接代码。</div>
-        <div class="fkb" data-v="b">Model Context Protocol：把「工具如何被发现、描述、调用」标准化为 JSON-RPC 协议（initialize → tools/list → tools/call）。工具做成 server、应用做 client，一次开发处处可接——USB-C 之于外设。2024-11 Anthropic 开源，此后被业界陆续采纳（据公开报道，未经人工核验）。你正在用的 Claude Code 就靠它接外部工具。</div>
-        <div class="fkb" data-v="c">不接任何协议：直接给模型屏幕截图 + 鼠标键盘——把「人用软件的方式」当万能接口。通用性最强（理论上能用一切软件），也最慢、最贵、错误率最高；代表探索方向而非当前主流。</div>
+        <div class="fkb" data-v="b">MCP 由 Host 管理 Client，再由 Client 连接 Server。2026-07-28 版本改为无状态请求：以 server/discover 查询服务能力，在每次请求的 _meta 中携带协议版本与能力；工具仍经 tools/list / tools/call 发现和调用。旧 initialize 会话握手属于旧版，不能混写。<a href="https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture" target="_blank" rel="noopener noreferrer">官方架构与报文 ↗</a></div>
+        <div class="fkb" data-v="c">宿主提供截图与点击、输入等动作工具，让模型操作界面；仍然需要工具接口、运行环境和权限控制。它与 API 接入可以互补，速度与可靠性取决于界面、模型和验证方式，不能笼统排名。</div>
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 报文显微镜<span class="demo-tag">G3 级</span></div>
-          <p class="dim" style="margin:4px 0 0">一次「查合同」调用的完整报文往返，四幕连播（JSON 现场拼装、长度实算）。拖工具数看 schema 吃预算；切到 MCP 看同一件事的标准化形态。</p>
+          <p class="dim" style="margin:4px 0 0">一次「查合同」调用的报文示意，JSON 现场拼装、字符数实算。原生模式展示模型接口，MCP 模式展示宿主与服务器之间的 2026-07-28 报文。</p>
           <div class="lab-ctrls">
             <label>接入工具 <output id="pr-n-o">2</output> 个 <input type="range" id="pr-n" min="1" max="5" value="2"></label>
             <button type="button" class="fk on" id="pr-nat">原生报文</button>
@@ -1764,7 +1770,7 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
           </div>
           <div class="lab-prompt" id="pr-view" style="max-height:300px;overflow-y:auto;white-space:pre-wrap"></div>
           <div class="tp-stats"><span>工具清单占用 <b id="pr-sch">—</b> 字符 ≈ <b id="pr-tok">—</b> token</span><span>占 8k 窗口 <b id="pr-pct">—</b>%</span><span id="pr-note" style="color:var(--ink-3)"></span></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>报文由浏览器现场 <code>JSON</code> 拼装、长度实算；形态为<b>结构等价的通用示意</b>——各家字段名不同（OpenAI <code>tools</code>、Anthropic <code>tool_use</code>、MCP JSON-RPC）。「幕②模型输出」是预写样本：真实调用由模型逐 token 生成，这正是参数幻觉的来源、也是宿主必须校验 schema 的理由。token 为估算（中文 1 字≈1 token、ASCII 约 4 字符 1 token），不同分词器结果有别。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>报文由浏览器现场 <code>JSON</code> 拼装、长度实算；原生模式为通用示意；MCP 模式使用 2026-07-28 的关键字段，省略服务发现响应、传输与认证，不是完整客户端。两者是不同边界；预算统计始终采用宿主选给模型的通用 schema，不把 _meta 等网络字段算作模型 token。「幕②模型输出」是预写样本：真实调用由模型逐 token 生成，这正是参数幻觉的来源、也是宿主必须校验 schema 的理由。token 为估算（中文 1 字≈1 token、ASCII 约 4 字符 1 token），不同分词器结果有别。</div>
         </div>
 
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p class="dim">挂点预留（合规层冻结中，2026-07-18 起另行规划）。</p></div>
@@ -1834,7 +1840,7 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
   <!-- ================= PLANE V ================= -->
   <section class="plane" id="pl5" style="--pc:var(--p5)">
     <div class="pl-head"><span class="rn">PLANE Ⅴ</span><h2>多模态 · 另一族造物</h2>
-      <p class="pl-q">这一平面回答：机器如何「看见」，又如何「画出」与「说出」。文本 LLM 之外的第二大陆——视觉理解直接汇入 Ⅱ 平面的 token 序列，而图像/视频/语音的<b>生成</b>则是结构不同的另一族模型，常作为工具被 Ⅳ 平面的 Agent 调用。本平面 v0.7 新开工，暂为 G1 骨架；合规密度为全图之最。</p></div>
+      <p class="pl-q">这一平面回答：机器如何「看见」，又如何「画出」与「说出」。文本 LLM 之外的第二大陆——视觉理解直接汇入 Ⅱ 平面的 token 序列，而图像/视频/语音的<b>生成</b>则是结构不同的另一族模型，常作为工具被 Ⅳ 平面的 Agent 调用。本平面已有六个教学实验；图文理解、图像生成与语音服务应逐型号区分。</p></div>
     <div class="pl-tools"><button data-plane="pl5">全部展开 / 收起</button></div>
 
     <details class="mod" id="mod-vlm">
@@ -1885,7 +1891,7 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
         </div>
         <div class="fkb" data-v="a">卷积「漏斗-反漏斗」结构，Stable Diffusion 1.x/2.x 时代的骨干。图像先验强、但规模化天花板低。</div>
         <div class="fkb on" data-v="b">Diffusion Transformer：用 Ⅱ 平面同款 Transformer 替换 U-Net，图像切块当 token 处理。SD3、Flux、Sora（据其技术报告）皆此路线——<b>Transformer 再下一城</b>，Scaling Laws 在图像域续写。</div>
-        <div class="fkb" data-v="c">把图像 token 化后按 LLM 方式逐个生成（GPT-4o 的图像生成据报道属此族）：与文本共用一套自回归机制，天然多模态统一，少数派但值得登记。</div>
+        <div class="fkb" data-v="c">把图像表示成离散 token 后逐个生成，是自回归图像生成的一条路线；也可与其他生成机制组合。闭源产品未披露完整架构时，不凭产品名或生成效果认定其实现。</div>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 加噪与去噪的循环<span class="demo-tag">G3 级</span></div>
@@ -2163,7 +2169,7 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
 
 prefill / 训练（大批量）: 同一块权重同时服务成百上千个 token
    → 强度 ×百千倍 → 跃上平顶区，算力瓶颈</code>
-        <p>一把钥匙开全部锁——蓝图里散落的谜团在此收束：为什么<b>批处理</b>能暴涨吞吐（复用权重抬强度，Ⅲ）；为什么<b>量化</b>「又省又快」（字节减半，斜坡区直接提速一倍，Ⅲ）；为什么 <b>GQA/MLA</b> 值钱（KV 搬运量变小，Ⅱ→Ⅲ）；为什么<b>投机解码</b>是免费午餐（把逐字 decode 改造成并行验收 = 抬强度，Ⅲ）；为什么 Prefill 快 Decode 慢（一个平顶一个斜坡，Ⅲ）。</p>
+        <p>一把钥匙开全部锁——蓝图里散落的谜团在此收束：为什么<b>批处理</b>能暴涨吞吐（复用权重抬强度，Ⅲ）；为什么<b>量化</b>「又省又快」（理想字节量下降，实际提速还取决于内核与其他瓶颈，Ⅲ）；为什么 <b>GQA/MLA</b> 值钱（KV 搬运量变小，Ⅱ→Ⅲ）；为什么<b>投机解码</b>在高接受率时可能加速（把逐字 decode 改造成并行验收 = 抬强度，Ⅲ）；为什么 Prefill 快 Decode 慢（一个平顶一个斜坡，Ⅲ）。</p>
         <p class="dim">诚实标注：屋顶线是刻意简化的模型（未计通信、调度、算子差异），但作为白板级思维工具，从业者真的天天用它。</p>
 
         <div class="lab">
@@ -2204,7 +2210,7 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
           <button class="fk" data-v="c">FP16（早期）</button>
         </div>
         <div class="fkb on" data-v="a">砍掉 FP32 的尾数精度、<b>保留它的指数位范围</b>：数值表示粗一点，但极大极小值不溢出——训练稳定性的关键。当今混合精度训练的主流选择。</div>
-        <div class="fkb" data-v="b">1 字节训练，Hopper 代（H100）起有硬件支持。DeepSeek-V3 大规模 FP8 训练是公开先例——「硬件代际决定训法」的实证：同样的钱买新一代卡，等于多买一倍带宽。</div>
+        <div class="fkb" data-v="b">1 字节训练，Hopper 代（H100）起有硬件支持。DeepSeek-V3 大规模 FP8 训练是公开先例。较低精度可减少数据字节量，但收益取决于数值稳定性、内核、算力与带宽，不能把新一代显卡或标称精度直接换算成固定倍数的性价比。</div>
         <div class="fkb" data-v="c">与 BF16 同为 2 字节但指数位窄，训练易溢出，需要损失缩放等补丁——被 BF16 取代的主因。</div>
         <p class="dim">推理侧的 INT8/INT4 量化已在 Ⅲ 平面详述；此处补硬件视角：能不能用某个格式，先看芯片支不支持（A100 无 FP8）——「模型怎么训、怎么跑」有时是采购合同问题。</p>
 
@@ -2250,12 +2256,23 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
     </details>
   </section>
 
+  <section class="plane" id="review-sources" style="--pc:var(--p0)">
+    <div class="pl-head"><span class="rn">REVIEW · 2026-10-15</span><h2>本轮来源与阅读边界</h2><p class="pl-q">这轮更新架构、推理成本、奖励训练、评测与工具接入；45 个实验仍是本地教学模型。Llama-3-8B / H100 保留为固定教学锚点，不代表最新产品性能。既有法律朱批仍待另行审校。</p></div>
+    <ul>
+      <li>架构与型号：<a href="genealogy.html">门派谱系 v4</a>逐家提供模型卡，区分主干 / 激活 / 附加记忆参数和托管 / 权重能力。</li>
+      <li>后训练：<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener noreferrer">DeepSeek-R1 论文</a>；分开看 R1-Zero、R1 和优化方法 / 奖励来源。</li>
+      <li>推理成本：<a href="https://www.nvidia.com/en-us/data-center/h100/" target="_blank" rel="noopener noreferrer">NVIDIA H100 规格</a>；本页采用 SXM 非稀疏峰值，只做理想算术。</li>
+      <li>上下文工程：<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener noreferrer">Anthropic 工程说明</a>；压缩、笔记和按需检索各有信息损失，须保留关键决定与可复查材料。</li>
+      <li>协议：<a href="https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture" target="_blank" rel="noopener noreferrer">MCP 2026-07-28 架构</a>；协议层不是模型上下文，也不自动赋予工具权限。</li>
+    </ul>
+  </section>
+
   <!-- ================= 边界登记簿 ================= -->
   <section class="plane" id="scope" style="--pc:var(--ink-3)">
     <div class="pl-head" style="border-left-color:var(--hairline)"><span class="rn" style="color:var(--ink-3)">APPENDIX</span><h2>蓝图的边界 · 已知未覆盖清单</h2>
-      <p class="pl-q">防返工登记簿。以下领域<b>刻意</b>尚未展开，但挂点已声明——按规则 R2/R4，扩建 = 新增平面或模块，不动现有结构。清单随行业演化滚动维护：发现新空白就登记，登记了就不慌。</p></div>
+      <p class="pl-q">这里记录已覆盖的主题及仍待深化的边界。“已建”表示已有教学入口，不表示覆盖了该领域全部研究、产品或实现。新架构、真实模型实测与法律审校仍需持续补充。</p></div>
     <div class="legend" style="margin-top:16px">
-      <div class="lg" style="border-color:var(--p5)"><b>✅ 多模态生成栈 → 已动工（v0.7）</b>已建成 PLANE Ⅴ 六模块 G1 骨架（VLM / 扩散 / 潜空间 / 条件引导 / 视频 / 语音克隆）。后续深化方向：扩散去噪过程实验室、声音克隆演示。</div>
+      <div class="lg" style="border-color:var(--p5)"><b>✅ 多模态生成栈 → 已建教学实验</b>PLANE Ⅴ 六模块均有实验（VLM / 扩散 / 潜空间 / 条件引导 / 视频 / 语音）。声音克隆保留机制示意，并非训练或调用真实克隆模型。</div>
       <div class="lg" style="border-color:var(--p5)"><b>✅ 视觉理解（VLM）→ 已并入 PLANE Ⅴ</b>原计划挂在 Ⅱ 平面「分词」旁，实建时并入 Ⅴ 平面首模块（多模态内容更内聚）——登记簿承诺的是「有去处」，不锁死具体位置。</div>
       <div class="lg" style="border-color:var(--p3)"><b>✅ 推理模型与测试时算力 → 已建（v0.9）</b>Ⅲ 平面新模块：长思维链、第二条 Scaling 曲线、思考预算、忠实性问题与朱批。</div>
       <div class="lg" style="border-color:var(--p2)"><b>✅ 非 Transformer 架构 → 已建（v0.9）</b>Ⅱ 平面新模块「架构地平线」：Mamba/SSM 状态递推 vs 注意力全回看、混合架构、扩散 LM 登记。</div>
@@ -2272,15 +2289,16 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.30 · 2026-07-19。数字例锚定 Llama-3-8B 与 NVIDIA H100（公开可查证）；各家模型数值不同、结构同构。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <p>LLM 系统蓝图 · 主线 v0.34 · 2026-10-15。数字例锚定 Llama-3-8B 与 NVIDIA H100；适用范围就近标注，当前架构另见谱系。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
       <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
-      分叉的「✓ 主流」判断以 2026 年年中开源生态为准，此行业半年一变。</p>
+      未逐项复核的历史分叉标签仍是教学路线标记，不代表当前市场份额或优劣排名。</p>
     </div>
   </footer>
 </div>
 </div>
 
-<script>
+<script type="module">
+import { majorityProbability, inferenceEstimate, mcpExchange } from "./assets/blueprint-lab-models.mjs";
 /* 分叉 chips：组内切换 */
 document.querySelectorAll('.m-body').forEach(body => {
   const groups = [];
@@ -3897,23 +3915,30 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
 (function () {
   const $ = id => document.getElementById(id);
   if (!$('pd-t')) return;
-  const F = 989e12, BW = 3.35e12, P = 8e9, OUT = 100;
-  const perTok = P * 2 / BW;            /* 每字秒数（带宽瓶颈） */
+  const OUT = 100;
   let timer = null;
   function calc() {
     const T = 2 ** (+$('pd-t').value);
     $('pd-t-o').textContent = T >= 1024 ? (T / 1024) + 'K' : T;
-    const ttft = 2 * P * T / F;
+    const estimate = inferenceEstimate(T);
+    const ttft = estimate.prefillSeconds;
     $('pd-ttft').textContent = ttft >= 1 ? ttft.toFixed(2) + ' s' : (ttft * 1000).toFixed(0) + ' ms';
-    $('pd-tps').textContent = (1 / perTok).toFixed(0);
-    return ttft;
+    $('pd-tps').textContent = estimate.tokensPerSecond.toFixed(0);
+    $('pd-weight').textContent = estimate.weightOnlyTPS.toFixed(0);
+    $('pd-kv').textContent = (estimate.kvBytes / 2 ** 30).toFixed(2);
+    return estimate;
   }
-  $('pd-t').addEventListener('input', () => { calc(); });
+  $('pd-t').addEventListener('input', () => {
+    if (timer) { clearInterval(timer); timer = null; }
+    ['pd-p', 'pd-d'].forEach(id => { $(id).style.width = '0'; });
+    ['pd-p-t', 'pd-d-t'].forEach(id => { $(id).textContent = '待播放'; });
+    calc();
+  });
   $('pd-run').addEventListener('click', () => {
     if (timer) clearInterval(timer);
-    const ttft = calc();
+    const estimate = calc();
     const K = 3;
-    const pMs = Math.min(ttft * 1000 * K, 5000), dMs = OUT * perTok * 1000 * K;
+    const pMs = estimate.prefillSeconds * 1000 * K, dMs = OUT * estimate.decodeSeconds * 1000 * K;
     const t0 = performance.now();
     $('pd-p').style.width = '0'; $('pd-d').style.width = '0';
     timer = setInterval(() => {
@@ -3923,10 +3948,10 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
         $('pd-p-t').textContent = '读题中…'; $('pd-d-t').textContent = '等待首字';
       } else {
         $('pd-p').style.width = '100%';
-        $('pd-p-t').textContent = '完成' + (ttft * 1000 * K > 5000 ? '（播放已截断）' : '');
+        $('pd-p-t').textContent = '完成';
         const de = Math.min((el - pMs) / dMs, 1);
         $('pd-d').style.width = (de * 100) + '%';
-        $('pd-d-t').textContent = Math.round(de * OUT) + ' / ' + OUT + ' 字';
+        $('pd-d-t').textContent = Math.round(de * OUT) + ' / ' + OUT + ' token';
         if (de >= 1) { clearInterval(timer); timer = null; }
       }
     }, 40);
@@ -3948,17 +3973,17 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
     $('kv-b-o').textContent = B;
     const md = M[m], bytes = PB[p];
     const perTokKB = 2 * md.L * md.hkv * md.dh * bytes / 1024;
-    const cacheGB = perTokKB * T * B / 1024 / 1024;
+    const cacheGB = perTokKB * 1024 * T * B / 1e9; // GB 与权重、80 GB 标称容量同口径
     $('kv-w').style.width = Math.min(md.w / VRAM * 100, 100) + '%';
     $('kv-w-t').textContent = md.w + ' GB';
     $('kv-c').style.width = Math.min(cacheGB / VRAM * 100, 100) + '%';
     $('kv-c-t').textContent = cacheGB >= 10 ? cacheGB.toFixed(0) + ' GB' : cacheGB.toFixed(1) + ' GB';
     const total = md.w + cacheGB;
     $('kv-verdict').innerHTML = md.w > VRAM
-      ? `⚠ ${md.n} 的权重单卡已装不下（${md.w}GB > 80GB，需多卡张量并行）——此处仅看 KV 的账：每 token ${perTokKB.toFixed(0)} KB，当前合计 ${cacheGB.toFixed(1)} GB。`
+      ? `⚠ ${md.n} 的权重单卡已装不下（${md.w}GB > 80GB，需多卡张量并行）——此处仅看 KV 的账：每 token ${perTokKB.toFixed(0)} KiB，当前合计 ${cacheGB.toFixed(1)} GB。`
       : total > VRAM
         ? `⚠ <b>撞墙</b>：权重 ${md.w} + KV ${cacheGB.toFixed(1)} = ${total.toFixed(1)} GB，超出 80GB 卡 ${(total - VRAM).toFixed(1)} GB——减并发、缩上下文、或给 KV 量化。`
-        : `✓ 装得下：还剩 ${(VRAM - total).toFixed(1)} GB 余量（每 token 缓存 ${perTokKB.toFixed(0)} KB 实算）。`;
+        : `✓ 装得下：还剩 ${(VRAM - total).toFixed(1)} GB 余量（每 token 缓存 ${perTokKB.toFixed(0)} KiB 实算）。`;
   }
   document.querySelectorAll('#mod-kv .rf-chips .fk').forEach(btn => btn.addEventListener('click', () => {
     const g = btn.dataset.km !== undefined ? 'km' : 'kp';
@@ -4004,29 +4029,24 @@ document.querySelectorAll('.pl-tools button').forEach(btn => {
   const $ = id => document.getElementById(id);
   if (!$('tc-p')) return;
   const NS = [1, 3, 5, 9, 15, 21, 31];
-  function majority(p, n) {
-    /* 二项分布：多数票正确 = Σ_{k>n/2} C(n,k) p^k (1−p)^(n−k) */
-    let sum = 0;
-    for (let k = Math.floor(n / 2) + 1; k <= n; k++) {
-      let c = 1;
-      for (let i = 0; i < k; i++) c = c * (n - i) / (i + 1);
-      sum += c * p ** k * (1 - p) ** (n - k);
-    }
-    return sum;
-  }
   function update() {
     const p = +$('tc-p').value / 100, n = NS[+$('tc-n').value];
     $('tc-p-o').textContent = ($('tc-p').value) + '%';
     $('tc-n-o').textContent = n;
-    const maj = n === 1 ? p : majority(p, n);
+    const rho = +$('tc-r').value / 100;
+    $('tc-r-o').textContent = Math.round(rho * 100) + '%';
+    const independent = majorityProbability(p, n);
+    const maj = majorityProbability(p, n, rho);
+    $('tc-independent').style.width = (independent * 100) + '%';
+    $('tc-independent-t').textContent = (independent * 100).toFixed(1) + '%';
     $('tc-one').style.width = (p * 100) + '%'; $('tc-one-t').textContent = (p * 100).toFixed(0) + '%';
     $('tc-maj').style.width = (maj * 100) + '%'; $('tc-maj-t').textContent = (maj * 100).toFixed(1) + '%';
     const gain = (maj - p) * 100;
     $('tc-gain').textContent = (gain >= 0 ? '+' : '') + gain.toFixed(1) + ' 个百分点';
     $('tc-cost').textContent = n;
-    $('tc-note').textContent = p < 0.5 && n > 1 ? '⚠ 单次低于五成：越投越错' : p >= 0.5 && n >= 15 ? '边际收益已明显递减' : '';
+    $('tc-note').textContent = rho === 1 ? '完全共享判断：多采样没有收益' : p < 0.5 && n > 1 ? '⚠ 单次低于五成：多数票放大错误' : p >= 0.5 && n >= 15 ? '边际收益已明显递减' : '';
   }
-  ['tc-p', 'tc-n'].forEach(id => $(id).addEventListener('input', update));
+  ['tc-p', 'tc-n', 'tc-r'].forEach(id => $(id).addEventListener('input', update));
   update();
 })();
 
@@ -4310,19 +4330,14 @@ function paintScene(cv, fine) {
     let acts;
     if (mode === 'nat') {
       acts = [
-        ['幕① 注入 · 系统提示携带工具清单（' + n + ' 个，宿主拼进上下文）', schemaStr],
+        ['幕① 提供 · 模型接口携带工具清单（' + n + ' 个，宿主拼进上下文）', schemaStr],
         ['幕② 模型输出 · 调用请求（结构化文本，逐 token 生成——预写样本）', J(CALL)],
         ['幕③ 宿主执行 → 结果作为新消息回填', J({ role: 'tool', name: CALL.name, content: RESULT })],
         ['幕④ 模型读到结果后的最终回答', ANSWER],
       ];
     } else {
-      acts = [
-        ['幕⓪ 握手 · initialize（client ↔ server 各自报能力）', J({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18', clientInfo: { name: 'atlas-demo' } } })],
-        ['幕① 发现 · tools/list → 服务器返回工具清单（' + n + ' 个）', J({ jsonrpc: '2.0', id: 2, result: { tools: tools } })],
-        ['幕② 调用 · tools/call（模型的调用意图被宿主翻译成协议请求）', J({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: CALL.name, arguments: CALL.arguments } })],
-        ['幕③ 结果返回', J({ jsonrpc: '2.0', id: 3, result: { content: [{ type: 'text', text: RESULT }] } })],
-        ['幕④ 模型读到结果后的最终回答', ANSWER],
-      ];
+      acts = mcpExchange(tools, CALL, RESULT).map(([heading, body]) => [heading, J(body)]);
+      acts.push(['模型读到工具结果后的回答（预写）', ANSWER]);
     }
     $('pr-view').textContent = acts.map(([h, b]) => '── ' + h + ' ──\n' + b).join('\n\n');
     const tok = estTok(schemaStr);
