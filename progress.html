@@ -76,6 +76,7 @@
   footer { margin-top: 40px; border-top: 1px solid var(--hairline); padding-top: 16px; font-size: 12.5px; color: var(--ink-3); }
 </style>
 <link rel="stylesheet" href="./assets/site-navigation.css">
+<link rel="stylesheet" href="./assets/content-review.css">
 <script type="module" src="./assets/site-navigation.mjs"></script>
 
 
@@ -94,7 +95,7 @@
 <div class="wrap">
   <div class="eyebrow">AI COMPLIANCE ATLAS · 项目进度看板</div>
   <h1>哪里亮了，哪里还没亮</h1>
-  <p class="sub">数据驱动的进度实况：下方所有数字与亮灯由同一份数据表计算，每个版本更新一次。口径与权重公开写在总进度条下方——数字可以被质疑，但不会被粉饰。</p>
+  <p class="sub">分别记录建设覆盖、来源核对与人工审校。页面和草稿已经建成，不表示内容已经全部核验；每项比例都注明自己的统计范围。</p>
   <div class="links">
     <a href="index.html"><svg class="ico" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg> 返回首页 →</a>
     <a href="blueprint.html"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线）→</a>
@@ -103,11 +104,28 @@
   </div>
 
   <div class="hero-bar">
+    <h2 style="margin-top:0">既定建设范围 · 完成度</h2>
+    <p>此比例只统计骨架、实验、草稿与扩建入口是否存在；内容核验见下方独立台账。</p>
     <div class="hb-top"><span class="hb-num" id="total">—</span><span class="hb-cap" id="total-cap"></span></div>
     <div class="hb-track" id="total-track"></div>
     <div class="hb-legend" id="total-legend"></div>
   </div>
 
+<!-- atlas-review-overview -->
+<!-- atlas-review:overview:start -->
+<section class="atlas-review-dashboard" id="review-status" aria-labelledby="review-heading">
+<h2 id="review-heading">建设之外，内容核验走到哪里</h2><p>按可追溯记录计数 · 2026-10-26。下面的分母分别是蓝图模块、入门站点与索引合规挂点，不合并为一个总分。</p>
+<div class="atlas-review-metrics">
+<div class="atlas-review-metric"><span>蓝图核心表述 · 来源核对（AI）</span><strong>10 / 45</strong><small>仅覆盖展开后列明的表述与边界；其余待复核。</small></div>
+<div class="atlas-review-metric"><span>入门九站 · 来源核对（AI）</span><strong>9 / 9</strong><small>覆盖技术叙事；示意动画不代表模型实测。</small></div>
+<div class="atlas-review-metric"><span>人工技术审校</span><strong>0 / 54</strong><small>分母为本台账的 45 个蓝图模块与 9 个入门站点。</small></div>
+<div class="atlas-review-metric"><span>索引合规挂点 · 法律审校</span><strong>0 / 28</strong><small>“已填”仅指草稿存在；入门与蓝图的法律观察也仍待审校。</small></div>
+</div>
+<details open><summary>本轮已对照来源的蓝图模块</summary><div class="atlas-review-links"><a href="blueprint.html#mod-tok">分词（运行时）</a><a href="blueprint.html#mod-embed">Embedding 查表</a><a href="blueprint.html#mod-attn">注意力</a><a href="blueprint.html#mod-ff">前馈网络 FFN</a><a href="blueprint.html#mod-pd">Prefill 与 Decode 两阶段</a><a href="blueprint.html#mod-kv">KV 缓存</a><a href="blueprint.html#mod-sample">采样</a><a href="blueprint.html#mod-rag">RAG 供料线</a><a href="blueprint.html#mod-agent">工具调用与 Agent 循环</a><a href="blueprint.html#mod-guard">护栏与标识</a></div></details>
+<details><summary>待来源复核的蓝图模块（35）</summary><div class="atlas-review-links"><a href="blueprint.html#mod-corpus">语料池与配比</a><a href="blueprint.html#mod-syn">合成数据与蒸馏</a><a href="blueprint.html#mod-clean">清洗 · 去重 · 过滤</a><a href="blueprint.html#mod-bpe">分词器训练</a><a href="blueprint.html#mod-train">预训练循环</a><a href="blueprint.html#mod-sft">监督微调 SFT</a><a href="blueprint.html#mod-pref">偏好优化</a><a href="blueprint.html#mod-rlvr">可验证奖励与推理训练</a><a href="blueprint.html#mod-eval">评估 · 红队 · 冻结发布</a><a href="blueprint.html#mod-rope">位置信息</a><a href="blueprint.html#mod-block">Block 总装 × N</a><a href="blueprint.html#mod-moe">MoE：把 FFN 复数化</a><a href="blueprint.html#mod-lmh">LM Head 与 logits</a><a href="blueprint.html#mod-ssm">架构地平线：稀疏、线性与混合</a><a href="blueprint.html#mod-interp">可解释性：打开黑箱</a><a href="blueprint.html#mod-quant">量化</a><a href="blueprint.html#mod-spec">吞吐工程</a><a href="blueprint.html#mod-ttc">推理模型与测试时算力</a><a href="blueprint.html#mod-ctx">上下文拼装</a><a href="blueprint.html#mod-ctxeng">上下文工程</a><a href="blueprint.html#mod-proto">工具协议</a><a href="blueprint.html#mod-orch">多智能体编排</a><a href="blueprint.html#mod-vlm">视觉理解 VLM</a><a href="blueprint.html#mod-diff">扩散模型</a><a href="blueprint.html#mod-vae">潜空间与 VAE</a><a href="blueprint.html#mod-cfg">条件与引导</a><a href="blueprint.html#mod-video">视频生成</a><a href="blueprint.html#mod-voice">语音栈：TTS 与声音克隆</a><a href="blueprint.html#mod-wm">世界模型</a><a href="blueprint.html#mod-vla">具身智能与 VLA</a><a href="blueprint.html#mod-gpu">为什么是 GPU</a><a href="blueprint.html#mod-mem">存储层级与内存墙</a><a href="blueprint.html#mod-roof">屋顶线模型</a><a href="blueprint.html#mod-formats">数字格式</a><a href="blueprint.html#mod-net">互联与集群</a></div></details>
+<p><b>如何理解标记：</b>“已对照来源”记录 AI 查阅资料后的核对范围；“教学简化”说明实验的适用边界；“待人工审校”说明还缺少人的专业复核。正文改动后，构建检查要求重新确认来源记录，不能自动沿用旧标记。</p>
+<p>模型谱系与工业现场沿用各自的盘点日期和来源记录，未计入本轮技术核验分母。<a href="docs/content-review.md">核验方法与维护约定</a> · <a href="assets/content-review.json">完整核验台账（JSON）</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%A0%B8%E9%AA%8C%E5%8F%B0%E8%B4%A6&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fprogress.html%23review-status%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p></section>
+<!-- atlas-review:overview:end -->
   <h2>四条分线</h2>
   <div class="bars" id="bars"></div>
 
@@ -123,7 +141,7 @@
   <div class="vlist" id="vlist"></div>
 
   <footer>
-    看板与蓝图同步更新；口径：总进度 = 蓝图骨架 35% + 模块深化 35% + 合规挂点填充 20% + 登记簿扩建 10%（权重为约定值，公开可议）。
+    看板与蓝图同步更新；口径：建设完成度 = 蓝图骨架 35% + 模块深化 35% + 合规挂点填充 20% + 登记簿扩建 10%（权重为约定值，公开可议）。
     最后更新见时间线最新条目。
   </footer>
 </div>
@@ -131,7 +149,7 @@
 <script>
 /* ======== 唯一数据源：每个版本只改这里 ======== */
 const DATA = {
-  updated: '2026-10-26 · 首页 v0.35.1 / 谱系 v5 / 蓝图 v0.34（10-15）/ 现场 v2（09-18）',
+  updated: '2026-10-26 · 站点 v0.36 / 蓝图与入门首批核验 / 谱系 v5 / 现场 v2（09-18）',
   // depth: 0=登记未建 1=G1骨架 3=G3实验室
   planes: [
     { code: '0 物理基座', pc: 'var(--p0)', mods: [['为什么是GPU 🔬', 3], ['存储层级与内存墙 🔬', 3], ['屋顶线模型 🔬', 3], ['数字格式 🔬', 3], ['互联与集群 🔬', 3]] },
@@ -177,7 +195,7 @@ const DATA = {
     ['v0.25', '2026-07-12', '🎨 全站换装「克制工程风」（用户拍板采纳）：冷白/冷灰双主题令牌（暖米黄退役）、锐角化（药丸废除）、门户新版转正（示意图卡片+悬停动效+朱批印章+FIG编号）、六页统一——风格规范 v2 正式写入 PROJECT.md §6', 'done'],
     ['v0.25.1', '2026-07-14', '🔤 字体即语法（用户发现注意力模块 Q 多种字体）：正文变量符号统一等宽——张量名/带下标变量/算式片段（h_q、d_k、Q·Kᵀ、T×T、O(T²) 等约60处）包裹 code 标签；缩写名与产品名（GQA/Llama/token）保持正文体；KV 缓存作为机制名保持正文体、KV 头作为张量合称转等宽', 'done'],
     ['v0.25.2', '2026-07-15', '🐛 修两个实验室首展空白画布（用户审计发现「激活函数与门控」异常）：折叠 details 内画布 clientWidth=0，init 时画成 0 宽——为「激活函数与门控」(mod-ff) 与「残差流对照」(mod-block) 补 id + toggle 展开重绘，对齐既有 5 个实验室的写法', 'done'],
-    ['v0.25.3', '2026-07-16', '✨ 激活函数与门控实验室·门控可视化（用户发现下半段只有数字、拖 gate/up 曲线无反应）：门 gate 现在以金点落在 SiLU 曲线上随拖动滑行，SiLU(门)×内容 的输出改画成中线为零的双向输出条——把门拖进负区看输出被掐灭，教学点从「一个小数字」升级为可见的动作', 'done'],
+    ['v0.25.3', '2026-07-16', '✨ 激活函数与门控实验室·门控可视化（用户发现下半段只有数字、拖 gate/up 曲线无反应）：门 gate 现在以金点落在 SiLU 曲线上随拖动滑行，SiLU(门)×内容 的输出改画成中线为零的双向输出条——把门控数值升级为双向输出条（当时的“负区掐灭”解释已于 v0.36 纠正，负区并非恒零）', 'done'],
     ['v0.25.4', '2026-07-16', '🐛 修顶部锚点跳转首次整屏闪白（用户报告：第一次点顶部跳转整页变白再恢复才落位）：原生锚点硬瞬移到未光栅化的远处区域→合成器空帧。加 html scroll-behavior:smooth（沿途渐进光栅化）+ 平面/模块 scroll-margin-top；reduced-motion 下回退为 auto', 'done'],
     ['v0.25.5', '2026-07-16', '🐛 修 Windows 端等宽字体回退难看（用户截图报告）：原 --mono 栈只有 macOS 字体（SF Mono/Menlo），Windows 上全数落空、退到系统默认 Courier New——六页 --mono 变量与蓝图 6 处画布 ctx.font 统一补 Cascadia Mono / Segoe UI Mono / Consolas 回退', 'done'],
     ['v0.26', '2026-07-18', '🗼 全景导航仪（试样稿 v1–v4.2 用户逐轮拍板后并入蓝图）：全景图重构为竖版 740×1060 按逻辑序构图（地基承载训练→权重灌塔→塔与推理装进外壳→穿护栏通向世界），常驻左栏、宽度自适应、跟读平移；「你在这里」=当前平面标题反白；⇤收起=纯文字单栏（记住偏好）、⛶细看=滚动放大；模型塔试点精工矢量档（渐变材质+投影+残差流辉光）。双态布局、总装配卡与镜头系统废除（净删）；退路=tag v0.25-pre-rail。施工规矩入册：区内必画数据流、连线不压字', 'done'],
@@ -198,7 +216,8 @@ const DATA = {
     ['v0.33', '2026-09-19', '门户与全站导航：首屏加入七平面系统概览与三个大入口，增加原创交互模型剖面；定位调整为技术为主、法律合规为辅；全站统一后退、前进、返回首页与页面目录，站内跳转保留在当前标签页，修复蓝图深链接落位；移除索引地图旧旗舰候选存档；首页源码、导航规范与构建发布说明纳入公开仓库', 'done'],
     ['v0.34 / 谱系 v4', '2026-10-15', '联网更新工程蓝图与十一家模型谱系：新增 GPT-6.1 Sol、Claude 5.5、Gemini 4 Argon、Grok 4.7，明确 DeepSeek 与 Kimi 路由；修正 GRPO/RLVR、混合架构与教学边界；升级推理成本、相关采样和 MCP 2026-07-28 三个实验；保留 45 模块与实验，补充官方来源与发布记录。Meta API 访问状态单列待复核，工业现场沿用 09-18 快照', 'done'],
     ['v0.35 / 谱系 v5', '2026-10-26', '更新模型门派谱系：DeepSeek V4.1 Flash-1017 权重与 API 别名、Kimi K3.1 Pro 服务与思考路由、Meta Spark Open / Glimmer 两条权重路线；区分已上线、计划发布与逐型号许可，补充 OpenAI 服务和 Claude 思考控制，44 个官方来源。首页与文档同步；蓝图及工业现场保留各自快照', 'done'],
-    ['v0.35.1', '2026-10-26', '首页粒子交互修复：五个浅色内容模块共用 GlassSurface，补齐入口、合规与更新记录的字符效果；图示、导航和深色区保持静态。事件局限于所属模块，减少动态设置即时生效，窗口变化后重新计算网格与画布精度；同步维护记录', 'now'],
+    ['v0.35.1', '2026-10-26', '首页粒子交互修复：五个浅色内容模块共用 GlassSurface，补齐入口、合规与更新记录的字符效果；图示、导航和深色区保持静态。事件局限于所属模块，减少动态设置即时生效，窗口变化后重新计算网格与画布精度；同步维护记录', 'done'],
+    ['v0.36', '2026-10-26', '首批内容核验：修订九站入门旅程与十个蓝图模块的核心表述，补充 19 个一手来源、教学边界与纠错入口；建设、来源核对、人工技术审校和法律审校分开计数；正文变化触发重新核对检查，索引地图同步概念纠错', 'now'],
     ['v1.0', '待定', '核验版：用户主导的 学习→审核→反馈→其他模型修改 循环 · 朱批统一调整 · 部署上线', 'todo'],
   ],
   weights: { skeleton: 0.35, labs: 0.35, hooks: 0.20, registry: 0.10 },
@@ -223,7 +242,7 @@ const total = parts.reduce((s, p) => s + p[1] * p[2], 0);
 
 document.getElementById('total').textContent = (total * 100).toFixed(0) + '%';
 document.getElementById('total-cap').textContent =
-  `骨架 ${nMods}/${nMods} · 实验室 ${nLabs}/${nMods} · 合规 ${DATA.hooks.filled}/${DATA.hooks.total} · 扩建 ${registry.mods.filter(m => m[1] > 0).length}/${registry.mods.length}　（${DATA.updated}）`;
+  `骨架 ${nMods}/${nMods} · 实验室 ${nLabs}/${nMods} · 合规草稿 ${DATA.hooks.filled}/${DATA.hooks.total} · 扩建 ${registry.mods.filter(m => m[1] > 0).length}/${registry.mods.length}　（${DATA.updated}）`;
 document.getElementById('total-track').innerHTML = parts.map(p =>
   `<i style="width:${(p[1] * p[2] * 100).toFixed(1)}%;background:${p[3]}"></i>`).join('');
 document.getElementById('total-legend').innerHTML = parts.map(p =>

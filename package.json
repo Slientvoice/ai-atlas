@@ -1,18 +1,28 @@
 {
   "name": "ai-atlas",
-  "version": "0.35.1",
+  "version": "0.36.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.13.0" },
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
-    "build": "vite build && node scripts/publish-home.mjs && node scripts/sync-navigation.mjs",
+    "build": "npm run sync:reviews && vite build && node scripts/publish-home.mjs && node scripts/sync-navigation.mjs",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
-    "check:links": "node scripts/check-links.mjs"
+    "check:links": "node scripts/check-links.mjs",
+    "sync:reviews": "node scripts/sync-content-review.mjs",
+    "check:reviews": "node scripts/sync-content-review.mjs --check"
   },
-  "dependencies": { "react": "19.2.6", "react-dom": "19.2.6" },
+  "dependencies": {
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
   "devDependencies": {
-    "@types/react": "19.2.14", "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.2", "typescript": "5.9.3", "vite": "8.0.13"
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "typescript": "5.9.3",
+    "vite": "8.0.13"
   }
 }

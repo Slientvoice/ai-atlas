@@ -1,0 +1,1049 @@
+{
+  "version": "0.36",
+  "updated": "2026-10-26",
+  "sources": {
+    "token": {
+      "title": "Hugging Face · Tokenization pipeline",
+      "url": "https://huggingface.co/docs/tokenizers/en/pipeline",
+      "scope": "归一化、预分词、模型与后处理；归一化可能改变原文。",
+      "checkedAt": "2026-10-26"
+    },
+    "attention": {
+      "title": "Attention Is All You Need · §3.2–3.4",
+      "url": "https://arxiv.org/html/1706.03762v7",
+      "scope": "点积缩放、因果掩码、逐位置 FFN 与输入嵌入。",
+      "checkedAt": "2026-10-26"
+    },
+    "llama": {
+      "title": "The Llama 3 Herd of Models · §3.2 / Table 3",
+      "url": "https://arxiv.org/html/2407.21783v3",
+      "scope": "8B / 70B 的层数、维度、KV 头数与 SwiGLU；作为历史数字例，不代表当前型号。",
+      "checkedAt": "2026-10-26"
+    },
+    "llamaCode": {
+      "title": "Meta · Llama 3 参考实现",
+      "url": "https://github.com/meta-llama/llama3/blob/main/llama/model.py",
+      "scope": "Embedding、因果 mask、KV 复用与 SiLU 门控实现。",
+      "checkedAt": "2026-10-26"
+    },
+    "embedding": {
+      "title": "Sentence Transformers · Semantic Textual Similarity",
+      "url": "https://sbert.net/docs/sentence_transformer/usage/semantic_textual_similarity.html",
+      "scope": "文本编码及余弦等相似度；与输入 token 查表的用途区分。",
+      "checkedAt": "2026-10-26"
+    },
+    "gqa": {
+      "title": "GQA · 原始论文",
+      "url": "https://arxiv.org/abs/2305.13245",
+      "scope": "多个查询头共享较少 KV 头；质量结论受实验设置约束。",
+      "checkedAt": "2026-10-26"
+    },
+    "flash": {
+      "title": "FlashAttention · 原始论文",
+      "url": "https://arxiv.org/abs/2205.14135",
+      "scope": "分块降低显存 I/O，精确注意力与显存占用的区别。",
+      "checkedAt": "2026-10-26"
+    },
+    "silu": {
+      "title": "PyTorch · SiLU 定义",
+      "url": "https://docs.pytorch.org/docs/2.14/generated/torch.nn.SiLU.html",
+      "scope": "SiLU(x)=x·sigmoid(x)，负值不恒为零。",
+      "checkedAt": "2026-10-26"
+    },
+    "glu": {
+      "title": "GLU Variants Improve Transformer",
+      "url": "https://arxiv.org/abs/2002.05202",
+      "scope": "门控结构与逐元素乘法。",
+      "checkedAt": "2026-10-26"
+    },
+    "cache": {
+      "title": "Hugging Face · How caching works",
+      "url": "https://huggingface.co/docs/transformers/en/cache_explanation",
+      "scope": "历史 KV 的缓存、复用及因果结构。",
+      "checkedAt": "2026-10-26"
+    },
+    "hardware": {
+      "title": "NVIDIA · H100 产品规格",
+      "url": "https://www.nvidia.com/en-us/data-center/h100/",
+      "scope": "SXM 80GB、3.35 TB/s；FP16/BF16 表列 1979 TFLOP/s 含稀疏，教学取稠密峰值约 989。",
+      "checkedAt": "2026-10-26"
+    },
+    "sampling": {
+      "title": "Hugging Face · GenerationConfig",
+      "url": "https://huggingface.co/docs/transformers/en/main_classes/text_generation",
+      "scope": "贪心、随机采样、温度、top-p、停止条件与流式接口。",
+      "checkedAt": "2026-10-26"
+    },
+    "rag": {
+      "title": "Retrieval-Augmented Generation · 原始论文",
+      "url": "https://arxiv.org/abs/2005.11401",
+      "scope": "把参数化生成模型与外部检索记忆组合；论文的具体训练方案不等于所有工程实现。",
+      "checkedAt": "2026-10-26"
+    },
+    "agents": {
+      "title": "Anthropic · Building effective agents",
+      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "scope": "固定工作流与动态 Agent 的区别、环境反馈、人工检查点和停止条件；仅使用架构原则。",
+      "checkedAt": "2026-10-26"
+    },
+    "security": {
+      "title": "OWASP · LLM01:2025 Prompt Injection",
+      "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+      "scope": "RAG 不能消除注入；权限边界、人工批准与多层缓解措施。",
+      "checkedAt": "2026-10-26"
+    },
+    "rlhf": {
+      "title": "Training language models to follow instructions with human feedback",
+      "url": "https://arxiv.org/abs/2203.02155",
+      "scope": "SFT、偏好排序与奖励优化是经典 RLHF 路线，并非所有模型的唯一方式。",
+      "checkedAt": "2026-10-26"
+    },
+    "dpo": {
+      "title": "Direct Preference Optimization",
+      "url": "https://arxiv.org/abs/2305.18290",
+      "scope": "直接偏好优化与经典奖励模型强化学习路线的区别。",
+      "checkedAt": "2026-10-26"
+    },
+    "pipl": {
+      "title": "《个人信息保护法》· 第 3 条",
+      "url": "https://www.samr.gov.cn/wljys/gzzd/art/2023/art_3ef1e889c1e644d4b65b5f5c7f432386.html",
+      "scope": "仅核对地域适用条文，未对读者项目作法律适用审查。",
+      "checkedAt": "2026-10-26"
+    },
+    "label": {
+      "title": "《人工智能生成合成内容标识办法》· 第 2–6 条",
+      "url": "https://www.cac.gov.cn/2025-03/14/c_1743654684782215.htm",
+      "scope": "仅核对适用主体、显式/隐式定义及场景差异；具体合规方案仍待审校。",
+      "checkedAt": "2026-10-26"
+    }
+  },
+  "units": [
+    {
+      "page": "blueprint.html",
+      "id": "mod-corpus",
+      "title": "语料池与配比",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-syn",
+      "title": "合成数据与蒸馏",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-clean",
+      "title": "清洗 · 去重 · 过滤",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-bpe",
+      "title": "分词器训练",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-train",
+      "title": "预训练循环",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-sft",
+      "title": "监督微调 SFT",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-pref",
+      "title": "偏好优化",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-rlvr",
+      "title": "可验证奖励与推理训练",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-eval",
+      "title": "评估 · 红队 · 冻结发布",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-tok",
+      "title": "分词（运行时）",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "分词由词表与处理规则共同决定；归一化可能使解码不能还原原始文本。",
+          "sources": [
+            "token"
+          ]
+        }
+      ],
+      "boundary": "实验词表手工构造，移除空白、截取前 60 个 JS 码元并逐码元回退，emoji 可能拆开；回退编号取模可能碰撞，不能用于可逆编码或真实服务计费。",
+      "contentHash": "44f50be2b5285e6ed0ad07dc6372ba198679d52a78b9b9c5a7b0981d72da98d4",
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-embed",
+      "title": "Embedding 查表",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "token 查表与面向文本检索的嵌入用途不同；二维近邻和类比不等于语义保证。",
+          "sources": [
+            "attention",
+            "embedding"
+          ]
+        },
+        {
+          "claim": "8B 的模型维度为 4096；此处大表参数量为词表规模乘以维度的约数。",
+          "sources": [
+            "llama",
+            "llamaCode"
+          ]
+        }
+      ],
+      "boundary": "布局由人工构造，距离与向量算术为本地计算；未运行真实嵌入模型或评测其语义质量。",
+      "contentHash": "09c9b1bb5a97812469f112348cdc67a940df7c1b8a81f55a7234c3a8f9175aa7",
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-rope",
+      "title": "位置信息",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-block",
+      "title": "Block 总装 × N",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-attn",
+      "title": "注意力",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "核对缩放点积、因果方向和多头投影，以及 GQA 缓存比例的条件。",
+          "sources": [
+            "attention",
+            "gqa",
+            "llama"
+          ]
+        },
+        {
+          "claim": "FlashAttention 减少显存 I/O，不改变稠密注意力的算术复杂度类别。",
+          "sources": [
+            "flash"
+          ]
+        }
+      ],
+      "boundary": "本地实验仅计算权重矩阵，未计算 V 汇聚或输出投影；随机投影、按字切分与额外 24 倍分数用于教学。MLA 具体型号参数未重核，不把头图当作因果解释。",
+      "contentHash": "3543038a00d5ed5966fb23c893aee0fbf5c7c94c071228911ad46ed88b207ed3",
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-ff",
+      "title": "前馈网络 FFN",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "SiLU 与 SwiGLU 的乘法结构；SiLU(−1)×3≈−0.807，负区并非恒零。",
+          "sources": [
+            "silu",
+            "glu",
+            "llamaCode"
+          ]
+        },
+        {
+          "claim": "历史 8B 数字例采用 d=4096、FFN 维度 14336。",
+          "sources": [
+            "llama"
+          ]
+        }
+      ],
+      "boundary": "实验仅演示标量激活和门控；不据此证明知识存储位置或某架构普遍优越。",
+      "contentHash": "d40549b30b087bf8155fa9b484f7d476bc68c7c421fb3af892c57f1f63baf6af",
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-moe",
+      "title": "MoE：把 FFN 复数化",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-lmh",
+      "title": "LM Head 与 logits",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-ssm",
+      "title": "架构地平线：稀疏、线性与混合",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-interp",
+      "title": "可解释性：打开黑箱",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-pd",
+      "title": "Prefill 与 Decode 两阶段",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "输入处理与逐步生成分开；缓存复用历史 KV，性能还受批量、调度与实现影响。",
+          "sources": [
+            "cache",
+            "llamaCode"
+          ]
+        },
+        {
+          "claim": "核对 H100 SXM 教学参数与 8B 层数、头数，并重算本地简化成本公式。",
+          "sources": [
+            "hardware",
+            "llama"
+          ]
+        }
+      ],
+      "boundary": "忽略注意力 FLOPs、调度、网络与实际利用率；128K 是成本外推，非原版窗口承诺，非实测延迟。",
+      "contentHash": "22e8e82d2c805e8fb89fc26d0ba562e98850c4340cff5aaad2f27de77fec9d1e",
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-kv",
+      "title": "KV 缓存",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "全历史 GQA 缓存数据量为 2×层数×KV头×头维×长度×字节数；8B FP16 每 token 128 KiB，8192 token 为 1 GiB。",
+          "sources": [
+            "cache",
+            "llama"
+          ]
+        },
+        {
+          "claim": "GQA 减少 KV 头数；缓存复用不等于每步重算历史。",
+          "sources": [
+            "gqa",
+            "llamaCode"
+          ]
+        }
+      ],
+      "boundary": "公式仅覆盖标注的缓存配置；量化、滑动窗口、MLA、跨层共享与卸载须另算，现役型号分支未重盘。",
+      "contentHash": "30097abba0ecdc89b589c26787cb3c2f9a56410d96774419bdcd0f0a28545a85",
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-sample",
+      "title": "采样",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "区分贪心与随机采样；温度/top-p 控制候选分布，不能保证真实性。",
+          "sources": [
+            "sampling"
+          ]
+        }
+      ],
+      "boundary": "候选 logits 人工设置；接口默认值和温度支持范围不作统一断言，未验证任何特定服务的输出保证。",
+      "contentHash": "08616bafeff7162772be1d03f6c4845f05f9548a5f04877ba0b2e15ce30fba59",
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-quant",
+      "title": "量化",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-spec",
+      "title": "吞吐工程",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-ttc",
+      "title": "推理模型与测试时算力",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-ctx",
+      "title": "上下文拼装",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-ctxeng",
+      "title": "上下文工程",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-rag",
+      "title": "RAG 供料线",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "检索资料进入生成上下文；检索嵌入与输入 token 嵌入不同，检索不能保证答案真实。",
+          "sources": [
+            "rag",
+            "embedding"
+          ]
+        },
+        {
+          "claim": "外部资料可能携带注入指令，RAG 本身不能消除该风险。",
+          "sources": [
+            "security"
+          ]
+        }
+      ],
+      "boundary": "实验使用字符特征哈希，到提示词拼装为止；未接生成模型、权限服务或生产评测。 二维投影距离不等于原始 64 维检索分数。",
+      "contentHash": "17ba015516bb95c91f3494f0272ecc5ab3027ae797f95a6aeb92466ceed87884",
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-agent",
+      "title": "工具调用与 Agent 循环",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "模型提出工具调用、宿主执行并回填；停止条件、环境反馈和验收需要显式设计。",
+          "sources": [
+            "agents"
+          ]
+        },
+        {
+          "claim": "工具权限与高影响操作的授权不能只靠模型提示词。",
+          "sources": [
+            "security"
+          ]
+        }
+      ],
+      "boundary": "沙盘为预写剧本；不表示真实 Agent 运行成功率、成本或法律责任结论。",
+      "contentHash": "8a452024fe70986578b58e05bf055f25b11429ef2f4dcf367f9487407eb0c889",
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-proto",
+      "title": "工具协议",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-orch",
+      "title": "多智能体编排",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-guard",
+      "title": "护栏与标识",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "护栏检测可能误报或漏报；规则、权限与执行隔离应分层考虑。",
+          "sources": [
+            "security"
+          ]
+        },
+        {
+          "claim": "显式与隐式标识是不同形式；具体适用取决于主体和场景。",
+          "sources": [
+            "label"
+          ]
+        }
+      ],
+      "boundary": "实验是小规模规则匹配；本次仅修正技术与条文概念，不是安全认证或法律审校。",
+      "contentHash": "9f4bc4d7a0f43015db444339f4b05320ca91d7234b025b326954ac0b7590b10c",
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-vlm",
+      "title": "视觉理解 VLM",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-diff",
+      "title": "扩散模型",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-vae",
+      "title": "潜空间与 VAE",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-cfg",
+      "title": "条件与引导",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-video",
+      "title": "视频生成",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-voice",
+      "title": "语音栈：TTS 与声音克隆",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-wm",
+      "title": "世界模型",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-vla",
+      "title": "具身智能与 VLA",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-gpu",
+      "title": "为什么是 GPU",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-mem",
+      "title": "存储层级与内存墙",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-roof",
+      "title": "屋顶线模型",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-formats",
+      "title": "数字格式",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-net",
+      "title": "互联与集群",
+      "checkedAt": null,
+      "method": null,
+      "evidence": [],
+      "boundary": "本轮未逐项核对；既有来源与实验标注不自动计为已核验。",
+      "contentHash": null,
+      "humanReview": null
+    },
+    {
+      "page": "thread.html",
+      "id": "st1",
+      "title": "抵达机房",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "本例限定云端 GPU 服务；并行计算、权重和缓存占用，不把 GPU 类型与响应时间普遍化。",
+          "sources": [
+            "hardware",
+            "llamaCode"
+          ]
+        },
+        {
+          "claim": "地域适用不能仅按机器部署地判断。",
+          "sources": [
+            "pipl"
+          ]
+        }
+      ],
+      "boundary": "GPU 图与水位为示意，未测服务延迟；法律适用分析待审校。",
+      "contentHash": "d954bc732e0d5c3fb6772eb5ea40391637fa277c20ef6d3cd98915a6f43e75cb",
+      "humanReview": null
+    },
+    {
+      "page": "thread.html",
+      "id": "st2",
+      "title": "句子被切碎",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "文本先编码为 token id，再转换为向量；词元不等于字，应用接口仍可传递文本。",
+          "sources": [
+            "token",
+            "attention"
+          ]
+        }
+      ],
+      "boundary": "切分与编号人工设定；不对应某款模型的真实词表。",
+      "contentHash": "e7d9b4efe9d547a6a1635ba83d906f51df0bba9c39010f2d2cbda497d9e38d7e",
+      "humanReview": null
+    },
+    {
+      "page": "thread.html",
+      "id": "st3",
+      "title": "编号变成向量",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "输入嵌入与检索文本嵌入分别解释，距离不作为含义等价保证。",
+          "sources": [
+            "attention",
+            "embedding"
+          ]
+        }
+      ],
+      "boundary": "坐标人工构造，不是模型向量或真实降维结果。",
+      "contentHash": "1971b189b86e40835ff54e3413732143dc272a9c66ec5abfcc2d8866c2661042",
+      "humanReview": null
+    },
+    {
+      "page": "thread.html",
+      "id": "st4",
+      "title": "走层：词与词互相注视",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "因果注意力只能看自身与此前位置，线条不作为真实权重或因果证据。",
+          "sources": [
+            "attention"
+          ]
+        },
+        {
+          "claim": "训练与后训练在运行前发生；经典 RLHF 和 DPO 是不同路线，不能保证安全。",
+          "sources": [
+            "llama",
+            "rlhf",
+            "dpo"
+          ]
+        }
+      ],
+      "boundary": "图中层数、权重及连线示意；无法由输出判定某合同是否在训练集中，法律观察待审校。",
+      "contentHash": "49bb121eb016c8c3ad7dda46448d433ad1869ef94edda3502cd72cba6161576f",
+      "humanReview": null
+    },
+    {
+      "page": "thread.html",
+      "id": "st5",
+      "title": "开卷考试：去合同里检索",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "检索可按应用需要先于最终生成组织，结果进入上下文；不是所有问答都必须检索。",
+          "sources": [
+            "rag",
+            "agents"
+          ]
+        }
+      ],
+      "boundary": "合同与距离是示意，向量是检索路线之一；未验证具体检索系统效果。",
+      "contentHash": "719d418d13d46663cfa6ecc01b9b264b8a9c60ca2899b9250e75397428eca734",
+      "humanReview": null
+    },
+    {
+      "page": "thread.html",
+      "id": "st6",
+      "title": "岔路口：这次不必绕远",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "固定工作流与动态 Agent 分开；宿主执行、授权、停止条件及验收不可省略。",
+          "sources": [
+            "agents",
+            "security"
+          ]
+        }
+      ],
+      "boundary": "环线为概念图，不代表复杂任务必须使用 Agent，也未实际发送邮件。",
+      "contentHash": "8ce3402cbb744d7aff39f5dc7814a0b803375a59a70ecebfd9b3c877c89d51d9",
+      "humanReview": null
+    },
+    {
+      "page": "thread.html",
+      "id": "st7",
+      "title": "逐个词元生成",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "自回归生成复用历史 KV；词元、显示字符及流式更新不是同一计数单位。",
+          "sources": [
+            "cache",
+            "sampling",
+            "token"
+          ]
+        }
+      ],
+      "boundary": "水位对应保留全部历史 KV 的教学设置；无特定 API 计费或速度承诺。",
+      "contentHash": "f15838ed07ffed982f93cc9d28583019073242e9da19aabe01923b20b23d41dc",
+      "humanReview": null
+    },
+    {
+      "page": "thread.html",
+      "id": "st8",
+      "title": "出门前过安检",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "多层控制与误报/漏报边界；检测未命中不能当成安全保证。",
+          "sources": [
+            "security"
+          ]
+        }
+      ],
+      "boundary": "通过/未检出为预设动画，不是实际扫描结果，也不代表履行全部法律义务。",
+      "contentHash": "c74dd6f14478e4685a33e86b84a5ed4b44e3c6c6c63aa6ca45ab77166f89cb4f",
+      "humanReview": null
+    },
+    {
+      "page": "thread.html",
+      "id": "st9",
+      "title": "回到聊天框",
+      "checkedAt": "2026-10-26",
+      "method": "AI 对照一手资料；范围限于下列核心表述",
+      "evidence": [
+        {
+          "claim": "生成、停止与流式展示由应用组织，没有固定三秒时限。",
+          "sources": [
+            "sampling"
+          ]
+        },
+        {
+          "claim": "标识办法区分显式/隐式形式与不同主体、内容场景。",
+          "sources": [
+            "label"
+          ]
+        }
+      ],
+      "boundary": "合同回答与 AI 标签为示意；没有对真实合同作审查，法律方案待审校。",
+      "contentHash": "fe2184001326421d86bc21708bb16b5669a21036d7a3b32803244e7f130e1594",
+      "humanReview": null
+    }
+  ],
+  "legalHooks": [
+    {
+      "id": "gpu",
+      "review": null
+    },
+    {
+      "id": "cluster",
+      "review": null
+    },
+    {
+      "id": "location",
+      "review": null
+    },
+    {
+      "id": "collect",
+      "review": null
+    },
+    {
+      "id": "clean",
+      "review": null
+    },
+    {
+      "id": "label",
+      "review": null
+    },
+    {
+      "id": "synthetic",
+      "review": null
+    },
+    {
+      "id": "token",
+      "review": null
+    },
+    {
+      "id": "embed",
+      "review": null
+    },
+    {
+      "id": "transformer",
+      "review": null
+    },
+    {
+      "id": "moe",
+      "review": null
+    },
+    {
+      "id": "pretrain",
+      "review": null
+    },
+    {
+      "id": "sft",
+      "review": null
+    },
+    {
+      "id": "rlhf",
+      "review": null
+    },
+    {
+      "id": "safety",
+      "review": null
+    },
+    {
+      "id": "infer",
+      "review": null
+    },
+    {
+      "id": "quant",
+      "review": null
+    },
+    {
+      "id": "open",
+      "review": null
+    },
+    {
+      "id": "api",
+      "review": null
+    },
+    {
+      "id": "prompt",
+      "review": null
+    },
+    {
+      "id": "rag",
+      "review": null
+    },
+    {
+      "id": "ftrag",
+      "review": null
+    },
+    {
+      "id": "tools",
+      "review": null
+    },
+    {
+      "id": "agent",
+      "review": null
+    },
+    {
+      "id": "guardrail",
+      "review": null
+    },
+    {
+      "id": "chatbot",
+      "review": null
+    },
+    {
+      "id": "copilot",
+      "review": null
+    },
+    {
+      "id": "watermark",
+      "review": null
+    }
+  ]
+}

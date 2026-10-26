@@ -266,6 +266,7 @@
   }
 </style>
 <link rel="stylesheet" href="./assets/site-navigation.css">
+<link rel="stylesheet" href="./assets/content-review.css">
 <script type="module" src="./assets/site-navigation.mjs"></script>
 
 
@@ -284,7 +285,7 @@
 <header class="hero">
   <canvas id="mesh" aria-hidden="true"></canvas>
   <div class="hero-inner">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · v0.1 骨架 · 技术先行</div>
+    <div class="eyebrow">AI ATLAS · 索引地图 · 28 个基础节点</div>
     <h1>AI 技术全景地图</h1>
     <p class="hero-sub">
       一幅从<b>硅</b>到<b>产品</b>的技术长卷：算力 → 数据 → 模型 → 对齐 → 部署 → 应用 → 产品。
@@ -296,6 +297,12 @@
 
 <div class="wrap">
 
+<!-- atlas-review-overview -->
+<!-- atlas-review:overview:start -->
+<aside class="atlas-review-overview" aria-label="本页核验范围"><b>读图前，先看核验范围</b>
+<p>索引地图仅同步部分入门概念纠错，28 个条目尚未逐项完成核验。</p>
+<p>来源核对由 AI 完成，人工技术审校与法律审校另行记录；标记不代表整页通过审核。<a href="progress.html#review-status">查看核验台账</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E7%B4%A2%E5%BC%95%E5%9C%B0%E5%9B%BE&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Findex-map.html%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p></aside>
+<!-- atlas-review:overview:end -->
   <section>
     <div class="sec-head"><span class="no">§1</span><h2>怎么读这张图</h2></div>
     <p class="sec-note">
@@ -319,7 +326,7 @@
       </div>
       <div class="legend-item">
         <b>🎓 范例 · ⚖ 挂点</b>
-        节点卡片下沿标注：可玩的交互范例数量，以及合规挂点是「已填」还是「待补」。待补不是缺陷，是预留的接口（规则 R4）。
+        节点卡片下沿标注：可玩的交互范例数量，以及合规草稿是「已填」还是「待补」，两者都不代表已完成法律审校。待补不是缺陷，是预留的接口（规则 R4）。
       </div>
     </div>
   </section>
@@ -402,7 +409,7 @@ const NODES = [
 
 { id:'location', layer:0, name:'云算力与部署地', en:'CLOUD · JURISDICTION',
   gist:'自建机房还是租云？机器放在哪个国家？这是成本问题，更是法域问题。',
-  how:'多数公司不自购 GPU，而是按小时租用云厂商（AWS、Azure、阿里云等）的集群。数据和模型物理上在谁的机房、哪个法域，决定适用什么法律。训练在 A 国、服务 B 国用户、日志存 C 国，是常见架构，也是常见的合规雷区。',
+  how:'部署地点会影响数据流向与法律分析，还需结合服务对象、处理主体和具体活动判断。训练、服务与日志可能位于不同地区；不能仅凭 GPU 所在地确定全部适用法律。',
   choices:['自建（重资产、可控）vs 云（弹性、依赖第三方）。','云合同里的责任划分、数据位置承诺、政府调取条款值得逐字读。'],
   up:['gpu'], down:['api'],
   examples:[],
@@ -447,26 +454,26 @@ const NODES = [
 
 { id:'token', layer:2, name:'分词 Tokenization', en:'TOKENIZATION · BPE',
   gist:'模型不认识「字」，只认识「编号」——分词是把文字切成碎片并编号的过账程序。',
-  how:'BPE 算法从海量语料统计出最常见的字符组合，作为「词元」（token）。「人工智能」可能是 2 个 token，一个生僻英文词可能被切成 4 个。模型的计费、上下文长度、生成速度，全部以 token 为单位。',
-  choices:['中文的 token 效率通常低于英文：同样内容更费 token = 更贵。','分词决定模型「看世界的颗粒度」：数学算错、字母数不对，病根多在这里。'],
+  how:'分词器按词表、预处理和切分规则把文本编码为编号。BPE 是其中一种算法，并非所有模型都采用同一种分词器。词元数与汉字数不同，具体上下文限制和计费方式以所用服务为准。',
+  choices:['切分结果随模型、语言与内容而变，不能直接把中文字符数当作 token 数。','分词会影响字符级任务，但不能独自解释模型的全部数学或拼写错误。'],
   up:['clean'], down:['embed'],
   examples:[{t:'Tiktokenizer', u:'https://www.tiktokenizer.app/', w:'实时看你输入的句子被切成什么样，支持 GPT、Claude 等多家模型。'},{t:'Tokenizer Playground（Hugging Face）', u:'https://huggingface.co/spaces/Xenova/the-tokenizer-playground', w:'对比不同模型的切法差异。'}],
   build:'G3 级最容易实现的一站：开源分词器有浏览器版，可直接内嵌一个「输入即切分」的真演示。',
   comp:{ status:'filled', items:['几乎无直接法定义务——密度极低本身即信息：法律追问数据与行为，不问编码方式。','但计费按 token：中文 token 效率劣势 = 同等内容成本更高，API 采购谈判中可量化主张的一项。'] } },
 
 { id:'embed', layer:2, name:'向量嵌入 Embedding', en:'EMBEDDING · VECTOR',
-  gist:'把每个词元变成一串数字坐标，让「意思相近」变成「距离相近」——后续一切魔法的地基。',
-  how:'每个 token 映射为几百到几千维的向量（一串数字），语义关系变成几何关系：著名例子是 国王 − 男 + 女 ≈ 女王。模型的「理解」、RAG 的检索、相似度匹配，全部建立在这个几何空间上。',
-  choices:['维度越高表达越细，计算与存储越贵。','嵌入模型本身是独立产品（如 text-embedding 系列），选型影响整个 RAG 的质量。'],
+  gist:'把输入编码为向量；模型输入查表与面向检索的文本嵌入要分开理解。',
+  how:'token 嵌入把编号映射为模型输入向量；检索嵌入通常对完整文本编码并针对相似度任务训练。向量距离的含义取决于模型与度量，类比算术不是普遍等式，也不能据此判断事实正确。',
+  choices:['维度会影响存储与计算，但更高维不自动代表质量更好。','检索嵌入模型的选型与评测应结合实际语料、语言和查询任务。'],
   up:['token'], down:['transformer','rag'],
   examples:[{t:'Embedding Projector（TensorFlow）', u:'https://projector.tensorflow.org/', w:'在 3D 空间里亲手旋转、搜索词向量的邻居，体感「语义即距离」。'}],
   build:'二维散点图：预置几十个词，点击一个词高亮它的近邻；切换「法律 / 水果 / 军事」聚类看语义分区。',
   comp:{ status:'filled', items:['向量是不是个人信息：已有研究证明嵌入向量可被部分反演回原文——「已匿名化/已脱敏」抗辩的技术弱点。','向量库出境 = 数据出境：文本变向量只是形态转换，不改变数据的法律属性，跨境评估不能因此绕行。'] } },
 
 { id:'transformer', layer:2, name:'Transformer 与注意力', en:'TRANSFORMER · ATTENTION',
-  gist:'当代所有大模型共用的一颗心脏：让每个词「环顾全句、决定重点看谁」，如此堆叠上百层。',
-  how:'注意力机制：每个 token 对句中所有其他 token 计算「相关度权重」，按权重吸收它们的信息——「银行」在「河边的银行」里会重点看「河」。一层 = 注意力 + 前馈网络；GPT-3 有 96 层，信息逐层提炼，越深越抽象。你想要的「神经网状图」，原型就在这一站。',
-  choices:['上下文窗口的代价：注意力计算量随长度平方增长——长上下文贵，根源在此。','多头注意力：每层并行多组注意力，各看各的角度（语法、指代、语义……）。'],
+  gist:'Transformer 是重要的模型架构；因果注意力让当前位置汇聚自身与此前位置的信息。',
+  how:'自回归 Transformer 使用因果掩码，避免当前位置看到未来词元。注意力按投影后的相关分数汇聚信息，FFN 逐位置加工；层数、头数与是否混合其他结构取决于具体模型。注意力图本身不能证明模型推理的因果过程。',
+  choices:['全序列稠密注意力通常有平方级计算量；缓存 decode、稀疏与混合架构需分别讨论。','多头学习不同投影，但不预先保证每个头具有固定的语义职责。'],
   up:['embed'], down:['moe','pretrain'],
   examples:[
     {t:'Transformer Explainer（佐治亚理工）', u:'https://poloclub.github.io/transformer-explainer/', w:'浏览器里跑一个真的 GPT-2，逐层动画展开——你项目形态的黄金标准。'},
@@ -568,12 +575,12 @@ const NODES = [
   comp:{ status:'filled', items:['提示词注入导致越权输出的责任场景——「谁拼装了上下文谁举证」的分析框架正在形成。','系统提示词的商业秘密属性：已有泄露纠纷先例，可保护性取决于保密措施（技术 + 合同）是否到位。','提示词中含个人信息或商密而调用第三方 API = 向外提供数据，触发相应告知与合同义务。'] } },
 
 { id:'rag', layer:5, name:'RAG 检索增强生成', en:'RETRIEVAL-AUGMENTED GENERATION',
-  gist:'让模型开卷考试：回答前先从你的资料库里检索相关段落塞给它——企业落地的第一主流形态。',
-  how:'全链条：文档切分（资料切成段落块）→ 向量化（每块算出语义坐标，见 L2 嵌入站）→ 存入向量库 → 用户提问同样向量化 → 按语义距离检索最相关的几块 → 拼进提示词 → 模型据此作答。每一环都有工程抉择：块切多大、检索几条、要不要重排序。',
+  gist:'回答前检索外部资料并加入上下文；这是一种应用路线，仍需验证引用和回答。',
+  how:'向量路线通常先解析、切块、编码并建立索引，再检索、可选重排、拼装输入并生成。也可以采用关键词或混合检索；权限过滤、语料质量、检索覆盖与生成表现都影响最终结果。',
   choices:['RAG 缓解幻觉但不根治：检索错则答错——垃圾进垃圾出在此复活。','权限继承难题:员工通过 AI 问出了他本无权查看的文件，谁的责任？'],
   up:['embed','api','prompt'], down:['agent'],
   examples:[{t:'RAG Visualized（Proser）', u:'https://zackproser.com/demos/rag-visualized', w:'全链路交互演示，作者曾主导 Pinecone 的 RAG 架构。'}],
-  build:'建议做成你的旗舰图：输入真实问题，动画走完切分 → 向量落点 → 检索命中 → 拼装 → 生成，每一站可点击跳回上游节点（嵌入、推理）——完美示范「层层递进」。',
+  build:'现有工程蓝图已提供切分、字符特征哈希、检索与拼装实验；没有调用生成模型，不能当作完整生产系统。',
   comp:{ status:'filled', items:['知识库是合规重灾区：库内个人信息与商业秘密的处理合法性。','检索越权与数据泄露：向量库的访问控制普遍薄弱。','输入端著作权：把整本书、整库判例塞进知识库的授权问题。','生成内容侵权的平台注意义务：杭互「奥特曼案」等 AIGC 判例线可类比适用。'] } },
 
 { id:'ftrag', layer:5, name:'抉择：微调 vs RAG vs 提示词', en:'FINE-TUNE vs RAG vs PROMPT',
@@ -587,7 +594,7 @@ const NODES = [
 
 { id:'tools', layer:5, name:'工具调用 Function Calling', en:'FUNCTION CALLING',
   gist:'给模型一双手：让它能查数据库、发邮件、调 API——从「聊天」到「办事」的分水岭。',
-  how:'开发者预先声明可用工具（名称 + 参数格式），模型在需要时输出「我要调用工具 X，参数 Y」的结构化指令，宿主程序执行后把结果喂回模型。关键事实：模型本身从不真正「动手」，动手的永远是宿主程序——责任分析的支点。',
+  how:'模型提出结构化工具调用，由宿主校验权限与参数、执行并回填结果。系统可以使用固定工作流或动态 Agent 循环；需要停止条件、预算与验收，高影响动作还应有相应授权或确认。模型说“完成”不能替代结果验证。',
   choices:['给哪些工具 = 给哪些权限，工具清单就是权限清单。','高危操作（转账、删除）是否设人工确认点。'],
   up:['api'], down:['agent'],
   examples:[],
@@ -605,7 +612,7 @@ const NODES = [
 
 { id:'guardrail', layer:5, name:'护栏 Guardrails', en:'GUARDRAILS · MODERATION',
   gist:'在模型的嘴前和耳后各站一个保安：输入先审、输出再审——合规要求落地成代码的地方。',
-  how:'输入侧：注入检测、敏感内容识别、身份与权限校验；输出侧：内容审核分类器、个人信息泄露检测、事实性校验。实现可以是关键词规则，也可以是另一个小模型当审核员。护栏独立于大模型存在——大模型是概率的，护栏要的是确定性。',
+  how:'护栏可以组合规则、分类器、权限校验与执行隔离，分布在输入、检索、工具和输出环节。检测可能误报或漏报；即使规则本身确定，也不保证风险识别完备，不能只靠一次输出扫描防住提示注入。',
   choices:['误杀率与漏过率的永恒权衡。','护栏日志既是安全资产也是合规证据。'],
   up:['safety','api'], down:['chatbot','copilot','watermark'],
   examples:[],
@@ -662,7 +669,7 @@ LAYERS.forEach((ly, i) => {
     b.className = 'node';
     b.style.setProperty('--lc', `var(--l${i})`);
     const exN = n.examples.length;
-    const sealTxt = n.comp.status === 'filled' ? '⚖ 挂点已填' : '⚖ 挂点待补';
+    const sealTxt = n.comp.status === 'filled' ? '⚖ 草稿已填 · 待审校' : '⚖ 挂点待补';
     b.innerHTML = `
       <div class="node-top"><span class="node-dot"></span><span class="node-en">${n.en}</span></div>
       <div class="node-name">${n.name}</div>
@@ -679,7 +686,7 @@ const exTotal = NODES.reduce((s, n) => s + n.examples.length, 0);
 const filled = NODES.filter(n => n.comp.status === 'filled').length;
 document.getElementById('stats').innerHTML = [
   ['7', '层'], [String(NODES.length), '节点'], [String(exTotal), '个可玩范例'],
-  [`${filled} / ${NODES.length - filled}`, '合规挂点 已填 / 待补'],
+  [`${filled} / ${NODES.length - filled}`, '合规草稿 已填 / 待补'],
 ].map(([n, l]) => `<div class="stat"><div class="num">${n}</div><div class="lab">${l}</div></div>`).join('');
 
 /* ---------- detail panel ---------- */
@@ -736,8 +743,8 @@ function openNode(id) {
     <div class="psec"><div class="psec-h">④ 学习范例 · 先去玩再回来</div>${ex}</div>
     <div class="psec"><div class="psec-h">⑤ 这张图将来怎么做</div>${build}</div>
     <div class="psec seal-sec"><div class="psec-h">⚖ 合规挂点（朱批）
-      <span class="seal-pill">${n.comp.status === 'filled' ? '已填' : '待补'}</span></div>${comp}</div>
-    <div class="vdate">R5 核验状态：AI 起草 · 2026-07-05 · 未经人工核验，默认存疑</div>`;
+      <span class="seal-pill">${n.comp.status === 'filled' ? '已填草稿 · 待法律审校' : '待补 · 待法律审校'}</span></div>${comp}</div>
+    <div class="vdate">索引条目尚未逐项完成来源与人工核验；2026-10-26 仅同步部分入门概念的纠错。<a href="progress.html#review-status">查看核验范围</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=${encodeURIComponent('内容纠错：索引地图 / ' + n.name)}&amp;body=${encodeURIComponent('节点：' + n.id + '\n原文与问题：\n建议与依据：\n')}">反馈本条问题 ↗</a></div>`;
 
   document.getElementById('p-body').querySelectorAll('[data-goto]').forEach(b =>
     b.addEventListener('click', () => openNode(b.dataset.goto)));

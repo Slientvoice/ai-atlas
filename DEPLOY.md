@@ -17,13 +17,14 @@ npm run typecheck
 npm test
 npm run build
 npm run check:links
+npm run check:reviews
 git diff --check
 python3 -m http.server 8767 --bind 127.0.0.1
 ```
 
 浏览器打开 `http://127.0.0.1:8767/`。检查桌面与窄屏：首页图示切换、三个主入口、各页目录、直接访问子页、深链接、后退与前进、刷新后的状态。浏览器可能缓存静态预览页，改动后需刷新对应页面。
 
-`npm run build` 先生成 `.portal-build/`，再复制首页到根目录 `index.html`，复制散列资源到 `assets/` 并删除上一版首页引用的旧散列资源，最后同步七个静态页面的导航。字体和其他共享资源不会清理。`.portal-build/`、`node_modules/` 不提交。
+`npm run build` 先检查内容指纹并同步核验标记与看板，再生成 `.portal-build/`，再复制首页到根目录 `index.html`，复制散列资源到 `assets/` 并删除上一版首页引用的旧散列资源，最后同步七个静态页面的导航。字体和其他共享资源不会清理。`.portal-build/`、`node_modules/` 不提交。
 
 发布前更新 `README.md`、`CHANGELOG.md` 及 `progress.html` 中的版本数据。提交首页源码、构建配置、导航源、静态内容和生成产物的完整差异。
 

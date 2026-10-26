@@ -386,6 +386,7 @@
   .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 2px; }
 </style>
 <link rel="stylesheet" href="./assets/site-navigation.css">
+<link rel="stylesheet" href="./assets/content-review.css">
 <script type="module" src="./assets/site-navigation.mjs"></script>
 
 
@@ -403,10 +404,16 @@
 <!-- atlas-navigation:end -->
 <header class="top">
   <div class="wrap">
-    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.34 · 工程蓝图</div>
+    <div class="eyebrow">AI COMPLIANCE ATLAS · 主线 v0.36 · 工程蓝图</div>
     <h1>LLM 系统蓝图</h1>
     <p class="sub">沿七个技术平面理解 AI：物理基座（0）、训练（Ⅰ）、模型本体（Ⅱ）、推理服务（Ⅲ）、系统组装（Ⅳ）、多模态（Ⅴ）、具身与世界模型（Ⅵ）。45 个模块与 45 个交互实验，逐层拆开机制、形状与工程代价。宽屏左侧的系统全景图可点击定位；每个模块可展开，分叉可切换。标准 Transformer 是教学起点，各家当前架构另行标注。</p>
-    <p class="sub" style="font-size:13px"><b>2026-10-15 更新：</b><a href="#mod-ssm">混合与稀疏架构</a> · <a href="#mod-pd">长上下文的推理成本</a> · <a href="#mod-ttc">相关错误与采样预算</a> · <a href="#mod-proto">MCP 2026-07-28 报文</a>。<a href="#review-sources">查看本轮来源与边界</a>。</p>
+    <p class="sub" style="font-size:13px"><b>2026-10-15 架构快照：</b><a href="#mod-ssm">混合与稀疏架构</a> · <a href="#mod-pd">长上下文的推理成本</a> · <a href="#mod-ttc">相关错误与采样预算</a> · <a href="#mod-proto">MCP 2026-07-28 报文</a>。<a href="#review-sources">查看该次快照的来源与边界</a>。</p>
+<!-- atlas-review-overview -->
+<!-- atlas-review:overview:start -->
+<aside class="atlas-review-overview" aria-label="本页核验范围"><b>读图前，先看核验范围</b>
+<p>本轮对照了 10 / 45 个模块的核心技术表述，其余模块待复核。</p>
+<p>来源核对由 AI 完成，人工技术审校与法律审校另行记录；标记不代表整页通过审核。<a href="progress.html#review-status">查看核验台账</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%B7%A5%E7%A8%8B%E8%93%9D%E5%9B%BE&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p></aside>
+<!-- atlas-review:overview:end -->
     <div class="top-links">
       <a href="progress.html"><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 进度看板 →</a>
       <a href="index-map.html">索引地图 · 28 节点目录 →</a>
@@ -788,6 +795,9 @@
     <details class="mod" id="mod-corpus">
       <summary><span class="m-caret">▶</span><span class="m-name">语料池与配比</span><span class="m-en">CORPUS · DATA MIX · 🔬 LAB</span><span class="m-shape">原始文本 ~10¹³ token 级</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-corpus:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E8%AF%AD%E6%96%99%E6%B1%A0%E4%B8%8E%E9%85%8D%E6%AF%94&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-corpus%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-corpus:end -->
         <p>预训练的输入是数以十万亿计的 token：网络爬取（占大头）、书籍、论文、代码、多语文本。<b>配比是产品决策</b>：代码占比抬推理能力，多语占比决定语种表现——模型的能力版图在开跑前就由配方锁定了。Llama-3 训练量约 15T token，作为量感参照：一个人一生的阅读量约 10 亿 token 上下，差四个数量级。</p>
         <ul><li>高质量语料（书、论文、代码）稀缺且最先耗尽——这是「合成数据」路线兴起的直接原因。</li>
         <li>数据配比各家保密，属于核心资产；公开的多是总量与来源类别。</li></ul>
@@ -813,6 +823,9 @@
     <details class="mod" id="mod-syn">
       <summary><span class="m-caret">▶</span><span class="m-name">合成数据与蒸馏</span><span class="m-en">SYNTHETIC DATA · DISTILLATION · 🔬 LAB</span><span class="m-shape">教师模型 → 生成语料 → 学生模型</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-syn:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%90%88%E6%88%90%E6%95%B0%E6%8D%AE%E4%B8%8E%E8%92%B8%E9%A6%8F&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-syn%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-syn:end -->
         <p>人写的高质量文本是有限的，而模型的胃口按数量级增长——这就是「数据墙」。下半场的答案是让模型自己造粮：<b>合成数据</b>（强模型批量生成教材式文本、题目与解答，喂给下一代）与<b>蒸馏</b>（学生模型直接学教师模型的输出——不只学答案，还可以学整条思维链）。公开配方里的教科书案例：DeepSeek-R1 用强化学习练出的大模型生成约 80 万条推理样本，蒸馏进小模型——小模型不跑强化学习也长出思考能力（据其论文）。</p>
         <p class="dim">两道阴影：①<b>近亲繁殖</b>——模型反复吃自己产出的数据，分布会尖峰化、长尾表达逐代灭绝（model collapse，有公开论文实证；下面实验室亲手演）；②配比问题回归——合成数据占多少，是新的「配方即能力」。蒸馏还有一条法律灰区（服务条款禁止蒸馏 vs 业界实际盛行）——技术侧先讲清，合规侧冻结待另立项目。</p>
         <div class="forks"><span class="flab">分叉 · 造数据的路线</span>
@@ -845,6 +858,9 @@
     <details class="mod" id="mod-clean">
       <summary><span class="m-caret">▶</span><span class="m-name">清洗 · 去重 · 过滤</span><span class="m-en">CLEANING PIPELINE · 🔬 LAB</span><span class="m-shape">TB 原始 → 高质量 token 流</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-clean:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%B8%85%E6%B4%97+%C2%B7+%E5%8E%BB%E9%87%8D+%C2%B7+%E8%BF%87%E6%BB%A4&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-clean%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-clean:end -->
         <p>工业级流水线：正文提取（去导航去广告）→ 去重（URL 级 + MinHash 近似去重，重复文本会让模型死记硬背并浪费算力）→ 质量过滤 → 安全过滤 → PII 检测移除。</p>
         <div class="forks"><span class="flab">分叉 · 质量过滤怎么做</span>
           <button class="fk" data-v="a">规则启发式</button>
@@ -874,6 +890,9 @@
     <details class="mod" id="mod-bpe">
       <summary><span class="m-caret">▶</span><span class="m-name">分词器训练</span><span class="m-en">TOKENIZER TRAINING · 🔬 LAB</span><span class="m-shape">语料统计 → 词表 V ≈ 32k–256k</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-bpe:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%88%86%E8%AF%8D%E5%99%A8%E8%AE%AD%E7%BB%83&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-bpe%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-bpe:end -->
         <p>在模型训练<b>之前</b>，先从语料统计出一部「切词法典」。它一旦定稿终身不改——模型看世界的颗粒度就此固定。词表大小 V 是第一个超参权衡：V 大 → 单 token 携带信息多、序列变短省算力，但 Embedding/LM Head 参数变大、稀有 token 训不充分。</p>
         <div class="forks"><span class="flab">分叉 · 算法</span>
           <button class="fk on" data-v="a">字节级 BPE ✓</button>
@@ -914,6 +933,9 @@
     <details class="mod" open id="mod-train">
       <summary><span class="m-caret">▶</span><span class="m-name">预训练循环</span><span class="m-en">PRE-TRAINING LOOP · 🔬 LAB</span><span class="m-shape">[B,T] → loss（标量）→ 梯度 → 权重</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-train:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E9%A2%84%E8%AE%AD%E7%BB%83%E5%BE%AA%E7%8E%AF&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-train%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-train:end -->
         <p>整个平面的心脏，一个四拍循环，重复数百万步：</p>
         <code class="fx">前向:  logits = Model(tokens[B,T])          # 每个位置预测下一 token 的分布
 损失:  L = −log p(真实下一token)             # 交叉熵，对全批取平均
@@ -968,6 +990,9 @@
     <details class="mod" id="mod-sft">
       <summary><span class="m-caret">▶</span><span class="m-name">监督微调 SFT</span><span class="m-en">SUPERVISED FINE-TUNING · 🔬 LAB</span><span class="m-shape">万条级示范 → 对话格式</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-sft:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E7%9B%91%E7%9D%A3%E5%BE%AE%E8%B0%83+SFT&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-sft%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-sft:end -->
         <p>用「指令 → 理想回答」的人写示范继续训练。技术上与预训练同一个循环，仅两处不同：数据小而精（万条级），且损失只在<b>回答段</b>计算（把指令部分 mask 掉——模型学「答」，不学「问」）。这一步之后它才从续写机变成助手。</p>
         <div class="forks"><span class="flab">分叉 · 改多少参数</span>
           <button class="fk on" data-v="a">全参微调</button>
@@ -989,9 +1014,12 @@
     </details>
     <div class="wire"><span>会对话的模型 ▼</span></div>
 
-    <details class="mod">
+    <details class="mod" id="mod-pref">
       <summary><span class="m-caret">▶</span><span class="m-name">偏好优化</span><span class="m-en">PREFERENCE OPTIMIZATION · 🔬 LAB</span><span class="m-shape">偏好对（A优于B）→ 价值观入参</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-pref:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%81%8F%E5%A5%BD%E4%BC%98%E5%8C%96&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-pref%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-pref:end -->
         <p>SFT 教会格式，这一步教会「分寸」。原料统一是<b>偏好对</b>：同一提问的两个回答，人类标注哪个更好。分歧在于怎么把偏好变成梯度：</p>
         <div class="forks"><span class="flab">分叉 · 优化路线</span>
           <button class="fk on" data-v="a">RLHF（RM+PPO）✓ 经典</button>
@@ -1032,6 +1060,9 @@
     <details class="mod" id="mod-rlvr">
       <summary><span class="m-caret">▶</span><span class="m-name">可验证奖励与推理训练</span><span class="m-en">RLVR · REASONING RL · 🔬 LAB</span><span class="m-shape">奖励来源：人类品味 → 机器判卷</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-rlvr:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%8F%AF%E9%AA%8C%E8%AF%81%E5%A5%96%E5%8A%B1%E4%B8%8E%E6%8E%A8%E7%90%86%E8%AE%AD%E7%BB%83&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-rlvr%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-rlvr:end -->
         <p>可验证奖励（RLVR）用答案匹配、代码测试或形式验证提供训练信号，减少逐条人工标注的成本。可验证任务为推理训练提供了规模化反馈，但<b>测试通过不等于任务正确</b>：测试覆盖不足、环境漏洞和格式奖励仍可能被利用。训练侧优化策略，推理侧分配思考预算，两者共同影响结果。</p>
         <p class="dim">数学与代码常能提供较便宜的自动反馈；开放式写作、法律意见等任务的质量较难压成单一判分规则。验证器的覆盖范围、数据质量与奖励设计，都决定可迁移的能力边界。</p>
         <div class="forks"><span class="flab">分叉 · 奖励从哪来</span>
@@ -1065,6 +1096,9 @@
     <details class="mod" id="mod-eval">
       <summary><span class="m-caret">▶</span><span class="m-name">评估 · 红队 · 冻结发布</span><span class="m-en">EVAL · RED TEAM · RELEASE · 🔬 LAB</span><span class="m-shape">→ 权重文件（safetensors，数百 GB）</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-eval:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E8%AF%84%E4%BC%B0+%C2%B7+%E7%BA%A2%E9%98%9F+%C2%B7+%E5%86%BB%E7%BB%93%E5%8F%91%E5%B8%83&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-eval%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-eval:end -->
         <p class="dim"><b>本轮补充 · 评测的是“模型 + 运行配置”。</b>除题集和污染风险，还应记录模型快照、harness（执行框架）、工具权限、思考档位、上下文与时间预算、采样次数及 pass@1 / avg@k 口径。<a href="https://huggingface.co/zai-org/GLM-5.3" target="_blank" rel="noopener noreferrer">GLM-5.3 模型卡</a>逐项披露了这些条件；厂商分数不能脱离配置比较。</p>
         <p>上线前三关：基准跑分（MMLU 等标准题库——注意「污染」问题：题目混进训练数据会虚高分数）、安全评估（拒答边界抽检）、红队（专家花式越狱，发现漏洞回炉）。全部通过后权重冻结，写入文件。此后模型本身不再学习——你与它的每次对话都不会改变这些数字（「它记住我了」是Ⅳ平面的工程幻觉）。</p>
         <details class="dv"><summary>扩建 · 评估科学：为什么 benchmark 数字要打折看（v0.9）</summary>
@@ -1102,16 +1136,22 @@
     <details class="mod" id="mod-tok">
       <summary><span class="m-caret">▶</span><span class="m-name">分词（运行时）</span><span class="m-en">TOKENIZE · 🔬 LAB</span><span class="m-shape">text → ids [T]</span></summary>
       <div class="m-body">
-        <p>用Ⅰ平面定稿的法典查表切分：字符串 → 整数序列。确定性操作、无参数、可逆。模型全程只见整数——「它不识字」是字面意思。分词的诸多怪癖（数字算术差、字母题翻车）见索引地图 L2「分词」，可用 Tiktokenizer 实证。</p>
+<!-- atlas-review:mod-tok:start -->
+<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · 2026-10-26</summary>
+<p>AI 对照一手资料；范围限于下列核心表述。待人工技术审校；法律审校另行记录。</p>
+<ul><li>分词由词表与处理规则共同决定；归一化可能使解码不能还原原始文本。<br><a href="https://huggingface.co/docs/tokenizers/en/pipeline" target="_blank" rel="noopener noreferrer">Hugging Face · Tokenization pipeline</a></li></ul><p><b>教学边界：</b>实验词表手工构造，移除空白、截取前 60 个 JS 码元并逐码元回退，emoji 可能拆开；回退编号取模可能碰撞，不能用于可逆编码或真实服务计费。</p>
+<p><a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%88%86%E8%AF%8D%EF%BC%88%E8%BF%90%E8%A1%8C%E6%97%B6%EF%BC%89&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-tok%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a> · <a href="progress.html#review-status">查看全站核验范围</a></p></details>
+<!-- atlas-review:mod-tok:end -->
+        <p>按已确定的词表、归一化与切分规则，把字符串编码为词元编号；随后由嵌入层转成向量。常规推理分词通常不更新模型权重，但分词器有自己的配置与词表。是否能无损还原原文取决于归一化、未知字符和解码规则，不能一概称为“无参数、可逆”。分词会影响长度与字符级任务，但不能独自解释模型的全部算术错误。</p>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 迷你分词器<span class="demo-tag">G3 级</span></div>
-          <p class="dim" style="margin:4px 0 0">一个真实的「最长匹配」分词器：词表里有的词整块切出，没有的退化成单字（字节回退的教学版）。输入任何句子，看它被过账。</p>
+          <p class="dim" style="margin:4px 0 0">一个真实的「最长匹配」分词器：词表里有的词整块切出，没有的退化成 JavaScript 字符串码元；这不是字节级回退，emoji 等字符可能被拆开。以常用汉字和英文演示切分；本实验会移除空白并截取前 60 个字符串码元。</p>
           <label class="lab-lab" for="tk-q">① 输入</label>
           <div class="lab-q"><input type="text" id="tk-q" value="甲方应当按合同支付违约金给乙方" spellcheck="false"></div>
           <div class="lab-chunks" id="tk-out" style="margin-top:10px"></div>
-          <div class="tp-stats"><span>字符数 <b id="tk-c">—</b></span><span>token 数 <b id="tk-t">—</b></span><span>压缩率 <b id="tk-r">—</b></span><span style="color:var(--ink-3)">计费按右边那个数</span></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>切分算法（贪心最长匹配 + 单字回退）是真实算法家族的一员；词表为手工构造的 24 词教学版（真实词表由 Ⅰ 平面的 BPE 训练产出、数万条起）。自查：输入「人工智能模型」整块命中；输入生僻词或英文——碎成单字/单字符，token 数暴涨，这就是「生僻内容更贵」的机制。</div>
+          <div class="tp-stats"><span>字符数 <b id="tk-c">—</b></span><span>token 数 <b id="tk-t">—</b></span><span>压缩率 <b id="tk-r">—</b></span><span style="color:var(--ink-3)">此处 token 数不代表任何服务的实际账单</span></div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>切分算法（贪心最长匹配 + 单字回退）是真实算法家族的一员；词表为手工构造的 24 词教学版，回退编号为取模示意、可能碰撞，不是可逆编码器（实际分词器还可能采用 BPE、Unigram 等不同算法与预处理）。自查：输入「人工智能模型」会命中「人工智能」与「模型」两块；输入生僻词或英文——碎成单字/单字符，token 数暴涨，这说明切分策略会改变序列长度；真实费用需按所用服务的分词器与计费规则计算。</div>
         </div>
       </div>
     </details>
@@ -1120,18 +1160,25 @@
     <details class="mod" id="mod-embed">
       <summary><span class="m-caret">▶</span><span class="m-name">Embedding 查表</span><span class="m-en">TOKEN EMBEDDING · 🔬 LAB</span><span class="m-shape">[T] → [T, d]　权重 [V×d]</span></summary>
       <div class="m-body">
-        <p>一张 V×d 的大表：每个 token id 换取一行长度 d 的向量（8B 例：d=4096，此表约 5.3 亿参数）。从此每个 token 都是 d 维空间中的一个点，语义关系体现为几何关系。这些向量本身是预训练<b>学出来的</b>，不是人工设定的。</p>
-        <p class="dim">工程注记：小模型常让这张表与末端 LM Head 共享参数（weight tying），一表两用省参数。</p>
+<!-- atlas-review:mod-embed:start -->
+<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · 2026-10-26</summary>
+<p>AI 对照一手资料；范围限于下列核心表述。待人工技术审校；法律审校另行记录。</p>
+<ul><li>token 查表与面向文本检索的嵌入用途不同；二维近邻和类比不等于语义保证。<br><a href="https://arxiv.org/html/1706.03762v7" target="_blank" rel="noopener noreferrer">Attention Is All You Need · §3.2–3.4</a> · <a href="https://sbert.net/docs/sentence_transformer/usage/semantic_textual_similarity.html" target="_blank" rel="noopener noreferrer">Sentence Transformers · Semantic Textual Similarity</a></li>
+<li>8B 的模型维度为 4096；此处大表参数量为词表规模乘以维度的约数。<br><a href="https://arxiv.org/html/2407.21783v3" target="_blank" rel="noopener noreferrer">The Llama 3 Herd of Models · §3.2 / Table 3</a> · <a href="https://github.com/meta-llama/llama3/blob/main/llama/model.py" target="_blank" rel="noopener noreferrer">Meta · Llama 3 参考实现</a></li></ul><p><b>教学边界：</b>布局由人工构造，距离与向量算术为本地计算；未运行真实嵌入模型或评测其语义质量。</p>
+<p><a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9AEmbedding+%E6%9F%A5%E8%A1%A8&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-embed%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a> · <a href="progress.html#review-status">查看全站核验范围</a></p></details>
+<!-- atlas-review:mod-embed:end -->
+        <p>一张 V×d 的大表：每个 token id 换取一行长度 d 的向量（8B 例：d=4096，此表约 5.3 亿参数）。这是模型输入处的 token 表示；后续层会结合上下文加工。它不等同于专为句子或文档检索训练的文本嵌入，也不能把距离直接解释为含义等价。这些向量本身是预训练<b>学出来的</b>，不是人工设定的。</p>
+        <p class="dim">工程注记：部分架构让这张表与末端 LM Head 共享参数（weight tying）；是否共享应检查具体配置，不能只按模型大小推断。</p>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 语义地图：距离与方向<span class="demo-tag">G2 级</span></div>
-          <p class="dim" style="margin:4px 0 0">点击任何词，按真实坐标距离找出它的三个近邻（虚线圈）——「意思相近 = 距离相近」。再按下面的按钮，看语义空间最著名的戏法。</p>
+          <p class="dim" style="margin:4px 0 0">点击任何词，按人工坐标实算距离，找出三个近邻（虚线圈）。这里展示向量操作，不保证真实模型有同样的语义布局。再按下面的按钮，看语义空间最著名的戏法。</p>
           <div class="emb-board" id="emb-board"></div>
           <div class="lab-ctrls" style="margin-top:10px">
             <button type="button" class="fk" id="emb-magic">✨ 演示：国王 − 男 + 女 = ?</button>
             <span id="emb-out" style="font-size:13px;color:var(--ink-2)"></span>
           </div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>本图坐标为<b>人工构造的教学布局</b>（真实嵌入是从数据里学出来的数千维空间，此处二维手绘）；但两件事忠实于真实：近邻由坐标距离<b>实算</b>（不是预设答案），向量算术「国王−男+女」按真实向量加减<b>实算</b>后找最近词。真实空间里这个戏法同样成立——去 Embedding Projector 亲手验证（索引地图 L2「向量嵌入」有直达链接）。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>本图坐标为<b>人工构造的教学布局</b>（真实嵌入是从数据里学出来的数千维空间，此处二维手绘）；但两件事忠实于真实：近邻由坐标距离<b>实算</b>（不是预设答案），向量算术「国王−男+女」按真实向量加减<b>实算</b>后找最近词。真实嵌入中的类比结果取决于训练目标、语料、词表与距离度量，并非普遍等式；本图不能用来评价模型语义能力。</div>
         </div>
       </div>
     </details>
@@ -1140,6 +1187,9 @@
     <details class="mod" id="mod-rope">
       <summary><span class="m-caret">▶</span><span class="m-name">位置信息</span><span class="m-en">POSITIONAL ENCODING · 🔬 LAB</span><span class="m-shape">[T, d] → [T, d]（注入位置）</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-rope:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E4%BD%8D%E7%BD%AE%E4%BF%A1%E6%81%AF&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-rope%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-rope:end -->
         <p>注意力对输入是「无序集合」——不加位置信息，「狗咬人」与「人咬狗」不可区分。怎么注入位置，是一个真实的路线分叉，且直接牵动「上下文能开多长」：</p>
         <div class="forks"><span class="flab">分叉</span>
           <button class="fk on" data-v="a">RoPE ✓</button>
@@ -1169,6 +1219,9 @@
     <details class="mod" id="mod-block">
       <summary><span class="m-caret">▶</span><span class="m-name">Block 总装 × N</span><span class="m-en">TRANSFORMER BLOCK · 🔬 LAB</span><span class="m-shape">[T, d] → [T, d]（每层同构）</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-block:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9ABlock+%E6%80%BB%E8%A3%85+%C3%97+N&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-block%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-block:end -->
         <p>全模型 = 同一种积木摞 N 层。理解一层就理解了全部。一层内部两个子单元，各配一次归一化和一条残差连接：</p>
         <code class="fx">x ── Norm ─ Attention ──(+)── Norm ─ FFN ──(+)──▶ 下一层
 │                       ↑ │                ↑
@@ -1198,12 +1251,19 @@
     <details class="mod" open id="mod-attn">
       <summary><span class="m-caret">▶</span><span class="m-name">注意力</span><span class="m-en">ATTENTION · 🔬 LAB</span><span class="m-shape">[B,T,d] → [B,T,d]　中间量 <code>[B,h,T,T]</code></span></summary>
       <div class="m-body">
-        <p>整摞模型中<b>唯一让 token 之间交换信息</b>的地方（其余模块都是每个位置各算各的）。每个位置对此前所有位置计算相关度，按权重汇聚信息。核心式：</p>
+<!-- atlas-review:mod-attn:start -->
+<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · 2026-10-26</summary>
+<p>AI 对照一手资料；范围限于下列核心表述。待人工技术审校；法律审校另行记录。</p>
+<ul><li>核对缩放点积、因果方向和多头投影，以及 GQA 缓存比例的条件。<br><a href="https://arxiv.org/html/1706.03762v7" target="_blank" rel="noopener noreferrer">Attention Is All You Need · §3.2–3.4</a> · <a href="https://arxiv.org/abs/2305.13245" target="_blank" rel="noopener noreferrer">GQA · 原始论文</a> · <a href="https://arxiv.org/html/2407.21783v3" target="_blank" rel="noopener noreferrer">The Llama 3 Herd of Models · §3.2 / Table 3</a></li>
+<li>FlashAttention 减少显存 I/O，不改变稠密注意力的算术复杂度类别。<br><a href="https://arxiv.org/abs/2205.14135" target="_blank" rel="noopener noreferrer">FlashAttention · 原始论文</a></li></ul><p><b>教学边界：</b>本地实验仅计算权重矩阵，未计算 V 汇聚或输出投影；随机投影、按字切分与额外 24 倍分数用于教学。MLA 具体型号参数未重核，不把头图当作因果解释。</p>
+<p><a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%B3%A8%E6%84%8F%E5%8A%9B&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-attn%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a> · <a href="progress.html#review-status">查看全站核验范围</a></p></details>
+<!-- atlas-review:mod-attn:end -->
+        <p>在本页的标准 Transformer 教学结构中，自注意力负责跨位置汇聚信息，FFN 则逐位置计算。因果自注意力允许回看自身与此前位置；混合架构还可能有其他跨位置计算。忽略 mask 的核心式：</p>
         <code class="fx">Attention(Q, K, V) = softmax( Q·Kᵀ / √d_k ) · V</code>
         <details class="dv"><summary>展开：<code>Q / K / V</code> 从哪来、mask 怎么加、多头是什么</summary>
           <p>· 同一输入 <code>X</code> 乘三个<b>学出来的</b>投影矩阵：<code>Q=XW_Q</code>（我在找什么）、<code>K=XW_K</code>（我能提供什么）、<code>V=XW_V</code>（真要取走的内容）。<code>Q·Kᵀ</code> 两两打分，除以 √<code>d_k</code> 防数值过大，softmax 归一成权重后对 V 加权求和。<br>
           · 因果掩码：给「未来位置」的打分强行置 −∞（softmax 后即 0）——生成式模型不许偷看后文，训练与推理同款规则。<br>
-          · 多头：把 <code>d</code> 拆成 <code>h</code> 份（8B: <code>h=32</code>，每头 <code>d_h=128</code>），各头在自己的子空间独立做上式、各学各的关系类型（指代、语法、位置…），结果拼接后过输出投影 W_O。</p>
+          · 多头：把 <code>d</code> 拆成 <code>h</code> 份（8B: <code>h=32</code>，每头 <code>d_h=128</code>），各头在投影得到的子空间计算；部分头可观察到位置或语法等模式，但没有预先分配且固定不变的语义职责，结果拼接后过输出投影 W_O。</p>
         </details>
         <div class="forks"><span class="flab">分叉 · <code>KV</code> 头配置</span>
           <button class="fk" data-v="a">MHA</button>
@@ -1211,15 +1271,15 @@
           <button class="fk" data-v="c">MQA</button>
           <button class="fk" data-v="d">MLA（前沿）</button>
         </div>
-        <div class="fkb" data-v="a">Multi-Head：每个 <code>Q</code> 头配独享的 <code>K</code>、<code>V</code> 头（<code>h_kv = h_q = 32</code>）。表达力满配，但推理时 KV 缓存最肥（Ⅲ平面详算）。原版设计，大模型已少用。</div>
-        <div class="fkb on" data-v="b">Grouped-Query：多组 <code>Q</code> 头共享少量 <code>KV</code> 头（8B: <code>h_q=32</code>, <code>h_kv=8</code>，即 4 个 <code>Q</code> 头共用一套 <code>KV</code>）。KV 缓存直接 ÷4，质量几乎不掉。Llama-3 的具体配置——架构决策被推理成本倒逼的典型案例。</div>
-        <div class="fkb" data-v="c">Multi-Query：极端版，全部 <code>Q</code> 头共用 1 套 <code>KV</code>（<code>h_kv=1</code>）。缓存最省、质量有可感损失，被 GQA 取代为主流折中。</div>
-        <div class="fkb" data-v="d">Multi-head Latent Attention：不存 K、V 本身，存一个低秩压缩「潜向量」，用时再展开——缓存比 GQA 再小数倍。DeepSeek-V2/V3 的招牌创新，前沿方向。</div>
-        <p class="dim">⚠ 复杂度 <code>O(T²)</code>：打分矩阵 <code>[B,h,T,T]</code> 随长度平方增长——「长上下文为什么贵」的数学根源。工程补丁 FlashAttention 不改数学，只改显存访问顺序（不再落盘整个 <code>T×T</code> 矩阵），是「同一公式、不同工程」的好例子。</p>
+        <div class="fkb" data-v="a">Multi-Head：每个 <code>Q</code> 头配独享的 <code>K</code>、<code>V</code> 头（<code>h_kv = h_q = 32</code>）。在层数、头维等相同的条件下，缓存占用高于更少 KV 头的配置；质量与速度仍须按任务实测。</div>
+        <div class="fkb on" data-v="b">Grouped-Query：多组 <code>Q</code> 头共享少量 <code>KV</code> 头（8B: <code>h_q=32</code>, <code>h_kv=8</code>，即 4 个 <code>Q</code> 头共用一套 <code>KV</code>）。在相同层数、头维和缓存精度下，KV 数据量为对应 32 个 KV 头配置的四分之一；质量不能由这个比例保证。Llama-3 的具体配置——架构决策被推理成本倒逼的典型案例。</div>
+        <div class="fkb" data-v="c">Multi-Query：极端版，全部 <code>Q</code> 头共用 1 套 <code>KV</code>（<code>h_kv=1</code>）。相同条件下 KV 数据量更小；质量变化与训练方式、模型和任务有关。</div>
+        <div class="fkb" data-v="d">Multi-head Latent Attention：以低秩联合压缩减少 KV 缓存，并需考虑位置编码相关状态；不能直接套用 GQA 的缓存公式。此分支的具体架构细节与型号参数不在本次核对范围，参见谱系所列模型资料。</div>
+        <p class="dim">完整序列的稠密注意力通常具有随长度平方增长的计算量，朴素实现还会物化 <code>[B,h,T,T]</code> 中间矩阵。FlashAttention 通过分块与重计算降低显存读写，避免保存完整注意力矩阵；它不把稠密注意力的算术复杂度变为线性。带 KV 缓存的单步 decode 与整段 prefill 应分开讨论。</p>
 
         <div class="lab">
-          <div class="lab-head">🔬 实验室 · 亲眼看 <code>softmax(QKᵀ/√d)V</code><span class="demo-tag">G3 级</span></div>
-          <p class="dim" style="margin:4px 0 0">上面那条核心公式此刻在你浏览器里逐项计算：输入一句话，看 <code>T×T</code> 注意力矩阵长什么样、因果掩码怎么挡住未来、去掉 √d 缩放后 softmax 如何饱和。</p>
+          <div class="lab-head">🔬 实验室 · 注意力权重 <code>softmax(QKᵀ/√d)</code><span class="demo-tag">G3 级</span></div>
+          <p class="dim" style="margin:4px 0 0">本实验计算核心公式中的权重矩阵部分：输入一句话，看 <code>T×T</code> 注意力矩阵长什么样、因果掩码怎么挡住未来、去掉 √d 缩放后 softmax 如何饱和。</p>
 
           <label class="lab-lab" for="att-q">① 输入（取前 10 字，每字一词元）</label>
           <div class="lab-q">
@@ -1244,7 +1304,7 @@
           <div class="viz-cap">斜纹格 = 被因果掩码禁看的「未来」。点击左侧行标签，在下方句子里看该词元的注意力分布。</div>
           <div class="att-focus" id="att-focus"></div>
 
-          <div class="lab-honest"><b>诚实标注（R5）：</b>softmax、<code>÷√d</code>、因果掩码、多头并行的数学与真实模型完全一致、逐项实时计算；但 Q/K 投影矩阵是固定随机的（真实模型的头是训练出来、各司其职的——语法头、指代头……去 Transformer Explainer 看真头）。两个自查实验：关掉「<code>÷√d</code> 缩放」看权重坍缩到一格（softmax 饱和——公式里 √d 存在的理由）；「相似度头」不做投影、纯按向量相似度分配注意力——投影矩阵的价值恰是让模型能学出「不同于相似度」的关注方式。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>本实验实算 softmax、<code>÷√d</code> 与因果掩码，按钮切换示意头；没有计算 V 加权汇聚与输出投影。为便于观察，点积分数额外放大 24 倍；Q/K 投影矩阵是固定随机的（真实模型的投影通过训练得到；注意力图中的模式不能单独证明某个头的因果作用）。两个自查实验：关掉「<code>÷√d</code> 缩放」观察分布是否更尖锐（效果取决于实际分数，不保证总会坍缩到一格）；「相似度头」不做投影、纯按向量相似度分配注意力——投影矩阵的价值恰是让模型能学出「不同于相似度」的关注方式。</div>
         </div>
       </div>
     </details>
@@ -1253,7 +1313,14 @@
     <details class="mod" id="mod-ff">
       <summary><span class="m-caret">▶</span><span class="m-name">前馈网络 FFN</span><span class="m-en">FEED-FORWARD · SwiGLU · 🔬 LAB</span><span class="m-shape">[T,d] → [T,~3.5d] → [T,d]</span></summary>
       <div class="m-body">
-        <p>每个位置<b>独立</b>过一个小型两段变换：升维（8B: 4096→14336）→ 非线性门控 → 降回。不看别的位置——注意力负责「交流」，FFN 负责「消化」。参数大头在此：全模型约三分之二的参数是 FFN。</p>
+<!-- atlas-review:mod-ff:start -->
+<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · 2026-10-26</summary>
+<p>AI 对照一手资料；范围限于下列核心表述。待人工技术审校；法律审校另行记录。</p>
+<ul><li>SiLU 与 SwiGLU 的乘法结构；SiLU(−1)×3≈−0.807，负区并非恒零。<br><a href="https://docs.pytorch.org/docs/2.14/generated/torch.nn.SiLU.html" target="_blank" rel="noopener noreferrer">PyTorch · SiLU 定义</a> · <a href="https://arxiv.org/abs/2002.05202" target="_blank" rel="noopener noreferrer">GLU Variants Improve Transformer</a> · <a href="https://github.com/meta-llama/llama3/blob/main/llama/model.py" target="_blank" rel="noopener noreferrer">Meta · Llama 3 参考实现</a></li>
+<li>历史 8B 数字例采用 d=4096、FFN 维度 14336。<br><a href="https://arxiv.org/html/2407.21783v3" target="_blank" rel="noopener noreferrer">The Llama 3 Herd of Models · §3.2 / Table 3</a></li></ul><p><b>教学边界：</b>实验仅演示标量激活和门控；不据此证明知识存储位置或某架构普遍优越。</p>
+<p><a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%89%8D%E9%A6%88%E7%BD%91%E7%BB%9C+FFN&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-ff%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a> · <a href="progress.html#review-status">查看全站核验范围</a></p></details>
+<!-- atlas-review:mod-ff:end -->
+        <p>每个位置<b>独立</b>过一个小型两段变换：升维（8B: 4096→14336）→ 非线性门控 → 降回。不看别的位置——注意力负责「交流」，FFN 负责「消化」。在本页 Llama-3-8B 数字例中，FFN 占较大参数比例；不同架构的比例需分别计算。</p>
         <code class="fx">SwiGLU(x) = ( SiLU(x·W_gate) ⊙ x·W_up ) · W_down    # ⊙ 逐元素相乘（门控）</code>
         <div class="forks"><span class="flab">分叉 · 激活函数演化</span>
           <button class="fk" data-v="a">ReLU（初代）</button>
@@ -1262,21 +1329,21 @@
         </div>
         <div class="fkb" data-v="a">max(0,x)，简单粗暴。两矩阵结构：升维→ReLU→降维。2017 原版。</div>
         <div class="fkb" data-v="b">ReLU 的平滑版，负区不再硬归零。GPT-2/3、BERT 时代主流。</div>
-        <div class="fkb on" data-v="c">三矩阵门控结构（如上式）：一路算内容、一路算「放行多少」的门。经验性胜出（论文原话近乎「我们也不知道为什么更好」），Llama 起成为开源标配——深度学习「炼丹」气质的诚实样本。</div>
-        <p class="dim">可解释性研究观点（标注：研究假说而非定论）：事实性知识主要存储于 FFN 权重中，注意力负责搬运——「知识在哪」这个法律上会被追问的问题，技术上的答案目前只有指向，没有定位。</p>
+        <div class="fkb on" data-v="c">三矩阵门控结构（如上式）：一路算内容、一路算「放行多少」的门。GLU 变体论文比较过这类结构，Meta 的 Llama 3 参考实现也使用 SiLU 门控。优势取决于具体模型与训练设置，不代表所有架构的统一选择。</div>
+        <p class="dim">可解释性研究观点（标注：研究假说而非定论）：部分研究分析 FFN 中的事实关联，但知识也依赖分布式表征和上下文。不能把 FFN 当成可逐条查证的数据库；这类研究结论不属于本轮函数核对范围。</p>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 激活函数与门控<span class="demo-tag">G3 级</span></div>
-          <p class="dim" style="margin:4px 0 0">三代激活函数的真曲线并排画出。拖<b>输入 <code>x</code></b> 看三家各放行多少；拖<b>门 gate</b> 让金点在 SiLU 曲线上滑动、下方输出条随之涨落——把门拖进负区，<b>内容再大输出也被掐灭</b>，门说了算。</p>
+          <p class="dim" style="margin:4px 0 0">三代激活函数的真曲线并排画出。拖<b>输入 <code>x</code></b> 看三家各放行多少；拖<b>门 gate</b> 让金点在 SiLU 曲线上滑动、下方输出条随之涨落——把 gate 设为 −1、up 设为 3，输出约为 <b>−0.81</b>：SiLU 的负值区间不会全部归零。</p>
           <div class="lab-ctrls"><label>输入 x = <output id="ff-x-o">1.0</output> <input type="range" id="ff-x" min="-40" max="40" value="10"></label></div>
           <div class="lab-2d"><canvas id="ff-cv" height="170"></canvas>
-            <div class="viz-cap">实线 SiLU（SwiGLU 所用）· 虚线 GELU · 点线 ReLU；● = 当前 <code>x</code>（三曲线各一点）· <span style="color:var(--p2)">◆ 金点 = 门 gate 在 SiLU 曲线上的落点，高度即「门开多大」</span>。负区差异是三代演化的全部剧情：硬归零 → 平滑 → 平滑且可轻微反悔。</div></div>
+            <div class="viz-cap">实线 SiLU（SwiGLU 所用）· 虚线 GELU · 点线 ReLU；● = 当前 <code>x</code>（三曲线各一点）· <span style="color:var(--p2)">◆ 金点 = 门 gate 在 SiLU 曲线上的落点，高度即「门开多大」</span>。注意 SiLU 可取负值，正区也不受 1 的上界限制；这里的“门”不是 0/1 开关。</div></div>
           <div class="lab-ctrls" style="margin-top:8px">
             <label>门 gate = <output id="ff-g-o">1.0</output> <input type="range" id="ff-g" min="-30" max="30" value="10"></label>
             <label>内容 up = <output id="ff-u-o">2.0</output> <input type="range" id="ff-u" min="-30" max="30" value="20"></label>
           </div>
           <div class="ff-eq"><span>SiLU(门)=<b id="ff-gv">—</b></span><span class="op">×</span><span>内容=<b id="ff-uv">—</b></span><span class="op">=</span><div class="ff-bar" title="输出 = SiLU(门)×内容，幅度按 ±9 归一，中线为零"><i id="ff-bar-neg"></i><i id="ff-bar-pos"></i></div><span class="op">→</span><b id="ff-out" class="ff-outnum">—</b></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>三条曲线、金点位置与输出条均为真函数实算（ReLU=max(0,x)；SiLU=x·σ(x)；GELU 用标准近似式；输出条 = SiLU(门)×内容，幅度按 ±9 归一显示）。教学点：门走的是 SiLU——负区几乎全被压平（金点贴地），此时内容 <code>up</code> 再大，乘出来仍近乎零；这就是「一路算内容、一路算放行多少」的字面演示，也是 SwiGLU 三矩阵结构存在的理由。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>三条曲线、金点位置与输出条均为真函数实算（ReLU=max(0,x)；SiLU=x·σ(x)；GELU 用标准近似式；输出条 = SiLU(门)×内容，幅度按 ±9 归一显示）。教学点：SiLU(−1)≈−0.269，乘以 up=3 得 −0.807。只有在 gate 趋于负无穷、且 up 固定时，输出才趋近零；负区不等于关门，输出还取决于内容项。这里演示一个标量分量，完整 FFN 还包含矩阵投影。</div>
         </div>
       </div>
     </details>
@@ -1285,6 +1352,9 @@
     <details class="mod" id="mod-moe">
       <summary><span class="m-caret">▶</span><span class="m-name">MoE：把 FFN 复数化</span><span class="m-en">MIXTURE OF EXPERTS · 🔬 LAB</span><span class="m-shape">router: [T,d] → top-k of E 个专家</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-moe:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9AMoE%EF%BC%9A%E6%8A%8A+FFN+%E5%A4%8D%E6%95%B0%E5%8C%96&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-moe%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-moe:end -->
         <p>Dense 与 MoE 的分岔点<b>精确地</b>在这：MoE 不动注意力，只把每层那<b>一个</b> FFN 换成 E 个并联「专家」+ 一个路由器。每个 token 到来，路由器（本身是个小线性层）打分选 top-k 个专家处理，其余专家沉睡——参数总量巨大、单 token 激活量小。</p>
         <ul>
           <li>Mixtral-8×7B：每层 8 专家选 2，总参 ~47B、激活 ~13B。</li>
@@ -1335,6 +1405,9 @@
     <details class="mod" id="mod-lmh">
       <summary><span class="m-caret">▶</span><span class="m-name">LM Head 与 logits</span><span class="m-en">LM HEAD · LOGITS · 🔬 LAB</span><span class="m-shape">[T,d] → [T,V]；取末位 → [V]</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-lmh:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9ALM+Head+%E4%B8%8E+logits&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-lmh%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-lmh:end -->
         <p>末端一个 [d×V] 投影，把每个位置的最终向量翻译回词表空间：<b>每个候选 token 一个分数</b>（logits）。生成时只取最后一个位置的 [V] 分数向量——这 12.8 万个数就是模型对「下一个词」的全部意见，尚未定夺。<b>定夺是Ⅲ平面采样器的事</b>：模型本体到此为止，它输出的是分布，不是决定。</p>
         <p class="dim">这个「分布/决定」的切分线在法律分析上有用：同一个模型本体 + 不同采样策略 = 不同风险画像（见Ⅲ「采样」）。</p>
 
@@ -1353,6 +1426,9 @@
     <details class="mod" id="mod-ssm">
       <summary><span class="m-caret">▶</span><span class="m-name">架构地平线：稀疏、线性与混合</span><span class="m-en">HYBRID ARCHITECTURES · SSM · 🔬 LAB</span><span class="m-shape"><code>O(T²)</code> 全回看 → O(1) 状态递推</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-ssm:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%9E%B6%E6%9E%84%E5%9C%B0%E5%B9%B3%E7%BA%BF%EF%BC%9A%E7%A8%80%E7%96%8F%E3%80%81%E7%BA%BF%E6%80%A7%E4%B8%8E%E6%B7%B7%E5%90%88&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-ssm%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-ssm:end -->
         <p><b>2026-10 技术路标：</b><a href="genealogy.html#qwen">Qwen3.8</a>每组以 3 层 Gated DeltaNet 配 1 层 Gated Attention；<a href="genealogy.html#deepseek">DeepSeek V4.1 Flash</a>使用 CED 因果编解码与 CSA2 跨层缓存/索引复用；<a href="genealogy.html#hunyuan">Hy4 preview</a>以稀疏注意力与 IndexCache 降低开销。这些不是同一种“SSM”，也不能直接套用全注意力的显存公式。具体模型卡见各家详情。</p>
         <p>Transformer 不是终点——注意力那张 <code>O(T²)</code> 的账单（越长越贵、KV 缓存吃显存）一直在催生替代路线。最有力的挑战者是<b>状态空间模型</b>（SSM，代表作 Mamba）：不再「每个字回看全文」，而是维护一个<b>固定大小的状态</b>逐字递推——像人的工作记忆，而不是每说一个词都重读全文。生成时每步 O(1)、无 KV 缓存膨胀。</p>
         <p class="dim">代价：精确回忆远处细节的能力偏弱（状态是有损压缩）。现实折中是<b>混合架构</b>：多数层用 SSM、少数层保留注意力——多家实验室已有产品化尝试。另一条更远的线：扩散语言模型（整段并行去噪而非逐字生成，Ⅴ 平面思想搬回文本），潜在的速度革命，尚在早期商用探索。</p>
@@ -1387,6 +1463,9 @@
     <details class="mod" id="mod-interp">
       <summary><span class="m-caret">▶</span><span class="m-name">可解释性：打开黑箱</span><span class="m-en">INTERPRETABILITY · 🔬 LAB</span><span class="m-shape">权重与激活 → 可命名的机制</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-interp:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%8F%AF%E8%A7%A3%E9%87%8A%E6%80%A7%EF%BC%9A%E6%89%93%E5%BC%80%E9%BB%91%E7%AE%B1&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-interp%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-interp:end -->
         <p>「模型为什么这么说」——法律上必被追问，技术上刚刚起步。研究的三条进路，由浅入深：<b>探针</b>（往残差流里插「读数器」，检测某概念此刻是否被想到）；<b>特征分解</b>（用稀疏自编码器把混叠的激活拆成一个个可命名的「特征」——Anthropic 公开过放大「金门大桥」特征让模型言必称大桥的著名演示）；<b>回路</b>（把某个小机制的完整算法逐权重解剖，如「归纳头」——已被完全读懂的少数样本）。</p>
         <p class="dim">诚实的现状：能解剖局部、不能解释整体；「能力为何涌现」大多未知；思维链写的理由与真实计算路径可能不一致（接 Ⅲ「推理模型」）。这一格的内容会以年为单位快速演化。</p>
         <div class="lab">
@@ -1414,6 +1493,13 @@
     <details class="mod" id="mod-pd">
       <summary><span class="m-caret">▶</span><span class="m-name">Prefill 与 Decode 两阶段</span><span class="m-en">PREFILL / DECODE · 🔬 LAB</span><span class="m-shape">prefill: [T] 并行 · decode: [1] × 循环</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-pd:start -->
+<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · 2026-10-26</summary>
+<p>AI 对照一手资料；范围限于下列核心表述。待人工技术审校；法律审校另行记录。</p>
+<ul><li>输入处理与逐步生成分开；缓存复用历史 KV，性能还受批量、调度与实现影响。<br><a href="https://huggingface.co/docs/transformers/en/cache_explanation" target="_blank" rel="noopener noreferrer">Hugging Face · How caching works</a> · <a href="https://github.com/meta-llama/llama3/blob/main/llama/model.py" target="_blank" rel="noopener noreferrer">Meta · Llama 3 参考实现</a></li>
+<li>核对 H100 SXM 教学参数与 8B 层数、头数，并重算本地简化成本公式。<br><a href="https://www.nvidia.com/en-us/data-center/h100/" target="_blank" rel="noopener noreferrer">NVIDIA · H100 产品规格</a> · <a href="https://arxiv.org/html/2407.21783v3" target="_blank" rel="noopener noreferrer">The Llama 3 Herd of Models · §3.2 / Table 3</a></li></ul><p><b>教学边界：</b>忽略注意力 FLOPs、调度、网络与实际利用率；128K 是成本外推，非原版窗口承诺，非实测延迟。</p>
+<p><a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9APrefill+%E4%B8%8E+Decode+%E4%B8%A4%E9%98%B6%E6%AE%B5&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-pd%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a> · <a href="progress.html#review-status">查看全站核验范围</a></p></details>
+<!-- atlas-review:mod-pd:end -->
         <p>一次请求天然分两段，性格迥异：</p>
         <ul>
           <li><b>Prefill</b>：并行处理提示词，建立后续生成所需的状态。长输入常更偏算力受限；首 token 延迟（TTFT）还包含排队、调度、缓存命中和网络等因素。</li>
@@ -1431,7 +1517,7 @@
           <div class="race-row"><span>Prefill（读题）</span><div class="bar"><i id="pd-p"></i></div><span class="tv" id="pd-p-t">—</span></div>
           <div class="race-row"><span>Decode（生成 100 token）</span><div class="bar"><i id="pd-d"></i></div><span class="tv" id="pd-d-t">—</span></div>
           <div class="tp-stats"><span>理想 prefill 耗时 <b id="pd-ttft">—</b></span><span>含 KV 读取 <b id="pd-tps">—</b> token/s</span><span>只搬权重对照 <b id="pd-weight">—</b> token/s</span><span>每步 KV 读取 <b id="pd-kv">—</b> GiB</span></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>prefill ≈ max(2PT/F，权重字节/BW)；首个 decode 步 ≈（权重字节 + 2Nh_kv d_h T·字节数）/BW。32 层、8 个 KV 头、128 维、2 字节；F=989 TFLOP/s，BW=3.35 TB/s。省略注意力计算、实际带宽利用率、调度与网络；100 token 动画用首步速度近似。128K 仅用于成本外推，不代表 Llama-3-8B 原版支持该窗口。两阶段统一放大 3 倍，无截断；不是实测延迟。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>prefill ≈ max(2PT/F，权重字节/BW)；首个 decode 步 ≈（权重字节 + 2Nh_kv d_h T·字节数）/BW。32 层、8 个 KV 头、128 维、2 字节；F≈989 TFLOP/s（稠密 FP16/BF16，官网含稀疏峰值约为两倍），BW=3.35 TB/s。省略注意力计算、实际带宽利用率、调度与网络；100 token 动画用首步速度近似。128K 仅用于成本外推，不代表 Llama-3-8B 原版支持该窗口。两阶段统一放大 3 倍，无截断；不是实测延迟。</div>
         </div>
       </div>
     </details>
@@ -1440,8 +1526,15 @@
     <details class="mod" open id="mod-kv">
       <summary><span class="m-caret">▶</span><span class="m-name">KV 缓存</span><span class="m-en">KV CACHE · 🔬 LAB</span><span class="m-shape">2 · N · <code>h_kv</code> · <code>d_h</code> · T · 字节数</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-kv:start -->
+<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · 2026-10-26</summary>
+<p>AI 对照一手资料；范围限于下列核心表述。待人工技术审校；法律审校另行记录。</p>
+<ul><li>全历史 GQA 缓存数据量为 2×层数×KV头×头维×长度×字节数；8B FP16 每 token 128 KiB，8192 token 为 1 GiB。<br><a href="https://huggingface.co/docs/transformers/en/cache_explanation" target="_blank" rel="noopener noreferrer">Hugging Face · How caching works</a> · <a href="https://arxiv.org/html/2407.21783v3" target="_blank" rel="noopener noreferrer">The Llama 3 Herd of Models · §3.2 / Table 3</a></li>
+<li>GQA 减少 KV 头数；缓存复用不等于每步重算历史。<br><a href="https://arxiv.org/abs/2305.13245" target="_blank" rel="noopener noreferrer">GQA · 原始论文</a> · <a href="https://github.com/meta-llama/llama3/blob/main/llama/model.py" target="_blank" rel="noopener noreferrer">Meta · Llama 3 参考实现</a></li></ul><p><b>教学边界：</b>公式仅覆盖标注的缓存配置；量化、滑动窗口、MLA、跨层共享与卸载须另算，现役型号分支未重盘。</p>
+<p><a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9AKV+%E7%BC%93%E5%AD%98&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-kv%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a> · <a href="progress.html#review-status">查看全站核验范围</a></p></details>
+<!-- atlas-review:mod-kv:end -->
         <p class="dim"><b>公式适用范围：</b>下面计算的是全注意力 / GQA、所有层保留全部历史 KV 的情形。滑动窗口、MLA、量化缓存、跨层共享、CED 与线性注意力要另算；<a href="genealogy.html#deepseek">V4.1 Flash 的 CSA2 / CED</a>是当前实例。前缀缓存命中率也会改变多请求之间的实际占用。</p>
-        <p>Decode 时每个新 token 都要对「此前所有位置」做注意力——若每次重算所有位置的 K、V，成本随长度平方爆炸。解法：算过一次就存显存里。代价是一笔精确可算的显存账：</p>
+        <p>在上述全注意力设置下，decode 的新位置读取历史 KV；缓存避免每步重新计算全部历史位置的 K、V。缓存通常放在显存，也可采用卸载策略。代价是一笔精确可算的显存账：</p>
         <code class="fx">每 token 缓存 = 2 (K和V) × N层 × h_kv × d_h × 精度字节
 Llama-3-8B @fp16: 2 × 32 × 8 × 128 × 2 B = 128 KiB/token
 → 8192 tokens ≈ 1 GiB／每条并发请求</code>
@@ -1466,7 +1559,7 @@ Llama-3-8B @fp16: 2 × 32 × 8 × 128 × 2 B = 128 KiB/token
           <div class="race-row"><span>权重占用</span><div class="bar"><i id="kv-w" style="background:var(--ink-3)"></i></div><span class="tv" id="kv-w-t">—</span></div>
           <div class="race-row"><span>KV 缓存占用</span><div class="bar"><i id="kv-c"></i></div><span class="tv" id="kv-c-t">—</span></div>
           <div class="viz-cap" id="kv-verdict"></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>全部按模块正文的公式实算（2 × 层数 × KV头 × 头维 × 长度 × 字节；8B: <code>N=32</code>,<code>h_kv=8</code>,<code>d_h=128</code>；70B: <code>N=80</code>,<code>h_kv=8</code>,<code>d_h=128</code>），采用十进制 GB 对照 80GB 标称容量；KiB / GiB 用于二进制换算。省略了激活值等杂项占用——真实水位只会更高。自查：8B + FP16 + 128K 上下文 + 8 并发 ≈ 137.4 GB（128 GiB）的 KV——约为 16 GB 权重的 8.6 倍，这就是「长上下文贵在显存」的算术。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>全部按模块正文的公式实算（2 × 层数 × KV头 × 头维 × 长度 × 字节；8B: <code>N=32</code>,<code>h_kv=8</code>,<code>d_h=128</code>；70B: <code>N=80</code>,<code>h_kv=8</code>,<code>d_h=128</code>），采用十进制 GB 对照 80GB 标称容量；KiB / GiB 用于二进制换算。在同样权重精度、完整缓存与不共享、不卸载的假设下，省略临时激活等开销会低估实际占用。不同优化配置不能直接按此预测。自查：8B + FP16 + 128K 上下文 + 8 并发 ≈ 137.4 GB（128 GiB）的 KV——约为 16 GB 权重的 8.6 倍，这是配置假设下的算术外推，不代表原版模型支持 128K 窗口。</div>
         </div>
       </div>
     </details>
@@ -1475,6 +1568,12 @@ Llama-3-8B @fp16: 2 × 32 × 8 × 128 × 2 B = 128 KiB/token
     <details class="mod" id="mod-sample">
       <summary><span class="m-caret">▶</span><span class="m-name">采样</span><span class="m-en">SAMPLING · 🔬 LAB</span><span class="m-shape">logits[V] → 1 个 token id</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-sample:start -->
+<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · 2026-10-26</summary>
+<p>AI 对照一手资料；范围限于下列核心表述。待人工技术审校；法律审校另行记录。</p>
+<ul><li>区分贪心与随机采样；温度/top-p 控制候选分布，不能保证真实性。<br><a href="https://huggingface.co/docs/transformers/en/main_classes/text_generation" target="_blank" rel="noopener noreferrer">Hugging Face · GenerationConfig</a></li></ul><p><b>教学边界：</b>候选 logits 人工设置；接口默认值和温度支持范围不作统一断言，未验证任何特定服务的输出保证。</p>
+<p><a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E9%87%87%E6%A0%B7&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-sample%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a> · <a href="progress.html#review-status">查看全站核验范围</a></p></details>
+<!-- atlas-review:mod-sample:end -->
         <p>模型只给分布，采样器负责掷骰子。三步流水：温度缩放 → 截断 → 抽签：</p>
         <code class="fx">p_i ∝ exp( logit_i / τ )     # τ&lt;1 分布变尖(保守)  τ&gt;1 变平(奔放)
 top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，圈内抽签</code>
@@ -1483,10 +1582,10 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
           <button class="fk on" data-v="b">温度 + top-p ✓</button>
           <button class="fk" data-v="c">结构化约束</button>
         </div>
-        <div class="fkb" data-v="a">永远选最高分。听起来最「准」，实际会陷入复读循环、文风僵死——概率最高的路径不等于整体最好的文本。仅适合有唯一答案的任务。</div>
-        <div class="fkb" data-v="b">工业默认（τ≈0.7、p≈0.9 量级）。<b>随机性是特性不是缺陷</b>：创造力与「同一问题两次答案不同」同源于这次掷骰子。</div>
-        <div class="fkb" data-v="c">按语法硬约束每步的候选集（如 JSON 模式：当前位置只允许合法 JSON 字符）。输出格式可保证、内容真实性不保证——「格式对了」与「说得对」是两回事，审工具输出时勿混。</div>
-        <p class="dim">法务视角：温度是<b>部署方</b>手里的旋钮。同一模型，τ=0 的检索问答与 τ=1.2 的创意写作，风险画像完全不同——尽调时「温度设多少」是个真问题。</p>
+        <div class="fkb" data-v="a">每一步选择最高分词元。局部最高概率不保证全句最优，也不保证内容正确；是否重复或适用，应按任务评估。</div>
+        <div class="fkb" data-v="b">一种常用的随机解码组合；参数默认值与支持范围因模型和接口而异。随机采样可以改变输出多样性，但不能单独等同于创造力或真实性。</div>
+        <div class="fkb" data-v="c">语法约束解码可限制每步的合法词元候选。约束支持范围、截断和拒答等边界仍需检查；格式符合要求也不代表内容真实。不要把只写在提示词中的“请输出 JSON”当成硬约束。</div>
+        <p class="dim">部署注记：接口可能限制温度设置；τ=0 在部分实现中表示贪心，在其他实现中不合法。比较风险应连同模型版本、任务、工具权限与验证机制一起看，低温度不保证事实正确或跨环境完全可复现。</p>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 采样漏斗<span class="demo-tag">G3 级</span></div>
@@ -1507,6 +1606,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-quant">
       <summary><span class="m-caret">▶</span><span class="m-name">量化</span><span class="m-en">QUANTIZATION · 🔬 LAB</span><span class="m-shape">fp16 → int8 → int4（权重&缓存）</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-quant:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E9%87%8F%E5%8C%96&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-quant%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-quant:end -->
         <p>把每个参数用更少比特存：显存与带宽同步减半再减半——而 decode 是带宽瓶颈（见上），所以量化常常「又省又快」。可后训练完成（GPTQ、AWQ 等，量化时无需重训），KV 缓存同样可量化。</p>
         <div class="forks"><span class="flab">分叉 · 精度档位</span>
           <button class="fk" data-v="a">FP16/BF16 原生</button>
@@ -1536,6 +1638,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-spec">
       <summary><span class="m-caret">▶</span><span class="m-name">吞吐工程</span><span class="m-en">BATCHING · SPECULATIVE · 🔬 LAB</span><span class="m-shape">多请求混编 · 草稿并行验收</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-spec:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%90%9E%E5%90%90%E5%B7%A5%E7%A8%8B&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-spec%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-spec:end -->
         <p>单条请求的 decode 只用到 GPU 一小部分算力，服务侧的功课是把空闲填满：</p>
         <div class="forks"><span class="flab">分叉 · 手段</span>
           <button class="fk on" data-v="a">连续批处理 ✓</button>
@@ -1566,6 +1671,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-ttc">
       <summary><span class="m-caret">▶</span><span class="m-name">推理模型与测试时算力</span><span class="m-en">REASONING · TEST-TIME COMPUTE · 🔬 LAB</span><span class="m-shape">预算、策略、验证器 → 质量与成本</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-ttc:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%8E%A8%E7%90%86%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%B5%8B%E8%AF%95%E6%97%B6%E7%AE%97%E5%8A%9B&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-ttc%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-ttc:end -->
         <p>推理模型把一部分计算预算用于作答前的中间推理与自检。长思考、并行采样和验证器择优，是不同的测试时算力分配方式；训练奖励与实际任务决定收益，<b>更多 token 不保证更正确</b>。</p>
         <p>把预算从“学”延伸到“想”，产生了新的成本与延迟权衡。当前产品常提供 effort 或 thinking 设置，但这些不是跨厂商通用的算力单位；最大上下文也不等于思考预算。具体档位见<a href="genealogy.html">模型门派谱系</a>。</p>
         <div class="forks"><span class="flab">分叉 · 用算力换质量的方式</span>
@@ -1605,6 +1713,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-ctx">
       <summary><span class="m-caret">▶</span><span class="m-name">上下文拼装</span><span class="m-en">CONTEXT ASSEMBLY · 🔬 LAB</span><span class="m-shape">多源文本 → 一串 token [T]</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-ctx:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E4%B8%8A%E4%B8%8B%E6%96%87%E6%8B%BC%E8%A3%85&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-ctx%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-ctx:end -->
         <p>一次请求会把系统要求、对话、检索资料、工具结果及多模态内容组织成模型输入。角色与特殊 token 能区分消息，但<b>不能单凭这些标记形成可靠的权限隔离</b>。外部文档可能夹带指令；宿主需要保留来源、限制工具权限并独立校验动作。</p>
         <p class="dim">「记忆」也在这拼装：把历史摘要塞回上下文而已，权重从未改变（Ⅰ平面末格的呼应）。上下文工程（context engineering）已是一门显学。</p>
         <div class="lab">
@@ -1629,6 +1740,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-ctxeng">
       <summary><span class="m-caret">▶</span><span class="m-name">上下文工程</span><span class="m-en">CONTEXT ENGINEERING · 🔬 LAB</span><span class="m-shape">固定窗口 <code>T_max</code> 内的预算分配</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-ctxeng:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-ctxeng%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-ctxeng:end -->
         <p>上下文不是记忆，是<b>每次请求都重新装填的行李箱</b>。窗口就那么大（<code>T_max</code>），系统提示、工具清单、记忆摘要、对话历史、检索结果全要挤这一个箱子。上下文工程回答三个问题：<b>装什么、怎么压、挤不下砍谁</b>。所谓模型「忘事」，多数不是遗忘——是那条信息这一次没被装进箱子。</p>
         <p class="dim">长上下文模型（百万级窗口）没有终结这门手艺：窗口越大，「迷失在中间」（关键信息埋在长文中部时命中率下降的实验现象）与成本问题越突出，工程上照样要管。法务问答机器人复述三小时前的关键口径忽对忽错，病根多半在此格，不在「模型记性」。</p>
         <div class="forks"><span class="flab">分叉 · 历史管理策略</span>
@@ -1675,7 +1789,14 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-rag">
       <summary><span class="m-caret">▶</span><span class="m-name">RAG 供料线</span><span class="m-en">RETRIEVAL PIPELINE · 🔬 LAB</span><span class="m-shape">docs → chunks → 向量库 → top-k 段落</span></summary>
       <div class="m-body">
-        <p>离线：切分 → 用<b>独立的嵌入模型</b>（与Ⅱ.Embedding 同原理、不同模型）算向量 → 入库。在线：问题同法算向量 → 近邻检索 →（可选重排序模型精排）→ 命中段落进入上下文拼装。工程参数（块大小、重叠、k 值、是否重排）逐个影响质量——「RAG 效果差」十有八九是这条供料线的参数病，不是模型病。</p>
+<!-- atlas-review:mod-rag:start -->
+<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · 2026-10-26</summary>
+<p>AI 对照一手资料；范围限于下列核心表述。待人工技术审校；法律审校另行记录。</p>
+<ul><li>检索资料进入生成上下文；检索嵌入与输入 token 嵌入不同，检索不能保证答案真实。<br><a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener noreferrer">Retrieval-Augmented Generation · 原始论文</a> · <a href="https://sbert.net/docs/sentence_transformer/usage/semantic_textual_similarity.html" target="_blank" rel="noopener noreferrer">Sentence Transformers · Semantic Textual Similarity</a></li>
+<li>外部资料可能携带注入指令，RAG 本身不能消除该风险。<br><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noopener noreferrer">OWASP · LLM01:2025 Prompt Injection</a></li></ul><p><b>教学边界：</b>实验使用字符特征哈希，到提示词拼装为止；未接生成模型、权限服务或生产评测。 二维投影距离不等于原始 64 维检索分数。</p>
+<p><a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9ARAG+%E4%BE%9B%E6%96%99%E7%BA%BF&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-rag%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a> · <a href="progress.html#review-status">查看全站核验范围</a></p></details>
+<!-- atlas-review:mod-rag:end -->
+        <p>以向量检索路线为例：离线解析、切分文档，用面向检索的嵌入模型编码并建立索引；在线编码查询、检索、可选重排，再把片段送入上下文。RAG 也可采用关键词或混合检索。质量取决于语料、权限过滤、检索与生成等多环节，需要分别评估；检索到相关片段不保证引用准确或回答真实。</p>
 
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 真算法此刻在你的浏览器里跑<span class="demo-tag">R1 · G3 级</span></div>
@@ -1712,13 +1833,13 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
 
           <label class="lab-lab">⑤ 向量空间实况（64 维真向量投影到 2D）</label>
           <div class="lab-2d"><canvas id="rag-cv" height="230"></canvas>
-            <div class="viz-cap">● 语料块 · ★ 你的查询 · 描边 = top-k 命中。距离与上表分数同源。</div></div>
+            <div class="viz-cap">● 语料块 · ★ 你的查询 · 描边 = top-k 命中。二维坐标来自投影，仅供观察；投影距离不等同于原始 64 维检索分数。</div></div>
 
           <label class="lab-lab">⑥ 提示词拼装 · 即将送入模型的最终输入</label>
           <pre class="lab-prompt" id="rag-prompt"></pre>
           <div class="lab-budget"><span>上下文占用（按 8k 窗口估）</span><div class="bar"><i id="rag-bud-i" style="width:4%"></i></div><span id="rag-bud-t">—</span></div>
 
-          <div class="lab-honest"><b>诚实标注（R5）：</b>本实验的向量化是字符级特征哈希——真算法、真距离，但只懂「字面重合」，不懂语义。所以第三个预置查询的结果很难看：「提前终止」一半靠「提前」二字蹭上解除条款、一半被保密条款里的「终止」带偏——这正是词面检索的病灶实录，也正是产业改用<b>神经嵌入模型</b>（Ⅱ 平面 Embedding 的近亲）的原因：让「提前终止」与「合同解除」在空间里天然靠近。工程链条本身（切分→向量→检索→拼装）与真实系统完全同构。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>本实验的向量化是字符级特征哈希——真算法、真距离，但只懂「字面重合」，不懂语义。所以第三个预置查询的结果很难看：「提前终止」一半靠「提前」二字蹭上解除条款、一半被保密条款里的「终止」带偏——这正是词面检索的病灶实录，也正是产业改用<b>神经嵌入模型</b>（Ⅱ 平面 Embedding 的近亲）的原因：让语义相关的表达有机会取得更高检索分数，效果须实测。本实验到上下文拼装为止，没有调用生成模型，也未实现生产权限、重排与引用校验。</div>
         </div>
 
         <div class="seal-note"><div class="sh">⚖ 朱批</div><p>知识库四险：库内个信与商密的处理合法性、越权检索、入库授权、生成侵权归责。上面实验室你亲手贴入语料的那一刻，「入库授权」问题就已发生——体感即此。<span class="ref">全案详见索引地图 L5「RAG」</span></p></div>
@@ -1729,7 +1850,14 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-agent">
       <summary><span class="m-caret">▶</span><span class="m-name">工具调用与 Agent 循环</span><span class="m-en">TOOL USE · AGENT LOOP · 🔬 LAB</span><span class="m-shape">提议 → 宿主执行 → 结果回填 → 循环</span></summary>
       <div class="m-body">
-        <p>结构一句话说尽：模型输出「我想调用工具 X(参数Y)」的结构化文本 → <b>宿主程序</b>校验并执行 → 结果作为新上下文回填 → 再前向。模型可以提议结束，但宿主还需检查交付物、任务状态与验证结果，并设置步数、时间和费用上限。模型全程只生产文本，<b>动手的永远是宿主</b>——harness 的权限清单即系统能力边界，也是责任分析的支点。MCP 等协议在标准化「工具如何声明与接入」。</p>
+<!-- atlas-review:mod-agent:start -->
+<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · 2026-10-26</summary>
+<p>AI 对照一手资料；范围限于下列核心表述。待人工技术审校；法律审校另行记录。</p>
+<ul><li>模型提出工具调用、宿主执行并回填；停止条件、环境反馈和验收需要显式设计。<br><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener noreferrer">Anthropic · Building effective agents</a></li>
+<li>工具权限与高影响操作的授权不能只靠模型提示词。<br><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noopener noreferrer">OWASP · LLM01:2025 Prompt Injection</a></li></ul><p><b>教学边界：</b>沙盘为预写剧本；不表示真实 Agent 运行成功率、成本或法律责任结论。</p>
+<p><a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8%E4%B8%8E+Agent+%E5%BE%AA%E7%8E%AF&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-agent%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a> · <a href="progress.html#review-status">查看全站核验范围</a></p></details>
+<!-- atlas-review:mod-agent:end -->
+        <p>结构一句话说尽：模型输出「我想调用工具 X(参数Y)」的结构化文本 → <b>宿主程序</b>校验并执行 → 结果作为新上下文回填 → 再前向。模型可以提议结束，但宿主还需检查交付物、任务状态与验证结果，并设置步数、时间和费用上限。在这个工具调用例子中，模型产生调用意图，<b>实际工具由宿主程序执行</b>——harness 的权限清单即系统能力边界，也是责任分析的支点。MCP 等协议在标准化「工具如何声明与接入」。</p>
         <div class="lab">
           <div class="lab-head">🔬 实验室 · Agent 沙盘：人工确认点在哪救场<span class="demo-tag">G2 级 · 剧本预写</span></div>
           <p class="dim" style="margin:4px 0 0">两个任务剧本，逐步播放「观察 → 思考 → 行动」循环。第二个剧本会走到高危操作——届时<b>批准还是拒绝，由你点</b>。留意：无论你选哪个，日志都在记录。</p>
@@ -1750,6 +1878,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-proto">
       <summary><span class="m-caret">▶</span><span class="m-name">工具协议</span><span class="m-en">FUNCTION CALLING · MCP · 🔬 LAB</span><span class="m-shape">工具清单注入 → JSON 调用 ↔ 结果回填</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-proto:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%B7%A5%E5%85%B7%E5%8D%8F%E8%AE%AE&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-proto%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-proto:end -->
         <p>工具调用分两个边界：模型根据可见的工具描述提出调用；<b>宿主程序</b>检查参数、权限与执行条件，调用工具后把结果回填。Function calling 定义模型接口的结构化输出；MCP 定义应用与工具服务器间的协议。模型不会直接替宿主执行 JSON-RPC，也不能仅凭生成了合法 JSON 就视为操作可靠。</p>
         <p class="dim">工具描述会消耗模型上下文，但不必一次装入全部工具：宿主可先检索、筛选，再按需提供 schema。下面预算实验取“全部装入”的教学情形；MCP 网络报文与模型实际看到的上下文不应混算。</p>
         <div class="forks"><span class="flab">分叉 · 接入路线</span>
@@ -1781,6 +1912,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-orch">
       <summary><span class="m-caret">▶</span><span class="m-name">多智能体编排</span><span class="m-en">MULTI-AGENT · ORCHESTRATION · 🔬 LAB</span><span class="m-shape">单体 → 流水线 → 主从：消息 × 账单 × 误差</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-orch:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E7%BC%96%E6%8E%92&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-orch%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-orch:end -->
         <p>任务复杂了，工程冲动是「多雇几个」。三种基本拓扑就是三种组织形式：<b>单体</b>（一人全干到底）、<b>流水线</b>(专家接力）、<b>主从</b>（orchestrator 拆解分派、worker 干活、主控验收）。要紧的事实：Agent 之间<b>不共享上下文</b>——对方只知道你消息里告诉它的。每一次交接 = 一次上下文重建 + 一笔 token 账单 + 一个误差注入点。</p>
         <p class="dim">「协作税」三项：通信开销（消息本身吃 token）、误差放大（上游一个字，下游一封信）、一致性难题（谁的版本为准）。什么时候值得交税：任务可清晰分段、单窗口装不下、或需要角色隔离（审查者不该被起草者的草稿带偏）。多智能体不是默认更强——是用账单换结构。</p>
         <div class="forks"><span class="flab">分叉 · 拓扑</span>
@@ -1815,7 +1949,14 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-guard">
       <summary><span class="m-caret">▶</span><span class="m-name">护栏与标识</span><span class="m-en">GUARDRAILS · LABELING · 🔬 LAB</span><span class="m-shape">输入/输出双闸 + 显式/隐式标识</span></summary>
       <div class="m-body">
-        <p>独立于大模型的确定性层：输入闸（注入检测、权限校验）、输出闸（内容分类器、PII 检测），以及法定标识（显式声明 + 隐式水印/元数据）。大模型是概率的，这一层要的是确定——<b>合规要求最终落地成代码的地方</b>。</p>
+<!-- atlas-review:mod-guard:start -->
+<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · 2026-10-26</summary>
+<p>AI 对照一手资料；范围限于下列核心表述。待人工技术审校；法律审校另行记录。</p>
+<ul><li>护栏检测可能误报或漏报；规则、权限与执行隔离应分层考虑。<br><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noopener noreferrer">OWASP · LLM01:2025 Prompt Injection</a></li>
+<li>显式与隐式标识是不同形式；具体适用取决于主体和场景。<br><a href="https://www.cac.gov.cn/2025-03/14/c_1743654684782215.htm" target="_blank" rel="noopener noreferrer">《人工智能生成合成内容标识办法》· 第 2–6 条</a></li></ul><p><b>教学边界：</b>实验是小规模规则匹配；本次仅修正技术与条文概念，不是安全认证或法律审校。</p>
+<p><a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%8A%A4%E6%A0%8F%E4%B8%8E%E6%A0%87%E8%AF%86&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-guard%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a> · <a href="progress.html#review-status">查看全站核验范围</a></p></details>
+<!-- atlas-review:mod-guard:end -->
+        <p>护栏是贯穿输入、检索、工具执行与输出的多层控制：权限校验、规则、分类器、内容检测与审计记录等。确定性的规则也可能漏掉风险，分类器还存在误报与漏报。提示注入不能仅靠一次扫描完全防止；生成内容标识是另一个治理环节，具体适用义务需按场景审校。</p>
         <div class="lab">
           <div class="lab-head">🔬 实验室 · 安检门值班台<span class="demo-tag">G3 级</span></div>
           <p class="dim" style="margin:4px 0 0">你来当护栏：输入任何消息（或用预置样本），<b>真规则</b>的输入闸当场判定放行/拦截，每次判定都写进值班日志——留痕不是口号，是每一行。</p>
@@ -1829,10 +1970,10 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
           </div>
           <div class="lab-ctrls"><button type="button" class="fk" id="gd-run">▶ 过闸</button></div>
           <div class="ag-log" id="gd-log"></div>
-          <div class="lab-honest"><b>诚实标注（R5）：</b>闸门规则是真的（注入特征正则、手机号/证件号正则、敏感词表——教学版规模），工业护栏在此之上叠加分类器模型。两个观察：① 换几种说法绕过注入正则并不难——<b>规则挡君子，分类器挡聪明人，都挡不住全部</b>，误杀率与漏过率的权衡是永恒的；② 日志里「拦截」与「放行」都有记录——将来说清责任，靠的就是这几行。</div>
+          <div class="lab-honest"><b>诚实标注（R5）：</b>闸门规则是真的（注入特征正则、手机号/证件号正则、敏感词表——教学版规模），生产系统可能组合分类器、权限控制、沙箱和人工确认等措施。两个观察：① 换几种说法绕过注入正则并不难——<b>规则和分类器均可能被绕过，需评估误报与漏报</b>，误杀率与漏过率的权衡是永恒的；② 日志里「拦截」与「放行」都有记录——日志有助于追溯，但不能单独证明合规或完成法律责任认定，还需控制日志访问与保存范围。</div>
         </div>
 
-        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>《AI生成合成内容标识办法》（2025-09-01 施行）双轨标识、备案材料中的审核机制说明、EU AI Act 第 50 条透明度——产品侧义务在索引地图 L6 全层铺开。</p></div>
+        <div class="seal-note"><div class="sh">⚖ 朱批</div><p>待法律审校：中国《人工智能生成合成内容标识办法》区分显式与隐式标识；适用主体、内容类型与传播环节需逐项核对。技术检测通过不代表完成全部义务。索引地图 L6 的相关条目仍是学习草稿。</p></div>
       </div>
     </details>
   </section>
@@ -1846,6 +1987,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-vlm">
       <summary><span class="m-caret">▶</span><span class="m-name">视觉理解 VLM</span><span class="m-en">VISION-LANGUAGE MODEL · 🔬 LAB</span><span class="m-shape">[H,W,3] → [N_patch, d]（图变词元）</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-vlm:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E8%A7%86%E8%A7%89%E7%90%86%E8%A7%A3+VLM&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-vlm%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-vlm:end -->
         <p>让 LLM「看图」的通用解法：把图像切成小块（patch，常见 14×14 或 16×16 像素）→ 每块经<b>视觉编码器</b>（ViT——就是 Transformer 的看图版，Ⅱ 平面结构的直系亲属）变成向量 → 一个小「投影层」把视觉向量翻译进 LLM 的词元空间 → 与文字 token 拼成<b>同一条序列</b>送进 Ⅱ 平面。在模型眼里，一张图 ≈ 几百个「视觉词」。</p>
         <ul>
           <li>视觉编码器多源自 CLIP：在数亿「图-文对」上做对比学习，让图片与其描述在空间中对齐——Ⅱ 平面 Embedding「语义即距离」的跨模态版。</li>
@@ -1880,6 +2024,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-diff">
       <summary><span class="m-caret">▶</span><span class="m-name">扩散模型</span><span class="m-en">DIFFUSION · 🔬 LAB</span><span class="m-shape">纯噪声 → 逐步去噪 → 图像</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-diff:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-diff%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-diff:end -->
         <p>图像生成的心脏，与 LLM 的「猜下一词」完全不同的游戏：<b>训练</b>时给真图逐步加噪直到面目全非，让网络学会「从带噪图预测所加的噪声」；<b>生成</b>时从纯噪声出发，反复「预测噪声并减掉一点」，几十步后图像从雾中浮现。</p>
         <code class="fx">训练目标:  给定 x_t（第 t 档噪声图），预测 ε（所加噪声）
 采样:      x_{t−1} = x_t − σ_t · ε̂(x_t, t, 文字条件)      （示意简化）</code>
@@ -1921,6 +2068,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-vae">
       <summary><span class="m-caret">▶</span><span class="m-name">潜空间与 VAE</span><span class="m-en">LATENT SPACE · VAE · 🔬 LAB</span><span class="m-shape">[512,512,3] ⇄ [64,64,4]</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-vae:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%BD%9C%E7%A9%BA%E9%97%B4%E4%B8%8E+VAE&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-vae%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-vae:end -->
         <p>直接在像素上扩散贵得离谱。解法：先用 VAE（一对压缩/解压网络）把 512×512×3 的图压进 64×64×4 的「潜空间」——信息浓缩约 48 倍——扩散全程在小空间里跑，最后一步才解码回像素。这就是 Stable Diffusion 名字里 「Stable」 得以平民化的工程根基（Latent Diffusion）。</p>
         <p class="dim">屋顶线的账在此再收一次（PLANE 0）：搬运与计算的字节数暴降两个数量级——「压缩即省钱」跨模态成立。</p>
         <div class="forks"><span class="flab">分叉</span>
@@ -1948,6 +2098,9 @@ top-p: 按概率从大到小累加到 p (如0.9) 为止，圈外全部清零，�
     <details class="mod" id="mod-cfg">
       <summary><span class="m-caret">▶</span><span class="m-name">条件与引导</span><span class="m-en">CONDITIONING · CFG · 🔬 LAB</span><span class="m-shape">提示词 → 文本向量 → 注入每步去噪</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-cfg:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%9D%A1%E4%BB%B6%E4%B8%8E%E5%BC%95%E5%AF%BC&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-cfg%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-cfg:end -->
         <p>提示词经文本编码器（CLIP/T5）变成向量，在<b>每一步去噪</b>时注入——相当于每步都问一遍「文字要什么」。听话程度另有旋钮：<b>CFG</b>（无分类器引导）同时算「有提示」与「无提示」两版预测，朝差值方向外推：</p>
         <code class="fx">最终预测 = 无条件预测 + s · (条件预测 − 无条件预测)
 s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵硬（常用 5–8）</code>
@@ -1974,6 +2127,9 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
     <details class="mod" id="mod-video">
       <summary><span class="m-caret">▶</span><span class="m-name">视频生成</span><span class="m-en">VIDEO GENERATION · 🔬 LAB</span><span class="m-shape">时空块 [T,H,W] → 时空 DiT</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-video:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-video%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-video:end -->
         <p>把时间当第三维：视频切成「时空块」（spacetime patches——一小段时间 × 一小块画面），DiT 在整个时空序列上去噪。Sora、可灵、Veo 据各家技术报告均属此路线。难在<b>一致性</b>：人物不变脸、物体不穿模、物理不崩坏——模型对世界规律的理解上限直接暴露在这。</p>
         <p class="dim">算力量感：秒级视频的 token 量以数十万计——PLANE 0 的带宽与显存账在此最为惨烈，「视频生成贵」不是定价策略是物理。</p>
         <div class="lab">
@@ -2000,6 +2156,9 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
     <details class="mod" id="mod-voice">
       <summary><span class="m-caret">▶</span><span class="m-name">语音栈：TTS 与声音克隆</span><span class="m-en">TTS · VOICE CLONING · 🔬 LAB</span><span class="m-shape">文本 + 3 秒音色样本 → 波形</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-voice:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E8%AF%AD%E9%9F%B3%E6%A0%88%EF%BC%9ATTS+%E4%B8%8E%E5%A3%B0%E9%9F%B3%E5%85%8B%E9%9A%86&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-voice%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-voice:end -->
         <p>现代主流把声音也 <b>token 化</b>：神经音频编解码器（codec）把波形压成离散 token → 用 LLM 式自回归生成音频 token → 解码回波形——「说话」变成了另一种「接着写」。<b>声音克隆</b>：从几秒参考音频提取「音色向量」作为生成条件，VALL-E（2023）起 3 秒样本即可逼真克隆，如今是消费级功能。</p>
         <div class="forks"><span class="flab">分叉</span>
           <button class="fk" data-v="a">传统管线</button>
@@ -2036,6 +2195,9 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
     <details class="mod" id="mod-wm">
       <summary><span class="m-caret">▶</span><span class="m-name">世界模型</span><span class="m-en">WORLD MODELS · 🔬 LAB</span><span class="m-shape">状态 + 动作 → 下一刻状态</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-wm:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-wm%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-wm:end -->
         <p>从「预测下一个词」到「预测下一刻的世界」。语言模型压缩的是文本的统计规律；世界模型要压缩的是<b>环境的动力学</b>：给定当前状态与将要发生的动作，预测下一刻会怎样。有了它，AI 才能在脑内排练（规划）而不必事事真做。</p>
         <div class="forks"><span class="flab">分叉 · 怎么获得一台内在模拟器</span>
           <button class="fk" data-v="a">视频生成顺带学</button>
@@ -2070,6 +2232,9 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
     <details class="mod" id="mod-vla">
       <summary><span class="m-caret">▶</span><span class="m-name">具身智能与 VLA</span><span class="m-en">EMBODIED AI · VLA · 🔬 LAB</span><span class="m-shape">看见 + 听懂 → 关节角序列</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-vla:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD%E4%B8%8E+VLA&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-vla%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-vla:end -->
         <p>给大脑接上手脚。VLA（视觉-语言-动作）模型把三件事放进同一网络：视觉编码器看环境、语言骨干懂指令，而输出头从「词表 logits」换成<b>动作</b>（离散动作 token 或连续控制量）——RT-2、π0 一族（据公开论文）。AI 从「说话」进化到「做事」，也把整套责任分析拽进了物理世界。</p>
         <ul>
           <li><b>数据瓶颈</b>：互联网上没有「动作数据」——靠人类遥操作示教、仿真合成（sim-to-real）与看视频学动作补课，条条昂贵。</li>
@@ -2113,6 +2278,9 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
     <details class="mod" id="mod-gpu">
       <summary><span class="m-caret">▶</span><span class="m-name">为什么是 GPU</span><span class="m-en">WHY GPU · 🔬 LAB</span><span class="m-shape">数千小核并行 · Tensor Core</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-gpu:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF+GPU&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-gpu%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-gpu:end -->
         <p>LLM 的计算原子是<b>矩阵乘法</b>——Ⅱ 平面每个模块拆到底都是它。矩阵乘法的性格：数量海量、彼此独立、可以同时算。这正好长成 GPU 的形状：数千个简单核心齐步走（CPU 反之：少数复杂核心 + 分支预测，擅长「走一步看一步」的串行逻辑）。现代 AI 算力的主体更来自 <b>Tensor Core</b>：把「小块矩阵乘加」直接做成一条硬件指令，一拍完成一小块。</p>
         <p class="dim">量感锚点（H100，量级取整）：BF16 算力约 10¹⁵ FLOPS。纸面推算：8B 模型 decode 一个 token 约需 2×80亿 ≈ 1.6×10¹⁰ FLOPs，理论上每秒可出数万 token——实际单请求只有百级。差出两个数量级的原因，是下一格的事。</p>
         <div class="forks"><span class="flab">分叉 · 芯片路线</span>
@@ -2144,6 +2312,9 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
     <details class="mod" id="mod-mem">
       <summary><span class="m-caret">▶</span><span class="m-name">存储层级与内存墙</span><span class="m-en">MEMORY HIERARCHY · 🔬 LAB</span><span class="m-shape">SRAM → HBM → 主机内存 → 盘</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-mem:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%AD%98%E5%82%A8%E5%B1%82%E7%BA%A7%E4%B8%8E%E5%86%85%E5%AD%98%E5%A2%99&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-mem%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-mem:end -->
         <p>核心事实：<b>数据从来不住在计算发生的地方</b>，要一级级搬过来。层级每往下一级，容量大十到千倍、速度慢约一个数量级（A100 量级例：片上 SRAM 约 19 TB/s 但只有 ~20MB；HBM 约 2 TB/s、几十 GB；主机内存百 GB/s 级；硬盘更慢）。</p>
         <p>HBM（高带宽显存）是把 DRAM 芯片立体堆叠、经硅中介层千针直连处理器——「把仓库盖到工厂隔壁，再修一条千车道的路」。即便如此，<b>算力的增速长期高于带宽的增速</b>，芯片越来越多的时间花在等数据上：这就是「内存墙」。能耗账同样在搬运侧——从 HBM 搬一个字节的能耗，远高于对它做一次乘加。</p>
         <p class="dim">收账（Ⅱ 平面伏笔）：FlashAttention 的全部秘密 = 精心安排计算顺序，让注意力的 <code>T×T</code> 中间矩阵始终待在 SRAM 里、不落 HBM。不改数学，只改「货物动线」。</p>
@@ -2162,6 +2333,9 @@ s（guidance scale）: 低 → 自由发挥；高 → 死板服从、画面僵�
     <details class="mod" open id="mod-roof">
       <summary><span class="m-caret">▶</span><span class="m-name">屋顶线模型</span><span class="m-en">ROOFLINE MODEL · 🔬 LAB</span><span class="m-shape">算术强度 = FLOPs / 每字节搬运</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-roof:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E5%B1%8B%E9%A1%B6%E7%BA%BF%E6%A8%A1%E5%9E%8B&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-roof%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-roof:end -->
         <p>本平面的灵魂，一个问题定生死：<b>每从显存搬 1 字节，你能拿它算几次？</b>（这个比值叫算术强度。）机器自己也有一个平衡点 = 峰值算力 ÷ 带宽（H100 约 300 FLOPs/字节量级）。你的任务强度高于平衡点 → 卡算力（「平顶区」，芯片喂饱了）；低于 → 卡带宽（「斜坡区」，芯片在等数据）。</p>
         <code class="fx">decode（单请求）: 每个权重字节搬来只用一次 ≈ 1 FLOP/B ≪ 300 → 深陷斜坡区
    吐字上限 ≈ 带宽 ÷ 权重体积 = 3.35 TB/s ÷ 16 GB (8B@fp16) ≈ 200 token/s
@@ -2200,9 +2374,12 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
     </details>
     <div class="wire"><span>字节本身还能更小 ▼</span></div>
 
-    <details class="mod">
+    <details class="mod" id="mod-formats">
       <summary><span class="m-caret">▶</span><span class="m-name">数字格式</span><span class="m-en">NUMBER FORMATS · 🔬 LAB</span><span class="m-shape">FP32(4B) → BF16(2B) → FP8(1B) → INT4</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-formats:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%95%B0%E5%AD%97%E6%A0%BC%E5%BC%8F&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-formats%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-formats:end -->
         <p>每个参数用几位二进制存，是一根绳上的四件事：精度、显存、带宽、能耗。位数减半 ≈ 搬运减半 ≈ 斜坡区速度翻倍（接屋顶线）——所以整个行业在系统性地「用精度换速度」。</p>
         <div class="forks"><span class="flab">分叉 · 训练精度</span>
           <button class="fk on" data-v="a">BF16 ✓</button>
@@ -2228,6 +2405,9 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
     <details class="mod" id="mod-net">
       <summary><span class="m-caret">▶</span><span class="m-name">互联与集群</span><span class="m-en">INTERCONNECT · CLUSTER · 🔬 LAB</span><span class="m-shape">HBM ≫ NVLink ≫ 节点间网络</span></summary>
       <div class="m-body">
+<!-- atlas-review:mod-net:start -->
+<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。<a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E4%BA%92%E8%81%94%E4%B8%8E%E9%9B%86%E7%BE%A4&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fblueprint.html%23mod-net%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p>
+<!-- atlas-review:mod-net:end -->
         <p>带宽阶梯（H100 代量级）：卡内 HBM ~3.3 TB/s ≫ 同机卡间 NVLink ~900 GB/s ≫ 跨机 InfiniBand ~每链路 50 GB/s——每跨一级掉将近一个数量级。这架阶梯直接决定了 Ⅰ 平面并行训练的切法：</p>
         <ul>
           <li><b>张量并行</b>（把单层矩阵切开）通信最密 → 只敢在 NVLink 内做（一台机器 8 卡为界）；</li>
@@ -2257,9 +2437,9 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
   </section>
 
   <section class="plane" id="review-sources" style="--pc:var(--p0)">
-    <div class="pl-head"><span class="rn">REVIEW · 2026-10-15</span><h2>本轮来源与阅读边界</h2><p class="pl-q">这轮更新架构、推理成本、奖励训练、评测与工具接入；45 个实验仍是本地教学模型。Llama-3-8B / H100 保留为固定教学锚点，不代表最新产品性能。既有法律朱批仍待另行审校。</p></div>
+    <div class="pl-head"><span class="rn">REVIEW · 2026-10-15</span><h2>2026-10-15 快照来源与阅读边界</h2><p class="pl-q">该次更新架构、推理成本、奖励训练、评测与工具接入；45 个实验仍是本地教学模型。Llama-3-8B / H100 保留为固定教学锚点，不代表最新产品性能。既有法律朱批仍待另行审校。</p></div>
     <ul>
-      <li>架构与型号：<a href="genealogy.html">门派谱系 v4</a>逐家提供模型卡，区分主干 / 激活 / 附加记忆参数和托管 / 权重能力。</li>
+      <li>架构与型号：<a href="genealogy.html">模型门派谱系</a>逐家提供模型卡，区分主干 / 激活 / 附加记忆参数和托管 / 权重能力。</li>
       <li>后训练：<a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener noreferrer">DeepSeek-R1 论文</a>；分开看 R1-Zero、R1 和优化方法 / 奖励来源。</li>
       <li>推理成本：<a href="https://www.nvidia.com/en-us/data-center/h100/" target="_blank" rel="noopener noreferrer">NVIDIA H100 规格</a>；本页采用 SXM 非稀疏峰值，只做理想算术。</li>
       <li>上下文工程：<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener noreferrer">Anthropic 工程说明</a>；压缩、笔记和按需检索各有信息损失，须保留关键决定与可复查材料。</li>
@@ -2289,8 +2469,8 @@ prefill / 训练（大批量）: 同一块权重同时服务成百上千个 toke
 
   <footer>
     <div class="wrap" style="padding:0">
-      <p>LLM 系统蓝图 · 主线 v0.34 · 2026-10-15。数字例锚定 Llama-3-8B 与 NVIDIA H100；适用范围就近标注，当前架构另见谱系。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
-      <span class="sn">按规则 R5：本页由 AI 起草、未经人工核验，标注「研究观点/据报道」处尤其存疑；</span>
+      <p>LLM 系统蓝图 · 主线 v0.36 · 2026-10-26。数字例锚定 Llama-3-8B 与 NVIDIA H100；适用范围就近标注，当前架构另见谱系。实验室算法在浏览器本地运行，输入的文本不会离开你的设备。
+      <span class="sn">按规则 R5：本页由 AI 辅助维护；本轮来源核对限于标记的核心技术表述，人工技术与法律审校尚未完成，标注「研究观点/据报道」处尤其存疑；</span>
       未逐项复核的历史分叉标签仍是教学路线标记，不代表当前市场份额或优劣排名。</p>
     </div>
   </footer>
