@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { CSSProperties } from "react";
 import ModelCutaway from "./ModelCutaway";
+import GlassSurface from "./GlassSurface";
 
 const planes = [
   { code: "P0", name: "物理底座", short: "算力 · 显存 · 互联", count: 5, color: "#536579", description: "GPU、显存墙、数值格式与集群互联：理解整个系统的资源边界。" },
@@ -34,7 +35,7 @@ export default function OverviewMap({ base }: { base: string }) {
   }
 
   return (
-    <section className="home-overview home-glass" id="overview" aria-labelledby="overview-title">
+    <GlassSurface className="home-overview" motion="quiet" id="overview" aria-labelledby="overview-title">
       <div className="home-map-heading">
         <div><span className="home-eyebrow">THE BIG PICTURE</span><h2 id="overview-title">AI 系统全景</h2></div>
         <div className="home-map-views" role="group" aria-label="全景图视图">
@@ -71,6 +72,6 @@ export default function OverviewMap({ base }: { base: string }) {
       <p className="home-map-footnote">这是一张工程关系图；一次请求通常调用已训练的模型。</p>
       </>}
       </div>
-    </section>
+    </GlassSurface>
   );
 }

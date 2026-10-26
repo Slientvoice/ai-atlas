@@ -1,9 +1,23 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
 
 const glyphSet = ["o", ">", "_"] as const;
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return reduced;
+}
 
 type ClickPulse = {
   x: number;
@@ -142,6 +156,7 @@ function compileShader(
 }
 
 function useFluidField(canvasRef: RefObject<HTMLCanvasElement | null>) {
+  const reduced = useReducedMotion();
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -177,8 +192,6 @@ function useFluidField(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const pointer = gl.getUniformLocation(program, "u_pointer");
     const time = gl.getUniformLocation(program, "u_time");
     const energyLocation = gl.getUniformLocation(program, "u_energy");
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const mobile = window.matchMedia("(max-width: 780px)").matches;
     let width = 1;
     let height = 1;
     let frame = 0;
@@ -189,12 +202,14 @@ function useFluidField(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const resize = () => {
       width = Math.max(1, window.innerWidth);
       height = Math.max(1, window.innerHeight);
+      const mobile = window.matchMedia("(max-width: 780px)").matches;
       const quality = mobile ? 0.58 : Math.min(1, (window.devicePixelRatio || 1) * 0.72);
       canvas.width = Math.max(1, Math.round(width * quality));
       canvas.height = Math.max(1, Math.round(height * quality));
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       gl.viewport(0, 0, canvas.width, canvas.height);
+      if (reduced) draw(0);
     };
 
     const draw = (now: number) => {
@@ -230,7 +245,7 @@ function useFluidField(canvasRef: RefObject<HTMLCanvasElement | null>) {
     };
 
     resize();
-    frame = requestAnimationFrame(draw);
+    if (!reduced) frame = requestAnimationFrame(draw);
     window.addEventListener("resize", resize);
     if (!reduced) {
       window.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -249,19 +264,25 @@ function useFluidField(canvasRef: RefObject<HTMLCanvasElement | null>) {
       gl.deleteShader(vertexShader);
       gl.deleteShader(fragmentShader);
     };
-  }, [canvasRef]);
+  }, [canvasRef, reduced]);
 }
 
 function useGlyphField(canvasRef: RefObject<HTMLCanvasElement | null>) {
+  const reduced = useReducedMotion();
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const resolvedContext = canvas.getContext("2d");
     if (!resolvedContext) return;
     const context: CanvasRenderingContext2D = resolvedContext;
+    const surface = canvas.parentElement;
+    if (!surface) return;
+    if (reduced) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const mobile = window.matchMedia("(max-width: 780px)").matches;
+    let mobile = window.matchMedia("(max-width: 780px)").matches;
     let width = 1;
     let height = 1;
     let spacing = mobile ? 14 : 12;
@@ -620,6 +641,7 @@ function useGlyphField(canvasRef: RefObject<HTMLCanvasElement | null>) {
     }
 
     const resize = () => {
+      mobile = window.matchMedia("(max-width: 780px)").matches;
       const bounds = canvas.getBoundingClientRect();
       width = Math.max(1, bounds.width);
       height = Math.max(1, bounds.height);
@@ -628,6 +650,7 @@ function useGlyphField(canvasRef: RefObject<HTMLCanvasElement | null>) {
       canvas.height = Math.round(height * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       rebuildGrid();
+      lastPointer = null;
     };
 
     const onPointerMove = (event: PointerEvent) => {
@@ -655,6 +678,7 @@ function useGlyphField(canvasRef: RefObject<HTMLCanvasElement | null>) {
       lastPointer = sample;
     };
     const onPointerDown = (event: PointerEvent) => {
+      if (!event.isPrimary || event.button !== 0) return;
       const bounds = canvas.getBoundingClientRect();
       if (
         event.clientX < bounds.left ||
@@ -676,12 +700,13 @@ function useGlyphField(canvasRef: RefObject<HTMLCanvasElement | null>) {
     };
 
     const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(canvas.parentElement ?? canvas);
+    resizeObserver.observe(surface);
     resize();
     if (!reduced) {
-      window.addEventListener("pointermove", onPointerMove, { passive: true });
-      window.addEventListener("pointerdown", onPointerDown, { passive: true });
-      document.documentElement.addEventListener("pointerleave", onPointerLeave);
+      surface.addEventListener("pointermove", onPointerMove, { passive: true });
+      surface.addEventListener("pointerdown", onPointerDown, { passive: true });
+      surface.addEventListener("pointerleave", onPointerLeave);
+      surface.addEventListener("pointercancel", onPointerLeave);
       document.addEventListener("visibilitychange", onVisibility);
     }
     window.addEventListener("resize", resize);
@@ -689,13 +714,14 @@ function useGlyphField(canvasRef: RefObject<HTMLCanvasElement | null>) {
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerdown", onPointerDown);
-      document.documentElement.removeEventListener("pointerleave", onPointerLeave);
+      surface.removeEventListener("pointermove", onPointerMove);
+      surface.removeEventListener("pointerdown", onPointerDown);
+      surface.removeEventListener("pointerleave", onPointerLeave);
+      surface.removeEventListener("pointercancel", onPointerLeave);
       document.removeEventListener("visibilitychange", onVisibility);
       resizeObserver.disconnect();
     };
-  }, [canvasRef]);
+  }, [canvasRef, reduced]);
 }
 
 export function CodexAtmosphere() {

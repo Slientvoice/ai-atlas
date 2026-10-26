@@ -1,4 +1,5 @@
-import { CodexAtmosphere, SectionGlyphField } from "./AmbientEffects";
+import { CodexAtmosphere } from "./AmbientEffects";
+import GlassSurface from "./GlassSurface";
 import OverviewMap from "./OverviewMap";
 import SiteNavigation from "./SiteNavigation";
 import "./home.css";
@@ -52,8 +53,7 @@ export default function Portal() {
       <div className="home-shell">
         <SiteNavigation base={liveBase} />
 
-        <header className="home-hero home-glass">
-          <SectionGlyphField />
+        <GlassSurface as="header" className="home-hero">
           <div className="home-hero-copy">
             <span className="home-eyebrow">AN INTERACTIVE FIELD GUIDE TO AI</span>
             <h1>看见 AI <em>如何工作。</em></h1>
@@ -63,11 +63,11 @@ export default function Portal() {
             <span>第一次来？从一个日常请求开始</span>
             <b>跟随一句话的旅程 <span aria-hidden="true">↗</span></b>
           </a>
-        </header>
+        </GlassSurface>
 
         <div className="home-dashboard">
           <OverviewMap base={liveBase} />
-          <section className="home-entries home-glass" id="explore" aria-labelledby="entries-title">
+          <GlassSurface className="home-entries" id="explore" aria-labelledby="entries-title">
             <div className="home-entries-heading">
               <h2 id="entries-title">三个入口，三种观看角度</h2>
               <span className="home-eyebrow" aria-hidden="true">EXPLORE ↗</span>
@@ -82,11 +82,10 @@ export default function Portal() {
                 <div className="home-entry-bottom"><span>{entry.stat}</span><b>{entry.action} <span aria-hidden="true">↗</span></b></div>
               </a>
             ))}
-          </section>
+          </GlassSurface>
         </div>
 
-        <section className="home-reading home-glass" id="routes" aria-labelledby="routes-title">
-          <SectionGlyphField />
+        <GlassSurface className="home-reading" id="routes" aria-labelledby="routes-title">
           <div className="home-section-heading">
             <div><span className="home-eyebrow">FIND YOUR WAY IN</span><h2 id="routes-title">从一个问题开始。</h2></div>
             <p>顺着一个故事理解整体，或带着一个词直接查找。</p>
@@ -109,9 +108,9 @@ export default function Portal() {
               <a className="home-button" href={`${liveBase}/index-map.html`}>打开索引地图 <span aria-hidden="true">↗</span></a>
             </article>
           </div>
-        </section>
+        </GlassSurface>
 
-        <aside className="home-compliance home-glass" id="compliance" aria-labelledby="compliance-title">
+        <GlassSurface as="aside" className="home-compliance" id="compliance" aria-labelledby="compliance-title">
           <div className="home-compliance-lead">
             <span className="home-eyebrow">A COMPLEMENTARY LENS / 合规观察</span>
             <h2 id="compliance-title">沿着技术链，定位合规问题。</h2>
@@ -123,13 +122,13 @@ export default function Portal() {
             <div><span>02 / 模型与许可</span><p>模型、权重和输出各有哪些使用条件？</p></div>
             <div><span>03 / 应用与部署</span><p>信息如何流转，操作权限与责任如何划分？</p></div>
           </div>
-        </aside>
+        </GlassSurface>
 
-        <section className="home-updates home-glass" aria-labelledby="updates-title">
+        <GlassSurface className="home-updates" aria-labelledby="updates-title">
           <div><span className="home-eyebrow">FIELD NOTES</span><h2 id="updates-title">地图持续生长</h2></div>
           <a href={`${liveBase}/genealogy.html`}><span className="home-update-date">2026.10.26 · 谱系 v5</span><b>模型谱系：新权重、思考模式与发布状态 <span aria-hidden="true">↗</span></b></a>
           <a href={`${liveBase}/blueprint.html`}><span className="home-update-date">2026.10.15 · 蓝图 v0.34</span><b>工程蓝图：新架构、推理成本与工具协议 <span aria-hidden="true">↗</span></b></a>
-        </section>
+        </GlassSurface>
 
         <section className="home-method" id="method" aria-labelledby="method-title">
           <div className="home-method-lead">
