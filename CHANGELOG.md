@@ -2,6 +2,15 @@
 
 完整早期时间线见 [项目进度](https://slientvoice.github.io/ai-atlas/progress.html)。本文件从 v0.33 起记录代码发布范围。
 
+## v0.35 · 2026-10-26
+
+- 谱系 v5 更新 DeepSeek V4.1 Flash-1017 的权重、别名、提示编码与工具边界。
+- 新增 Kimi K3.1 Pro 服务与 Code 路由：仅思考模式；完整权重仍为 11 月 4 日发布计划，未套用旧 K3 许可。
+- Meta 补充 Muse Spark Open 与 Glimmer 30B；分别记录 Muse Model License、Apache 2.0 与旧 Llama Community License。
+- 补充 Decisions API 正式可用及 Claude Sonnet 5.5 的 between_tools / disabled 区别；既有家族区分目录复核日期与规格核对日期。
+- 首页更新入口、进度和维护文档同步。工程蓝图保留 10 月 15 日的 v0.34，工业现场保留 9 月 18 日的 v2。
+- 研究证据、日期冲突与检查记录见 [发布记录](docs/release-v0.35.md)。
+
 ## v0.34 · 2026-10-15
 
 - 工程蓝图保留七平面、45 模块与实验，补充混合 / 稀疏 / CED 架构与缓存公式适用范围。

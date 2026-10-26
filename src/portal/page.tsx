@@ -127,8 +127,8 @@ export default function Portal() {
 
         <section className="home-updates home-glass" aria-labelledby="updates-title">
           <div><span className="home-eyebrow">FIELD NOTES</span><h2 id="updates-title">地图持续生长</h2></div>
+          <a href={`${liveBase}/genealogy.html`}><span className="home-update-date">2026.10.26 · 谱系 v5</span><b>模型谱系：新权重、思考模式与发布状态 <span aria-hidden="true">↗</span></b></a>
           <a href={`${liveBase}/blueprint.html`}><span className="home-update-date">2026.10.15 · 蓝图 v0.34</span><b>工程蓝图：新架构、推理成本与工具协议 <span aria-hidden="true">↗</span></b></a>
-          <a href={`${liveBase}/genealogy.html`}><span className="home-update-date">2026.10.15 · 谱系 v4</span><b>模型谱系：新型号、服务路由与能力边界 <span aria-hidden="true">↗</span></b></a>
         </section>
 
         <section className="home-method" id="method" aria-labelledby="method-title">
