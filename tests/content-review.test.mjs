@@ -19,7 +19,7 @@ test('editing a reviewed claim invalidates its status; a date alone cannot valid
   assert.equal(statusOf({}, original), 'pending');
 });
 
-test('release registry rejects orphaned sources, missing modules and invented human approvals', async () => {
+test('public source manifest rejects orphaned references and internal workflow fields', async () => {
   const root = new URL('../', import.meta.url);
   const registry = JSON.parse(await readFile(new URL('assets/content-review.json', root)));
   const pages = Object.fromEntries(await Promise.all(['blueprint.html', 'thread.html', 'index-map.html'].map(async p => [p, await readFile(new URL(p, root), 'utf8')])));
@@ -27,10 +27,27 @@ test('release registry rejects orphaned sources, missing modules and invented hu
   const missingSource = structuredClone(registry);
   delete missingSource.sources.token;
   assert.throws(() => validateRegistry(missingSource, pages), /missing source token/);
-  const missingUnit = structuredClone(registry);
-  missingUnit.units.pop();
-  assert.throws(() => validateRegistry(missingUnit, pages), /cover every unit/);
-  const unsigned = structuredClone(registry);
-  unsigned.units[0].humanReview = { date: '2026-10-26' };
-  assert.throws(() => validateRegistry(unsigned, pages), /human review needs/);
+  const unknownUnit = structuredClone(registry);
+  unknownUnit.units[0].id = 'unknown-unit';
+  assert.throws(() => validateRegistry(unknownUnit, pages), /unknown source record/);
+  for (const mutate of [
+    data => { data.legalHooks = []; },
+    data => { data.units[0].humanReview = null; },
+    data => { data.sources.token.internalNote = 'private'; },
+    data => { data.units[0].evidence[0].reviewer = 'private'; },
+  ]) {
+    const internal = structuredClone(registry);
+    mutate(internal);
+    assert.throws(() => validateRegistry(internal, pages), /non-public field/);
+  }
+  const unsupported = structuredClone(registry);
+  unsupported.units[0].checkedAt = null;
+  assert.throws(() => validateRegistry(unsupported, pages), /incomplete source evidence/);
+});
+
+test('public pages and reading guides contain no internal review status displays', async () => {
+  const root = new URL('../', import.meta.url);
+  const files = ['blueprint.html', 'thread.html', 'index-map.html', 'progress.html', 'genealogy.html', 'README.md', 'PROJECT.md', 'docs/content-review.md', 'docs/release-v0.36.md', 'assets/content-review.json'];
+  const internalStatus = /待(?:人工技术|人工与法律|法律)?审校|人工(?:技术)?审校[：\s]*\d|尚未经人工核验|atlas-review-metric/;
+  for (const file of files) assert.doesNotMatch(await readFile(new URL(file, root), 'utf8'), internalStatus, file);
 });

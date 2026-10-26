@@ -126,7 +126,7 @@ export default function Portal() {
 
         <GlassSurface className="home-updates" aria-labelledby="updates-title">
           <div><span className="home-eyebrow">FIELD NOTES</span><h2 id="updates-title">地图持续生长</h2></div>
-          <a href={`${liveBase}/progress.html#review-status`}><span className="home-update-date">2026.10.26 · v0.36</span><b>首批内容核验：九站入门与十个高频模块 <span aria-hidden="true">↗</span></b></a>
+          <a href={`${liveBase}/progress.html#review-status`}><span className="home-update-date">2026.10.27 · v0.36.1</span><b>阅读体验更新：资料来源与教学边界 <span aria-hidden="true">↗</span></b></a>
           <a href={`${liveBase}/genealogy.html`}><span className="home-update-date">2026.10.26 · 谱系 v5</span><b>模型谱系：新权重、思考模式与发布状态 <span aria-hidden="true">↗</span></b></a>
           <a href={`${liveBase}/blueprint.html`}><span className="home-update-date">2026.10.26 · 蓝图 v0.36</span><b>工程蓝图：校正核心表述，标明依据与边界 <span aria-hidden="true">↗</span></b></a>
         </GlassSurface>
@@ -136,7 +136,7 @@ export default function Portal() {
             <span className="home-eyebrow">MECHANISM / EVIDENCE / CONSEQUENCE</span>
             <h2 id="method-title">理解机制，也追问依据。</h2>
             <p>技术解释注明机制与来源，动态信息注明盘点日期。后续法律与合规观察将另行标明适用地区、场景和规则版本。</p>
-            <a className="home-button" href={`${liveBase}/progress.html`}>查看来源核对与审校进度 <span aria-hidden="true">↗</span></a>
+            <a className="home-button" href={`${liveBase}/progress.html`}>查看来源与阅读说明 <span aria-hidden="true">↗</span></a>
           </div>
           <div className="home-method-notes">
             <article><span>01</span><div><h3>结构可拆</h3><p>把能力放回数据、模型、推理与系统之间。</p></div></article>

@@ -15,14 +15,9 @@
 .atlas-review-overview p { margin: 6px 0; font-size: 13px; }
 .atlas-review-dashboard { padding: 26px; margin: 28px 0; background: var(--surface, #fff); border: 1px solid var(--hairline, #dce1eb); border-radius: 16px; }
 .atlas-review-dashboard h2 { margin: 0 0 8px; }
-.atlas-review-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 20px 0; }
-.atlas-review-metric { border: 1px solid var(--hairline, #dce1eb); border-radius: 10px; padding: 16px; }
-.atlas-review-metric strong { display: block; font: 500 30px/1.3 var(--mono, monospace); margin: 4px 0; }
-.atlas-review-metric small { color: var(--ink-2, #4b5158); }
 .atlas-review-links { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 12px 0; }
 .atlas-review-dashboard summary { cursor: pointer; padding: 10px 0; }
 @media (max-width: 540px) {
-  .atlas-review-metrics { grid-template-columns: 1fr; }
   .atlas-review-dashboard, .atlas-review-overview { padding: 18px; }
   .atlas-review { padding: 10px 12px; }
 }

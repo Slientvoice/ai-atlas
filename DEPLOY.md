@@ -4,7 +4,7 @@
 
 - 公开仓库：`Slientvoice/ai-atlas`
 - 网站：https://slientvoice.github.io/ai-atlas/
-- 2026-10-26 核对的 GitHub Pages 来源：**`agent/add-atlas-flow-skill` 分支根目录 `/`**，legacy 分支发布模式。
+- 2026-10-27 核对的 GitHub Pages 来源：**`agent/add-atlas-flow-skill` 分支根目录 `/`**，legacy 分支发布模式。
 - 此分支名沿用既有设置；推送 `main` 不会更新当前站点。发布前用 `gh api repos/Slientvoice/ai-atlas/pages` 再核对配置。
 
 ## 构建与检查
@@ -24,7 +24,9 @@ python3 -m http.server 8767 --bind 127.0.0.1
 
 浏览器打开 `http://127.0.0.1:8767/`。检查桌面与窄屏：首页图示切换、三个主入口、各页目录、直接访问子页、深链接、后退与前进、刷新后的状态。浏览器可能缓存静态预览页，改动后需刷新对应页面。
 
-`npm run build` 先检查内容指纹并同步核验标记与看板，再生成 `.portal-build/`，再复制首页到根目录 `index.html`，复制散列资源到 `assets/` 并删除上一版首页引用的旧散列资源，最后同步七个静态页面的导航。字体和其他共享资源不会清理。`.portal-build/`、`node_modules/` 不提交。
+`npm run build` 先检查内容指纹并同步公开来源说明，再生成 `.portal-build/`，再复制首页到根目录 `index.html`，复制散列资源到 `assets/` 并删除上一版首页引用的旧散列资源，最后同步七个静态页面的导航。字体和其他共享资源不会清理。`.portal-build/`、`node_modules/` 不提交。
+
+发布根目录及仓库中的文件均应视为公开资料。内部记录必须保存在仓库之外；不能依靠 CSS 隐藏、前端口令或不显示链接保护隐私。公开来源 JSON 只允许规定字段，构建不得读取内部记录。
 
 发布前更新 `README.md`、`CHANGELOG.md` 及 `progress.html` 中的版本数据。提交首页源码、构建配置、导航源、静态内容和生成产物的完整差异。
 

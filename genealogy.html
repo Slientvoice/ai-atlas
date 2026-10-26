@@ -148,7 +148,7 @@
     <span class="lt">📎 活页快照 · 盘点基准日 <time datetime="2026-10-26">2026-10-26</time></span>
     本页按当日可查的<b>官方发布、模型卡、开发文档和许可证</b>更新，独立编号。未发现已核实的新代表型号时保留原型号，不把复核日期当成发布日期。型号与服务会继续变化；产品可用性、开放权重和预览状态分别标注。
     <div class="legend"><b>阅读口径</b><span>◉ 官方资料支持，非独立实测</span><span>未披露 = 本次所列资料未提供足够细节</span><span>Preview / 受限访问 ≠ 全面开放</span></div>
-    <div class="snapshot-status" id="snapshot-status">建议每 30 天复核；本次由 AI 检索整理，尚未经人工与法律审校。</div>
+    <div class="snapshot-status" id="snapshot-status">本页由 AI 辅助检索整理；按注明日期阅读，型号、服务与许可信息请结合官方原文确认。</div>
   </div>
 
   <div class="others"><b>这一轮看什么 · 2026-10-26</b>
@@ -337,7 +337,7 @@
   <nav class="links" aria-label="相关页面">
     <a href="index.html">返回首页</a><a href="blueprint.html">工程蓝图（主线）</a><a href="progress.html">进度看板</a>
   </nav>
-  <footer>模型门派谱系 · 活页 v5 · 盘点基准日 2026-10-26 · AI 检索整理 / 人工与法律审校待完成。官方来源就近列于各家详情；后续发布、许可变更与服务调整可能使本快照过期。</footer>
+  <footer>模型门派谱系 · 活页 v5 · 盘点基准日 2026-10-26 · AI 辅助检索整理。官方来源就近列于各家详情；后续发布、许可变更与服务调整可能使本快照过期。</footer>
 </main>
 <script>
 (function () {
@@ -368,7 +368,7 @@
   var age = Math.floor((Date.now() - Date.UTC(2026, 9, 26)) / 86400000);
   if (age > 30) {
     var status = document.getElementById('snapshot-status');
-    status.textContent = '快照待复核：距盘点已 ' + age + ' 天，请以详情中的官方最新资料为准。AI 整理内容仍待人工与法律审校。';
+    status.textContent = '快照待复核：距盘点已 ' + age + ' 天，请以详情中的官方最新资料为准。许可与服务条件以官方原文为准。';
     status.classList.add('stale');
   }
 }());

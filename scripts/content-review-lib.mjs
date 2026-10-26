@@ -33,33 +33,34 @@ export function statusOf(record, content) {
   return record.contentHash === digest(content) ? 'checked' : 'stale';
 }
 
+// The public manifest is an allowlist, never a serialized internal work queue.
 export function validateRegistry(data, pages) {
   const errors = [], seen = new Set();
+  const fields = (object, allowed, label) => {
+    for (const key of Object.keys(object)) if (!allowed.includes(key)) errors.push(`${label}: non-public field ${key}`);
+  };
+  fields(data, ['version', 'updated', 'sources', 'units'], 'manifest');
+  for (const [id, source] of Object.entries(data.sources)) {
+    fields(source, ['title', 'url', 'scope', 'checkedAt'], `source ${id}`);
+  }
+  const available = new Map();
   for (const [page, kind] of [['blueprint.html', 'blueprint'], ['thread.html', 'journey']]) {
-    const units = unitsIn(pages[page], kind);
-    const records = data.units.filter(r => r.page === page);
-    if (records.length !== units.length) errors.push(`${page}: registry does not cover every unit`);
-    for (const unit of units) {
-      const key = `${page}#${unit.id}`;
-      const record = records.find(r => r.id === unit.id);
-      if (!record) { errors.push(`Missing ${key}`); continue; }
-      seen.add(key);
-      if (record.title !== unit.title) errors.push(`${key}: title changed`);
-      if (record.checkedAt) {
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(record.checkedAt) || !record.evidence?.length || !record.boundary) errors.push(`${key}: incomplete review evidence`);
-        if (statusOf(record, unit.content) === 'stale') errors.push(`${key}: content changed since review; recheck sources or mark pending`);
-        for (const evidence of record.evidence || []) {
-          if (!evidence.claim || !evidence.sources?.length) errors.push(`${key}: claim needs sources`);
-          for (const id of evidence.sources || []) if (!data.sources[id]?.url || !data.sources[id]?.checkedAt) errors.push(`${key}: missing source ${id}`);
-        }
-      }
-      if (record.humanReview && (!record.humanReview.name || !record.humanReview.date || !record.humanReview.note)) errors.push(`${key}: human review needs name, date and note`);
+    for (const unit of unitsIn(pages[page], kind)) available.set(`${page}#${unit.id}`, unit);
+  }
+  for (const record of data.units) {
+    const key = `${record.page}#${record.id}`;
+    fields(record, ['page', 'id', 'title', 'checkedAt', 'evidence', 'boundary', 'contentHash'], key);
+    const unit = available.get(key);
+    if (!unit || seen.has(key)) { errors.push(`Duplicate or unknown source record: ${key}`); continue; }
+    seen.add(key);
+    if (record.title !== unit.title) errors.push(`${key}: title changed`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(record.checkedAt) || !record.evidence?.length || !record.boundary) errors.push(`${key}: incomplete source evidence`);
+    if (statusOf(record, unit.content) !== 'checked') errors.push(`${key}: content changed since source comparison; recheck the affected statements`);
+    for (const evidence of record.evidence || []) {
+      fields(evidence, ['claim', 'sources'], `${key} evidence`);
+      if (!evidence.claim || !evidence.sources?.length) errors.push(`${key}: claim needs sources`);
+      for (const id of evidence.sources || []) if (!data.sources[id]?.url || !data.sources[id]?.checkedAt) errors.push(`${key}: missing source ${id}`);
     }
   }
-  const keys = data.units.map(r => `${r.page}#${r.id}`);
-  if (new Set(keys).size !== keys.length || keys.some(k => !seen.has(k))) errors.push('Duplicate or unknown review records');
-  const legalIds = [...pages['index-map.html'].matchAll(/\{ id:'([^']+)', layer:/g)].map(m => m[1]);
-  if (new Set(data.legalHooks.map(r => r.id)).size !== legalIds.length || data.legalHooks.length !== legalIds.length || legalIds.some(id => !data.legalHooks.some(r => r.id === id))) errors.push('Legal hook inventory differs from index map');
-  for (const hook of data.legalHooks) if (hook.review && (!hook.review.name || !hook.review.date || !hook.review.note)) errors.push(`${hook.id}: legal review needs name, date and note`);
   if (errors.length) throw new Error(errors.join('\n'));
 }

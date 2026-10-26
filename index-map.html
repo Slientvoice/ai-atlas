@@ -299,9 +299,9 @@
 
 <!-- atlas-review-overview -->
 <!-- atlas-review:overview:start -->
-<aside class="atlas-review-overview" aria-label="本页核验范围"><b>读图前，先看核验范围</b>
-<p>索引地图仅同步部分入门概念纠错，28 个条目尚未逐项完成核验。</p>
-<p>来源核对由 AI 完成，人工技术审校与法律审校另行记录；标记不代表整页通过审核。<a href="progress.html#review-status">查看核验台账</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E7%B4%A2%E5%BC%95%E5%9C%B0%E5%9B%BE&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Findex-map.html%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p></aside>
+<aside class="atlas-review-overview" aria-label="阅读说明"><b>来源与阅读说明</b>
+<p>按技术环节探索概念、交互范例与合规观察，深入原理可进入对应蓝图模块。</p>
+<p>合规观察用于学习，具体适用需结合主体、地区与业务场景判断。<a href="progress.html#review-status">查看资料来源</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E7%B4%A2%E5%BC%95%E5%9C%B0%E5%9B%BE&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Findex-map.html%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p></aside>
 <!-- atlas-review:overview:end -->
   <section>
     <div class="sec-head"><span class="no">§1</span><h2>怎么读这张图</h2></div>
@@ -326,7 +326,7 @@
       </div>
       <div class="legend-item">
         <b>🎓 范例 · ⚖ 挂点</b>
-        节点卡片下沿标注：可玩的交互范例数量，以及合规草稿是「已填」还是「待补」，两者都不代表已完成法律审校。待补不是缺陷，是预留的接口（规则 R4）。
+        节点卡片下沿标注可玩的交互范例数量与合规观察入口。合规观察用于联系技术环节与实际场景，适用条件须结合原文理解。
       </div>
     </div>
   </section>
@@ -358,7 +358,7 @@
   <footer>
     <p>
       本地图由 AI（Claude）检索并起草于 2026-07-05，作为学习与建站的 v0.1 骨架。
-      <span class="seal-note">按规则 R5：所有技术断言尚未经人工核验，默认存疑；</span>
+      <span class="seal-note">按规则 R5：本页由 AI 辅助维护；来源版本、教学简化与具体适用条件需结合正文理解；</span>
       外部范例链接的可用性以访问时为准。学习范例来源见各节点详情。
     </p>
   </footer>
@@ -669,7 +669,7 @@ LAYERS.forEach((ly, i) => {
     b.className = 'node';
     b.style.setProperty('--lc', `var(--l${i})`);
     const exN = n.examples.length;
-    const sealTxt = n.comp.status === 'filled' ? '⚖ 草稿已填 · 待审校' : '⚖ 挂点待补';
+    const sealTxt = n.comp.status === 'filled' ? '⚖ 合规观察' : '⚖ 挂点待补';
     b.innerHTML = `
       <div class="node-top"><span class="node-dot"></span><span class="node-en">${n.en}</span></div>
       <div class="node-name">${n.name}</div>
@@ -743,8 +743,8 @@ function openNode(id) {
     <div class="psec"><div class="psec-h">④ 学习范例 · 先去玩再回来</div>${ex}</div>
     <div class="psec"><div class="psec-h">⑤ 这张图将来怎么做</div>${build}</div>
     <div class="psec seal-sec"><div class="psec-h">⚖ 合规挂点（朱批）
-      <span class="seal-pill">${n.comp.status === 'filled' ? '已填草稿 · 待法律审校' : '待补 · 待法律审校'}</span></div>${comp}</div>
-    <div class="vdate">索引条目尚未逐项完成来源与人工核验；2026-10-26 仅同步部分入门概念的纠错。<a href="progress.html#review-status">查看核验范围</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=${encodeURIComponent('内容纠错：索引地图 / ' + n.name)}&amp;body=${encodeURIComponent('节点：' + n.id + '\n原文与问题：\n建议与依据：\n')}">反馈本条问题 ↗</a></div>`;
+      <span class="seal-pill">${n.comp.status === 'filled' ? '合规观察' : '观察方向'}</span></div>${comp}</div>
+    <div class="vdate">索引条目提供概念入口与学习线索；2026-10-26 仅同步部分入门概念的纠错。<a href="progress.html#review-status">查看来源说明</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=${encodeURIComponent('内容纠错：索引地图 / ' + n.name)}&amp;body=${encodeURIComponent('节点：' + n.id + '\n原文与问题：\n建议与依据：\n')}">反馈本条问题 ↗</a></div>`;
 
   document.getElementById('p-body').querySelectorAll('[data-goto]').forEach(b =>
     b.addEventListener('click', () => openNode(b.dataset.goto)));

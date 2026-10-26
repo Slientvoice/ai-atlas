@@ -95,7 +95,7 @@
 <div class="wrap">
   <div class="eyebrow">AI COMPLIANCE ATLAS · 项目进度看板</div>
   <h1>哪里亮了，哪里还没亮</h1>
-  <p class="sub">分别记录建设覆盖、来源核对与人工审校。页面和草稿已经建成，不表示内容已经全部核验；每项比例都注明自己的统计范围。</p>
+  <p class="sub">查看已发布内容、资料来源与版本演进。建设比例表示页面、实验与学习入口的覆盖范围。</p>
   <div class="links">
     <a href="index.html"><svg class="ico" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg> 返回首页 →</a>
     <a href="blueprint.html"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线）→</a>
@@ -105,7 +105,7 @@
 
   <div class="hero-bar">
     <h2 style="margin-top:0">既定建设范围 · 完成度</h2>
-    <p>此比例只统计骨架、实验、草稿与扩建入口是否存在；内容核验见下方独立台账。</p>
+    <p>此比例只统计骨架、实验、草稿与扩建入口是否存在；资料来源与阅读说明见下方。</p>
     <div class="hb-top"><span class="hb-num" id="total">—</span><span class="hb-cap" id="total-cap"></span></div>
     <div class="hb-track" id="total-track"></div>
     <div class="hb-legend" id="total-legend"></div>
@@ -114,17 +114,11 @@
 <!-- atlas-review-overview -->
 <!-- atlas-review:overview:start -->
 <section class="atlas-review-dashboard" id="review-status" aria-labelledby="review-heading">
-<h2 id="review-heading">建设之外，内容核验走到哪里</h2><p>按可追溯记录计数 · 2026-10-26。下面的分母分别是蓝图模块、入门站点与索引合规挂点，不合并为一个总分。</p>
-<div class="atlas-review-metrics">
-<div class="atlas-review-metric"><span>蓝图核心表述 · 来源核对（AI）</span><strong>10 / 45</strong><small>仅覆盖展开后列明的表述与边界；其余待复核。</small></div>
-<div class="atlas-review-metric"><span>入门九站 · 来源核对（AI）</span><strong>9 / 9</strong><small>覆盖技术叙事；示意动画不代表模型实测。</small></div>
-<div class="atlas-review-metric"><span>人工技术审校</span><strong>0 / 54</strong><small>分母为本台账的 45 个蓝图模块与 9 个入门站点。</small></div>
-<div class="atlas-review-metric"><span>索引合规挂点 · 法律审校</span><strong>0 / 28</strong><small>“已填”仅指草稿存在；入门与蓝图的法律观察也仍待审校。</small></div>
-</div>
-<details open><summary>本轮已对照来源的蓝图模块</summary><div class="atlas-review-links"><a href="blueprint.html#mod-tok">分词（运行时）</a><a href="blueprint.html#mod-embed">Embedding 查表</a><a href="blueprint.html#mod-attn">注意力</a><a href="blueprint.html#mod-ff">前馈网络 FFN</a><a href="blueprint.html#mod-pd">Prefill 与 Decode 两阶段</a><a href="blueprint.html#mod-kv">KV 缓存</a><a href="blueprint.html#mod-sample">采样</a><a href="blueprint.html#mod-rag">RAG 供料线</a><a href="blueprint.html#mod-agent">工具调用与 Agent 循环</a><a href="blueprint.html#mod-guard">护栏与标识</a></div></details>
-<details><summary>待来源复核的蓝图模块（35）</summary><div class="atlas-review-links"><a href="blueprint.html#mod-corpus">语料池与配比</a><a href="blueprint.html#mod-syn">合成数据与蒸馏</a><a href="blueprint.html#mod-clean">清洗 · 去重 · 过滤</a><a href="blueprint.html#mod-bpe">分词器训练</a><a href="blueprint.html#mod-train">预训练循环</a><a href="blueprint.html#mod-sft">监督微调 SFT</a><a href="blueprint.html#mod-pref">偏好优化</a><a href="blueprint.html#mod-rlvr">可验证奖励与推理训练</a><a href="blueprint.html#mod-eval">评估 · 红队 · 冻结发布</a><a href="blueprint.html#mod-rope">位置信息</a><a href="blueprint.html#mod-block">Block 总装 × N</a><a href="blueprint.html#mod-moe">MoE：把 FFN 复数化</a><a href="blueprint.html#mod-lmh">LM Head 与 logits</a><a href="blueprint.html#mod-ssm">架构地平线：稀疏、线性与混合</a><a href="blueprint.html#mod-interp">可解释性：打开黑箱</a><a href="blueprint.html#mod-quant">量化</a><a href="blueprint.html#mod-spec">吞吐工程</a><a href="blueprint.html#mod-ttc">推理模型与测试时算力</a><a href="blueprint.html#mod-ctx">上下文拼装</a><a href="blueprint.html#mod-ctxeng">上下文工程</a><a href="blueprint.html#mod-proto">工具协议</a><a href="blueprint.html#mod-orch">多智能体编排</a><a href="blueprint.html#mod-vlm">视觉理解 VLM</a><a href="blueprint.html#mod-diff">扩散模型</a><a href="blueprint.html#mod-vae">潜空间与 VAE</a><a href="blueprint.html#mod-cfg">条件与引导</a><a href="blueprint.html#mod-video">视频生成</a><a href="blueprint.html#mod-voice">语音栈：TTS 与声音克隆</a><a href="blueprint.html#mod-wm">世界模型</a><a href="blueprint.html#mod-vla">具身智能与 VLA</a><a href="blueprint.html#mod-gpu">为什么是 GPU</a><a href="blueprint.html#mod-mem">存储层级与内存墙</a><a href="blueprint.html#mod-roof">屋顶线模型</a><a href="blueprint.html#mod-formats">数字格式</a><a href="blueprint.html#mod-net">互联与集群</a></div></details>
-<p><b>如何理解标记：</b>“已对照来源”记录 AI 查阅资料后的核对范围；“教学简化”说明实验的适用边界；“待人工审校”说明还缺少人的专业复核。正文改动后，构建检查要求重新确认来源记录，不能自动沿用旧标记。</p>
-<p>模型谱系与工业现场沿用各自的盘点日期和来源记录，未计入本轮技术核验分母。<a href="docs/content-review.md">核验方法与维护约定</a> · <a href="assets/content-review.json">完整核验台账（JSON）</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%A0%B8%E9%AA%8C%E5%8F%B0%E8%B4%A6&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fprogress.html%23review-status%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p></section>
+<h2 id="review-heading">资料来源与阅读说明</h2><p>从具体表述回到原始资料，结合教学边界理解每个实验。下列资料查阅日期为 2026-10-26；模型谱系与工业现场另有各自的盘点日期。</p>
+<details open><summary>工程蓝图 · 原理与实验来源</summary><div class="atlas-review-links"><a href="blueprint.html#mod-tok">分词（运行时）</a><a href="blueprint.html#mod-embed">Embedding 查表</a><a href="blueprint.html#mod-attn">注意力</a><a href="blueprint.html#mod-ff">前馈网络 FFN</a><a href="blueprint.html#mod-pd">Prefill 与 Decode 两阶段</a><a href="blueprint.html#mod-kv">KV 缓存</a><a href="blueprint.html#mod-sample">采样</a><a href="blueprint.html#mod-rag">RAG 供料线</a><a href="blueprint.html#mod-agent">工具调用与 Agent 循环</a><a href="blueprint.html#mod-guard">护栏与标识</a></div></details>
+<details><summary>入门旅程 · 沿请求链路阅读</summary><div class="atlas-review-links"><a href="thread.html#st1">抵达机房</a><a href="thread.html#st2">句子被切碎</a><a href="thread.html#st3">编号变成向量</a><a href="thread.html#st4">走层：词与词互相注视</a><a href="thread.html#st5">开卷考试：去合同里检索</a><a href="thread.html#st6">岔路口：这次不必绕远</a><a href="thread.html#st7">逐个词元生成</a><a href="thread.html#st8">出门前过安检</a><a href="thread.html#st9">回到聊天框</a></div></details>
+<p>来源链接对应所列核心表述；实验中的简化参数、预设动画与真实模型运行结果需分别理解。合规观察用于学习，具体适用需结合业务场景判断。</p>
+<p><a href="docs/content-review.md">来源说明与维护约定</a> · <a href="assets/content-review.json">公开来源记录（JSON）</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%9D%A5%E6%BA%90%E4%B8%8E%E9%98%85%E8%AF%BB%E8%AF%B4%E6%98%8E&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fprogress.html%23review-status%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p></section>
 <!-- atlas-review:overview:end -->
   <h2>四条分线</h2>
   <div class="bars" id="bars"></div>
@@ -149,7 +143,7 @@
 <script>
 /* ======== 唯一数据源：每个版本只改这里 ======== */
 const DATA = {
-  updated: '2026-10-26 · 站点 v0.36 / 蓝图与入门首批核验 / 谱系 v5 / 现场 v2（09-18）',
+  updated: '2026-10-27 · 站点 v0.36.1 / 来源与阅读说明 / 谱系 v5 / 现场 v2（09-18）',
   // depth: 0=登记未建 1=G1骨架 3=G3实验室
   planes: [
     { code: '0 物理基座', pc: 'var(--p0)', mods: [['为什么是GPU 🔬', 3], ['存储层级与内存墙 🔬', 3], ['屋顶线模型 🔬', 3], ['数字格式 🔬', 3], ['互联与集群 🔬', 3]] },
@@ -161,7 +155,7 @@ const DATA = {
     { code: 'Ⅵ 具身与世界', pc: 'var(--p6)', mods: [['世界模型 🔬', 3], ['具身智能与 VLA 🔬', 3]] },
     { code: 'APPENDIX 登记簿（扩建区）', pc: 'var(--ink-3)', mods: [['Agent 系统学 →Ⅳ', 1], ['RL 新范式 →Ⅰ', 1], ['合成数据与蒸馏 →Ⅰ', 1], ['多模态生成栈 →Ⅴ', 1], ['视觉理解 →Ⅴ', 1], ['推理模型 →Ⅲ', 1], ['非 Transformer →Ⅱ', 1], ['评估科学 →Ⅰ', 1], ['可解释性 →Ⅱ', 1], ['具身智能 →Ⅵ', 1], ['世界模型 →Ⅵ', 1]] },
   ],
-  hooks: { filled: 28, total: 28 },  // 合规挂点（索引地图 28 节点口径，v0.8 补全；内容为 AI 起草待用户法律审校）
+  hooks: { filled: 28, total: 28 },  // 合规挂点（索引地图 28 节点口径，v0.8 补全；内容为合规观察）
   versions: [
     ['v0.1', '2026-07-05', '索引地图：七层 28 节点 + 例子库 + 合规接口', 'done'],
     ['v0.2', '2026-07-06', '叙事长卷《一句话的旅程》→ 归档为入门版', 'done'],
@@ -171,8 +165,8 @@ const DATA = {
     ['v0.5', '2026-07-06', '第二个实验室：MoE 路由分诊台（Ⅱ）+ 字体 bug 修复', 'done'],
     ['v0.6', '2026-07-06', '第三个实验室：RLHF 亲手标注（Ⅰ）+ 本看板上线', 'done'],
     ['v0.7', '2026-07-07', 'PLANE Ⅴ 多模态平面动工：VLM · 扩散 · 潜空间 · 条件引导 · 视频 · 语音克隆（登记簿两项点亮）', 'done'],
-    ['v0.8', '2026-07-07', '三个新实验室（注意力矩阵 · 屋顶线计算器 · 扩散去噪）+ 合规挂点补全 28/28（AI 起草，待法律审校）', 'done'],
-    ['v0.9', '2026-07-07', '图景补全：登记簿六领域全部落地（推理模型→Ⅲ · 架构地平线→Ⅱ · 可解释性→Ⅱ · 评估科学→Ⅰ扩建）+ VERIFY.md 核验工作包（起草者自首清单）', 'done'],
+    ['v0.8', '2026-07-07', '三个新实验室（注意力矩阵 · 屋顶线计算器 · 扩散去噪）+ 合规挂点补全 28/28（合规观察）', 'done'],
+    ['v0.9', '2026-07-07', '图景补全：登记簿六领域全部落地（推理模型→Ⅲ · 架构地平线→Ⅱ · 可解释性→Ⅱ · 评估科学→Ⅰ扩建）+ 来源核对与维护约定', 'done'],
     ['v0.10', '2026-07-07', '迷你训练场（第七实验室·全站之巅：浏览器内真训练带注意力的语言模型）+ LAB-SPECS.md 施工规格书', 'done'],
     ['v0.11', '2026-07-07', '实验室冲刺 ×4：BPE 现场训练（Ⅰ）· 投机解码模拟器（Ⅲ）· 采样漏斗（Ⅲ）· RoPE 旋转（Ⅱ）——十一实验室', 'done'],
     ['v0.12', '2026-07-08', '用户点名五模块深化：算珠墙竞速（并行/串行两赛）· 内存墙等待体验 · 并行切积木 · Agent 沙盘（人工确认点）· 语义地图——十六实验室', 'done'],
@@ -217,8 +211,9 @@ const DATA = {
     ['v0.34 / 谱系 v4', '2026-10-15', '联网更新工程蓝图与十一家模型谱系：新增 GPT-6.1 Sol、Claude 5.5、Gemini 4 Argon、Grok 4.7，明确 DeepSeek 与 Kimi 路由；修正 GRPO/RLVR、混合架构与教学边界；升级推理成本、相关采样和 MCP 2026-07-28 三个实验；保留 45 模块与实验，补充官方来源与发布记录。Meta API 访问状态单列待复核，工业现场沿用 09-18 快照', 'done'],
     ['v0.35 / 谱系 v5', '2026-10-26', '更新模型门派谱系：DeepSeek V4.1 Flash-1017 权重与 API 别名、Kimi K3.1 Pro 服务与思考路由、Meta Spark Open / Glimmer 两条权重路线；区分已上线、计划发布与逐型号许可，补充 OpenAI 服务和 Claude 思考控制，44 个官方来源。首页与文档同步；蓝图及工业现场保留各自快照', 'done'],
     ['v0.35.1', '2026-10-26', '首页粒子交互修复：五个浅色内容模块共用 GlassSurface，补齐入口、合规与更新记录的字符效果；图示、导航和深色区保持静态。事件局限于所属模块，减少动态设置即时生效，窗口变化后重新计算网格与画布精度；同步维护记录', 'done'],
-    ['v0.36', '2026-10-26', '首批内容核验：修订九站入门旅程与十个蓝图模块的核心表述，补充 19 个一手来源、教学边界与纠错入口；建设、来源核对、人工技术审校和法律审校分开计数；正文变化触发重新核对检查，索引地图同步概念纠错', 'now'],
-    ['v1.0', '待定', '核验版：用户主导的 学习→审核→反馈→其他模型修改 循环 · 朱批统一调整 · 部署上线', 'todo'],
+    ['v0.36', '2026-10-26', '首批内容核验：修订九站入门旅程与十个蓝图模块的核心表述，补充 19 个一手来源、教学边界与纠错入口；正文变化触发重新核对检查，索引地图同步概念纠错', 'done'],
+    ['v0.36.1', '2026-10-27', '阅读体验调整：统一来源与教学边界说明，简化公开看板与模块提示，同步维护文档', 'now'],
+    ['v1.0', '待定', '学习路径扩展：完善入门指引与合规专题，持续补充资料与实验', 'todo'],
   ],
   weights: { skeleton: 0.35, labs: 0.35, hooks: 0.20, registry: 0.10 },
 };

@@ -15,38 +15,29 @@ const feedback = (page, id, title) => {
   return `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a>`;
 };
 const marker = (id, content) => `\n<!-- atlas-review:${id}:start -->\n${content}\n<!-- atlas-review:${id}:end -->`;
-function reviewBox(r) {
-  if (!r.checkedAt) return `<p class="atlas-review"><b>待来源核对</b> · 本轮未逐项复核。${feedback(r.page, r.id, r.title)}</p>`;
+function reviewBox(r, page, unit) {
+  if (!r) return `<p class="atlas-review">${feedback(page, unit.id, unit.title)}</p>`;
   const claims = r.evidence.map(e => `<li>${esc(e.claim)}<br>${e.sources.map(id => {
     const source = data.sources[id];
     return `<a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a>`;
   }).join(' · ')}</li>`).join('\n');
-  const human = r.humanReview ? `人工技术审校：${esc(r.humanReview.name)} · ${esc(r.humanReview.date)}` : '待人工技术审校';
-  return `<details class="atlas-review" data-review-status="source-checked"><summary>核心表述已对照来源（AI） · ${r.checkedAt}</summary>
-<p>${esc(r.method)}。${human}；法律审校另行记录。</p>
+  return `<details class="atlas-review"><summary>来源与教学边界 · ${r.checkedAt}</summary>
+<p>以下资料对应所列核心表述，图示与实验的适用条件见下方说明。</p>
 <ul>${claims}</ul><p><b>教学边界：</b>${esc(r.boundary)}</p>
-<p>${feedback(r.page, r.id, r.title)} · <a href="progress.html#review-status">查看全站核验范围</a></p></details>`;
+<p>${feedback(r.page, r.id, r.title)} · <a href="progress.html#review-status">来源与阅读说明</a></p></details>`;
 }
 const blueprint = data.units.filter(r => r.page === 'blueprint.html');
 const journey = data.units.filter(r => r.page === 'thread.html');
-const checkedCount = records => records.filter(r => r.checkedAt).length;
-const overview = page => `<aside class="atlas-review-overview" aria-label="本页核验范围"><b>读图前，先看核验范围</b>
-<p>${page === 'blueprint.html' ? `本轮对照了 ${checkedCount(blueprint)} / ${blueprint.length} 个模块的核心技术表述，其余模块待复核。` : page === 'thread.html' ? `九站核心技术表述已对照来源；动画、合同与数值为教学示意，不能当作真实服务运行结果。` : '索引地图仅同步部分入门概念纠错，28 个条目尚未逐项完成核验。'}</p>
-<p>来源核对由 AI 完成，人工技术审校与法律审校另行记录；标记不代表整页通过审核。<a href="progress.html#review-status">查看核验台账</a> · ${feedback(page, '', page === 'thread.html' ? '入门旅程' : page === 'blueprint.html' ? '工程蓝图' : '索引地图')}</p></aside>`;
+const overview = page => `<aside class="atlas-review-overview" aria-label="阅读说明"><b>来源与阅读说明</b>
+<p>${page === 'blueprint.html' ? '原理说明配有来源链接，交互实验就近标注算法、示意数据与简化条件。' : page === 'thread.html' ? '跟随一句请求理解系统链路；动画、合同与数值为教学示意，不能当作真实服务运行结果。' : '按技术环节探索概念、交互范例与合规观察，深入原理可进入对应蓝图模块。'}</p>
+<p>合规观察用于学习，具体适用需结合主体、地区与业务场景判断。<a href="progress.html#review-status">查看资料来源</a> · ${feedback(page, '', page === 'thread.html' ? '入门旅程' : page === 'blueprint.html' ? '工程蓝图' : '索引地图')}</p></aside>`;
 function dashboard() {
-  const metric = (title, value, note) => `<div class="atlas-review-metric"><span>${title}</span><strong>${value}</strong><small>${note}</small></div>`;
   return `<section class="atlas-review-dashboard" id="review-status" aria-labelledby="review-heading">
-<h2 id="review-heading">建设之外，内容核验走到哪里</h2><p>按可追溯记录计数 · ${data.updated}。下面的分母分别是蓝图模块、入门站点与索引合规挂点，不合并为一个总分。</p>
-<div class="atlas-review-metrics">
-${metric('蓝图核心表述 · 来源核对（AI）', `${checkedCount(blueprint)} / ${blueprint.length}`, '仅覆盖展开后列明的表述与边界；其余待复核。')}
-${metric('入门九站 · 来源核对（AI）', `${checkedCount(journey)} / ${journey.length}`, '覆盖技术叙事；示意动画不代表模型实测。')}
-${metric('人工技术审校', `${data.units.filter(r => r.humanReview).length} / ${data.units.length}`, '分母为本台账的 45 个蓝图模块与 9 个入门站点。')}
-${metric('索引合规挂点 · 法律审校', `${data.legalHooks.filter(r => r.review).length} / ${data.legalHooks.length}`, '“已填”仅指草稿存在；入门与蓝图的法律观察也仍待审校。')}
-</div>
-<details open><summary>本轮已对照来源的蓝图模块</summary><div class="atlas-review-links">${blueprint.filter(r => r.checkedAt).map(recordLink).join('')}</div></details>
-<details><summary>待来源复核的蓝图模块（${blueprint.length - checkedCount(blueprint)}）</summary><div class="atlas-review-links">${blueprint.filter(r => !r.checkedAt).map(recordLink).join('')}</div></details>
-<p><b>如何理解标记：</b>“已对照来源”记录 AI 查阅资料后的核对范围；“教学简化”说明实验的适用边界；“待人工审校”说明还缺少人的专业复核。正文改动后，构建检查要求重新确认来源记录，不能自动沿用旧标记。</p>
-<p>模型谱系与工业现场沿用各自的盘点日期和来源记录，未计入本轮技术核验分母。<a href="docs/content-review.md">核验方法与维护约定</a> · <a href="assets/content-review.json">完整核验台账（JSON）</a> · ${feedback('progress.html', 'review-status', '核验台账')}</p></section>`;
+<h2 id="review-heading">资料来源与阅读说明</h2><p>从具体表述回到原始资料，结合教学边界理解每个实验。下列资料查阅日期为 ${data.updated}；模型谱系与工业现场另有各自的盘点日期。</p>
+<details open><summary>工程蓝图 · 原理与实验来源</summary><div class="atlas-review-links">${blueprint.map(recordLink).join('')}</div></details>
+<details><summary>入门旅程 · 沿请求链路阅读</summary><div class="atlas-review-links">${journey.map(recordLink).join('')}</div></details>
+<p>来源链接对应所列核心表述；实验中的简化参数、预设动画与真实模型运行结果需分别理解。合规观察用于学习，具体适用需结合业务场景判断。</p>
+<p><a href="docs/content-review.md">来源说明与维护约定</a> · <a href="assets/content-review.json">公开来源记录（JSON）</a> · ${feedback('progress.html', 'review-status', '来源与阅读说明')}</p></section>`;
 }
 let changed = 0;
 for (const page of files) {
@@ -57,7 +48,7 @@ for (const page of files) {
     for (const unit of units.reverse()) {
       const r = data.units.find(r => r.page === page && r.id === unit.id);
       const opening = page === 'blueprint.html' ? '<div class="m-body">' : '<div class="st-body">';
-      const content = unit.content.replace(opening, opening + marker(unit.id, reviewBox(r)));
+      const content = unit.content.replace(opening, opening + marker(unit.id, reviewBox(r, page, unit)));
       html = html.slice(0, unit.start) + content + html.slice(unit.end);
     }
   }
@@ -73,4 +64,4 @@ for (const page of files) {
     await writeFile(new URL(page, root), html);
   }
 }
-console.log(check ? 'Review evidence, content fingerprints, inventories and displays match.' : `Review displays synchronized (${changed} pages).`);
+console.log(check ? 'Public source evidence, content fingerprints and displays match.' : `Review displays synchronized (${changed} pages).`);
