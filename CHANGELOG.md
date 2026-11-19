@@ -1,5 +1,10 @@
 # 版本记录
 
+## 技术活页 · 2026-11-19
+
+- 工业现场 v3 补充推理服务压测、Agent 沙箱与会话服务的部署边界、OpenTelemetry 内容采集和 Inspect AI 任务评测。
+- 模型门派谱系 v6 更新 GPT-6.2、Claude Fable 5.2、Gemini 4 Carbon / Neon、Qwen4-Max 与混元 Hy4 系列，补录 Kimi K3.1 Pro 权重和逐型号许可，并复核 Meta 托管 API。
+
 ## v0.36.2 · 2026-10-28
 
 - 移除工程蓝图页首的“架构快照”更新提示，简化进入正文前的信息。

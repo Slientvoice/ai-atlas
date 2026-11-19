@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="LLM 工业现场：六工位与开发工作台，30 个工具链条目，逐条连接原理、能力边界与官方来源。2026-09-18 盘点。">
+<meta name="description" content="LLM 工业现场：六工位与开发工作台，30 个工具链条目，逐条连接原理、能力边界与官方来源。2026-11-19 盘点。">
 <title>工业现场 · LLM 开发工具链版图</title>
 <style>
-  /* 工业现场 v2 · 2026-09-18 · 六工位与开发工作台，逐条附官方来源。 */
+  /* 工业现场 v3 · 2026-11-19 · 六工位与开发工作台，逐条附官方来源。 */
 
   /* ===== 风格令牌 v2「克制工程风」（照抄全站 :root 三段式） ===== */
   :root {
@@ -155,10 +155,10 @@
 <!-- atlas-navigation:end -->
 <header id="top">
   <div class="wrap">
-    <div class="eyebrow"><b>AI-ATLAS</b> // LOOSE-LEAF · 活页 · <a href="index.html">返回首页</a> · <a href="blueprint.html">📐 蓝图</a></div>
+    <div class="eyebrow"><b>AI-ATLAS</b> // LOOSE-LEAF · 活页 · <a href="index.html">返回首页</a> · <a href="blueprint.html">📐 蓝图</a> · <a href="genealogy.html">模型谱系</a></div>
     <h1>工业现场</h1>
     <p class="sub">蓝图讲<b>器官与数据流</b>，这里看<b>工具如何把模型变成产品</b>。沿着六个工位，辨认硬件栈、训练框架、权重、推理服务、Agent 组装与评测；从每张卡片回到原理，也能直接查官方资料。</p>
-    <div class="meta"><i>现场 v2</i><i class="hot">盘点基准日 <time datetime="2026-09-18">2026-09-18</time></i><i>6 工位 + 开发工作台</i><i>30 条目 · 44 个官方来源</i></div>
+    <div class="meta"><i>现场 v3</i><i class="hot">盘点基准日 <time datetime="2026-11-19">2026-11-19</time></i><i>6 工位 + 开发工作台</i><i>30 条目 · 50 个条目来源链接</i></div>
     <nav class="station-nav" aria-label="工位导航"><a href="#s0">ST.00 · 地基与内核</a><a href="#s1">ST.01 · 训练车间</a><a href="#s2">ST.02 · 权重集散地</a><a href="#s3">ST.03 · 推理机房</a><a href="#s4">ST.04 · 组装车间</a><a href="#sqc">ST.QC · 质检站</a><a href="#sdev">ST.DEV · 你手边的工具</a></nav>
     <div class="lineview">      <svg viewBox="0 0 980 216" role="group" aria-label="LLM 开发生产线总览：地基与内核、训练车间、权重集散地、推理机房、组装车间、质检站六个工位，各列代表条目，使用链接直达详情">
         <defs>
@@ -238,15 +238,15 @@
 <main class="wrap">
   <div class="notice">
     <p><b>读法：</b>六工位按开发流程划分，颜色对应蓝图七平面；主线 28 条，加开发工作台 2 条，共 30 条。成组介绍的工具、协议和平台按一条计算。</p>
-    <p><b>资料范围：</b>各条目已于盘点日查阅官方文档或仓库，来源就近列出；“使用边界”和下方观察是据此做的工程归纳。本页未进行独立性能测试，未经人工复核；功能支持以具体版本为准。</p>
+    <p><b>资料范围：</b>本轮复核推理压测、Agent 运行环境、观测和任务评测的变化。其余条目保留既有说明与官方入口。版本兼容与运行表现请以具体部署和实测为准。</p>
     <p class="snapshot-warning" id="snapshot-warning" hidden>这份快照距盘点日已超过 90 天，使用前请重新核对各条目的官方文档与维护状态。</p>
   </div>
   <section class="insights" aria-labelledby="insights-title">
     <h2 id="insights-title">这次盘点，看三处变化</h2>
     <div class="insight-grid">
-      <article><h3>01 · 硬件决定可选路径</h3><p><a href="#t-rocm">ROCm</a> 补齐 AMD 计算栈；<a href="#t-trt">TensorRT-LLM</a> 已采用 PyTorch 原生架构。先查硬件与模型支持，再谈性能。</p></article>
-      <article><h3>02 · 训练与推理接成循环</h3><p><a href="#t-trl">TRL</a>、<a href="#t-verl">verl</a> 将生成采样接入后训练。推理引擎也参与训练，权重同步和后端兼容成为配方的一部分。</p></article>
-      <article><h3>03 · Agent 按层组装与验收</h3><p><a href="#t-mcp">MCP / A2A</a> 负责连接，<a href="#t-agent-sdk">SDK</a> 负责执行；还要用<a href="#t-agent-eval">任务评测</a>检查结果，并用轨迹定位失败。</p></article>
+      <article><h3>推理服务怎样比较</h3><p>用同一模型、硬件和请求分布压测 <a href="#t-vllm">vLLM</a> 与 <a href="#t-sglang">SGLang</a>，一起看首 token 延迟、输出速度和吞吐。</p></article>
+      <article><h3>Agent 运行在哪里</h3><p>部署 <a href="#t-agent-sdk">Agent</a> 时分别核对工具沙箱、会话服务和模型推理的位置。自托管的范围会影响数据流向。</p></article>
+      <article><h3>怎样复现任务结果</h3><p>用 <a href="#t-agent-eval">Inspect AI</a> 固定样本与评分方法，再借助 <a href="#t-obs">调用轨迹</a> 定位失败。记录输入输出前先确认采集范围。</p></article>
     </div>
   </section>
   <details class="routes">
@@ -254,7 +254,7 @@
     <ul>
       <li><b>先在本机运行：</b><a href="#s2">核对模型与权重格式</a> → <a href="#t-llamacpp">llama.cpp</a> / <a href="#t-ollama">Ollama</a> → 检查内存、上下文和执行位置。</li>
       <li><b>做一个微调实验：</b><a href="#t-lf">LlamaFactory / PEFT</a> 或 <a href="#t-trl">TRL</a> → <a href="#t-wandb">记录配置与产物</a> → <a href="#t-harness">固定评测集验证</a>；资源不够时再设计分布式训练。</li>
-      <li><b>交付 Agent 应用：</b><a href="#s4">选择编排层与执行 SDK</a> → 接模型、数据和工具 → <a href="#t-obs">接入观测</a> → 用自己的任务集验收，必要时参考<a href="#t-agent-eval">公开基准</a>。</li>
+      <li><b>交付 Agent 应用：</b><a href="#s4">选择编排与执行环境</a> → <a href="#t-obs">配置观测</a> → 用 <a href="#t-agent-eval">Inspect AI 等框架</a>运行自己的任务验收集。</li>
     </ul>
   </details>
 
@@ -375,14 +375,14 @@
 <article class="tool" id="t-vllm" aria-labelledby="t-vllm-title">
   <div class="th"><h3 id="t-vllm-title">vLLM</h3><span class="role">推理 / 服务引擎</span></div>
   <p>以 PagedAttention、连续批处理等机制管理推理资源，提供模型服务接口；现有能力涵盖前缀缓存、结构化输出、量化与多种并行策略。</p>
-  <p><b>当前重点：</b>预填充与解码分离、推测解码、工具与推理输出解析都进入服务层。不同硬件、模型和后端的功能支持并不一致，选型以实际负载压测。</p>
+  <p><b>压测入口。</b> <code>vllm bench serve</code> 可记录首 token 延迟（TTFT）、后续每 token 耗时（TPOT）与吞吐。比较引擎时固定版本、模型、精度、输入输出长度和请求并发，并注明前缀缓存是冷启动还是已预热。</p>
   <p class="map">原理在蓝图：<a href="blueprint.html#mod-kv">Ⅲ · KV 缓存</a> · <a href="blueprint.html#mod-pd">Ⅲ · Prefill / Decode</a></p>
-  <p class="sources">官方来源：<a href="https://github.com/vllm-project/vllm" target="_blank" rel="noopener noreferrer">vLLM 官方仓库 ↗</a></p>
+  <p class="sources">官方来源：<a href="https://github.com/vllm-project/vllm" target="_blank" rel="noopener noreferrer">vLLM 官方仓库 ↗</a><a href="https://docs.vllm.ai/en/stable/benchmarking/cli/" target="_blank" rel="noopener noreferrer">vLLM 服务压测 ↗</a></p>
 </article>
 <article class="tool" id="t-sglang" aria-labelledby="t-sglang-title">
   <div class="th"><h3 id="t-sglang-title">SGLang</h3><span class="role">推理 / 服务框架</span></div>
   <p>面向语言与多模态模型的服务框架，RadixAttention 与前缀缓存复用请求中的公共内容，支持从单设备到分布式部署。</p>
-  <p><b>使用边界：</b>官方列出多类加速器与强化学习集成。前缀复用可能有利于多轮或 Agent 负载，但缓存命中率、调度和模型会改变收益；不能直接断言比 vLLM 快。</p>
+  <p><b>前缀复用。</b> 系统提示、对话历史或文档前缀相同且命中缓存时，可减少重复预填充。压测时把高复用与低复用的请求分开统计，方便解释首 token 延迟的变化。</p>
   <p class="map">原理在蓝图：<a href="blueprint.html#mod-kv">Ⅲ · KV 缓存</a> · <a href="blueprint.html#mod-ctx">Ⅳ · 上下文拼装</a> · <a href="blueprint.html#mod-sample">Ⅲ · 采样</a></p>
   <p class="sources">官方来源：<a href="https://docs.sglang.io/" target="_blank" rel="noopener noreferrer">SGLang 文档 ↗</a></p>
 </article>
@@ -423,16 +423,16 @@
 <article class="tool" id="t-mcp" aria-labelledby="t-mcp-title">
   <div class="th"><h3 id="t-mcp-title">MCP / A2A</h3><span class="role">连接与协作协议</span></div>
   <p>MCP 规范应用如何接入外部工具、资源和提示；A2A 让独立 Agent 发现彼此、委派任务与交换结果。两者解决不同层次的互操作。</p>
-  <p><b>使用边界：</b>协议并不提供完整 Agent 运行时，也不会自动决定授权和信任。OpenAI Assistants API 的官方迁移方向是 Responses API，MCP 是其中可用的工具连接方式。</p>
+  <p><b>协议版本。</b> MCP 规范 2026-07-28 与 A2A 规范分别约定连接和任务交换。接入时核对客户端与服务端支持的版本和认证方式。OpenAI Assistants API 的迁移目标是 Responses API，后者可配置 MCP 工具。</p>
   <p class="map">原理在蓝图：<a href="blueprint.html#mod-proto">Ⅳ · 工具协议</a>（含报文显微镜实验室）</p>
-  <p class="sources">官方来源：<a href="https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro" target="_blank" rel="noopener noreferrer">MCP ↗</a><a href="https://a2a-protocol.org/latest/" target="_blank" rel="noopener noreferrer">A2A 与 MCP ↗</a><a href="https://developers.openai.com/api/docs/assistants/migration" target="_blank" rel="noopener noreferrer">Assistants 迁移说明 ↗</a></p>
+  <p class="sources">官方来源：<a href="https://modelcontextprotocol.io/specification/2026-07-28" target="_blank" rel="noopener noreferrer">MCP 2026-07-28 规范 ↗</a><a href="https://a2a-protocol.org/latest/specification/" target="_blank" rel="noopener noreferrer">A2A 规范 ↗</a><a href="https://developers.openai.com/api/docs/assistants/migration" target="_blank" rel="noopener noreferrer">Assistants 迁移说明 ↗</a></p>
 </article>
 <article class="tool" id="t-agent-sdk" aria-labelledby="t-agent-sdk-title">
-  <div class="th"><h3 id="t-agent-sdk-title">OpenAI Agents SDK / Claude Agent SDK</h3><span class="role">Agent 执行 SDK</span></div>
+  <div class="th"><h3 id="t-agent-sdk-title">OpenAI Agents SDK / Claude Agent SDK</h3><span class="role">Agent 执行与部署</span></div>
   <p>OpenAI Agents SDK 在应用中运行 Agent 循环，组织工具、交接和追踪；Claude Agent SDK 将 Claude Code 的工具、循环与上下文管理提供为 Python / TypeScript 库。</p>
-  <p><b>本次补入：</b>SDK 适合将执行逻辑接入自己的产品。部署、状态与权限仍需配置；各厂商的托管 Agent 服务是另一种运行方式，不能与 SDK 混为一项。</p>
+  <p><b>自托管到哪一层。</b> Claude Managed Agents 区分自托管工具沙箱和自托管整套会话服务。后者于 11 月 12 日进入需申请访问的阶段，Agent、会话和历史可由使用方运行与存储，模型请求仍会发往配置的推理服务。</p>
   <p class="map">原理在蓝图：<a href="blueprint.html#mod-orch">Ⅳ · 多智能体编排</a> · <a href="blueprint.html#mod-agent">Ⅳ · 工具与 Agent</a></p>
-  <p class="sources">官方来源：<a href="https://developers.openai.com/api/docs/guides/agents/sdk" target="_blank" rel="noopener noreferrer">OpenAI Agents SDK ↗</a><a href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank" rel="noopener noreferrer">Claude Agent SDK ↗</a></p>
+  <p class="sources">官方来源：<a href="https://developers.openai.com/api/docs/guides/agents/sdk" target="_blank" rel="noopener noreferrer">OpenAI Agents SDK ↗</a><a href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank" rel="noopener noreferrer">Claude Agent SDK ↗</a><a href="https://platform.claude.com/docs/en/managed-agents/overview" target="_blank" rel="noopener noreferrer">Managed Agents 部署方式 ↗</a><a href="https://platform.claude.com/docs/en/managed-agents/self-hosted" target="_blank" rel="noopener noreferrer">自托管范围与访问条件 ↗</a></p>
 </article>
 <article class="tool" id="t-llamaindex" aria-labelledby="t-llamaindex-title">
   <div class="th"><h3 id="t-llamaindex-title">LlamaIndex</h3><span class="role">数据与 Agent 框架</span></div>
@@ -451,9 +451,9 @@
 <article class="tool" id="t-obs" aria-labelledby="t-obs-title">
   <div class="th"><h3 id="t-obs-title">Langfuse / LangSmith</h3><span class="role">观测与应用评估</span></div>
   <p>收集模型、检索和工具调用轨迹，将延迟、成本、反馈与评估数据连接起来。Langfuse 支持 OpenTelemetry；LangSmith 支持多种框架与部署方式。</p>
-  <p><b>使用边界：</b>能看到什么取决于埋点、采样和保留配置。有轨迹便于定位故障，但重跑仍受模型随机性和外部工具状态影响。</p>
+  <p><b>观测与内容采集。</b> OpenTelemetry GenAI 语义约定描述调用、计时和用量字段。提示词、工具输入和输出可能含敏感信息，采集正文前核对显式启用、访问权限与保留期限。</p>
   <p class="map">原理在蓝图：<a href="blueprint.html#mod-orch">Ⅳ · 多智能体编排</a>（编排剧场实验室的「日志」就是它的雏形）</p>
-  <p class="sources">官方来源：<a href="https://langfuse.com/docs" target="_blank" rel="noopener noreferrer">Langfuse ↗</a><a href="https://docs.langchain.com/langsmith/observability" target="_blank" rel="noopener noreferrer">LangSmith Observability ↗</a></p>
+  <p class="sources">官方来源：<a href="https://langfuse.com/docs" target="_blank" rel="noopener noreferrer">Langfuse ↗</a><a href="https://docs.langchain.com/langsmith/observability" target="_blank" rel="noopener noreferrer">LangSmith Observability ↗</a><a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-spans.md" target="_blank" rel="noopener noreferrer">OpenTelemetry GenAI 调用轨迹 ↗</a></p>
 </article>
 </div>
 </section>
@@ -469,11 +469,11 @@
   <p class="sources">官方来源：<a href="https://github.com/EleutherAI/lm-evaluation-harness" target="_blank" rel="noopener noreferrer">lm-evaluation-harness ↗</a><a href="https://opencompass.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer">OpenCompass ↗</a></p>
 </article>
 <article class="tool" id="t-agent-eval" aria-labelledby="t-agent-eval-title">
-  <div class="th"><h3 id="t-agent-eval-title">SWE-bench / Terminal-Bench</h3><span class="role">Agent 任务评测</span></div>
+  <div class="th"><h3 id="t-agent-eval-title">Inspect AI / SWE-bench / Terminal-Bench</h3><span class="role">Agent 任务评测</span></div>
   <p>SWE-bench 以真实仓库问题检验代码修复；Terminal-Bench 在可执行环境中考察终端任务，报告完成率，并展示成本等指标。</p>
-  <p><b>本次补入：</b>任务成绩属于“模型 + Agent 实现 + 工具环境”的组合。比较时固定数据子集、环境、预算与重试次数；不同版本的榜单不可直接拼成模型排名。</p>
+  <p><b>自定义验收。</b> Inspect AI 把评测写成样本集、求解器和评分器，可保存运行配置与日志。用同一套任务比较时，记录模型、Agent 实现、工具环境、预算和重试次数。</p>
   <p class="map">原理在蓝图：<a href="blueprint.html#mod-eval">Ⅰ · 评估·红队·发布</a></p>
-  <p class="sources">官方来源：<a href="https://www.swebench.com/" target="_blank" rel="noopener noreferrer">SWE-bench ↗</a><a href="https://www.tbench.ai/" target="_blank" rel="noopener noreferrer">Terminal-Bench ↗</a></p>
+  <p class="sources">官方来源：<a href="https://www.swebench.com/" target="_blank" rel="noopener noreferrer">SWE-bench ↗</a><a href="https://www.tbench.ai/" target="_blank" rel="noopener noreferrer">Terminal-Bench ↗</a><a href="https://inspect.aisi.org.uk/tutorial.html" target="_blank" rel="noopener noreferrer">Inspect AI 自定义任务 ↗</a><a href="https://inspect.aisi.org.uk/eval-logs.html" target="_blank" rel="noopener noreferrer">Inspect AI 评测日志 ↗</a></p>
 </article>
 <article class="tool" id="t-wandb" aria-labelledby="t-wandb-title">
   <div class="th"><h3 id="t-wandb-title">Weights &amp; Biases</h3><span class="role">实验与模型管理</span></div>
@@ -512,9 +512,9 @@
 </div>
 </section>
 <footer>
-  <p><span class="sn">现场 v2 · 2026-09-18 快照。</span>本页按问题与工位组织代表项目；平台、框架、协议与模型许可分别判断。公开基准与厂商功能介绍不构成本页的性能排名。</p>
-  <p class="refs">本次逐条复查并链接 44 个官方来源；网页与 main / latest 文档会继续变化。旧版本记录见 <a href="progress.html">建设台账</a>。<a href="#top">返回页首 ↑</a></p>
-  <div class="build">FIELD SHEET v2 · 2026-09-18 · 6 STATIONS + DEV · 30 ENTRIES · STYLE rev2</div>
+  <p><span class="sn">现场 v3 · 2026-11-19 快照。</span>本页按问题与工位组织代表项目；平台、框架、协议与模型许可分别判断。公开基准与厂商功能介绍不构成本页的性能排名。</p>
+  <p class="refs">官方来源就近列于条目；规范与文档会继续更新。旧版本记录见 <a href="progress.html">建设台账</a>。<a href="#top">返回页首 ↑</a></p>
+  <div class="build">FIELD SHEET v3 · 2026-11-19 · 6 STATIONS + DEV · 30 ENTRIES · STYLE rev2</div>
 </footer>
 </main>
 <script>
@@ -535,7 +535,7 @@ document.querySelectorAll('.tool').forEach(card => {
   card.addEventListener('animationend', () => card.classList.remove('flash'));
 });
 highlightTarget();
-const snapshotAge = Date.now() - Date.UTC(2026, 8, 18);
+const snapshotAge = Date.now() - Date.parse(document.querySelector('.meta time').dateTime);
 document.getElementById('snapshot-warning').hidden = snapshotAge <= 90 * 86400000;
 </script>
 </body>

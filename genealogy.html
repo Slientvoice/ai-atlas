@@ -140,19 +140,19 @@
 </nav>
 <!-- atlas-navigation:end -->
 <main class="wrap">
-  <div class="eyebrow">AI COMPLIANCE ATLAS · 活页 · 谱系 v5</div>
+  <div class="eyebrow">AI COMPLIANCE ATLAS · 活页 · 谱系 v6</div>
   <h1>模型门派谱系</h1>
   <p class="sub">十一家模型家族，在<a href="blueprint.html">工程蓝图</a>的分叉路口上怎样选择？先看<b>权重与许可</b>，再用<b>门派矩阵</b>对照架构、后训练、推理和多模态。每一行限定到具体型号，展开即可查看变化、能力边界与官方来源。先读代表型号，再沿原理链接返回蓝图。</p>
 
   <div class="loose">
-    <span class="lt">📎 活页快照 · 盘点基准日 <time datetime="2026-10-26">2026-10-26</time></span>
+    <span class="lt">📎 活页快照 · 盘点基准日 <time datetime="2026-11-19">2026-11-19</time></span>
     本页按当日可查的<b>官方发布、模型卡、开发文档和许可证</b>更新，独立编号。未发现已核实的新代表型号时保留原型号，不把复核日期当成发布日期。型号与服务会继续变化；产品可用性、开放权重和预览状态分别标注。
     <div class="legend"><b>阅读口径</b><span>◉ 官方资料支持，非独立实测</span><span>未披露 = 本次所列资料未提供足够细节</span><span>Preview / 受限访问 ≠ 全面开放</span></div>
     <div class="snapshot-status" id="snapshot-status">本页由 AI 辅助检索整理；按注明日期阅读，型号、服务与许可信息请结合官方原文确认。</div>
   </div>
 
-  <div class="others"><b>这一轮看什么 · 2026-10-26</b>
-    <p><a href="#deepseek">DeepSeek V4.1 Flash-1017</a>：更新权重与 API 别名。<a href="#kimi">Kimi K3.1 Pro</a>：服务已上线，完整权重计划 11 月 4 日发布。<a href="#meta">Meta Muse Spark Open / Glimmer</a>：补齐大型 MoE 与本地模型两条权重路线，分别核对许可。</p><p class="scope-note">读矩阵时注意三个区别：输入上限与总窗口；托管服务与下载权重；模型本体与工具能力。推理档位、参数量和榜单分数不能跨家族直接换算。</p></div>
+  <div class="others"><b>这一轮看什么</b>
+    <p><a href="#openai">GPT-6.2</a>、<a href="#anthropic">Claude Fable 5.2</a>、<a href="#google">Gemini 4 Carbon / Neon</a> 与 <a href="#qwen">Qwen4-Max</a> 已上线相应 API。<a href="#kimi">Kimi K3.1 Pro</a> 权重已发布，<a href="#hunyuan">混元 Hy4 flash</a> 也已开放权重，两者各有自定义许可。<a href="#meta">Meta</a> 托管 Spark 1.3 的付费 API 入口已复核。</p><p class="scope-note">对比时留意输入上限与总窗口、托管服务与下载权重、模型本体与外接工具。推理档位和榜单分数应结合任务与预算阅读。</p></div>
 
   <h2>开放情况 · 权重、许可与复现材料分开看</h2>
   <p class="sub" style="font-size:13.5px">「能下载」回答能否自行部署；「许可证」决定授权条件；训练代码、数据和报告则影响可复现程度。三者不能压成一个排名，同一家公司也可能同时提供多种路线。以下只归类本页列出的具体型号。</p>
@@ -164,13 +164,13 @@
     </div>
     <div class="rung" style="--lc:var(--p2)">
       <div class="lv">开放权重<small>自定义许可</small></div>
-      <div class="rd"><p>下列型号也可获取权重，但许可包含各自的商业条件。Meta、Qwen、Kimi、GLM 的条款和触发门槛并不相同，详情行附原文；部分仓库需要申请访问。</p>
-        <div class="chips"><a class="chip" href="#qwen">Qwen3.8-2.4T-A95B</a><a class="chip" href="#kimi">Kimi K3</a><a class="chip" href="#glm">GLM-5.3</a><a class="chip" href="#meta">Muse Spark Open · 需申请</a><a class="chip side" href="#meta">Llama 4</a></div></div>
+      <div class="rd"><p>下列型号也可获取权重，但许可包含各自的商业条件。各型号的商业条款与触发门槛见详情行及许可原文。部分仓库需要申请访问。</p>
+        <div class="chips"><a class="chip" href="#qwen">Qwen3.8-2.4T-A95B</a><a class="chip" href="#kimi">Kimi K3.1 Pro / K3</a><a class="chip" href="#hunyuan">Hy4 flash</a><a class="chip" href="#glm">GLM-5.3</a><a class="chip" href="#meta">Muse Spark Open · 需申请</a><a class="chip side" href="#meta">Llama 4</a></div></div>
     </div>
     <div class="rung" style="--lc:var(--ink-3)">
       <div class="lv">托管服务<small>本次未见权重发布</small></div>
       <div class="rd"><p>通过产品或 API 使用下列型号；公开的服务文档不等于权重授权。同一家的开放权重支线应单独判断。</p>
-        <div class="chips"><a class="chip" href="#openai">GPT-6 Astra / 6.1 Sol</a><a class="chip" href="#anthropic">Claude Opus 5.5 / Fable 5.1</a><a class="chip" href="#google">Gemini 4 Argon / 3.8 Flash</a><a class="chip" href="#xai">Grok 4.7</a><a class="chip" href="#kimi">Kimi K3.1 Pro · 权重待发布</a><a class="chip side" href="#meta">Muse Spark 1.3 · 访问待复核</a><a class="chip" href="#bytedance">Seed2.1</a></div></div>
+        <div class="chips"><a class="chip" href="#openai">GPT-6.2 Astra / Sol</a><a class="chip" href="#anthropic">Claude Fable 5.2 / Opus 5.5</a><a class="chip" href="#google">Gemini 4 Carbon / Neon</a><a class="chip" href="#xai">Grok 4.7</a><a class="chip" href="#qwen">Qwen4-Max</a><a class="chip side" href="#meta">Muse Spark 1.3 / Wonder</a><a class="chip" href="#bytedance">Seed2.1</a><a class="chip" href="#hunyuan">Hy4 正式版</a></div></div>
     </div>
   </div>
 
@@ -180,42 +180,39 @@
     <thead><tr><th scope="col">门派 / 本次代表型号</th><th scope="col">架构骨干</th><th scope="col">后训练公开信息</th><th scope="col">推理控制</th><th scope="col">输入 → 输出</th><th scope="col">权重与许可</th><th scope="col">获取方式</th></tr></thead>
     <tbody>
       <tr class="fam" id="openai">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-openai"><span class="car" aria-hidden="true">▶</span>OpenAI · GPT<span class="model-name">GPT-6 Astra / GPT-6.1 Sol</span></button></th>
-        <td>未披露完整架构</td><td>未披露完整配方</td><td>low → max<br>五档 effort</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>API / 产品</td>
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-openai"><span class="car" aria-hidden="true">▶</span>OpenAI · GPT<span class="model-name">GPT-6.2 Astra / Sol</span></button></th>
+        <td>未披露完整架构</td><td>未披露完整配方</td><td>推理强度可配<br>Sol 不接受 none</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>API / 产品</td>
       </tr>
       <tr class="det" id="detail-openai"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 目录复核 2026-10-26 · 规格核对 2026-10-15</span><br>代表型号仍为 GPT-6 Astra / GPT-6.1 Sol。10 月 22 日，基于 gpt-6-luna 的 Decisions API 转为正式可用；这是服务接口更新，不表示新权重发布。下列数值规格仍以 Sol 为准。</p>
-        <dl><div><dt>可核实规格</dt><dd>Sol 上下文 1,050,000 tokens，最大输出 128,000；文字、图像输入，文字输出。</dd></div>
-<div><dt>推理方式</dt><dd>reasoning.effort 提供 low、medium、high、xhigh、max；Sol 不支持 none / minimal。不同厂商的同名档位不能直接比较。</dd></div>
-<div><dt>开放支线</dt><dd>gpt-oss-120b / 20b 另行发布开放权重，采用 Apache 2.0；不能据此推断 GPT 旗舰的权重开放。</dd></div>
-<div><dt>资料边界</dt><dd>Sol 的工具调用应走 Responses API；Chat Completions 不支持工具调用。本次不推测参数规模或 MoE 架构。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://developers.openai.com/api/docs/changelog" target="_blank" rel="noopener noreferrer">API 更新日志 / Decisions ↗</a><a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol" target="_blank" rel="noopener noreferrer">GPT-6.1 Sol 规格与接口 ↗</a><a href="https://huggingface.co/openai/gpt-oss-120b" target="_blank" rel="noopener noreferrer">gpt-oss 权重与许可 ↗</a><a href="https://developers.openai.com/api/docs/models/gpt-6-astra" target="_blank" rel="noopener noreferrer">Astra 模型文档 ↗</a><a href="https://developers.openai.com/api/docs/models/all" target="_blank" rel="noopener noreferrer">官方模型目录 / gpt-oss ↗</a></p>
+        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>11 月 17 日发布 GPT-6.2 Astra 与 Sol。官方将 Astra 用于复杂推理、编程与专业任务，将 Sol 用于日常编程和 Agent 工作流。两者都接收图文并输出文字。</p>
+        <dl><div><dt>Sol 规格</dt><dd>总上下文 1,050,000 tokens，最大输入 922,000，最大输出 128,000。</dd></div>
+<div><dt>接口与工具</dt><dd>两款模型均支持 Responses 与 Chat Completions。需调用工具时使用 Responses API。</dd></div>
+<div><dt>开放支线</dt><dd>gpt-oss-120b / 20b 单独发布，权重使用 Apache 2.0。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://openai.com/index/introducing-gpt-6-2-astra-sol/" target="_blank" rel="noopener noreferrer">GPT-6.2 发布 ↗</a><a href="https://developers.openai.com/api/docs/changelog" target="_blank" rel="noopener noreferrer">API 更新日志 ↗</a><a href="https://developers.openai.com/api/docs/models/gpt-6.2-astra" target="_blank" rel="noopener noreferrer">Astra 规格 ↗</a><a href="https://developers.openai.com/api/docs/models/gpt-6.2-sol" target="_blank" rel="noopener noreferrer">Sol 规格 ↗</a><a href="https://huggingface.co/openai/gpt-oss-120b" target="_blank" rel="noopener noreferrer">gpt-oss 模型卡 ↗</a></p>
       </td></tr>
 
       <tr class="fam" id="anthropic">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-anthropic"><span class="car" aria-hidden="true">▶</span>Anthropic · Claude<span class="model-name">Opus 5.5 / Fable 5.1</span></button></th>
-        <td>未披露完整架构</td><td>发布系统卡与对齐评估；完整配方未披露</td><td>自适应思考<br>机制按型号区分</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>API / 产品<br>Mythos 另为受限访问</td>
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-anthropic"><span class="car" aria-hidden="true">▶</span>Anthropic · Claude<span class="model-name">Fable 5.2 / Opus 5.5</span></button></th>
+        <td>未披露完整架构</td><td>发布系统卡与对齐评估</td><td>自适应思考<br>选项依型号</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>API / 产品<br>Mythos 5.2 受限访问</td>
       </tr>
       <tr class="det" id="detail-anthropic"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 检索核对 2026-10-26</span><br>当前目录已列出 Opus 5.5、Sonnet 5.5、Haiku 5.5 与 Fable 5.1。Fable 5.1 和 Mythos 5.1 是同一底层模型的不同安全设置；Mythos 仍属受限访问，不与通用目录混为一谈。</p>
-        <dl><div><dt>可核实规格</dt><dd>上述四个通用型号均列出 1M 上下文、128K 最大输出；图文输入、文字输出。</dd></div>
-<div><dt>推理方式</dt><dd>Fable 5.1 与 Opus 5.5 始终自适应思考。Sonnet 5.5 支持 between_tools（关闭前置思考），但不接受 disabled（完全关闭）；不能把两种开关混为一谈。其他型号按 Models API 的 capabilities 核对。</dd></div>
-<div><dt>同族分工</dt><dd>官方默认 effort：Fable / Sonnet 为 high，Opus / Haiku 为 medium。型号定位与默认预算不同，比较时应固定任务和预算。</dd></div>
-<div><dt>资料边界</dt><dd>安全保护设置的区别不应画成两套不同的底层架构；官方系统卡也不等于独立安全认证。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://platform.claude.com/docs/en/models/overview" target="_blank" rel="noopener noreferrer">当前型号、思考机制与规格 ↗</a><a href="https://www.anthropic.com/claude-fable-and-mythos-5-1" target="_blank" rel="noopener noreferrer">5.1 官方发布与系统卡入口 ↗</a><a href="https://platform.claude.com/docs/en/models/fable-5-1/overview" target="_blank" rel="noopener noreferrer">Fable 5.1 规格 ↗</a></p>
+        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>11 月 9 日发布 Claude Fable 5.2。Mythos 5.2 面向通过 Anthropic 验证计划的组织，获取条件单独核对。Opus、Sonnet 与 Haiku 5.5 仍列在官方目录。</p>
+        <dl><div><dt>Fable 5.2 规格</dt><dd>1M 上下文、128K 最大输出，图文输入、文字输出。</dd></div>
+<div><dt>推理方式</dt><dd>Fable 5.2 采用始终开启的自适应思考，默认 effort 为 high。Opus 5.5 默认 medium。</dd></div>
+<div><dt>资料边界</dt><dd>跨型号比较时同时记录思考模式、默认预算与可用参数。安全与能力评估可查系统卡。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://platform.claude.com/docs/en/release-notes/overview" target="_blank" rel="noopener noreferrer">11 月 9 日发布与访问范围 ↗</a><a href="https://platform.claude.com/docs/en/models/overview" target="_blank" rel="noopener noreferrer">当前型号和思考机制 ↗</a><a href="https://platform.claude.com/docs/en/models/fable-5-2/overview" target="_blank" rel="noopener noreferrer">Fable 5.2 规格 ↗</a><a href="https://platform.claude.com/docs/en/resources/overview" target="_blank" rel="noopener noreferrer">系统卡目录 ↗</a></p>
       </td></tr>
 
       <tr class="fam" id="google">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-google"><span class="car" aria-hidden="true">▶</span>Google · Gemini<span class="model-name">Gemini 4 Argon / 3.8 Flash</span></button></th>
-        <td>Argon：稀疏 MoE<br>Transformer 新基座</td><td>Argon：指令微调、RL<br>人类偏好数据</td><td>推理设置依型号<br>Flash：low / medium / high</td><td>文、图、音、视频 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>Gemini 产品 / API<br>Gemma 另有权重</td>
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-google"><span class="car" aria-hidden="true">▶</span>Google · Gemini<span class="model-name">Gemini 4 Carbon / Neon</span></button></th>
+        <td>Argon 基座 → Carbon<br>Carbon → Neon</td><td>模型卡沿 Argon 追溯<br>训练数据说明</td><td>推理与后台解码<br>按端点核对</td><td>文、图、音、视频 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>Gemini 产品 / API<br>Gemma 另有权重</td>
       </tr>
       <tr class="det" id="detail-google"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 目录复核 2026-10-26 · 规格核对 2026-10-15</span><br>10 月 13 日发布的 Gemini 4 Argon 模型卡披露了新的稀疏 MoE Transformer 基座，并非前代 Gemini 的微调版。保留 3.8 Flash 作为另一条服务线；Live 实时语音单独判断。</p>
-        <dl><div><dt>可核实规格</dt><dd>Argon 支持文字、图像、音频、视频输入，文字输出；输入加输出合计最多 1M tokens，不能写成“1M 输入另加输出”。</dd></div>
-<div><dt>Flash 仍单列</dt><dd>3.8 Flash 输入上限 1,048,576、输出上限 65,536 tokens；thinking 为 low / medium / high，不支持 minimal。</dd></div>
-<div><dt>开放支线</dt><dd>Gemma 4 已采用 Apache 2.0，含 Dense 与 MoE 型号；旧页对整个 Gemma 系列的自定义许可标签已更新。</dd></div>
-<div><dt>资料边界</dt><dd>不同 Gemma 4 尺寸的音频支持不同；不能把一家公司的图像、语音、视频生成能力视为同一个模型。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://deepmind.google/models/model-cards/gemini-4-argon/" target="_blank" rel="noopener noreferrer">Gemini 4 Argon 模型卡 ↗</a><a href="https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash" target="_blank" rel="noopener noreferrer">3.8 Flash API 规格 ↗</a><a href="https://deepmind.google/models/model-cards/gemini-3-8-flash/" target="_blank" rel="noopener noreferrer">Gemini 3.8 Flash 模型卡 ↗</a><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-8-live-gemini-3-8-live-extended-thinking/" target="_blank" rel="noopener noreferrer">3.8 Live 发布 ↗</a><a href="https://ai.google.dev/gemma/docs/core/model_card_4" target="_blank" rel="noopener noreferrer">Gemma 4 模型卡与许可 ↗</a></p>
+        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>Carbon 于 11 月 10 日开放使用，基于 Argon。11 月 18 日开始推出的 Neon 由 Carbon 改造而来。Argon 模型卡描述了其稀疏 MoE Transformer 基座。</p>
+        <dl><div><dt>窗口与输出</dt><dd>两份模型卡均列出最高 1M 的输入与输出合计窗口。Neon 的默认同步输出上限为 64K，后台长解码另有上限与渠道条件。</dd></div>
+<div><dt>访问范围</dt><dd>Carbon 通过 Gemini API 等入口提供。Neon 自 11 月 18 日起分渠道推出，接入时查所用 API 或产品的可用状态。</dd></div>
+<div><dt>开放支线</dt><dd>Gemma 4 采用 Apache 2.0，含 Dense 与 MoE 型号，具体音视频输入支持见各尺寸规格。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://deepmind.google/models/model-cards/gemini-4-carbon/" target="_blank" rel="noopener noreferrer">Carbon 模型卡 ↗</a><a href="https://deepmind.google/models/model-cards/gemini-4-neon/" target="_blank" rel="noopener noreferrer">Neon 模型卡 ↗</a><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/" target="_blank" rel="noopener noreferrer">Neon 发布与渠道 ↗</a><a href="https://deepmind.google/models/model-cards/gemini-4-argon/" target="_blank" rel="noopener noreferrer">Argon 基座模型卡 ↗</a><a href="https://ai.google.dev/gemma/docs/core/model_card_4" target="_blank" rel="noopener noreferrer">Gemma 4 模型卡与许可 ↗</a></p>
       </td></tr>
 
       <tr class="fam" id="xai">
@@ -223,64 +220,62 @@
         <td>未披露完整架构</td><td>更大新基座<br>+ 更长智能体 RL</td><td>low / medium /<br>high / xhigh</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>API / Grok Build<br>合作开发工具</td>
       </tr>
       <tr class="det" id="detail-xai"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 目录复核 2026-10-26 · 规格核对 2026-10-15</span><br>9 月 21 日发布 Grok 4.7：采用更大的新基座与更长的强化学习训练，强调长任务执行、自检和上下文管理。具体表现仍需在自己的任务上验证。</p>
+        <p class="bio"><span class="fl">◉ 官方资料 · API 文档核对 2026-11-19</span><br>9 月 21 日发布 Grok 4.7：采用更大的新基座与更长的强化学习训练，强调长任务执行、自检和上下文管理。具体表现仍需在自己的任务上验证。</p>
         <dl><div><dt>可核实规格</dt><dd>当前文档列出 500K 上下文；四档推理强度，默认 high。</dd></div>
 <div><dt>工具与模态</dt><dd>网页 / X 搜索、代码执行属于工具能力；4.7 为图文输入、文字输出。10 月 14 日发布的 Grok Voice 3.0 是另一个语音模型。</dd></div>
 <div><dt>获取方式</dt><dd>标准 4.7 可通过 API 使用。Fast 为同一模型的更快服务配置，文档仅列 Cursor / Grok Build，不作为公开 API 型号。</dd></div>
 <div><dt>资料边界</dt><dd>旧 Grok-1 的架构或许可不能外推至 4.7，本次不沿用“宽松安全尺度”等无直接证据的评价。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://x.ai/news/grok-voice-3" target="_blank" rel="noopener noreferrer">Voice 3.0 独立语音支线 ↗</a><a href="https://docs.x.ai/developers/grok-4-7" target="_blank" rel="noopener noreferrer">Grok 4.7 开发文档 ↗</a><a href="https://x.ai/news/grok-4-7" target="_blank" rel="noopener noreferrer">Grok 4.7 发布与训练说明 ↗</a></p>
+        <p class="sources"><b>官方来源</b><a href="https://x.ai/news/grok-voice-3" target="_blank" rel="noopener noreferrer">Voice 3.0 独立语音支线 ↗</a><a href="https://docs.x.ai/developers/models/grok-4.7" target="_blank" rel="noopener noreferrer">Grok 4.7 模型规格 ↗</a><a href="https://docs.x.ai/developers/release-notes" target="_blank" rel="noopener noreferrer">API 发布日志 ↗</a><a href="https://x.ai/news/grok-4-7" target="_blank" rel="noopener noreferrer">Grok 4.7 发布与训练说明 ↗</a></p>
       </td></tr>
 
       <tr class="fam" id="deepseek">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-deepseek"><span class="car" aria-hidden="true">▶</span>DeepSeek<span class="model-name">V4.1 Flash-1017 / V4 Pro <span class="status">更新</span></span></button></th>
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-deepseek"><span class="car" aria-hidden="true">▶</span>DeepSeek<span class="model-name">V4.1 Flash-1017 / V4 Pro</span></button></th>
         <td>Flash：MoE<br>CED + CSA2</td><td>1017：补充自反馈 RL<br>家族配方另列</td><td>Flash：1–100<br>推理强度</td><td>V4.1 Flash：<br>文字、图像 → 文字</td><td class="opn" style="--oc:var(--p1)"><span class="ob">MIT</span></td><td>1017 权重 / API<br>Pro 继续服务</td>
       </tr>
       <tr class="det" id="detail-deepseek"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 更新核对 2026-10-26</span><br>10 月 17 日的 V4.1 Flash-1017 是 V4.1 Flash 的增量更新，已提供权重并上线网页、App 与 API。官方披露用自反馈强化学习改进完整项目开发；不据此宣称更换了基座架构。</p>
+        <p class="bio"><span class="fl">◉ 官方资料 · API 核对 2026-11-19 · 权重规格核对 2026-10-26</span><br>保留 V4.1 Flash-1017 与 V4 Pro。11 月 13 日，官方扩展了 <code>deepseek-flash</code> 的应用 API，覆盖检索、文件与语音等接入。</p>
         <dl><div><dt>家族架构</dt><dd>V4.1 Flash 技术报告描述 CED、CSA2、MoE 与 Engram；552B 主干另加 196B 条件记忆，预填充 / 解码激活量为 8B / 16B，窗口 1M。1017 模型卡仍引用这份报告；这些规格不外推到 V4 Pro。</dd></div>
 <div><dt>权重与部署</dt><dd>1017 仓库与权重采用 MIT。该版没有 Jinja 格式聊天模板，另提供编码参考实现与 deepseek-recipe；部署时应匹配新版本的提示编码。</dd></div>
 <div><dt>API 别名</dt><dd>deepseek-flash 已指向 V4.1 Flash-1017，调用名称不变不等于底层快照不变。V4 Pro 按当前更新日志继续提供，旧停服计划不再适用。</dd></div>
-<div><dt>工具边界</dt><dd>同期开放 Search &amp; Fetch API，属于检索与抓取服务；不能将联网检索能力写成模型权重的内置知识或原生输出。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://api-docs.deepseek.com/news/news261017/" target="_blank" rel="noopener noreferrer">10 月 17 日发布与工具说明 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017" target="_blank" rel="noopener noreferrer">1017 模型卡与部署说明 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">1017 MIT 许可证 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash" target="_blank" rel="noopener noreferrer">V4.1 家族架构与技术报告 ↗</a><a href="https://api-docs.deepseek.com/updates/" target="_blank" rel="noopener noreferrer">API 别名与服务更新日志 ↗</a></p>
+<div><dt>工具边界</dt><dd>网页搜索、文件解析与语音由 API 内置工具或独立服务提供。下载 1017 权重后，需要另行连接相应组件。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://api-docs.deepseek.com/news/news261017/" target="_blank" rel="noopener noreferrer">10 月 17 日发布与工具说明 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017" target="_blank" rel="noopener noreferrer">1017 模型卡与部署说明 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">1017 MIT 许可证 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash" target="_blank" rel="noopener noreferrer">V4.1 家族架构与技术报告 ↗</a><a href="https://api-docs.deepseek.com/updates/" target="_blank" rel="noopener noreferrer">API 别名与服务更新日志 ↗</a><a href="https://api-docs.deepseek.com/news/news261113/" target="_blank" rel="noopener noreferrer">11 月 13 日应用 API ↗</a></p>
       </td></tr>
 
       <tr class="fam" id="meta">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-meta"><span class="car" aria-hidden="true">▶</span>Meta · Muse / Llama<span class="model-name">Spark Open / Glimmer 30B <span class="status">补充权重</span></span></button></th>
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-meta"><span class="car" aria-hidden="true">▶</span>Meta · Muse / Llama<span class="model-name">Spark Open / Glimmer 30B</span></button></th>
         <td>Spark Open：MoE<br>Glimmer：Dense</td><td>Spark Open：安全后训练<br>Glimmer：蒸馏自 Spark</td><td>low / medium /<br>high / xhigh</td><td>Spark Open：文图音视频 → 文<br>Glimmer：图文 → 文</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分型号</span></td><td>Spark Open：申请权重<br>Glimmer：本地权重</td>
       </tr>
       <tr class="det" id="detail-meta"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 权重核对 2026-10-26 · 托管 Spark 1.3 访问状态待复核</span><br>补入 10 月 15 日发布的 Muse Spark Open，以及面向本地运行的 Muse Glimmer 30B。Glimmer 的模型卡标注 8 月发布，研究页日期为 10 月 19 日；本轮收录日期不作为其首次发布日期。</p>
+        <p class="bio"><span class="fl">◉ 官方资料 · API 核对 2026-11-19 · 权重规格核对 2026-10-26</span><br>矩阵比较 Spark Open 和 Glimmer 30B 两个权重型号。Meta Model API 另列按量付费的 <code>muse-spark-1.3</code> 和 <code>muse-wonder-1.0</code>。Wonder Full 当前只通过 Muse Code 的指定订阅方案提供。</p>
         <dl><div><dt>Spark Open 规格</dt><dd>816B 总参数 / 42B 激活的 MoE，带感知编码器，1M 上下文；文、图、音、视频输入，文字输出。开放 BF16 / NVFP4 版本，下载需按官方仓库申请；与托管 Spark 1.3 分开记录。</dd></div>
 <div><dt>本地模型 Glimmer</dt><dd>约 29.6B 的 Dense 模型，含感知编码器，由 Spark 蒸馏；图文输入、文字输出，模型卡列 131,072+ 上下文。提供量化与 DFlash 草稿模型；实际运行内存还取决于上下文和部署组件。</dd></div>
 <div><dt>三种许可</dt><dd>Spark Open 用 Muse Model License：有署名与使用政策；MaaS 业务且关联主体连续 12 个月总收入超过 2,000 万美元时，须另签协议，例外见原文。Glimmer 用 Apache 2.0；Llama 4 仍为 Community License，不能统一标为 Apache。</dd></div>
-<div><dt>推理与资料边界</dt><dd>Spark Open 的 reasoning_effort 为 low / medium / high / xhigh，默认 xhigh；Glimmer 在系统提示中设置 Reasoning strength。相同档位名称不表示相同预算。托管 Spark 1.3 的访问资格本轮未确认。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B" target="_blank" rel="noopener noreferrer">Spark Open 模型卡 / 许可全文 ↗</a><a href="https://huggingface.co/meta-models/Muse-Glimmer-30B" target="_blank" rel="noopener noreferrer">Glimmer 模型卡 / Apache 2.0 ↗</a><a href="https://ai.meta.com/research/publications/muse-glimmer-30b-an-on-device-agentic-model/" target="_blank" rel="noopener noreferrer">Glimmer 研究页（10-19）↗</a><a href="https://huggingface.co/meta-models" target="_blank" rel="noopener noreferrer">Meta 官方权重目录 ↗</a><a href="https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Llama 4 许可 ↗</a></p>
+<div><dt>推理与资料边界</dt><dd>Spark Open 的 reasoning_effort 为 low / medium / high / xhigh，默认 xhigh；Glimmer 在系统提示中设置 Reasoning strength。托管 Spark 1.3 的标准和 Contributor 模式使用不同模型 ID。按官方说明，Contributor 模式允许用请求内容训练未来模型。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B" target="_blank" rel="noopener noreferrer">Spark Open 模型卡 / 许可全文 ↗</a><a href="https://huggingface.co/meta-models/Muse-Glimmer-30B" target="_blank" rel="noopener noreferrer">Glimmer 模型卡 / Apache 2.0 ↗</a><a href="https://ai.meta.com/research/publications/muse-glimmer-30b-an-on-device-agentic-model/" target="_blank" rel="noopener noreferrer">Glimmer 研究页（10-19）↗</a><a href="https://dev.meta.ai/docs/muse-spark" target="_blank" rel="noopener noreferrer">托管 Spark 可用性与数据模式 ↗</a><a href="https://dev.meta.ai/docs/muse-wonder" target="_blank" rel="noopener noreferrer">Muse Wonder / Full 访问条件 ↗</a><a href="https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Llama 4 许可 ↗</a></p>
       </td></tr>
 
       <tr class="fam" id="qwen">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-qwen"><span class="car" aria-hidden="true">▶</span>阿里 · Qwen<span class="model-name">Qwen3.8-Max / 2.4T-A95B</span></button></th>
-        <td>MoE + Gated DeltaNet<br>/ Gated Attention</td><td>已发布后训练权重；本卡未列完整配方</td><td>可调 effort；<br>托管版另支持非思考</td><td>Max 服务：视觉输入<br>2.4T 权重：文本</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分型号</span></td><td>Max API<br>2.4T / 27B 等权重</td>
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-qwen"><span class="car" aria-hidden="true">▶</span>阿里 · Qwen<span class="model-name">Qwen4-Max / Qwen3.8-2.4T-A95B</span></button></th>
+        <td>4-Max 完整架构未披露<br>3.8 权重：混合注意力 MoE</td><td>3.8 已发布后训练权重</td><td>4-Max：深度思考<br>3.8：设置因端点而异</td><td>4-Max：文图视频 → 文<br>2.4T 权重：文本</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分型号</span></td><td>4-Max 托管 API<br>3.8 提供权重</td>
       </tr>
       <tr class="det" id="detail-qwen"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 目录复核 2026-10-26 · 规格核对 2026-10-15</span><br>Qwen3.8 首次开放 Max 级权重 Qwen3.8-2.4T-A95B。官方明确：托管 Qwen3.8-Max 基于这些权重，但额外提供视觉输入、非思考模式及默认 1M 上下文；二者不是完全相同的交付物。</p>
-        <dl><div><dt>架构与窗口</dt><dd>2.4T 总参数、95B 激活；每组 3 层 Gated DeltaNet + 1 层 Gated Attention；不应统称为标准全注意力。权重原生窗口为 262,144，可扩展至 1,010,000 tokens。</dd></div>
-<div><dt>Max 级许可</dt><dd>Qwen3.8-Max License 含署名要求；从事 MaaS 或 AI Work Assistant 业务且关联主体连续 12 个月总收入超过 5,000 万美元时，商业使用需另获许可，内部使用有定义与例外。</dd></div>
-<div><dt>同族不同许可</dt><dd>Qwen3.8-27B 为 Apache 2.0；Flash-Next 标注 Qwen Community License 1.0。不能给全部 Qwen 型号统一贴 Apache 标签。</dd></div>
-<div><dt>资料边界</dt><dd>托管版的视觉输入、工具和默认上下文设置，不自动随开放权重下载；部署时核对模型卡与服务说明。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B" target="_blank" rel="noopener noreferrer">2.4T-A95B 模型卡 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Max 级许可证 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-27B" target="_blank" rel="noopener noreferrer">27B 模型卡 / Apache 2.0 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-Flash-Next" target="_blank" rel="noopener noreferrer">Flash-Next 模型卡 / 许可 ↗</a></p>
+        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>11 月 16 日发布正式版 Qwen4-Max，阿里云将其列为多模态旗舰。前代 Qwen3.8-2.4T-A95B 仍作为开放权重版本单独对照。</p>
+        <dl><div><dt>Qwen4-Max 接入</dt><dd>支持文本生成、图像及视频理解、工具调用。部署时区分正式模型与 Token Plan 的 preview。</dd></div>
+<div><dt>Qwen3.8 权重</dt><dd>2.4T 总参数、95B 激活，模型卡描述混合 Gated DeltaNet 与 Gated Attention。Max 级权重使用自定义许可，含署名与特定商业规模条款。</dd></div>
+<div><dt>同族不同许可</dt><dd>Qwen3.8-27B 使用 Apache 2.0，轻量或前代版本的权重与许可证单独核对。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://www.alibabacloud.com/help/en/model-studio/newly-released-models" target="_blank" rel="noopener noreferrer">Qwen4-Max 正式版与预览渠道 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B" target="_blank" rel="noopener noreferrer">2.4T-A95B 模型卡 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Max 级权重许可证 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-27B" target="_blank" rel="noopener noreferrer">27B 模型卡 / Apache 2.0 ↗</a></p>
       </td></tr>
 
       <tr class="fam" id="kimi">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-kimi"><span class="car" aria-hidden="true">▶</span>月之暗面 · Kimi<span class="model-name">K3.1 Pro / K3 <span class="status">更新</span></span></button></th>
-        <td>K3 基座：MoE<br>KDA + 门控 MLA<br>K3.1 Pro 为后训练版</td><td>扩展后训练计算<br>多领域联合 RL</td><td>low / high / max<br>K3.1 Pro 仅思考模式</td><td>K3.1 Pro：<br>Code 支持图像、视频输入</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分版本</span></td><td>K3.1 Pro：服务已上线<br>完整权重计划 11-04<br>K3：已有权重</td>
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-kimi"><span class="car" aria-hidden="true">▶</span>月之暗面 · Kimi<span class="model-name">K3.1 Pro / K3</span></button></th>
+        <td>K3 基座：MoE<br>K3.1 Pro 为后训练版</td><td>扩展后训练计算<br>多领域联合 RL</td><td>K3.1 Pro 仅思考模式<br>low / high / max</td><td>K3.1 Pro：<br>图文与视频输入依入口</td><td class="opn" style="--oc:var(--p2)"><span class="ob">自定义许可</span></td><td>API / 产品<br>K3.1 Pro 与 K3 均有权重</td>
       </tr>
       <tr class="det" id="detail-kimi"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 更新核对 2026-10-26</span><br>10 月 23 日 K3.1 Pro 上线 Kimi、Work、Code 与 API。官方称其为 K3 的后训练版本、3T 级模型，完整权重计划于 11 月 4 日发布。截至本页盘点日，不将计划写成已开放，也不将 K3 许可自动套给 K3.1 Pro。</p>
-        <dl><div><dt>模型与服务 ID</dt><dd>Code 使用 k3.1-pro / k3.1-pro-highspeed；通用 API 使用 kimi-k3.1-pro / kimi-k3.1-pro-highspeed。Code 仍列 K3 与 K2.x 支线，接入时按所用入口核对 ID。</dd></div>
-<div><dt>思考与路由</dt><dd>K3.1 Pro 支持 low / high / max，默认 high；关闭 thinking 返回 HTTP 400，不沿用旧 K3 / K2.x 的非思考回退。Code 文档仍提示拼错模型 ID 可能回退，因此不能只看请求是否成功。</dd></div>
-<div><dt>上下文与模态</dt><dd>Code 的 K3.1 Pro / Highspeed 列出图像、视频输入及最高 1,048,576 上下文，具体额度依账号方案；Highspeed 属同能力的加速服务。3D 创作示例是工具工作流，不等于原生生成 3D 文件。</dd></div>
-<div><dt>已有权重支线</dt><dd>K3 权重及 Kimi K3 License 继续单列：运营 MaaS 且关联主体连续 12 个月总收入超过 2,000 万美元时，商业使用需另行协议；署名要求与例外见原文。K3.1 Pro 的最终权重与许可待发布后再核对。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://www.kimi.ai/blog/kimi-k3-1-pro" target="_blank" rel="noopener noreferrer">K3.1 Pro 发布 / 权重计划 ↗</a><a href="https://www.kimi.com/code/docs/en/kimi-code/whats-new.html" target="_blank" rel="noopener noreferrer">Code 10 月 23 日更新 ↗</a><a href="https://www.kimi.com/code/docs/en/kimi-code/models.html" target="_blank" rel="noopener noreferrer">当前六个 Code ID 与路由 ↗</a><a href="https://www.kimi.com/news/kimi-k3-open-source" target="_blank" rel="noopener noreferrer">K3 已发布权重说明 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">K3 许可证（非 K3.1 Pro）↗</a></p>
+        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>10 月 23 日上线的 K3.1 Pro 已在 Moonshot AI 官方模型仓库提供权重，并附独立的 Kimi K3.1-Pro License。</p>
+        <dl><div><dt>模型 ID 与思考</dt><dd>通用 API 使用 <code>kimi-k3.1-pro</code>，Code 使用 <code>k3.1-pro</code>。不同入口有各自的模型 ID 和预算。K3.1 Pro 为仅思考型号。</dd></div>
+<div><dt>商业条款</dt><dd>许可证区分模型即服务（MaaS）业务与大规模产品署名条件。MaaS 达相应收入门槛需另签协议。内部使用，以及通过官方产品或认证伙伴访问，有条款列明的例外。</dd></div>
+<div><dt>部署边界</dt><dd>下载时核对模型卡、许可和部署支持。K3 与 K3.1 Pro 的权重、托管 ID 和许可分别记录。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://www.kimi.com/en/blog/kimi-k3-1-pro" target="_blank" rel="noopener noreferrer">K3.1 Pro 发布与技术说明 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3.1-Pro" target="_blank" rel="noopener noreferrer">K3.1 Pro 权重与模型卡 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3.1-Pro/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">K3.1 Pro 许可证 ↗</a><a href="https://www.kimi.com/code/docs/en/kimi-code/models.html" target="_blank" rel="noopener noreferrer">Code 模型配置 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">K3 许可证 ↗</a></p>
       </td></tr>
 
       <tr class="fam" id="glm">
@@ -301,25 +296,24 @@
         <td>本次发布页未列完整架构</td><td>本次发布页未列完整配方</td><td>推理与多步骤<br>任务执行</td><td>视觉、视频理解<br>支持代码 / 文本任务</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>豆包 / TRAE<br>火山引擎</td>
       </tr>
       <tr class="det" id="detail-bytedance"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 目录复核 2026-10-26 · 规格核对 2026-10-15</span><br>6 月 23 日发布 Seed2.1 Pro / Turbo，重点是通用智能体、代码工程和多模态理解。豆包是产品入口，Seed 是模型线；产品中的图像或视频生成要另外核对具体模型。</p>
-        <dl><div><dt>本次复核</dt><dd>官方产品页仍以 Seed2.1 Pro / Turbo 为当前代表。重点是规划、文件处理、跨工具执行以及编码、调试、验证，未据传闻添加新版本。</dd></div>
+        <p class="bio"><span class="fl">◉ 官方资料 · 目录核对 2026-11-19</span><br>6 月 23 日发布 Seed2.1 Pro / Turbo，重点是通用智能体、代码工程和多模态理解。豆包是产品入口，Seed 是模型线；产品中的图像或视频生成要另外核对具体模型。</p>
+        <dl><div><dt>本次复核</dt><dd>方舟目录按具体能力和日期后缀列出模型。<code>doubao-seed-2-1-pro-260915</code> 与 <code>doubao-seed-2-1-pro-260628</code> 的窗口规格有别，配置时记录完整 ID。</dd></div>
 <div><dt>多模态边界</dt><dd>Seed2.1 增强视觉、空间推理与长视频理解；这里的“理解”不等于模型原生输出视频。</dd></div>
 <div><dt>获取方式</dt><dd>发布说明列出豆包、TRAE 与火山引擎等入口；本次资料未提供 Seed2.1 的权重发布。</dd></div>
 <div><dt>资料边界</dt><dd>不把字节持有的内容平台直接写成训练数据来源，也不根据其他 Seed 型号推断 2.1 的参数规模。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://seed.bytedance.com/zh/blog/seed2-1-officially-released-advancing-ai-productivity" target="_blank" rel="noopener noreferrer">Seed2.1 官方中文发布 ↗</a><a href="https://seed.bytedance.com/en/seed2_1" target="_blank" rel="noopener noreferrer">Seed2.1 产品页 / 模型卡入口 ↗</a></p>
+        <p class="sources"><b>官方来源</b><a href="https://seed.bytedance.com/zh/blog/seed2-1-officially-released-advancing-ai-productivity" target="_blank" rel="noopener noreferrer">Seed2.1 官方中文发布 ↗</a><a href="https://seed.bytedance.com/en/seed2_1" target="_blank" rel="noopener noreferrer">Seed2.1 产品页 / 模型卡入口 ↗</a><a href="https://docs.volcengine.com/docs/ark/model-list?lang=zh" target="_blank" rel="noopener noreferrer">火山方舟型号与规格 ↗</a></p>
       </td></tr>
 
       <tr class="fam" id="hunyuan">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-hunyuan"><span class="car" aria-hidden="true">▶</span>腾讯 · 混元 / Hy<span class="model-name">Hy4 preview <span class="status">预览</span></span></button></th>
-        <td>MoE + Gated DSA<br>IndexCache + iHC</td><td>扩展预训练与后训练；专家任务数据</td><td>推理与长任务能力<br>档位依接口核对</td><td>语言 / 编码主线<br>生成模型另列</td><td class="opn" style="--oc:var(--p1)"><span class="ob">Apache 2.0</span></td><td>预览权重 / API<br>腾讯产品</td>
+        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-hunyuan"><span class="car" aria-hidden="true">▶</span>腾讯 · 混元 / Hy<span class="model-name">Hy4 / Hy4 flash</span></button></th>
+        <td>Flash：LatentMoE<br>混合注意力 + Engram</td><td>Flash：模型卡提供微调流程</td><td>Flash 权重：<br>high / no_think</td><td>Flash：文字、图像 → 文字</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分版本</span></td><td>Hy4 API<br>Flash 权重 / API</td>
       </tr>
       <tr class="det" id="detail-hunyuan"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 目录复核 2026-10-26 · 规格核对 2026-10-15</span><br>8 月 28 日发布并开放 Hy4 preview：旧页以 T1 和历史地域限制概括混元，已不适用于该型号。当前 Hy4-preview 仓库明确采用 Apache 2.0。</p>
-        <dl><div><dt>可核实规格</dt><dd>主干 770B、每 token 激活 49B，1M 上下文；MTP 另计 10B 总参数 / 0.7B 激活，不能与主干统计混用。</dd></div>
-<div><dt>架构路线</dt><dd>Gated DSA 稀疏注意力、IndexCache 跨层复用索引，iHC 扩展层间信息流。</dd></div>
-<div><dt>开放情况</dt><dd>本次核对的是 Hy4 preview 权重与其 Apache 2.0 文件；图像、视频、3D 等其他混元仓库仍须分别核对。</dd></div>
-<div><dt>发布状态</dt><dd>仍保留 preview 标签。官方说明与 CodeBuddy、WorkBuddy 等产品协同，模型能力和产品工作流应分开比较。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://www.tencent.com/zh-cn/tencent-releases-and-open-sources-tencent-hy4-preview/" target="_blank" rel="noopener noreferrer">Hy4 preview 官方发布 ↗</a><a href="https://huggingface.co/tencent/Hy4-preview" target="_blank" rel="noopener noreferrer">Hy4 preview 技术说明 ↗</a><a href="https://huggingface.co/tencent/Hy4-preview/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Hy4 preview Apache 2.0 ↗</a></p>
+        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>Hy4 正式版于 11 月 4 日发布，Hy4 flash 于 11 月 16 日发布并提供权重。腾讯云 TokenHub 将 <code>hy4</code>、<code>hy4-flash</code> 和即将下线的 <code>hy4-preview</code> 列为不同标识。</p>
+        <dl><div><dt>Flash 可核实规格</dt><dd>模型卡列出混合稀疏与滑动窗口注意力，支持图文输入、文本输出和最高 1M 上下文。提供指令版、FP8 与基础权重。</dd></div>
+<div><dt>许可分开读</dt><dd>Hy4 flash 使用 Tencent Hy License，MaaS 场景有单独授权条件和内部使用例外。旧 Hy4 preview 已发布的权重使用 Apache 2.0。</dd></div>
+<div><dt>正式版边界</dt><dd>本次确认 Hy4 正式版的托管入口。正式版权重发布状态与许可应另查，不沿用 preview 或 flash 的结论。</dd></div></dl>
+        <p class="sources"><b>官方来源</b><a href="https://cloud.tencent.com/document/product/1823/130079" target="_blank" rel="noopener noreferrer">TokenHub 型号与 API ↗</a><a href="https://developer.cloud.tencent.com/article/2777165" target="_blank" rel="noopener noreferrer">Hy4 正式版发布 ↗</a><a href="https://huggingface.co/tencent/Hy4-flash" target="_blank" rel="noopener noreferrer">Hy4 flash 模型卡 ↗</a><a href="https://huggingface.co/tencent/Hy4-flash/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Hy4 flash 许可证 ↗</a><a href="https://huggingface.co/tencent/Hy4-preview/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Hy4 preview Apache 2.0 ↗</a></p>
       </td></tr>
     </tbody>
   </table></div>
@@ -333,11 +327,11 @@
       <li><b>用任务评测能力</b>：本页未做独立性能测试；参数量、上下文上限和厂商榜单不构成质量或安全保证。</li>
     </ol>
   </div>
-  <div class="others"><b>范围说明：</b>保留原有十一家供纵向比较，本页不是全市场榜单。MiniMax、阶跃星辰、文心、星火、MiniCPM 等未列入，不代表其能力或采购可行性判断。<p class="scope-note">本次重点：DeepSeek 1017、Kimi K3.1 Pro、Meta 两条开放权重支线，以及 OpenAI 服务与 Claude 思考控制。其余家族复核当前目录，既有规格沿用 10 月 15 日核对结果；Meta 托管 Spark 1.3 的访问状态仍待复核。未做独立性能测试。</p></div>
+  <div class="others"><b>范围说明：</b>保留原有十一家供纵向比较，本页不是全市场榜单。MiniMax、阶跃星辰、文心、星火、MiniCPM 等未列入，不代表其能力或采购可行性判断。<p class="scope-note">各行附资料核对日期，沿用旧规格的条目标明原日期。当前快照基于官方资料整理，未进行独立性能测试。</p></div>
   <nav class="links" aria-label="相关页面">
-    <a href="index.html">返回首页</a><a href="blueprint.html">工程蓝图（主线）</a><a href="progress.html">进度看板</a>
+    <a href="index.html">返回首页</a><a href="blueprint.html">工程蓝图（主线）</a><a href="toolchain.html">工业现场</a><a href="progress.html">进度看板</a>
   </nav>
-  <footer>模型门派谱系 · 活页 v5 · 盘点基准日 2026-10-26 · AI 辅助检索整理。官方来源就近列于各家详情；后续发布、许可变更与服务调整可能使本快照过期。</footer>
+  <footer>模型门派谱系 · 活页 v6 · 盘点基准日 2026-11-19 · AI 辅助检索整理。官方来源就近列于各家详情；后续发布、许可变更与服务调整可能使本快照过期。</footer>
 </main>
 <script>
 (function () {
@@ -365,7 +359,7 @@
     });
   });
   openLinkedFamily();
-  var age = Math.floor((Date.now() - Date.UTC(2026, 9, 26)) / 86400000);
+  var age = Math.floor((Date.now() - Date.parse(document.querySelector('.lt time').dateTime)) / 86400000);
   if (age > 30) {
     var status = document.getElementById('snapshot-status');
     status.textContent = '快照待复核：距盘点已 ' + age + ' 天，请以详情中的官方最新资料为准。许可与服务条件以官方原文为准。';
