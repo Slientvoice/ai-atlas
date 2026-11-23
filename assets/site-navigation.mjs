@@ -37,13 +37,10 @@ const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&':'&amp;'
 export function navigationContents(current, base = '.') {
   const name = pages.find(([file]) => file === current)?.[1] || '字体试衣间';
   const home = `${base}/index.html`;
-  const isCover = current === 'index.html';
-  const brand = isCover ? '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="m2 9 9-5 10 5 9-5v19l-9 5-10-5-9 5Z M11 4v19m10-14v19" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"/></svg>AI Atlas' : 'AI—ATLAS <span aria-hidden="true">o &gt; _</span>';
-  const shortcuts = isCover ? '<div class="cover-shortcuts"><a href="#explore">分册目录</a><a href="#overview">系统全景</a></div>' : '';
-  return `<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="${escape(home)}" aria-label="AI Atlas 首页">${brand}</a><span class="atlas-nav-current">${name}</span></div>${shortcuts}
+  return `<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="${escape(home)}" aria-label="AI Atlas 首页">AI—ATLAS <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">${name}</span></div>
     <div class="atlas-nav-actions" aria-label="浏览历史与首页">
-      <button type="button" data-atlas-back disabled title="没有可返回的站内记录"><span aria-hidden="true">←</span> ${isCover ? '<span class="history-label">后退</span>' : '后退'}</button>
-      <button type="button" data-atlas-forward disabled title="没有可前进的站内记录">${isCover ? '<span class="history-label">前进</span>' : '前进'} <span aria-hidden="true">→</span></button>
+      <button type="button" data-atlas-back disabled title="没有可返回的站内记录"><span aria-hidden="true">←</span> 后退</button>
+      <button type="button" data-atlas-forward disabled title="没有可前进的站内记录">前进 <span aria-hidden="true">→</span></button>
       <a class="atlas-nav-home" href="${escape(home)}"${current === 'index.html' ? ' aria-current="page"' : ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v10h5v-6h4v6h5V10" /></svg>返回首页</a>
     </div>
     <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu">${pages.map(([file,label]) => `<a href="${escape(`${base}/${file}`)}"${file===current?' aria-current="page"':''}>${label}<span aria-hidden="true">${file===current?'·':'→'}</span></a>`).join('')}<a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>`;
