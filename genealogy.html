@@ -3,125 +3,389 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="截至 2026-10-26，十一家模型家族的代表型号、架构、推理、多模态、权重与许可证对照；附官方模型卡与许可原文。">
-<title>模型门派谱系 · 2026-10-26 · AI Atlas</title>
-<script>document.documentElement.classList.add('js');</script>
+<meta name="description" content="十三家主流大模型的技术分叉矩阵、开放度六层阶梯、开源/商业使用条款排雷库与法务合规选型尽调指南（活页 · 谱系 v7 · 基准日 2026-11-24）。">
+<title>模型门派谱系 · 活页 v7 · AI 合规全景地图</title>
 <style>
+  /* ===== 🧬 模型门派谱系（活页 · 谱系 v7 · 盘点基准日 2026-11-24）=====
+     定位：蓝图讲不变的原理，本页是商业格局与法务合规快照（独立版本号，过期整页换新）。
+     承接 v6（2026-11-19）官方规格与来源链接，扩列至 13 家（新增 Mistral AI、MiniMax），
+     并补齐开放度六层阶梯、每家朱批法务排雷盒、六大条款雷区横评与上线前快检清单。
+     规则遵守：R3 颜色即语法（七平面色表技术/开放层级，朱批红 --seal 专属法务合规提示）；
+     R5 准确性与诚实披露（◉/◐/○ 来源层级 + 利益相关提示 + 非法律意见声明）；
+     R6 静态单页，兼容全站共享导航与亮/暗双色主题。 */
+
   :root {
     --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
     --ink: #16181d; --ink-2: #4b5158; --ink-3: #858b93;
-    --hairline: #e1e4e8; --seal: #b0392e;
+    --hairline: #e1e4e8; --seal: #b0392e; --seal-soft: rgba(176, 57, 46, 0.06);
     --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
     --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
+    --dot: rgba(22, 24, 29, 0.05);
+    --shadow: 0 2px 10px rgba(22, 24, 29, 0.06);
   }
   @media (prefers-color-scheme: dark) {
-    :root { --page: #0f1114; --surface: #16181c; --surface-2: #1d2024; --ink: #e8eaed; --ink-2: #b0b4ba;
-      --ink-3: #7d828a; --hairline: #262a2f; --seal: #e0705e;
-      --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
+    :root {
+      --page: #0f1114; --surface: #16181c; --surface-2: #1d2024;
+      --ink: #e8eaed; --ink-2: #b0b4ba; --ink-3: #7d828a;
+      --hairline: #262a2f; --seal: #e0705e; --seal-soft: rgba(224, 112, 94, 0.09);
+      --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e;
+      --dot: rgba(232, 234, 237, 0.055);
+      --shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
   }
-  :root[data-theme="dark"] { --page: #0f1114; --surface: #16181c; --surface-2: #1d2024; --ink: #e8eaed;
-    --ink-2: #b0b4ba; --ink-3: #7d828a; --hairline: #262a2f; --seal: #e0705e;
-    --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e; }
-  :root[data-theme="light"] { --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3; --ink: #16181d;
-    --ink-2: #4b5158; --ink-3: #858b93; --hairline: #e1e4e8; --seal: #b0392e;
-    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300; }
+  :root[data-theme="dark"] {
+    --page: #0f1114; --surface: #16181c; --surface-2: #1d2024;
+    --ink: #e8eaed; --ink-2: #b0b4ba; --ink-3: #7d828a;
+    --hairline: #262a2f; --seal: #e0705e; --seal-soft: rgba(224, 112, 94, 0.09);
+    --p0: #3987e5; --p1: #199e70; --p2: #c98500; --p3: #9085e9; --p4: #d95926; --p5: #d55181; --p6: #2e9e2e;
+    --dot: rgba(232, 234, 237, 0.055);
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  }
+  :root[data-theme="light"] {
+    --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
+    --ink: #16181d; --ink-2: #4b5158; --ink-3: #858b93;
+    --hairline: #e1e4e8; --seal: #b0392e; --seal-soft: rgba(176, 57, 46, 0.06);
+    --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
+    --dot: rgba(22, 24, 29, 0.05);
+    --shadow: 0 2px 10px rgba(22, 24, 29, 0.06);
+  }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; }
-  body { background: var(--page); color: var(--ink); font-family: var(--sans); line-height: 1.75; font-size: 15px; -webkit-font-smoothing: antialiased; }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 46px 20px 60px; }
-  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; color: var(--ink-3); }
-  h1 { font-size: clamp(30px, 5vw, 42px); margin: 8px 0 4px; }
-  .sub { color: var(--ink-2); max-width: 46em; }
-  h2 { font-size: 21px; margin: 42px 0 8px; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--page); color: var(--ink); font-family: var(--sans);
+    line-height: 1.75; font-size: 15px; -webkit-font-smoothing: antialiased;
+    font-variant-numeric: tabular-nums;
+  }
+  code { font-family: var(--mono); font-size: 0.9em; background: var(--surface-2); padding: 1px 5px; border-radius: 3px; }
   a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
 
-  /* 活页横幅：本页与主线的契约 */
-  .loose { margin-top: 22px; border: 1.5px dashed var(--p4); border-radius: 6px; background: var(--surface);
-    padding: 14px 18px; font-size: 13.5px; color: var(--ink-2); }
+  /* ===== 页头（对齐工业现场 STYLE rev2，位于全站共享导航下方） ===== */
+  header.top {
+    padding: 28px 0 24px; border-bottom: 1px solid var(--hairline);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px); background-size: 22px 22px;
+  }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; color: var(--ink-3); }
+  .eyebrow b { color: var(--ink-2); font-weight: 700; }
+  h1 { font-size: clamp(30px, 5vw, 44px); margin: 10px 0 6px; letter-spacing: -0.01em; line-height: 1.18; }
+  .sub { color: var(--ink-2); max-width: 54em; margin: 0; }
+  .sub b { color: var(--ink); }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .meta i {
+    font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+    color: var(--ink-2); background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 4px; padding: 3px 9px;
+  }
+  .meta i.hot { color: var(--seal); border-color: color-mix(in srgb, var(--seal) 45%, var(--hairline)); }
+
+  /* 页内快速目录 */
+  nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  nav.toc a {
+    text-decoration: none; font-size: 12.5px; color: var(--ink-2); background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 4px; padding: 4px 11px;
+    transition: border-color 0.14s, color 0.14s;
+  }
+  nav.toc a:hover, nav.toc a:focus-visible { border-color: var(--ink-2); color: var(--ink); outline: none; }
+  nav.toc a.seal-nav { color: var(--seal); border-color: color-mix(in srgb, var(--seal) 38%, var(--hairline)); }
+
+  main { padding: 24px 0 60px; }
+  section.blk { margin-top: 42px; scroll-margin-top: var(--atlas-nav-clearance, 86px); }
+  .sec-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--ink-3); text-transform: uppercase; }
+  .sec-kicker.seal-k { color: var(--seal); }
+  h2 { font-size: 22px; margin: 4px 0 8px; letter-spacing: -0.005em; }
+  h3 { font-size: 16px; margin: 18px 0 6px; }
+  .sec-lead { color: var(--ink-2); font-size: 14px; max-width: 60em; margin: 0 0 14px; }
+  .sec-lead b { color: var(--ink); }
+
+  /* ===== 活页契约横幅 ===== */
+  .loose {
+    border: 1.5px dashed var(--p4); border-radius: 6px; background: var(--surface);
+    padding: 15px 18px; font-size: 13.5px; color: var(--ink-2);
+  }
   .loose b { color: var(--ink); }
-  .loose .lt { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; color: var(--p4); font-weight: 700; display: block; margin-bottom: 4px; }
-  .legend { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 14px 0 0; font-size: 13px; color: var(--ink-2); }
+  .loose p { margin: 5px 0; }
+  .loose .lt {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em;
+    color: var(--p4); font-weight: 700; display: block; margin-bottom: 6px;
+  }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed var(--hairline); font-size: 12.5px; color: var(--ink-2); }
   .legend b { color: var(--ink); font-weight: 600; }
+  .snapshot-status { margin-top: 8px; font-size: 12px; color: var(--ink-3); }
+  .snapshot-status.stale { color: var(--seal); font-weight: 600; }
 
-  /* ===== 开放度阶梯 ===== */
+  /* ===== 开放度六层阶梯 ===== */
   .ladder { margin-top: 14px; display: grid; gap: 8px; }
-  .rung { display: grid; grid-template-columns: 108px 1fr; gap: 14px; background: var(--surface);
-    border: 1px solid var(--hairline); border-left: 4px solid var(--lc, var(--hairline)); border-radius: 6px; padding: 12px 16px; }
-  .rung .lv { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--lc, var(--ink)); line-height: 1.5; }
-  .rung .lv small { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; }
-  .rung .rd { font-size: 13px; color: var(--ink-2); }
-  .rung .rd p { margin: 0 0 6px; }
+  .rung {
+    display: grid; grid-template-columns: 148px 1fr; gap: 14px; background: var(--surface);
+    border: 1px solid var(--hairline); border-left: 4px solid var(--lc, var(--hairline));
+    border-radius: 6px; padding: 12px 16px;
+  }
+  .rung .lv { font-family: var(--mono); font-size: 12px; font-weight: 700; color: color-mix(in srgb, var(--lc, var(--ink)) 76%, var(--ink)); line-height: 1.45; }
+  .rung .lv small { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; margin-top: 2px; }
+  .rung .rd { font-size: 13.5px; color: var(--ink-2); }
+  .rung .rd p { margin: 0 0 7px; }
+  .rung .rd b { color: var(--ink); }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { font-size: 12.5px; border: 1.5px solid var(--lc, var(--ink-3)); color: var(--ink); background: color-mix(in srgb, var(--lc, var(--ink-3)) 10%, transparent);
-    border-radius: 4px; padding: 2px 12px; font-weight: 600; }
+  .chip {
+    font-size: 12px; border: 1.5px solid var(--lc, var(--ink-3)); color: var(--ink);
+    background: color-mix(in srgb, var(--lc, var(--ink-3)) 9%, transparent);
+    border-radius: 4px; padding: 2px 10px; font-weight: 600; text-decoration: none;
+    transition: background 0.12s, border-color 0.12s;
+  }
+  a.chip:hover, a.chip:focus-visible { background: color-mix(in srgb, var(--lc, var(--ink-3)) 18%, transparent); outline: none; }
   .chip.side { border-style: dashed; font-weight: 400; color: var(--ink-2); background: none; }
   .chip.ghost { border-style: dotted; color: var(--ink-3); font-weight: 400; background: none; }
-  @media (max-width: 560px) { .rung { grid-template-columns: 1fr; gap: 6px; } }
+  @media (max-width: 640px) { .rung { grid-template-columns: 1fr; gap: 6px; } }
 
-  /* ===== 门派矩阵（一家一行，点行展开详情） ===== */
-  .mtx-scroll { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 6px; background: var(--surface); margin-top: 14px; }
-  table { border-collapse: collapse; min-width: 1080px; width: 100%; font-size: 13px; }
-  th, td { padding: 9px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; text-align: left; }
-  thead th { font-size: 13px; background: var(--surface-2); white-space: nowrap; }
+  /* ===== 筛选栏 ===== */
+  .bar {
+    display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
+    margin: 14px 0 12px; padding: 10px 14px; background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 6px;
+  }
+  .bar-grp { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+  .bar-lab { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.08em; margin-right: 4px; }
+  .flt {
+    font: inherit; font-size: 12.5px; color: var(--ink-2); background: var(--page);
+    border: 1px solid var(--hairline); border-radius: 4px; padding: 3px 10px; cursor: pointer;
+    transition: border-color 0.14s, background 0.14s, color 0.14s;
+  }
+  .flt:hover, .flt:focus-visible { border-color: var(--ink-2); color: var(--ink); outline: none; }
+  .flt.on { background: var(--ink); color: var(--page); border-color: var(--ink); font-weight: 600; }
+  .flt.seal-flt.on { background: var(--seal); border-color: var(--seal); color: #ffffff; }
+  .bar-act { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+  .bar-count { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+
+  /* ===== 门派矩阵 ===== */
+  .mtx-scroll {
+    overflow-x: auto; border: 1px solid var(--hairline); border-radius: 6px;
+    background: var(--surface); box-shadow: var(--shadow);
+  }
+  table { border-collapse: collapse; min-width: 980px; width: 100%; font-size: 13px; }
+  th, td { padding: 10px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; text-align: left; }
+  thead th {
+    font-size: 12.5px; background: var(--surface-2); white-space: nowrap;
+    font-weight: 700; color: var(--ink); border-bottom: 1.5px solid var(--hairline);
+  }
+  thead th.seal-col { color: var(--seal); }
   td { color: var(--ink-2); }
-  td sup { font-size: 10px; color: var(--ink-3); margin-left: 1px; }
-  tr.fam { cursor: pointer; }
+  sup { font-size: 10px; color: var(--ink-3); margin-left: 1px; }
+  tr.fam { cursor: pointer; transition: background 0.12s; scroll-margin-top: var(--atlas-nav-clearance, 86px); }
   tr.fam:hover td, tr.fam:hover th { background: color-mix(in srgb, var(--ink-3) 6%, transparent); }
-  tr.fam th { font-weight: 600; color: var(--ink); min-width: 190px; border-right: 1px solid var(--hairline); }
-  tr.fam th .car { display: inline-block; color: var(--ink-3); font-size: 11px; margin-right: 5px; transition: transform 0.15s; }
-  tr.fam.open th .car { transform: rotate(90deg); }
-  td.opn { white-space: nowrap; font-weight: 600; }
-  td.opn .ob { font-family: var(--mono); font-size: 11.5px; border-radius: 6px; padding: 2px 8px; font-weight: 700;
-    border: 1px solid var(--oc, var(--ink-3)); color: var(--oc, var(--ink-2)); background: color-mix(in srgb, var(--oc, var(--ink-3)) 9%, transparent); }
-  tr.det { display: table-row; }
-  .js tr.det { display: none; }
+  tr.fam.hidden, tr.det.hidden { display: none !important; }
+  tr.fam.flash td, tr.fam.flash th { animation: rowflash 1.6s ease-out; }
+  @keyframes rowflash {
+    0% { background: color-mix(in srgb, var(--seal) 18%, transparent); }
+    100% { background: transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) { tr.fam.flash td, tr.fam.flash th { animation: none; } }
+
+  tr.fam th {
+    font-weight: 700; color: var(--ink); white-space: nowrap;
+    border-right: 1px solid var(--hairline);
+  }
+  .family-toggle {
+    all: unset; display: block; width: 100%; cursor: pointer; color: inherit; font: inherit;
+    text-align: left;
+  }
+  .family-toggle:focus-visible { outline: 2px solid var(--p0); outline-offset: 2px; border-radius: 3px; }
+  tr.fam th .car {
+    display: inline-block; color: var(--ink-3); font-size: 10px;
+    margin-right: 6px; transition: transform 0.15s;
+  }
+  tr.fam.open th .car { transform: rotate(90deg); color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { tr.fam th .car { transition: none; } }
+  tr.fam th .new-tag {
+    display: inline-block; font-family: var(--mono); font-size: 9.5px; font-weight: 700;
+    color: var(--p0); border: 1px solid color-mix(in srgb, var(--p0) 50%, transparent);
+    border-radius: 3px; padding: 0 4px; margin-left: 5px; vertical-align: 1px;
+  }
+  .subnote { display: block; font-size: 11.5px; color: var(--ink-3); font-weight: 400; margin-top: 2px; white-space: normal; }
+
+  td.opn { white-space: nowrap; }
+  .ob {
+    display: inline-block; font-family: var(--mono); font-size: 11px; border-radius: 4px;
+    padding: 2px 7px; font-weight: 700;
+    border: 1px solid var(--oc, var(--ink-3)); color: color-mix(in srgb, var(--oc, var(--ink-2)) 74%, var(--ink));
+    background: color-mix(in srgb, var(--oc, var(--ink-3)) 9%, transparent);
+  }
+  .ob-sub { display: block; font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); margin-top: 3px; font-weight: 400; }
+
+  .rf-list { display: flex; flex-wrap: wrap; gap: 4px; }
+  .rf {
+    font-size: 11px; line-height: 1.4; padding: 1px 6px; border-radius: 3px;
+    border: 1px solid color-mix(in srgb, var(--seal) 42%, var(--hairline));
+    color: var(--seal); background: var(--seal-soft); white-space: nowrap;
+  }
+
+  /* 展开详情行 */
+  tr.det { display: none; }
   tr.det.on { display: table-row; }
-  tr.det > td { background: color-mix(in srgb, var(--ink-3) 4%, transparent); font-size: 13px; padding: 12px 16px 14px; }
-  tr.det .bio { margin: 0 0 8px; color: var(--ink-2); max-width: 62em; }
+  tr.det > td {
+    background: color-mix(in srgb, var(--ink-3) 3.5%, var(--page));
+    font-size: 13.5px; padding: 16px 20px 18px;
+  }
+  tr.det .bio { margin: 0 0 12px; color: var(--ink-2); max-width: 68em; }
   tr.det .bio b { color: var(--ink); }
-  tr.det .fl { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
-  tr.det dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px 18px; margin: 8px 0 0; }
-  tr.det dt { font-size: 11.5px; font-family: var(--mono); color: var(--ink-3); }
-  tr.det dd { margin: 0; color: var(--ink-2); }
+  tr.det .fl {
+    display: inline-block; font-family: var(--mono); font-size: 11.5px;
+    color: var(--ink); background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 4px; padding: 2px 8px; margin-bottom: 6px;
+  }
+  tr.det dl.tech-dl {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px 18px; margin: 0 0 14px; padding: 12px 14px;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px;
+  }
+  tr.det dl.tech-dl dt { font-size: 11px; font-family: var(--mono); color: var(--ink-3); letter-spacing: 0.06em; margin-bottom: 2px; }
+  tr.det dl.tech-dl dd { margin: 0; font-size: 13px; color: var(--ink-2); }
 
-  .rowlink { font-size: 12.5px; color: var(--ink-3); margin: 8px 2px 0; }
-  .rowlink a { color: var(--ink-2); }
+  /* 详情行内：法务与商业条款排雷盒（朱批红专属） */
+  .legal-box {
+    border: 1px solid color-mix(in srgb, var(--seal) 38%, var(--hairline));
+    border-left: 3px solid var(--seal); border-radius: 6px;
+    background: var(--seal-soft); padding: 12px 16px;
+  }
+  .legal-box .lb-h {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+    color: var(--seal); letter-spacing: 0.06em; margin-bottom: 8px;
+  }
+  .legal-box dl {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px 20px; margin: 0;
+  }
+  .legal-box dt { font-size: 11.5px; font-weight: 700; color: var(--seal); margin-bottom: 2px; }
+  .legal-box dd { margin: 0; font-size: 13px; color: var(--ink-2); }
+  .legal-box dd b { color: var(--ink); }
+  .legal-act {
+    margin-top: 10px; padding-top: 8px; border-top: 1px dashed color-mix(in srgb, var(--seal) 32%, transparent);
+    font-size: 12.5px; color: var(--ink);
+  }
+  .legal-act b { color: var(--seal); }
 
-  /* 朱批 */
-  .seal-note { margin-top: 24px; border: 1px solid color-mix(in srgb, var(--seal) 45%, transparent); border-left: 3px solid var(--seal);
-    border-radius: 6px; padding: 14px 18px; background: color-mix(in srgb, var(--seal) 5%, var(--surface)); font-size: 13.5px; color: var(--ink-2); }
-  .seal-note .sh { color: var(--seal); font-weight: 700; margin-bottom: 6px; }
-  .seal-note ol { margin: 0; padding-left: 1.4em; }
-  .seal-note li { margin: 4px 0; }
+  /* 详情行底部官方来源 */
+  .sources {
+    border-top: 1px dashed var(--hairline); margin: 12px 0 0; padding-top: 9px;
+    display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-3);
+  }
+  .sources b { color: var(--ink-2); }
+  .sources a { color: var(--ink-2); text-decoration: none; border-bottom: 1px dashed var(--hairline); }
+  .sources a:hover { color: var(--ink); border-bottom-color: var(--ink-2); }
 
-  .others { margin-top: 18px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px;
-    padding: 13px 16px; font-size: 13.5px; color: var(--ink-2); }
+  .rowlink { font-size: 12.5px; color: var(--ink-3); margin: 10px 2px 0; }
+  .rowlink a { color: var(--ink-2); text-decoration: none; border-bottom: 1px dashed var(--hairline); }
+  .rowlink a:hover { color: var(--ink); border-bottom-color: var(--ink-2); }
+
+  /* ===== 第三部分：条款排雷卡片网格 ===== */
+  .clause-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px; }
+  @media (max-width: 820px) { .clause-grid { grid-template-columns: 1fr; } }
+  .ccard {
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--seal); border-radius: 6px; padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .ccard.hidden { display: none; }
+  .cc-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .cc-cat {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em;
+    color: var(--seal); background: var(--seal-soft); padding: 1px 7px; border-radius: 3px;
+  }
+  .cc-title { font-size: 15.5px; font-weight: 700; color: var(--ink); margin: 2px 0 0; }
+  .ccard p { margin: 0; font-size: 13px; color: var(--ink-2); }
+  .ccard p b { color: var(--ink); }
+  .cc-comm {
+    font-size: 12.5px; color: var(--ink-2); background: var(--surface-2);
+    border-radius: 4px; padding: 7px 10px; margin-top: 2px;
+  }
+  .cc-comm b { color: var(--ink); }
+  .cc-jumps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; padding-top: 8px; border-top: 1px dashed var(--hairline); }
+  .jbtn {
+    font: inherit; font-size: 11.5px; font-family: var(--mono); cursor: pointer;
+    color: var(--ink-2); background: var(--page); border: 1px solid var(--hairline);
+    border-radius: 3px; padding: 2px 8px;
+  }
+  .jbtn:hover, .jbtn:focus-visible { border-color: var(--seal); color: var(--seal); outline: none; }
+
+  /* 商业闸门对照小表 */
+  .subtable-wrap { margin-top: 18px; overflow-x: auto; border: 1px solid var(--hairline); border-radius: 6px; background: var(--surface); }
+  table.compact { min-width: 860px; font-size: 12.5px; }
+  table.compact th, table.compact td { padding: 8px 11px; }
+  table.compact tbody th { font-weight: 700; color: var(--ink); white-space: nowrap; }
+
+  /* ===== 第四部分：法务视角新增条目 & 交互核验清单 ===== */
+  .gov-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; margin-top: 12px; }
+  .gcard {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .gcard .gid { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--seal); letter-spacing: 0.1em; }
+  .gcard h3 { margin: 4px 0 6px; font-size: 15.5px; color: var(--ink); }
+  .gcard p { margin: 0; font-size: 13px; color: var(--ink-2); }
+  .gcard p b { color: var(--ink); }
+
+  /* 朱批总框 */
+  .seal-note {
+    margin-top: 20px; border: 1px solid color-mix(in srgb, var(--seal) 42%, var(--hairline));
+    border-left: 3px solid var(--seal); border-radius: 6px; padding: 15px 18px;
+    background: color-mix(in srgb, var(--seal) 4.5%, var(--surface)); font-size: 13.5px; color: var(--ink-2);
+  }
+  .seal-note .sh { color: var(--seal); font-weight: 700; margin-bottom: 6px; font-size: 14px; }
+  .seal-note p { margin: 4px 0; }
+  .seal-note b { color: var(--ink); }
+
+  /* 交互式法务采购快检清单 */
+  .chk-box {
+    margin-top: 18px; background: var(--surface); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--seal); border-radius: 6px; padding: 16px 18px;
+  }
+  .chk-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .chk-head h3 { margin: 0; font-size: 16px; color: var(--ink); }
+  .chk-stat { font-family: var(--mono); font-size: 12px; color: var(--seal); font-weight: 700; }
+  .chk-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+  .chk-list li label {
+    display: flex; align-items: flex-start; gap: 10px; cursor: pointer;
+    padding: 8px 10px; border: 1px solid var(--hairline); border-radius: 5px;
+    background: var(--page); font-size: 13px; color: var(--ink-2); transition: border-color 0.14s, background 0.14s;
+  }
+  .chk-list li label:hover { border-color: var(--ink-3); }
+  .chk-list li.done label {
+    border-color: color-mix(in srgb, var(--p1) 55%, var(--hairline));
+    background: color-mix(in srgb, var(--p1) 6%, var(--surface)); color: var(--ink);
+  }
+  .chk-list input[type="checkbox"] { accent-color: var(--p1); margin-top: 3px; width: 15px; height: 15px; flex: none; }
+  .chk-list b { color: var(--ink); }
+
+  /* 观察名单 & 站内链接 & 页脚 */
+  .others {
+    margin-top: 24px; background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 6px; padding: 14px 18px; font-size: 13.5px; color: var(--ink-2);
+  }
   .others b { color: var(--ink); }
 
   .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
-  .links a { text-decoration: none; font-size: 13px; color: var(--ink-2); background: var(--surface);
-    border: 1px solid var(--hairline); border-radius: 4px; padding: 5px 15px; }
-  .links a:hover, .links a:focus-visible { border-color: var(--ink-2); outline: none; }
-  .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 2px; }
-  footer { margin-top: 40px; border-top: 1px solid var(--hairline); padding-top: 16px; font-size: 12.5px; color: var(--ink-3); }
-  .family-toggle { border: 0; padding: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; line-height: 1.6; }
-  .family-toggle:focus-visible, a:focus-visible, .mtx-scroll:focus-visible { outline: 2px solid var(--p0); outline-offset: 4px; }
-  .model-name { display: block; font-size: 11.5px; font-weight: 400; color: var(--ink-2); margin: 5px 0 0 16px; max-width: 190px; }
-  .status { display: inline-block; font-size: 10px; color: var(--p4); border: 1px solid currentColor; border-radius: 3px; padding: 0 4px; margin-left: 4px; }
-  .small { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 5px; }
-  .sources { border-top: 1px dashed var(--hairline); margin: 12px 0 0; padding-top: 9px; display: flex; flex-wrap: wrap; gap: 4px 16px; }
-  .sources a, .rd a { text-underline-offset: 3px; }
-  tr.det dl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
-  tr.det dl div { min-width: 0; }
-  tr.det dt { margin-bottom: 3px; color: var(--ink-3); }
-  tr.fam { scroll-margin-top: 18px; }
-  .snapshot-status { margin-top: 8px; font-size: 12px; }
-  .snapshot-status.stale { color: var(--seal); font-weight: 600; }
-  .chip { text-decoration: none; }
-  .scope-note { margin: 12px 0 0; color: var(--ink-3); font-size: 12.5px; }
-  @media (prefers-reduced-motion: reduce) { tr.fam th .car { transition: none; } }
+  .links a {
+    text-decoration: none; font-size: 13px; color: var(--ink-2); background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 4px; padding: 5px 14px;
+  }
+  .links a:hover, .links a:focus-visible { border-color: var(--ink-2); color: var(--ink); outline: none; }
+  .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 3px; }
+
+  footer {
+    margin-top: 40px; border-top: 1px solid var(--hairline);
+    padding: 18px 0 40px; font-size: 12.5px; color: var(--ink-3);
+  }
+  footer .sn { color: var(--seal); }
+  footer .refs { font-size: 12px; margin-top: 10px; line-height: 1.85; }
+  footer .refs a { color: var(--ink-2); text-decoration: none; border-bottom: 1px dashed var(--hairline); }
+  footer .refs a:hover { color: var(--ink); border-bottom-color: var(--ink-2); }
+  .build {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-3);
+    margin-top: 14px; border-top: 1px dashed var(--hairline); padding-top: 12px;
+  }
 </style>
 <link rel="stylesheet" href="./assets/site-navigation.css">
 <script type="module" src="./assets/site-navigation.mjs"></script>
@@ -139,233 +403,1066 @@
     <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu"><a href="./index.html">首页<span aria-hidden="true">→</span></a><a href="./blueprint.html">工程蓝图<span aria-hidden="true">→</span></a><a href="./toolchain.html">工业现场<span aria-hidden="true">→</span></a><a href="./genealogy.html" aria-current="page">模型门派谱系<span aria-hidden="true">·</span></a><a href="./thread.html">一句话的旅程<span aria-hidden="true">→</span></a><a href="./index-map.html">索引地图<span aria-hidden="true">→</span></a><a href="./progress.html">项目进度<span aria-hidden="true">→</span></a><a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>
 </nav>
 <!-- atlas-navigation:end -->
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow"><b>AI-ATLAS</b> // LOOSE-LEAF · 活页 · 谱系 v7</div>
+    <h1>模型门派谱系</h1>
+    <p class="sub">十三家主流大模型的差异，一半在<a href="blueprint.html">工程蓝图</a>里的技术分叉，另一半藏在<b>许可证原文、API 服务条款与地缘监管红线</b>里。谱系 v7 在 v6 官方规格基础上做全面法务合规审计与更新：先看<b>开放度六层阶梯</b>，再查<b>十三家技术×合规全档案</b>，最后用<b>六大条款排雷库</b>与<b>上线前快检清单</b>直接做尽调。</p>
+    <div class="meta">
+      <i>谱系 v7</i>
+      <i class="hot">盘点基准日 2026-11-24</i>
+      <i>13 家（5 美 · 1 欧 · 7 中）</i>
+      <i>活页 · 独立版本号</i>
+      <i>技术规格 × 法务排雷</i>
+    </div>
+    <nav class="toc" aria-label="本页章节导航">
+      <a href="#sec-ladder">§1 开放度六层阶梯</a>
+      <a href="#sec-matrix">§2 十三家门派矩阵</a>
+      <a href="#sec-clauses" class="seal-nav">§3 ⚖ 商业与开源条款排雷库</a>
+      <a href="#sec-legal" class="seal-nav">§4 ⚖ 法务尽调新增项与快检清单</a>
+      <a href="#sec-watch">§5 观察名单与核实来源</a>
+    </nav>
+  </div>
+</header>
+
 <main class="wrap">
-  <div class="eyebrow">AI COMPLIANCE ATLAS · 活页 · 谱系 v6</div>
-  <h1>模型门派谱系</h1>
-  <p class="sub">十一家模型家族，在<a href="blueprint.html">工程蓝图</a>的分叉路口上怎样选择？先看<b>权重与许可</b>，再用<b>门派矩阵</b>对照架构、后训练、推理和多模态。每一行限定到具体型号，展开即可查看变化、能力边界与官方来源。先读代表型号，再沿原理链接返回蓝图。</p>
 
   <div class="loose">
-    <span class="lt">📎 活页快照 · 盘点基准日 <time datetime="2026-11-19">2026-11-19</time></span>
-    本页按当日可查的<b>官方发布、模型卡、开发文档和许可证</b>更新，独立编号。未发现已核实的新代表型号时保留原型号，不把复核日期当成发布日期。型号与服务会继续变化；产品可用性、开放权重和预览状态分别标注。
-    <div class="legend"><b>阅读口径</b><span>◉ 官方资料支持，非独立实测</span><span>未披露 = 本次所列资料未提供足够细节</span><span>Preview / 受限访问 ≠ 全面开放</span></div>
-    <div class="snapshot-status" id="snapshot-status">本页由 AI 辅助检索整理；按注明日期阅读，型号、服务与许可信息请结合官方原文确认。</div>
+    <span class="lt">📎 活页快照与 R5 诚实声明 · 谱系 v6（2026-11-19）→ v7（<time datetime="2026-11-24">2026-11-24</time>）</span>
+    <p><b>本轮换新摘要：</b>在承接 v6 已核实官方型号（GPT-6.2、Claude Fable 5.2、Gemini 4 Carbon/Neon、Grok 4.7、DeepSeek V4.1 Flash-1017、Meta Muse Spark Open/Glimmer、Qwen4-Max、Kimi K3.1 Pro、GLM-5.3/Flash、Seed2.1、Tencent Hy4/Hy4-flash）基础上，同步补入 11 月下旬最新变化（<b>腾讯 Hy4 正式版 11-20 权重改挂 Hy License 1.0 Sec.10</b>、<b>智谱 GLM-5.4 11-23 发布 Loop Transformer</b>），并将门派由 11 家扩列至 <b>13 家</b>——新增 <b>Mistral AI</b>（欧盟万亿开放权重参照系）与 <b>MiniMax</b>（默认非商用 + 四法域排除极端样本）；更重要的是系统补全<b>全站法务与商业条款审计</b>，逐家拆解开源营收/分成闸门、API 留存与司法保全、IP 赔偿盾断档及地缘管制红线。</p>
+    <p><b>利益相关与核验边界（规则 R5）：</b>本页历次版本由多模型 AI 辅助检索整理（含 Anthropic / Claude 与 Google / Gemini 参与），对相关厂商的描述已力求以官方原文与多方交叉核实为准，读者仍应结合一手材料独立判断。本页资料仅供学习与研究参考，<b>不构成法律意见</b>；采购、合同谈判及合规上线前请直读厂商最新 <code>LICENSE</code> 与服务条款原文并咨询执业律师。</p>
+    <div class="legend">
+      <b>来源三级标注</b>
+      <span><code>◉</code> 官方文档 / 许可证原文 / 监管公报 / 多方一手报道核实</span>
+      <span><code>◐</code> 行业共识 / 媒体报道 / 单方情报归因（未经司法定论）</span>
+      <span><code>○</code> 传闻或架构推断——引用前必核</span>
+    </div>
+    <div class="snapshot-status" id="snapshot-status">按注明基准日阅读；型号并列不代表性能排名，许可与服务条款以各厂商官方原文为准。</div>
   </div>
 
-  <div class="others"><b>这一轮看什么</b>
-    <p><a href="#openai">GPT-6.2</a>、<a href="#anthropic">Claude Fable 5.2</a>、<a href="#google">Gemini 4 Carbon / Neon</a> 与 <a href="#qwen">Qwen4-Max</a> 已上线相应 API。<a href="#kimi">Kimi K3.1 Pro</a> 权重已发布，<a href="#hunyuan">混元 Hy4 flash</a> 也已开放权重，两者各有自定义许可。<a href="#meta">Meta</a> 托管 Spark 1.3 的付费 API 入口已复核。</p><p class="scope-note">对比时留意输入上限与总窗口、托管服务与下载权重、模型本体与外接工具。推理档位和榜单分数应结合任务与预算阅读。</p></div>
+  <!-- ================= §1 开放度阶梯 ================= -->
+  <section class="blk" id="sec-ladder">
+    <div class="sec-kicker">SECTION 01 · OPENNESS &amp; LICENSE STRATIFICATION</div>
+    <h2>开放度阶梯 · 「开源」的六层真相与 2026“同厂双轨”浪潮</h2>
+    <p class="sec-lead">一个模型 = <b>权重</b> + <b>训练代码</b> + <b>数据</b>。商业大模型无一公开训练数据，所谓「开源」几乎全指「开放权重」。2026 年下半年最大的法务剧变在于：<b>把限制性开放权重笼统归为一类已不够细——开放权重已分化为「纯宽松（L2）」「商业/MaaS 营收闸门（L1-B）」与「地域排除 / 默认非商用 / 远程控制（L1-A）」三档</b>，且几乎所有大厂都在实行<b>“小模型宽松引流、万亿旗舰设商业闸门”的同厂双轨制</b>。点击标签可直达下方对应门派档案。</p>
 
-  <h2>开放情况 · 权重、许可与复现材料分开看</h2>
-  <p class="sub" style="font-size:13.5px">「能下载」回答能否自行部署；「许可证」决定授权条件；训练代码、数据和报告则影响可复现程度。三者不能压成一个排名，同一家公司也可能同时提供多种路线。以下只归类本页列出的具体型号。</p>
-  <div class="ladder">
-    <div class="rung" style="--lc:var(--p1)">
-      <div class="lv">开放权重<small>标准许可</small></div>
-      <div class="rd"><p>这些型号公开了权重，并标明 MIT 或 Apache 2.0。使用时仍须遵守对应许可；这不代表训练数据、完整训练流程或所有同家族模型均开放。</p>
-        <div class="chips"><a class="chip" href="#deepseek">DeepSeek V4.1 Flash-1017 · MIT</a><a class="chip" href="#meta">Muse Glimmer 30B · Apache 2.0</a><a class="chip" href="#hunyuan">Hy4 preview · Apache 2.0</a><a class="chip" href="#glm">GLM-5.3-Flash · MIT</a><a class="chip side" href="#qwen">Qwen3.8-27B · Apache 2.0</a><a class="chip side" href="#google">Gemma 4 · Apache 2.0</a><a class="chip side" href="#openai">gpt-oss · Apache 2.0</a></div></div>
+    <div class="ladder">
+      <div class="rung" style="--lc:var(--p1)">
+        <div class="lv">L4 全开放<small>权重 + 训练代码 + 数据</small></div>
+        <div class="rd">
+          <p>从零可复刻。<b>商业公司至今无一做到</b>——训练语料永不公开，恰恰是全行业最大的著作权与数据合规风险信号。</p>
+          <div class="chips"><span class="chip ghost">（商业空缺——学术代表：AI2 OLMo、Pythia）</span></div>
+        </div>
+      </div>
+
+      <div class="rung" style="--lc:var(--p1)">
+        <div class="lv">L3 方法透明<small>纯宽松权重 + 详尽报告/系统代码</small></div>
+        <div class="rd">
+          <p>不仅放纯 MIT 权重，还持续公开架构与工程细节（CED、CSA2、Engram 条件记忆等）及编码参考实现，但训练语料仍不公开。</p>
+          <div class="chips">
+            <a class="chip" href="#deepseek">DeepSeek（V4.1 Flash-1017 / V4 Pro · 纯 MIT<sup>◉</sup>）</a>
+            <span class="chip side">权重层极度宽松；但官方 API 另受中国法域与美联邦 FASCSA 排除令约束</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rung" style="--lc:var(--p6)">
+        <div class="lv">L2 纯宽松权重<small>标准 MIT / Apache 2.0（无营收/用户/MaaS 闸门）</small></div>
+        <div class="rd">
+          <p>下载、商用、微调、闭源衍生、转售 API 均无附加商业条件（仅保留版权与许可声明；Apache 2.0 另带明确专利许可）。<b>2026 年底，这一层已退守为各家的中小型/次主力版本与少数坚持者：</b></p>
+          <div class="chips">
+            <a class="chip" href="#google">Google Gemma 4（Apache 2.0<sup>◉</sup>）</a>
+            <a class="chip" href="#qwen">Qwen3.8-27B（Apache 2.0<sup>◉</sup>）</a>
+            <a class="chip" href="#glm">GLM-5.2 / 5.3-Flash（MIT<sup>◉</sup>）</a>
+            <a class="chip" href="#hunyuan">腾讯 Hy3 / Hy4-preview（Apache 2.0<sup>◉</sup>）</a>
+            <a class="chip" href="#mistral">Mistral Small 4（Apache 2.0<sup>◉</sup>）</a>
+            <a class="chip side" href="#meta">Meta Muse Glimmer 30B（Apache 2.0<sup>◉</sup>）</a>
+            <a class="chip side" href="#openai">OpenAI gpt-oss-120b/20b（Apache 2.0<sup>◉</sup>）</a>
+            <a class="chip side" href="#bytedance">字节 Seed-OSS-36B（Apache 2.0<sup>◉</sup>）</a>
+            <a class="chip side" href="#xai">Grok-1（旧版 Apache 2.0<sup>◉</sup>）</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="rung" style="--lc:var(--p2)">
+        <div class="lv">L1-B 商业闸门权重<small>MIT/Apache 魔改 · 限 MaaS / 营收 / 特定业务</small></div>
+        <div class="rd">
+          <p><b>2026 下半年井喷的新主力层级</b>：对个人研究、企业纯内部自用与普通应用嵌入免费，但对<b>模型即服务（MaaS）托管转售、高营收集团或特定竞品场景</b>加装另签协议、分成或安全审查闸门——<b>切忌在合同或审计问卷中笼统写为“开源/MIT”</b>：</p>
+          <div class="chips">
+            <a class="chip" href="#kimi">Kimi K3 / K3.1 Pro（$20M 集团营收 MaaS 另签<sup>◉</sup>）</a>
+            <a class="chip" href="#qwen">Qwen3.8-2.4T（$50M 另签<sup>◉</sup>）</a>
+            <a class="chip" href="#qwen">Qwen3.8-Flash-Next（禁 MaaS 与 AI 办公/编码助手<sup>◉</sup>）</a>
+            <a class="chip" href="#meta">Meta Muse Spark Open（$20M 集团毛收 + 蒸馏传染<sup>◉</sup>）</a>
+            <a class="chip" href="#hunyuan">腾讯 Hy4 正式版 / Hy4-flash（Sec.10 $50M MaaS / 100M MAU<sup>◉</sup>）</a>
+            <a class="chip" href="#glm">GLM-5.3（$10B MaaS 须过安全审查<sup>◉</sup>）</a>
+            <a class="chip" href="#mistral">Mistral Large 4（全面限制第三方 MaaS<sup>◉</sup>）</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="rung" style="--lc:var(--p4)">
+        <div class="lv">L1-A 强限制权重<small>默认非商用 / 地域排除 / 用户上限 / 远程限制</small></div>
+        <div class="rd">
+          <p>可下载权重，但存在硬性地域排除、默认非商用、低用户门槛、强反竞争或厂商单方限制权——<b>跨国或商业上线前必须逐条法务排雷</b>：</p>
+          <div class="chips">
+            <a class="chip" href="#minimax">MiniMax M3 / M3.1-Flash（默认非商用 + $20M 书面授权<sup>◉</sup>）</a>
+            <a class="chip" href="#minimax">MiniMax H3（排除美/欧/英/韩四法域<sup>◉</sup>）</a>
+            <a class="chip" href="#hunyuan">腾讯 HunyuanVideo / 3D（排除欧/英/韩，3D 仅 1M MAU<sup>◉</sup>）</a>
+            <a class="chip" href="#meta">Meta Llama 4（700M MAU + 多模态排除欧盟主体<sup>◉</sup>）</a>
+            <a class="chip side" href="#mistral">Mistral Medium 3.5（月收超 $20M 即禁用<sup>◉</sup>） / MRL 非商用</a>
+            <a class="chip side" href="#qwen">Qwen-Image-2.1（非商用研究许可<sup>◉</sup>）</a>
+            <a class="chip side" href="#google">旧 Gemma 1–3（可远程限制<sup>◉</sup>）</a>
+            <a class="chip side" href="#xai">Grok 2.5（禁训竞品<sup>◉</sup>）</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="rung" style="--lc:var(--ink-3)">
+        <div class="lv">L0 完全封闭<small>仅 API / 订阅租用（黑盒）</small></div>
+        <div class="rd">
+          <p>权重不公开，数据进厂商或云托管机房；合规重心完全转向<b>服务条款（ToS）、数据处理协议（DPA）、零留存（ZDR）、数据跨境与 IP 赔偿盾</b>。</p>
+          <div class="chips">
+            <a class="chip" href="#openai">GPT-6.2 Astra / Sol</a>
+            <a class="chip" href="#anthropic">Claude Fable 5.2 / Mythos / Opus 5.5</a>
+            <a class="chip" href="#google">Gemini 4 Carbon / Neon / Argon</a>
+            <a class="chip" href="#xai">Grok 4.7</a>
+            <a class="chip" href="#bytedance">豆包 Seed2.1</a>
+            <a class="chip side" href="#qwen">Qwen4-Max</a>
+            <a class="chip side" href="#meta">Meta Muse Spark 1.3 / Wonder</a>
+            <a class="chip side" href="#glm">GLM-5.4（暂仅订阅）</a>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="rung" style="--lc:var(--p2)">
-      <div class="lv">开放权重<small>自定义许可</small></div>
-      <div class="rd"><p>下列型号也可获取权重，但许可包含各自的商业条件。各型号的商业条款与触发门槛见详情行及许可原文。部分仓库需要申请访问。</p>
-        <div class="chips"><a class="chip" href="#qwen">Qwen3.8-2.4T-A95B</a><a class="chip" href="#kimi">Kimi K3.1 Pro / K3</a><a class="chip" href="#hunyuan">Hy4 flash</a><a class="chip" href="#glm">GLM-5.3</a><a class="chip" href="#meta">Muse Spark Open · 需申请</a><a class="chip side" href="#meta">Llama 4</a></div></div>
+
+    <div class="seal-note">
+      <div class="sh">⚖ 法务第一铁律：许可证绑定到「具体模型仓库与版本」，不再绑定到「厂商名」</div>
+      <p>过去笼统说「Qwen 是 Apache 2.0」「Gemma 是自订许可」「混元是地域排除」在 2026 年 11 月已全部失准：<b>同一厂商的不同尺寸、不同模态，甚至 Preview 与正式版之间（如腾讯 Hy4-preview 是 Apache 2.0，2026-11-16 Hy4-flash 与 11-20 Hy4 正式版却改挂 Hy License 1.0 Section 10），许可证可以完全不同。</b>采购与法务立项必须留存所下载具体 <code>repo + commit</code> 的 <code>LICENSE</code> 原文快照。</p>
     </div>
-    <div class="rung" style="--lc:var(--ink-3)">
-      <div class="lv">托管服务<small>本次未见权重发布</small></div>
-      <div class="rd"><p>通过产品或 API 使用下列型号；公开的服务文档不等于权重授权。同一家的开放权重支线应单独判断。</p>
-        <div class="chips"><a class="chip" href="#openai">GPT-6.2 Astra / Sol</a><a class="chip" href="#anthropic">Claude Fable 5.2 / Opus 5.5</a><a class="chip" href="#google">Gemini 4 Carbon / Neon</a><a class="chip" href="#xai">Grok 4.7</a><a class="chip" href="#qwen">Qwen4-Max</a><a class="chip side" href="#meta">Muse Spark 1.3 / Wonder</a><a class="chip" href="#bytedance">Seed2.1</a><a class="chip" href="#hunyuan">Hy4 正式版</a></div></div>
+  </section>
+
+  <!-- ================= §2 门派矩阵 ================= -->
+  <section class="blk" id="sec-matrix">
+    <div class="sec-kicker">SECTION 02 · 13 MODEL FAMILIES × TECHNICAL &amp; LEGAL MATRIX</div>
+    <h2 id="matrix-title">门派矩阵 · 十三家 × 技术分叉与合规排雷档案</h2>
+    <p class="sec-lead" id="matrix-help">按法域或开放姿态筛选；<b>点击任意一行（或用 Tab 选中门派按钮后按回车/空格）</b>展开小传、技术规格四维、<b>朱批法务排雷盒</b>及官方一手来源。<b>型号并列不代表性能排名</b>；本版新增 <b>Mistral AI（补齐欧盟法域）</b> 与 <b>MiniMax（严苛许可样本）</b>。</p>
+
+    <div class="bar" role="region" aria-label="矩阵筛选控件">
+      <div class="bar-grp" data-filter="region">
+        <span class="bar-lab">法域</span>
+        <button type="button" class="flt on" data-val="all" aria-pressed="true">全部</button>
+        <button type="button" class="flt" data-val="us" aria-pressed="false">美系 (5)</button>
+        <button type="button" class="flt" data-val="eu" aria-pressed="false">欧系 (1)</button>
+        <button type="button" class="flt" data-val="cn" aria-pressed="false">中系 (7)</button>
+      </div>
+      <div class="bar-grp" data-filter="tier">
+        <span class="bar-lab">开放姿态</span>
+        <button type="button" class="flt on" data-val="all" aria-pressed="true">全部</button>
+        <button type="button" class="flt" data-val="open-permissive" aria-pressed="false">纯宽松旗舰 (1)</button>
+        <button type="button" class="flt" data-val="open-gated" aria-pressed="false">商业闸门/限制权重 (7)</button>
+        <button type="button" class="flt" data-val="closed" aria-pressed="false">闭源旗舰 (5)</button>
+      </div>
+      <div class="bar-act">
+        <span class="bar-count" id="fam-count">显示 13 / 13 家</span>
+        <button type="button" class="flt" id="toggle-all">展开全部详情</button>
+      </div>
     </div>
-  </div>
 
-  <h2 id="matrix-title">门派矩阵 · 十一家 × 六个观察面</h2>
-  <p class="sub" id="matrix-help" style="font-size:13.5px">点击一家展开资料；也可用 Tab 选中门派按钮，再按 Enter 或空格。宽表可左右滚动。<b>型号并列不代表性能排名</b>；文字 / 图像 / 音频 / 视频均区分输入与输出，工具能力另行说明。</p>
-  <div class="mtx-scroll" tabindex="0" role="region" aria-labelledby="matrix-title" aria-describedby="matrix-help"><table id="famtable">
-    <thead><tr><th scope="col">门派 / 本次代表型号</th><th scope="col">架构骨干</th><th scope="col">后训练公开信息</th><th scope="col">推理控制</th><th scope="col">输入 → 输出</th><th scope="col">权重与许可</th><th scope="col">获取方式</th></tr></thead>
-    <tbody>
-      <tr class="fam" id="openai">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-openai"><span class="car" aria-hidden="true">▶</span>OpenAI · GPT<span class="model-name">GPT-6.2 Astra / Sol</span></button></th>
-        <td>未披露完整架构</td><td>未披露完整配方</td><td>推理强度可配<br>Sol 不接受 none</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>API / 产品</td>
-      </tr>
-      <tr class="det" id="detail-openai"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>11 月 17 日发布 GPT-6.2 Astra 与 Sol。官方将 Astra 用于复杂推理、编程与专业任务，将 Sol 用于日常编程和 Agent 工作流。两者都接收图文并输出文字。</p>
-        <dl><div><dt>Sol 规格</dt><dd>总上下文 1,050,000 tokens，最大输入 922,000，最大输出 128,000。</dd></div>
-<div><dt>接口与工具</dt><dd>两款模型均支持 Responses 与 Chat Completions。需调用工具时使用 Responses API。</dd></div>
-<div><dt>开放支线</dt><dd>gpt-oss-120b / 20b 单独发布，权重使用 Apache 2.0。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://openai.com/index/introducing-gpt-6-2-astra-sol/" target="_blank" rel="noopener noreferrer">GPT-6.2 发布 ↗</a><a href="https://developers.openai.com/api/docs/changelog" target="_blank" rel="noopener noreferrer">API 更新日志 ↗</a><a href="https://developers.openai.com/api/docs/models/gpt-6.2-astra" target="_blank" rel="noopener noreferrer">Astra 规格 ↗</a><a href="https://developers.openai.com/api/docs/models/gpt-6.2-sol" target="_blank" rel="noopener noreferrer">Sol 规格 ↗</a><a href="https://huggingface.co/openai/gpt-oss-120b" target="_blank" rel="noopener noreferrer">gpt-oss 模型卡 ↗</a></p>
-      </td></tr>
+    <div class="mtx-scroll" tabindex="0" role="region" aria-labelledby="matrix-title" aria-describedby="matrix-help">
+      <table id="famtable">
+        <thead>
+          <tr>
+            <th scope="col">门派</th>
+            <th scope="col">代表型号（2026-11）</th>
+            <th scope="col">架构与推理控制</th>
+            <th scope="col">输入 → 输出 / 多模态</th>
+            <th scope="col">开放度与双轨</th>
+            <th scope="col">辖区 / 监管态势</th>
+            <th scope="col" class="seal-col">⚖ 核心条款与合规红旗</th>
+          </tr>
+        </thead>
+        <tbody>
 
-      <tr class="fam" id="anthropic">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-anthropic"><span class="car" aria-hidden="true">▶</span>Anthropic · Claude<span class="model-name">Fable 5.2 / Opus 5.5</span></button></th>
-        <td>未披露完整架构</td><td>发布系统卡与对齐评估</td><td>自适应思考<br>选项依型号</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>API / 产品<br>Mythos 5.2 受限访问</td>
-      </tr>
-      <tr class="det" id="detail-anthropic"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>11 月 9 日发布 Claude Fable 5.2。Mythos 5.2 面向通过 Anthropic 验证计划的组织，获取条件单独核对。Opus、Sonnet 与 Haiku 5.5 仍列在官方目录。</p>
-        <dl><div><dt>Fable 5.2 规格</dt><dd>1M 上下文、128K 最大输出，图文输入、文字输出。</dd></div>
-<div><dt>推理方式</dt><dd>Fable 5.2 采用始终开启的自适应思考，默认 effort 为 high。Opus 5.5 默认 medium。</dd></div>
-<div><dt>资料边界</dt><dd>跨型号比较时同时记录思考模式、默认预算与可用参数。安全与能力评估可查系统卡。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://platform.claude.com/docs/en/release-notes/overview" target="_blank" rel="noopener noreferrer">11 月 9 日发布与访问范围 ↗</a><a href="https://platform.claude.com/docs/en/models/overview" target="_blank" rel="noopener noreferrer">当前型号和思考机制 ↗</a><a href="https://platform.claude.com/docs/en/models/fable-5-2/overview" target="_blank" rel="noopener noreferrer">Fable 5.2 规格 ↗</a><a href="https://platform.claude.com/docs/en/resources/overview" target="_blank" rel="noopener noreferrer">系统卡目录 ↗</a></p>
-      </td></tr>
+          <!-- 1. OpenAI -->
+          <tr class="fam" id="openai" data-region="us" data-tier="closed">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-openai"><span class="car" aria-hidden="true">▶</span>OpenAI · GPT</button></th>
+            <td>GPT-6.2 Astra / Sol<sup>◉</sup><span class="subnote">GPT-6 Cyber · gpt-oss-120b/20b</span></td>
+            <td>完整架构未披露（据报引入循环深度<sup>◐</sup>）；推理强度可配，Sol 不接受 <code>none</code><sup>◉</sup></td>
+            <td>文/图 → 文（工具走 Responses API）<sup>◉</sup>；Sora 平台 2026-03 已停运<sup>◐</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--ink-3)">🔒 L0</span><span class="ob-sub">gpt-oss: L2·Apache</span></td>
+            <td>美<span class="subnote">未在华备案</span></td>
+            <td><div class="rf-list"><span class="rf">NYT 诉案日志保全</span><span class="rf">Responses 默认存 30 天</span><span class="rf">赔偿盾排斥修改与转售</span></div></td>
+          </tr>
+          <tr class="det" id="detail-openai" data-for="openai"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 旗舰：GPT-6.2 Astra / Sol（11-17）· 小开源：gpt-oss-120b/20b（Apache 2.0）</span><br>规模定律与测试时推理的开创者。11 月 17 日发布 <b>GPT-6.2 Astra</b>（复杂推理、编程与专业任务）与 <b>Sol</b>（日常编程和 Agent 工作流），另有定向网安版 GPT-6 Cyber<sup>◉</sup>；Sora 视频平台因算力成本与版权困局（含迪士尼合作破裂）于 2026-03 关停<sup>◐</sup>。技术架构延续保密，业内报道称 GPT-6 Astra 引入循环深度（Loop Transformer），可能降低部分内部思维链外部可观测性<sup>◐</sup>。</p>
+            <dl class="tech-dl">
+              <div><dt>已核实规格与接口</dt><dd>Sol 总上下文 <b>1,050,000 tokens</b>（最大输入 922,000、最大输出 128,000）；Astra / Sol 均支持 Responses 与 Chat Completions，需调用工具时须走 Responses API<sup>◉</sup></dd></div>
+              <div><dt>算力与数据诉讼</dt><dd>NVIDIA Grace Blackwell 集群 + Azure 多云<sup>◐</sup>；NYT 等大规模版权诉讼仍未终结<sup>◐</sup></dd></div>
+              <div><dt>安全主张与事件</dt><dd>准备度框架；2026-07 曾曝 Agent 未授权网络攻击事件致 GPT-6 推迟补强护栏<sup>◐</sup></dd></div>
+              <div><dt>商业形态</dt><dd>ChatGPT + API + 微软生态；2026-08 切断被 SpaceX 收购后的 Cursor 模型供应<sup>◐</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>开源 / 权重许可</dt><dd>旗舰全闭源。独立小分支 <code>gpt-oss-120b / 20b</code> 采用标准 <b>Apache 2.0</b><sup>◉</sup>，无营收/用户门槛，另附单独的 gpt-oss 使用政策供参考。</dd></div>
+                <div><dt>API 条款与数据留存陷阱</dt><dd>① 商用/API 默认不训练，但常规接口留存 <b>30 天滥用监控日志</b>；② <b>Responses API 陷阱</b>：新接口 <code>/v1/responses</code> 默认开启 <code>store: true</code> 留存状态 30 天，须显式传 <code>store: false</code><sup>◉</sup>；③ <b>司法保全打破删除预期</b>：NYT 诉案中纽约法院曾令 OpenAI 无限期保全用户已删对话日志（仅签有 <b>ZDR 零留存协议</b>或部分企业/教育版豁免）<sup>◉</sup>；④ ToS §3.3 严禁将输出用于开发竞品模型或程序化抓取<sup>◉</sup>。</dd></div>
+                <div><dt>IP 赔偿盾与商业争议</dt><dd>Services Agreement 提供 Copyright Shield，但公开条款存在多处收窄：<b>排除修改后的输出、与非 OpenAI 产品组合使用、商标侵权，以及客户“禁用、忽略或未启用”引用/过滤/安全功能的情形</b><sup>◉</sup>；且明确<b>“无第三方受益人”</b>——经第三方网关/转售商调用将失去直签赔偿盾<sup>◉</sup>。企业长协社区反馈常见「锁价高于随后降价的官网刊例价」与超额保底风险<sup>◐</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>对高敏数据务必签署 ZDR 协议（或走 Azure OpenAI 独立租户）并在代码层强制 <code>store: false</code>；评估 Copyright Shield 时核查“编辑修改后输出是否失保”及是否开启全部官方过滤器。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://openai.com/index/introducing-gpt-6-2-astra-sol/" target="_blank" rel="noopener noreferrer">GPT-6.2 发布 ↗</a><a href="https://developers.openai.com/api/docs/models/gpt-6.2-astra" target="_blank" rel="noopener noreferrer">Astra 规格 ↗</a><a href="https://developers.openai.com/api/docs/models/gpt-6.2-sol" target="_blank" rel="noopener noreferrer">Sol 规格 ↗</a><a href="https://huggingface.co/openai/gpt-oss-120b" target="_blank" rel="noopener noreferrer">gpt-oss 模型卡 ↗</a><a href="https://openai.com/policies/services-agreement/" target="_blank" rel="noopener noreferrer">Services Agreement ↗</a><a href="https://openai.com/policies/row-terms-of-use/" target="_blank" rel="noopener noreferrer">Terms of Use ↗</a></p>
+          </td></tr>
 
-      <tr class="fam" id="google">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-google"><span class="car" aria-hidden="true">▶</span>Google · Gemini<span class="model-name">Gemini 4 Carbon / Neon</span></button></th>
-        <td>Argon 基座 → Carbon<br>Carbon → Neon</td><td>模型卡沿 Argon 追溯<br>训练数据说明</td><td>推理与后台解码<br>按端点核对</td><td>文、图、音、视频 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>Gemini 产品 / API<br>Gemma 另有权重</td>
-      </tr>
-      <tr class="det" id="detail-google"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>Carbon 于 11 月 10 日开放使用，基于 Argon。11 月 18 日开始推出的 Neon 由 Carbon 改造而来。Argon 模型卡描述了其稀疏 MoE Transformer 基座。</p>
-        <dl><div><dt>窗口与输出</dt><dd>两份模型卡均列出最高 1M 的输入与输出合计窗口。Neon 的默认同步输出上限为 64K，后台长解码另有上限与渠道条件。</dd></div>
-<div><dt>访问范围</dt><dd>Carbon 通过 Gemini API 等入口提供。Neon 自 11 月 18 日起分渠道推出，接入时查所用 API 或产品的可用状态。</dd></div>
-<div><dt>开放支线</dt><dd>Gemma 4 采用 Apache 2.0，含 Dense 与 MoE 型号，具体音视频输入支持见各尺寸规格。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://deepmind.google/models/model-cards/gemini-4-carbon/" target="_blank" rel="noopener noreferrer">Carbon 模型卡 ↗</a><a href="https://deepmind.google/models/model-cards/gemini-4-neon/" target="_blank" rel="noopener noreferrer">Neon 模型卡 ↗</a><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/" target="_blank" rel="noopener noreferrer">Neon 发布与渠道 ↗</a><a href="https://deepmind.google/models/model-cards/gemini-4-argon/" target="_blank" rel="noopener noreferrer">Argon 基座模型卡 ↗</a><a href="https://ai.google.dev/gemma/docs/core/model_card_4" target="_blank" rel="noopener noreferrer">Gemma 4 模型卡与许可 ↗</a></p>
-      </td></tr>
+          <!-- 2. Anthropic -->
+          <tr class="fam" id="anthropic" data-region="us" data-tier="closed">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-anthropic"><span class="car" aria-hidden="true">▶</span>Anthropic · Claude</button></th>
+            <td>Fable 5.2 / Mythos 5.2<sup>◉</sup><span class="subnote">Opus 5.5 · Sonnet 5.5 · Haiku 5.5</span></td>
+            <td>完整架构未披露；宪法式对齐 + 系统卡；Fable 5.2 始终开启自适应思考（默认 high）<sup>◉</sup></td>
+            <td>文/图与文档 → 文；不做生图/视频<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--ink-3)">🔒 L0</span><span class="ob-sub">全系闭源<br>Mythos 受限验证</span></td>
+            <td>美<span class="subnote">穿透封禁中资控股</span></td>
+            <td><div class="rf-list"><span class="rf">中资控股&gt;50%全球禁令</span><span class="rf">封禁第三方 Harness 订阅</span><span class="rf">消费者版默认训练存 5 年</span></div></td>
+          </tr>
+          <tr class="det" id="detail-anthropic" data-for="anthropic"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 旗舰：Claude Fable 5.2 / Mythos 5.2（11-09）+ Opus/Sonnet/Haiku 5.5</span><br>将安全与宪法式对齐写入治理章程，企业与代码场景标杆，2026 年秋季已提交 IPO 注册文件（S-1）<sup>◐</sup>。11 月 9 日发布 Fable 5.2（1M 上下文、128K 输出）；高危网安档位 Mythos 5.2 仅通过 Project Glasswing 验证计划向受信任组织分级准入<sup>◉</sup>。同时期因拒绝撤除大规模监控与自主武器红线与美国防部爆发激烈冲突<sup>◐</sup>。</p>
+            <dl class="tech-dl">
+              <div><dt>已核实规格与思考</dt><dd>Fable 5.2 为 1M 上下文 / 128K 最大输出、始终开启自适应思考（默认 effort 为 high）；Opus 5.5 默认 medium<sup>◉</sup>；思考摘要化输出防蒸馏<sup>◉</sup></dd></div>
+              <div><dt>数据姿态与诉讼</dt><dd>Bartz 书籍版权集体诉讼已达成 <b>$15 亿美元</b>和解（约 50 万册书，每册至少 $3,000）；另面临 UMG/Concord 音乐版权诉讼（索赔 $31 亿）<sup>◉</sup></dd></div>
+              <div><dt>安全主张与事件</dt><dd>责任扩展政策（RSP）+ 系统卡目录<sup>◉</sup>；2026-07 披露三次评测沙箱误配致无护栏模型越权联网，2026-11 S-1 披露曾因安全/对齐核查暂停训练逾月<sup>◐</sup></dd></div>
+              <div><dt>商业形态</dt><dd>企业 API / Claude Code / 订阅（Ultra/Max/Pro）+ AWS Bedrock / Google Vertex AI；S-1 披露 5%–7% 营收来自事后查出违反使用政策的账户<sup>◐</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>主体与地域穿透禁令（高危）</dt><dd><b>中资控股实体全球禁令（2025-09 起生效）</b>：不仅封禁中国大陆访问，更禁止<b>全球范围内由中国（及俄、伊、朝）实体控股超过 50% 的企业及其海外子公司</b>使用 Claude<sup>◉</sup>。中资出海企业即便通过新加坡/日本主体接入仍属违约，随时面临封号断供。</dd></div>
+                <div><dt>条款收紧与开发者社区反弹</dt><dd>① <b>消费者版数据训练转向</b>：Free / Pro / Max 个人对话与编码会话改为<b>默认用于模型训练，开启训练者数据留存长达 5 年</b>（须手动 opt-out）；商用 API 维持不训练承诺<sup>◉</sup>；② <b>封禁第三方 Agent Harness</b>：2026-03/04 限制 OAuth 订阅凭据仅限官方 Claude.ai / Claude Code 使用，禁止接入第三方工具，引发 HN 等开发者社区强烈反弹<sup>◉</sup>；③ 商用协议<b>一般责任上限仅 6 个月费用或 $100（孰高）</b>，且保留无通知暂停访问权<sup>◉</sup>。</dd></div>
+                <div><dt>IP 赔偿盾与政府采购风波</dt><dd>直签商业条款明确涵盖训练数据与输出侵权赔偿，但<b>通过 Google Vertex AI 调用时 Google §19(b) 免责，而 Anthropic 2026-08 更新的服务条款未明确写明 Vertex 路由的赔偿归属</b>（需书面确认）<sup>◐</sup>；另 2026-03 美防部将其列为供应链风险（地方法院暂禁 10 U.S.C. §3252 认定，但 D.C. 巡回法院于 2026-09 维持 FASCSA 认定<sup>◐</sup>），涉美国防承包业务需核查最新状态。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>中资背景或中资参股企业须先做股权穿透核查，严防“中资控股 &gt;50%”触发强制停服；禁止员工用个人 Pro/Max 账号处理公司代码与商密（防 5 年留存训练）；经 Bedrock/Vertex 采购须书面锁定 IP 赔偿责任主体。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://platform.claude.com/docs/en/release-notes/overview" target="_blank" rel="noopener noreferrer">11 月 9 日发布与访问范围 ↗</a><a href="https://platform.claude.com/docs/en/models/fable-5-2/overview" target="_blank" rel="noopener noreferrer">Fable 5.2 规格 ↗</a><a href="https://platform.claude.com/docs/en/resources/overview" target="_blank" rel="noopener noreferrer">系统卡目录 ↗</a><a href="https://www.anthropic.com/claude-fable-and-mythos-5-2" target="_blank" rel="noopener noreferrer">Fable/Mythos 5.2 公告 ↗</a><a href="https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data" target="_blank" rel="noopener noreferrer">5 年数据留存说明 ↗</a></p>
+          </td></tr>
 
-      <tr class="fam" id="xai">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-xai"><span class="car" aria-hidden="true">▶</span>xAI · Grok<span class="model-name">Grok 4.7</span></button></th>
-        <td>未披露完整架构</td><td>更大新基座<br>+ 更长智能体 RL</td><td>low / medium /<br>high / xhigh</td><td>文字、图像 → 文字</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>API / Grok Build<br>合作开发工具</td>
-      </tr>
-      <tr class="det" id="detail-xai"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · API 文档核对 2026-11-19</span><br>9 月 21 日发布 Grok 4.7：采用更大的新基座与更长的强化学习训练，强调长任务执行、自检和上下文管理。具体表现仍需在自己的任务上验证。</p>
-        <dl><div><dt>可核实规格</dt><dd>当前文档列出 500K 上下文；四档推理强度，默认 high。</dd></div>
-<div><dt>工具与模态</dt><dd>网页 / X 搜索、代码执行属于工具能力；4.7 为图文输入、文字输出。10 月 14 日发布的 Grok Voice 3.0 是另一个语音模型。</dd></div>
-<div><dt>获取方式</dt><dd>标准 4.7 可通过 API 使用。Fast 为同一模型的更快服务配置，文档仅列 Cursor / Grok Build，不作为公开 API 型号。</dd></div>
-<div><dt>资料边界</dt><dd>旧 Grok-1 的架构或许可不能外推至 4.7，本次不沿用“宽松安全尺度”等无直接证据的评价。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://x.ai/news/grok-voice-3" target="_blank" rel="noopener noreferrer">Voice 3.0 独立语音支线 ↗</a><a href="https://docs.x.ai/developers/models/grok-4.7" target="_blank" rel="noopener noreferrer">Grok 4.7 模型规格 ↗</a><a href="https://docs.x.ai/developers/release-notes" target="_blank" rel="noopener noreferrer">API 发布日志 ↗</a><a href="https://x.ai/news/grok-4-7" target="_blank" rel="noopener noreferrer">Grok 4.7 发布与训练说明 ↗</a></p>
-      </td></tr>
+          <!-- 3. Google -->
+          <tr class="fam" id="google" data-region="us" data-tier="closed">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-google"><span class="car" aria-hidden="true">▶</span>Google · Gemini</button></th>
+            <td>Gemini 4 Carbon / Neon<sup>◉</sup><span class="subnote">Argon 基座 · 3.8 Flash Cyber · Gemma 4</span></td>
+            <td>Argon 稀疏 MoE Transformer → Carbon → Neon<sup>◉</sup>；推理与后台解码按端点核对<sup>◉</sup></td>
+            <td>原生文/图/音/视频 → 文<sup>◉</sup> + Live Avatar<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--ink-3)">🔒 L0</span><span class="ob-sub">Gemma 4: L2·Apache<br>旧 Gemma: L1-A</span></td>
+            <td>美<span class="subnote">未在华备案</span></td>
+            <td><div class="rf-list"><span class="rf">免费 API 人工审阅+训练</span><span class="rf">赔偿盾限未修改输出</span><span class="rf">旧 Gemma 可远程限制</span></div></td>
+          </tr>
+          <tr class="det" id="detail-google" data-for="google"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 旗舰：Gemini 4 Carbon（11-10）/ Neon（11-18）· 开源：Gemma 4（Apache 2.0）</span><br>Transformer 发明者，拥有「自研 TPU + 搜索/YouTube 生态 + 安卓/办公分发」的唯一全栈闭环。Carbon 基于 Argon 稀疏 MoE 基座，Neon 由 Carbon 改造而来并自 11 月 18 日分渠道推出；另设受限网安变体 3.8 Flash Cyber<sup>◉</sup>。开源线 <b>Gemma 4（2026-04，含 Dense 与 MoE 型号）已彻底切换为标准 Apache 2.0</b><sup>◉</sup>。<b>利益相关声明：本版（v7）审计修订由 Gemini / Antigravity 协助完成，读者请自行折扣核对原文。</b></p>
+            <dl class="tech-dl">
+              <div><dt>已核实规格与窗口</dt><dd>Carbon 与 Neon 模型卡均列最高 <b>1M 输入输出合计窗口</b>；Neon 默认同步输出上限 64K，后台长解码另有上限与渠道条件<sup>◉</sup></dd></div>
+              <div><dt>算力底座</dt><dd>自研 TPU 全链路——十三家中唯一不依赖外部 GPU 供给的体系<sup>◉</sup></dd></div>
+              <div><dt>安全与生态姿态</dt><dd>前沿安全框架（FSF）+ 多支独立安全委员会<sup>◉</sup>；依托搜索与 YouTube 自有生态，版权与反垄断诉讼敞口结构异于纯创业实验室</dd></div>
+              <div><dt>商业形态</dt><dd>Google Cloud（Gemini Enterprise Agent Platform，原 Vertex AI）+ Workspace + Gemini Developer API 免费/付费双轨<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>开源 / 权重许可（严防版本混用）</dt><dd><b>Gemma 4（2026-04）采用纯 Apache 2.0</b>——无用户/营收门槛、无 UI 署名、允许用于竞品<sup>◉</sup>。但<b>旧版 Gemma 1–3 仍受 Gemma Terms of Use（2026-04-01 更新）约束</b>：要求向下游传导限制条款，且明文赋予 Google <b>「远程或以其他方式（remotely or otherwise）」限制使用</b>的权利<sup>◉</sup>！</dd></div>
+                <div><dt>免费 API 数据陷阱与商业计费坑</dt><dd>① <b>免费层 = 数据付费</b>：AI Studio 与 Gemini API 未付费配额属 Unpaid Services，条款明文规定 Google 将输入输出用于改进产品，且<b>人工审阅员可阅读、标注和处理你的 API 数据</b><sup>◉</sup>；② <b>欧洲法域硬杠</b>：在 EEA、英国和瑞士，条款规定<b>面向终端用户的 API 应用只能使用付费服务</b>（免费层仅限本人测试）<sup>◉</sup>；③ 计费陷阱：2026-03 起 $300 GCP 试用金不再抵扣 Gemini API，余额归零直接全项目 HTTP 402 停摆，且存在约 10 分钟计费延迟超刷风险<sup>◉</sup>。</dd></div>
+                <div><dt>IP 赔偿盾与 Agent 责任扩展</dt><dd>Google Cloud 提供业界少见的<b>双重 IP 赔偿盾（训练数据 + 生成输出）</b>且覆盖合规微调模型<sup>◉</sup>，但有严格前提：<b>仅限付费 GA 版本</b>（排除免费层/试用金/Preview/第三方模型），且条款要求<b>「未修改输出（unmodified）」</b>——人工编辑一段文字或与外部内容拼接即可能触发失保争议<sup>◉</sup>；2026-11 Cloud 条款更新还将客户反向赔偿与使用限制明文扩展至 <b>AI Agent 行为</b><sup>◉</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>严禁研发在生产或含 NDA/客户数据场景误用免费 API Key（一键绑定付费结算账户或改走 Vertex AI）；私有化部署选用 Gemma 时务必锁定 <b>Gemma 4（Apache 2.0）</b>，淘汰带远程限制条款的旧版 Gemma。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://deepmind.google/models/model-cards/gemini-4-carbon/" target="_blank" rel="noopener noreferrer">Carbon 模型卡 ↗</a><a href="https://deepmind.google/models/model-cards/gemini-4-neon/" target="_blank" rel="noopener noreferrer">Neon 模型卡 ↗</a><a href="https://deepmind.google/models/model-cards/gemini-4-argon/" target="_blank" rel="noopener noreferrer">Argon 模型卡 ↗</a><a href="https://ai.google.dev/gemma/docs/core/model_card_4" target="_blank" rel="noopener noreferrer">Gemma 4 模型卡与许可 ↗</a><a href="https://opensource.googleblog.com/2026/03/gemma-4-expanding-the-gemmaverse-with-apache-20.html" target="_blank" rel="noopener noreferrer">Gemma 4 Apache 2.0 公告 ↗</a><a href="https://aistudio.google.com/docs/terms" target="_blank" rel="noopener noreferrer">Gemini API Additional Terms ↗</a></p>
+          </td></tr>
 
-      <tr class="fam" id="deepseek">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-deepseek"><span class="car" aria-hidden="true">▶</span>DeepSeek<span class="model-name">V4.1 Flash-1017 / V4 Pro</span></button></th>
-        <td>Flash：MoE<br>CED + CSA2</td><td>1017：补充自反馈 RL<br>家族配方另列</td><td>Flash：1–100<br>推理强度</td><td>V4.1 Flash：<br>文字、图像 → 文字</td><td class="opn" style="--oc:var(--p1)"><span class="ob">MIT</span></td><td>1017 权重 / API<br>Pro 继续服务</td>
-      </tr>
-      <tr class="det" id="detail-deepseek"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · API 核对 2026-11-19 · 权重规格核对 2026-10-26</span><br>保留 V4.1 Flash-1017 与 V4 Pro。11 月 13 日，官方扩展了 <code>deepseek-flash</code> 的应用 API，覆盖检索、文件与语音等接入。</p>
-        <dl><div><dt>家族架构</dt><dd>V4.1 Flash 技术报告描述 CED、CSA2、MoE 与 Engram；552B 主干另加 196B 条件记忆，预填充 / 解码激活量为 8B / 16B，窗口 1M。1017 模型卡仍引用这份报告；这些规格不外推到 V4 Pro。</dd></div>
-<div><dt>权重与部署</dt><dd>1017 仓库与权重采用 MIT。该版没有 Jinja 格式聊天模板，另提供编码参考实现与 deepseek-recipe；部署时应匹配新版本的提示编码。</dd></div>
-<div><dt>API 别名</dt><dd>deepseek-flash 已指向 V4.1 Flash-1017，调用名称不变不等于底层快照不变。V4 Pro 按当前更新日志继续提供，旧停服计划不再适用。</dd></div>
-<div><dt>工具边界</dt><dd>网页搜索、文件解析与语音由 API 内置工具或独立服务提供。下载 1017 权重后，需要另行连接相应组件。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://api-docs.deepseek.com/news/news261017/" target="_blank" rel="noopener noreferrer">10 月 17 日发布与工具说明 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017" target="_blank" rel="noopener noreferrer">1017 模型卡与部署说明 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">1017 MIT 许可证 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash" target="_blank" rel="noopener noreferrer">V4.1 家族架构与技术报告 ↗</a><a href="https://api-docs.deepseek.com/updates/" target="_blank" rel="noopener noreferrer">API 别名与服务更新日志 ↗</a><a href="https://api-docs.deepseek.com/news/news261113/" target="_blank" rel="noopener noreferrer">11 月 13 日应用 API ↗</a></p>
-      </td></tr>
+          <!-- 4. SpaceXSI / Grok -->
+          <tr class="fam" id="xai" data-region="us" data-tier="closed">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-xai"><span class="car" aria-hidden="true">▶</span>SpaceXSI · Grok<span class="subnote">原 xAI（已并入 SpaceX）</span></button></th>
+            <td>Grok 4.7<sup>◉</sup><span class="subnote">Voice 3.0 · Grok Build · Cursor</span></td>
+            <td>完整架构未披露（新大基座 + 长智能体 RL）；四档推理强度（默认 high）<sup>◉</sup></td>
+            <td>4.7 为文/图 → 文；Voice 3.0 独立语音支线；网页/X 搜索属工具能力<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--ink-3)">🔒 L0</span><span class="ob-sub">Grok 2.5: L1-A<br>Grok-1: L2·Apache</span></td>
+            <td>美（纳斯达克 SPCX）<span class="subnote">欧/英/美多地调查诉讼</span></td>
+            <td><div class="rf-list"><span class="rf">深伪监管与州检诉讼</span><span class="rf">无欧盟数据驻留</span><span class="rf">Grok 2.5 反竞争许可</span></div></td>
+          </tr>
+          <tr class="det" id="detail-xai" data-for="xai"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 旗舰：Grok 4.7（09-21，500K 上下文）· 组织主体：SpaceXSI（SPCX）</span><br>组织变动最剧烈的门派：2025-03 并购 X、2026-02 被 SpaceX 以 $2500 亿全股收购（合并估值 $1.25 万亿）、2026-06 随 SpaceX 纳斯达克上市、2026-08 完成 $600 亿收购代码编辑器 Cursor，并于 2026-10 更名 <b>SpaceX Super Intelligence（SpaceXSI）</b><sup>◉</sup>。9 月 21 日发布的 Grok 4.7 强调长任务执行、自检与上下文管理，Fast 变体仅限 Cursor / Grok Build 而不作公开 API<sup>◉</sup>。</p>
+            <dl class="tech-dl">
+              <div><dt>已核实规格与渠道</dt><dd>500K 上下文，low / medium / high / xhigh 四档推理强度（默认 high）；10 月 14 日发布独立语音模型 Grok Voice 3.0<sup>◉</sup></dd></div>
+              <div><dt>算力与数据姿态</dt><dd>自建 Colossus 超大 GPU 集群<sup>◐</sup>；X 平台公开帖子独家实时语料<sup>◉</sup>；爱尔兰 DPC 自 2025-04 起持续调查其使用欧盟用户帖子训练的合法性<sup>◉</sup></dd></div>
+              <div><dt>安全与治理事件</dt><dd>2026-01 内容安全核心高管离职<sup>◐</sup>；为合规加州 SB 53 更新安全框架并签约美 CAISI，但系统卡披露较薄<sup>◐</sup></dd></div>
+              <div><dt>商业形态</dt><dd>「X Subscription」捆绑 Grok + Cursor + X Premium，及 SpaceXSI Enterprise / API<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>开源 / 权重许可争议</dt><dd>仅 2024 年旧版 Grok-1 为 Apache 2.0。2025-08 宣称“开源”的 <b>Grok 2.5 实为自订 <code>SpaceXSI Community License Agreement</code></b>，附带使用政策限制并封堵竞品训练，遭技术社区公开指责为“伪开源 / 含反竞争条款”<sup>◉</sup>；2026-07 开源的仅是 Grok Build 的 Agent Harness（Apache 2.0）<sup>◉</sup>。</dd></div>
+                <div><dt>全球监管调查与深伪诉讼风暴</dt><dd>因 Grok Imagine「spicy」模式引发非自愿私密深伪图片泛滥，2026 年爆发连环监管打击：<b>英国 Ofcom 启动《网络安全法》正式调查（最高罚全球营收 10%）</b>、<b>欧盟委员会立案 DSA 调查并下达数据保全令</b>、<b>法国检方与欧警署搜查 X 巴黎办公室</b>、加拿大隐私专员认定违法、印尼/马/菲一度封禁，美国俄勒冈、弗吉尼亚及巴尔的摩等地提起诉讼<sup>◐</sup>。</dd></div>
+                <div><dt>API 数据条款与遥测风波</dt><dd>SpaceXSI 企业条款（2026-08/10 更新）承诺 <b>API 默认不训练</b>、自动并入含 EU SCCs 的 DPA 并提供 ZDR 选项，默认保留 30 天滥用日志<sup>◉</sup>；但<b>仅提供美国区域端点、不提供欧盟数据驻留保证</b><sup>◉</sup>。另 2026-07 曾曝 Grok Build 终端工具超量上传本地数据事故（随后紧急关停并承诺删除）<sup>◐</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>面向欧盟或对品牌声誉敏感的 B 端/消费级场景，须重点评估 Grok 多模态生成合规风险及缺乏欧盟数据驻留的 GDPR 障碍；切勿将 Grok 2.5 误作 Apache 2.0 商用引入。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://docs.x.ai/developers/models/grok-4.7" target="_blank" rel="noopener noreferrer">Grok 4.7 模型规格 ↗</a><a href="https://x.ai/news/grok-4-7" target="_blank" rel="noopener noreferrer">Grok 4.7 发布说明 ↗</a><a href="https://x.ai/news/grok-voice-3" target="_blank" rel="noopener noreferrer">Voice 3.0 ↗</a><a href="https://x.ai/legal/terms-of-service-enterprise" target="_blank" rel="noopener noreferrer">SpaceXSI Enterprise ToS ↗</a></p>
+          </td></tr>
 
-      <tr class="fam" id="meta">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-meta"><span class="car" aria-hidden="true">▶</span>Meta · Muse / Llama<span class="model-name">Spark Open / Glimmer 30B</span></button></th>
-        <td>Spark Open：MoE<br>Glimmer：Dense</td><td>Spark Open：安全后训练<br>Glimmer：蒸馏自 Spark</td><td>low / medium /<br>high / xhigh</td><td>Spark Open：文图音视频 → 文<br>Glimmer：图文 → 文</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分型号</span></td><td>Spark Open：申请权重<br>Glimmer：本地权重</td>
-      </tr>
-      <tr class="det" id="detail-meta"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · API 核对 2026-11-19 · 权重规格核对 2026-10-26</span><br>矩阵比较 Spark Open 和 Glimmer 30B 两个权重型号。Meta Model API 另列按量付费的 <code>muse-spark-1.3</code> 和 <code>muse-wonder-1.0</code>。Wonder Full 当前只通过 Muse Code 的指定订阅方案提供。</p>
-        <dl><div><dt>Spark Open 规格</dt><dd>816B 总参数 / 42B 激活的 MoE，带感知编码器，1M 上下文；文、图、音、视频输入，文字输出。开放 BF16 / NVFP4 版本，下载需按官方仓库申请；与托管 Spark 1.3 分开记录。</dd></div>
-<div><dt>本地模型 Glimmer</dt><dd>约 29.6B 的 Dense 模型，含感知编码器，由 Spark 蒸馏；图文输入、文字输出，模型卡列 131,072+ 上下文。提供量化与 DFlash 草稿模型；实际运行内存还取决于上下文和部署组件。</dd></div>
-<div><dt>三种许可</dt><dd>Spark Open 用 Muse Model License：有署名与使用政策；MaaS 业务且关联主体连续 12 个月总收入超过 2,000 万美元时，须另签协议，例外见原文。Glimmer 用 Apache 2.0；Llama 4 仍为 Community License，不能统一标为 Apache。</dd></div>
-<div><dt>推理与资料边界</dt><dd>Spark Open 的 reasoning_effort 为 low / medium / high / xhigh，默认 xhigh；Glimmer 在系统提示中设置 Reasoning strength。托管 Spark 1.3 的标准和 Contributor 模式使用不同模型 ID。按官方说明，Contributor 模式允许用请求内容训练未来模型。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B" target="_blank" rel="noopener noreferrer">Spark Open 模型卡 / 许可全文 ↗</a><a href="https://huggingface.co/meta-models/Muse-Glimmer-30B" target="_blank" rel="noopener noreferrer">Glimmer 模型卡 / Apache 2.0 ↗</a><a href="https://ai.meta.com/research/publications/muse-glimmer-30b-an-on-device-agentic-model/" target="_blank" rel="noopener noreferrer">Glimmer 研究页（10-19）↗</a><a href="https://dev.meta.ai/docs/muse-spark" target="_blank" rel="noopener noreferrer">托管 Spark 可用性与数据模式 ↗</a><a href="https://dev.meta.ai/docs/muse-wonder" target="_blank" rel="noopener noreferrer">Muse Wonder / Full 访问条件 ↗</a><a href="https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Llama 4 许可 ↗</a></p>
-      </td></tr>
+          <!-- 5. DeepSeek -->
+          <tr class="fam" id="deepseek" data-region="cn" data-tier="open-permissive">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-deepseek"><span class="car" aria-hidden="true">▶</span>DeepSeek</button></th>
+            <td>V4.1 Flash-1017 / V4 Pro<sup>◉</sup><span class="subnote">1M 上下文 · 11-13 扩展应用 API</span></td>
+            <td>Flash：MoE + CED + CSA2 + Engram（552B 主干 + 196B 记忆，8B/16B 激活）<sup>◉</sup>；1–100 推理强度<sup>◉</sup></td>
+            <td>V4.1 Flash：文/图 → 文；搜索/文件/语音由 API 工具提供<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--p1)">🔓 L3·纯MIT</span><span class="ob-sub">全系无商业闸门</span></td>
+            <td>中 · 已备案<span class="subnote">美联邦 FASCSA 禁令</span></td>
+            <td><div class="rf-list"><span class="rf">美 DHS FASCSA 排除令</span><span class="rf">API 缺留存期与 DPA</span><span class="rf">蒸馏与中转指控争议</span></div></td>
+          </tr>
+          <tr class="det" id="detail-deepseek" data-for="deepseek"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 旗舰：DeepSeek-V4.1-Flash-1017 &amp; V4-Pro（纯 MIT 权重）</span><br>幻方量化孵化的研究型力量，2026 年持续通过 V4 系列巩固「工程极致降本 + 论文坦诚公开」的行业地位，且在 Kimi / Qwen / 智谱 / 腾讯 / Meta 纷纷加装商业闸门的浪潮中，<b>仍是十三家头部厂商中唯一全线旗舰坚持纯 MIT 许可的孤勇者</b><sup>◉</sup>。11 月 13 日官方扩展了 <code>deepseek-flash</code> 应用 API（覆盖检索、文件与语音）；但同期地缘合规风险急剧升级。</p>
+            <dl class="tech-dl">
+              <div><dt>已核实架构与别名</dt><dd>V4.1 Flash 采用 CED、CSA2、MoE 与 Engram（552B 主干 + 196B 条件记忆，预填充/解码激活 8B/16B，1M 窗口）；1017 版无 Jinja 模板须匹配官方编码参考实现；<code>deepseek-flash</code> 别名会静默升级底层快照，V4 Pro 继续服务<sup>◉</sup></dd></div>
+              <div><dt>算力与芯片合规</dt><dd>芯片出口管制约束下的极致系统优化；路透曾报道美方调查其是否涉及管制芯片训练（未获公开裁决）<sup>◐</sup></dd></div>
+              <div><dt>数据姿态与评测</dt><dd>公开语料 + 大规模合成数据 + 自反馈 RL<sup>◉</sup>；美 NIST CAISI 早期评测指其 R1 越狱与 Agent 劫持风险较高，V4 公开独立红队报告尚缺<sup>◐</sup></dd></div>
+              <div><dt>商业形态</dt><dd>低价直连 API + 纯 MIT 权重引流；权重广泛托管于阿里云、火山方舟等第三方合规云<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>权重层 vs API 层的「冰火两重天」</dt><dd>① <b>本地自托管权重（纯 MIT）</b>：无营收、用户、地域或 MaaS 限制，断网自部署完全不向 DeepSeek 回传数据<sup>◉</sup>；② <b>官方 API / App 风险极高</b>：开放平台条款（2026-04-29 生效）适用中国大陆法、数据存于中国境内，隐私政策载明用于训练（提供 opt-out），<b>未声明 API 留存期限且无标准 DPA</b>，并规定涉违法活动须留存上报<sup>◉</sup>。德柏林数据保护官曾依 GDPR 第 46 条与 DSA 通报下架其 App<sup>◉</sup>。</dd></div>
+                <div><dt>美国联邦 FASCSA 排除令（2026-10-20 重大升级）</dt><dd>美国国土安全部（DHS）发布联邦公报排除令（<code>91 Fed. Reg. 66,346</code>），不仅禁止联邦民用行政系统及采购链使用 DeepSeek 产品，更将覆盖范围扩至<b>「使用 DeepSeek 开发（developed using）」的系统</b>——<b>潜在波及用 DeepSeek 生成合成数据、蒸馏或评测的下游软件！</b>涉美联邦合同（含 <code>FAR 52.204-30</code>）的承包商须在 3 个工作日内排查上报并向下游分包传导<sup>◉</sup>。澳、台、捷克等政府系统亦有限制<sup>◉</sup>。</dd></div>
+                <div><dt>社区争议与中转隐私警示</dt><dd>2026-09 美三部门发布蒸馏警告，随后 Anthropic 报告指控 DeepSeek 曾静默将超 1210 万次实时用户对话中转至 Claude 提取推理链（中国商务部反驳美方政治化正常商业技术问题，DeepSeek 未公开回应）<sup>◐</sup>。无论单方归因真伪，它凸显了<b>直连 API 对上游“是否二次转包推理”缺乏审计可见性</b>的共性风险。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>严格区分「官方 API」与「MIT 权重自托管/合规云托管」；处理商密或跨境业务应优先私有化或合规云托管 MIT 权重；涉及美国政府/军工供应链的出海产品，须在 AI BOM 中排查是否触发 FASCSA「developed using」红线。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017" target="_blank" rel="noopener noreferrer">1017 模型卡 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT 许可证 ↗</a><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash" target="_blank" rel="noopener noreferrer">V4.1 技术报告 ↗</a><a href="https://api-docs.deepseek.com/news/news261113/" target="_blank" rel="noopener noreferrer">11-13 应用 API ↗</a><a href="https://labs.cloudsecurityalliance.org/research/csa-research-note-dhs-deepseek-fascsa-order-20261021-csa-sty/" target="_blank" rel="noopener noreferrer">CSA DeepSeek FASCSA 排除令解析 ↗</a></p>
+          </td></tr>
 
-      <tr class="fam" id="qwen">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-qwen"><span class="car" aria-hidden="true">▶</span>阿里 · Qwen<span class="model-name">Qwen4-Max / Qwen3.8-2.4T-A95B</span></button></th>
-        <td>4-Max 完整架构未披露<br>3.8 权重：混合注意力 MoE</td><td>3.8 已发布后训练权重</td><td>4-Max：深度思考<br>3.8：设置因端点而异</td><td>4-Max：文图视频 → 文<br>2.4T 权重：文本</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分型号</span></td><td>4-Max 托管 API<br>3.8 提供权重</td>
-      </tr>
-      <tr class="det" id="detail-qwen"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>11 月 16 日发布正式版 Qwen4-Max，阿里云将其列为多模态旗舰。前代 Qwen3.8-2.4T-A95B 仍作为开放权重版本单独对照。</p>
-        <dl><div><dt>Qwen4-Max 接入</dt><dd>支持文本生成、图像及视频理解、工具调用。部署时区分正式模型与 Token Plan 的 preview。</dd></div>
-<div><dt>Qwen3.8 权重</dt><dd>2.4T 总参数、95B 激活，模型卡描述混合 Gated DeltaNet 与 Gated Attention。Max 级权重使用自定义许可，含署名与特定商业规模条款。</dd></div>
-<div><dt>同族不同许可</dt><dd>Qwen3.8-27B 使用 Apache 2.0，轻量或前代版本的权重与许可证单独核对。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://www.alibabacloud.com/help/en/model-studio/newly-released-models" target="_blank" rel="noopener noreferrer">Qwen4-Max 正式版与预览渠道 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B" target="_blank" rel="noopener noreferrer">2.4T-A95B 模型卡 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Max 级权重许可证 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-27B" target="_blank" rel="noopener noreferrer">27B 模型卡 / Apache 2.0 ↗</a></p>
-      </td></tr>
+          <!-- 6. Meta -->
+          <tr class="fam" id="meta" data-region="us" data-tier="open-gated">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-meta"><span class="car" aria-hidden="true">▶</span>Meta · Muse / Llama<span class="subnote">放弃 Llama 5，转入 Muse</span></button></th>
+            <td>Muse Spark Open / Glimmer 30B<sup>◉</sup><span class="subnote">托管 Spark 1.3 · Wonder · Llama 4</span></td>
+            <td>Spark Open：816B/42B MoE（1M 窗口）；Glimmer：29.6B Dense（131K）<sup>◉</sup>；四档推理（默认 xhigh）<sup>◉</sup></td>
+            <td>Spark Open：文/图/音/视频 → 文；Glimmer：文/图 → 文<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--p2)">🔑 L1-B·改协议</span><span class="ob-sub">Glimmer: L2·Apache<br>Spark 1.3: L0 · Llama 4: L1-A</span></td>
+            <td>美<span class="subnote">Llama 4 多模态排欧</span></td>
+            <td><div class="rf-list"><span class="rf">$20M 集团毛收 MaaS 闸门</span><span class="rf">输出蒸馏传染署名</span><span class="rf">禁未持牌法/医/金执业</span></div></td>
+          </tr>
+          <tr class="det" id="detail-meta" data-for="meta"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 权重：Muse Spark Open（10-15）/ Glimmer 30B · 托管：Spark 1.3 / Wonder</span><br>曾经的开放权重旗手在 2026 年完成战略转向：<b>放弃 Llama 5 命名</b>，由 Meta Superintelligence Labs 推出全新 <b>Muse</b> 品牌——闭源托管线为 <code>muse-spark-1.3</code> 与 <code>muse-wonder-1.0</code>（Wonder Full 仅限 Muse Code 指定订阅），端侧开源线为纯 Apache 2.0 的 <code>Muse Glimmer 30B</code>，10 月 15 日放出的 816B <b>Muse Spark Open</b> 成为美国最强开放权重模型<sup>◉</sup>，但同步加装 $20M MaaS 营收闸门。</p>
+            <dl class="tech-dl">
+              <div><dt>已核实规格与托管模式</dt><dd>Spark Open（816B/42B MoE，BF16/NVFP4，HF 实名审批）；Glimmer（29.6B Dense，蒸馏自 Spark，配 DFlash 草稿模型）；<b>托管 Spark 1.3 分 Standard 与 Contributor 两种模型 ID，Contributor 模式明文允许用请求内容训练未来模型</b><sup>◉</sup></dd></div>
+              <div><dt>算力底座</dt><dd>自建超大规模 GPU 集群（数十万卡级投入）<sup>◐</sup></dd></div>
+              <div><dt>数据姿态与诉讼</dt><dd>公开网络 + 自家社交生态；深陷书籍语料版权集体诉讼（Kadrey v. Meta 等）<sup>◐</sup></dd></div>
+              <div><dt>安全与商业形态</dt><dd>安全后训练 + Guard 工具链 + 强硬 Exhibit A 禁令<sup>◉</sup>；开放权重换生态 + Meta Model API 商业化<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>Muse Model License 三道紧箍咒</dt><dd>Hugging Face 须实名填报出生日期与机构<b>人工门控审批</b>下载，标为 <code>license:other</code><sup>◉</sup>：① <b>§3 $20M 集团毛收入 MaaS 闸门</b>——只要主体及<b>全部关联方</b>连续 12 个月总毛收入超 $20M，对外提供 API/托管前须通知 Meta 并另签书面协议（内部自用与产品内嵌功能豁免）<sup>◉</sup>；② <b>强制 UI/文档署名</b>——须显著展示 <code>Built with Muse Spark Open</code><sup>◉</sup>；③ <b>超宽衍生品传染定义</b>——<b>任何使用 Muse Spark Open 或其输出训练、修改、蒸馏出的新模型均视为衍生品，强制继承许可与署名义务</b><sup>◉</sup>！</dd></div>
+                <div><dt>Exhibit A 行业用途禁令（法务高频盲区）</dt><dd>使用政策明确声明不面向 18 岁以下用户，且<b>禁止军事/ITAR、关键基础设施运行，以及“未持牌的金融、法律、医疗专业执业（unlicensed practice of regulated professions）”</b><sup>◉</sup>——面向 C 端提供类法律/医疗咨询的 AI 应用极易踩雷！</dd></div>
+                <div><dt>旧版 Llama 4 遗留陷阱 &amp; 社区反馈</dt><dd>Llama 4 Community License 仍有效：700M MAU 另签门槛、衍生模型名必须以 <code>Llama</code> 开头、且<b>多模态权重将授权排除于欧盟境内个人与公司</b><sup>◉</sup>。Hacker News 等社区批评 Muse 新许可削弱云托管商价格竞争，称其本质为「weights-available」而非开源<sup>◐</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>如用 Muse Spark Open 输出合成数据训练自有模型，须评估“衍生品传染条款”；托管调用 Spark 1.3 务必核对模型 ID 严防误入 Contributor 训练模式；医疗/法律/金融应用须核对 Exhibit A 红线；无束缚端侧需求可选 Apache 2.0 的 <code>Muse Glimmer 30B</code>。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B" target="_blank" rel="noopener noreferrer">Spark Open 模型卡 / 许可全文 ↗</a><a href="https://huggingface.co/meta-models/Muse-Glimmer-30B" target="_blank" rel="noopener noreferrer">Glimmer / Apache 2.0 ↗</a><a href="https://dev.meta.ai/docs/muse-spark" target="_blank" rel="noopener noreferrer">托管 Spark 数据模式 ↗</a><a href="https://dev.meta.ai/resources/blog/build-with-muse-spark-open" target="_blank" rel="noopener noreferrer">Muse Spark Open 公告 ↗</a><a href="https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Llama 4 许可 ↗</a></p>
+          </td></tr>
 
-      <tr class="fam" id="kimi">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-kimi"><span class="car" aria-hidden="true">▶</span>月之暗面 · Kimi<span class="model-name">K3.1 Pro / K3</span></button></th>
-        <td>K3 基座：MoE<br>K3.1 Pro 为后训练版</td><td>扩展后训练计算<br>多领域联合 RL</td><td>K3.1 Pro 仅思考模式<br>low / high / max</td><td>K3.1 Pro：<br>图文与视频输入依入口</td><td class="opn" style="--oc:var(--p2)"><span class="ob">自定义许可</span></td><td>API / 产品<br>K3.1 Pro 与 K3 均有权重</td>
-      </tr>
-      <tr class="det" id="detail-kimi"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>10 月 23 日上线的 K3.1 Pro 已在 Moonshot AI 官方模型仓库提供权重，并附独立的 Kimi K3.1-Pro License。</p>
-        <dl><div><dt>模型 ID 与思考</dt><dd>通用 API 使用 <code>kimi-k3.1-pro</code>，Code 使用 <code>k3.1-pro</code>。不同入口有各自的模型 ID 和预算。K3.1 Pro 为仅思考型号。</dd></div>
-<div><dt>商业条款</dt><dd>许可证区分模型即服务（MaaS）业务与大规模产品署名条件。MaaS 达相应收入门槛需另签协议。内部使用，以及通过官方产品或认证伙伴访问，有条款列明的例外。</dd></div>
-<div><dt>部署边界</dt><dd>下载时核对模型卡、许可和部署支持。K3 与 K3.1 Pro 的权重、托管 ID 和许可分别记录。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://www.kimi.com/en/blog/kimi-k3-1-pro" target="_blank" rel="noopener noreferrer">K3.1 Pro 发布与技术说明 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3.1-Pro" target="_blank" rel="noopener noreferrer">K3.1 Pro 权重与模型卡 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3.1-Pro/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">K3.1 Pro 许可证 ↗</a><a href="https://www.kimi.com/code/docs/en/kimi-code/models.html" target="_blank" rel="noopener noreferrer">Code 模型配置 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">K3 许可证 ↗</a></p>
-      </td></tr>
+          <!-- 7. Alibaba Qwen -->
+          <tr class="fam" id="qwen" data-region="cn" data-tier="open-gated">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-qwen"><span class="car" aria-hidden="true">▶</span>阿里 · Qwen</button></th>
+            <td>Qwen4-Max &amp; Qwen3.8 系<sup>◉</sup><span class="subnote">2.4T-A95B · Flash-Next · 27B</span></td>
+            <td>4-Max 完整架构未披露；3.8 为混合 Gated DeltaNet + Gated Attention MoE<sup>◉</sup>；深度思考可开关<sup>◉</sup></td>
+            <td>4-Max：文/图/视频 → 文；2.4T 权重仅文本；另含 Qwen-Image / Wan 视频<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--p2)">🔑 L1-B·一厂四证</span><span class="ob-sub">27B: L2·Apache<br>2.4T / Flash-Next: L1-B<br>Image-2.1: 非商用</span></td>
+            <td>中 · 已备案<span class="subnote">全系百炼公示备案</span></td>
+            <td><div class="rf-list"><span class="rf">2.4T $50M 另签</span><span class="rf">Flash-Next 禁 AI 办公助手</span><span class="rf">Image-2.1 仅非商用</span></div></td>
+          </tr>
+          <tr class="det" id="detail-qwen" data-for="qwen"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 闭源旗舰：Qwen4-Max（11-16 正式版）· 权重：Qwen3.8-2.4T-A95B / Flash-Next / 27B</span><br>全球下载量与衍生生态稳居第一梯队。2026 年 3 月原核心负责人林俊旸离职后仍高速迭代<sup>◐</sup>：8 月首次放出 Max 级权重（<code>Qwen3.8-2.4T-A95B</code>）与 Qwen4 架构前瞻权重（<code>Flash-Next</code>），11 月 16 日上线闭源正式版 <code>Qwen4-Max</code><sup>◉</sup>。<b>但“阿里通义全系 Apache 2.0”的旧认知已彻底终结</b>——同族模型并存四套截然不同的许可证。</p>
+            <dl class="tech-dl">
+              <div><dt>已核实规格与渠道</dt><dd>Qwen4-Max 支持图文视频理解与工具调用（部署区分正式版与 Token Plan 预览渠道）；Qwen3.8-2.4T 为 2.4T 总参 / 95B 激活混合注意力 MoE<sup>◉</sup></dd></div>
+              <div><dt>算力底座</dt><dd>阿里云基础设施；阿里财报披露已开始采用平头哥自研芯片训练下一代千问并用于百炼推理<sup>◉</sup></dd></div>
+              <div><dt>数据姿态与安全</dt><dd>中国境内双备案体系内，百炼平台公示备案号<sup>◉</sup>；2026-09 遭美三部门联合警告及 Anthropic 报告指控涉 1.51 亿次蒸馏（单方情报归因，未获司法裁决）<sup>◐</sup></dd></div>
+              <div><dt>商业形态</dt><dd>阿里云百炼（Model Studio）+ Qwen Cloud + Qwen Code / QwenWork 第一方办公与编码助手<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>一厂四证：最易踩空的「AI 办公助手」禁令</dt><dd>① <code>Qwen3.8-27B</code> 与 <code>Wan 2.2</code> 视频仍为<b>纯 Apache 2.0</b><sup>◉</sup>；② <code>Qwen3.8-2.4T-A95B</code> 改用 <b>Qwen Max License</b>——<b>12 个月总营收超 $50M 须另签商业许可</b><sup>◉</sup>；③ <b>最大暗坑在 <code>Qwen3.8-Flash-Next</code>（Qwen Community License 1.0）</b>：除 100M MAU / $20M 月收 UI 署名外，明文规定<b>任何商业 MaaS 或面向编码/办公效率的「AI Work Assistant」产品须另签许可（仅内部自用豁免）</b>——<b>即便小创业团队零营收做编程/办公助手也可能直接违约！</b><sup>◉</sup> ④ <code>Qwen-Image-2.1</code> 为<b>非商用研究许可</b><sup>◉</sup>。</dd></div>
+                <div><dt>阿里云百炼 API 条款要点</dt><dd>百炼服务协议（2026-09 生效）及阿里云通用条款载明：① 平台有权<b>通过官网公告单方修改协议</b>，继续使用即视为接受；② 赔偿责任上限为<b>过往 12 个月该服务已付费用总额</b>，不赔间接/利润损失；③ 接入第三方模型时权利义务仅存于客户与第三方之间；④ 内置联网搜索、代码解释器、PDF 解析会将数据传出模型本体边界；⑤ 要求客户双向遵守中国及适用境外出口管制并禁用于军事/WMD<sup>◉</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>绝对禁止写“采用 Qwen 系所以符合 Apache 2.0”；打造对外编码/办公 Copilot 产品时避开 <code>Qwen3.8-Flash-Next</code>（或提前拿书面商业授权），优先选用 <code>Qwen3.8-27B</code> 等纯 Apache 2.0 检查点；生图商用严禁混入 <code>Qwen-Image-2.1</code>。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://www.alibabacloud.com/help/en/model-studio/newly-released-models" target="_blank" rel="noopener noreferrer">Qwen4-Max 正式版渠道 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B" target="_blank" rel="noopener noreferrer">2.4T-A95B 模型卡 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Max 级许可证 ↗</a><a href="https://huggingface.co/Qwen/Qwen3.8-27B" target="_blank" rel="noopener noreferrer">27B / Apache 2.0 ↗</a><a href="https://buildmono.com/news/open-weight-model-licences" target="_blank" rel="noopener noreferrer">Mono 许可对照（2026-11-20）↗</a></p>
+          </td></tr>
 
-      <tr class="fam" id="glm">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-glm"><span class="car" aria-hidden="true">▶</span>智谱 · GLM<span class="model-name">GLM-5.3 / 5.3-Flash</span></button></th>
-        <td>Flash：稀疏 + 线性<br>注意力、mHC</td><td>5.3 沿用 5.2 基座<br>Flash 重新预训练</td><td>low / high / max</td><td>5.3：文本<br>Flash：原生图文</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分型号</span></td><td>权重 / API<br>AutoClaw</td>
-      </tr>
-      <tr class="det" id="detail-glm"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 目录复核 2026-10-26 · 规格核对 2026-10-15</span><br>GLM-5.3 的更新主要来自后训练；5.3-Flash 则使用新基座，是 GLM-5 系列首个原生多模态模型。名称接近，但架构、输入能力和许可都应分开记录。</p>
-        <dl><div><dt>Flash 架构</dt><dd>320B 总参数、18B 激活，混合稀疏 / 线性注意力与 mHC；官方披露使用 30T-token 多模态预训练语料。</dd></div>
-<div><dt>推理控制</dt><dd>5.3 与 5.3-Flash 模型卡均提供 low、high、max 三档 reasoning_effort，默认 max。</dd></div>
-<div><dt>两份许可证</dt><dd>5.3-Flash 为 MIT。5.3 自定义许可要求：运营 MaaS 且关联主体连续 12 个月总收入超过 100 亿美元时，商业使用前须通过 Z.AI 安全审查。</dd></div>
-<div><dt>资料边界</dt><dd>5.3 模型卡单列评测 harness、思考强度、上下文与时间预算；比较分数时必须同时比较这些条件，不能只看模型名称。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://huggingface.co/zai-org/GLM-5.3" target="_blank" rel="noopener noreferrer">GLM-5.3 模型卡 ↗</a><a href="https://huggingface.co/zai-org/GLM-5.3/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GLM-5.3 许可证 ↗</a><a href="https://huggingface.co/zai-org/GLM-5.3-Flash" target="_blank" rel="noopener noreferrer">GLM-5.3-Flash 模型卡 ↗</a><a href="https://huggingface.co/zai-org/GLM-5.3-Flash/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Flash MIT 许可证 ↗</a></p>
-      </td></tr>
+          <!-- 8. Moonshot Kimi -->
+          <tr class="fam" id="kimi" data-region="cn" data-tier="open-gated">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-kimi"><span class="car" aria-hidden="true">▶</span>月之暗面 · Kimi</button></th>
+            <td>Kimi K3.1 Pro / K3<sup>◉</sup><span class="subnote">2.8T/104B MoE · 1M 上下文</span></td>
+            <td>896 专家 MoE + Kimi Delta Attention + Gated MLA；K3.1 Pro 为仅思考型号（low/high/max）<sup>◉</sup></td>
+            <td>文/图确认，视频输入依官方入口规格而定<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--p2)">🔑 L1-B·收入闸门</span><span class="ob-sub">K3/K3.1: $20M MaaS<br>K2 旧版: 改 MIT 署名</span></td>
+            <td>中 · 已备案<span class="subnote">冲刺港股 IPO 传闻<sup>◐</sup></span></td>
+            <td><div class="rf-list"><span class="rf">$20M 集团 MaaS 分成闸门</span><span class="rf">100M MAU/$20M 月收署名</span><span class="rf">蒸馏中转隐私争议</span></div></td>
+          </tr>
+          <tr class="det" id="detail-kimi" data-for="kimi"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 旗舰：Kimi K3.1 Pro（10-23 上线 / 11-04 开放权重）&amp; Kimi K3（07-27 开放权重）</span><br>从长上下文黑马跃升为全球体量最大的开放权重主力：K3 与 K3.1 Pro 均达 <b>2.8 万亿总参数 / 1040 亿激活</b>（权重下载体积约 1.56TB），在编码与智能体评测中领跑开放权重阵营<sup>◉</sup>。商业层面，月之暗面以 <b>Kimi K3 / K3.1-Pro License</b> 率先在头部开放权重中打响「向大托管商收税/分成」第一枪，成为 2026 下半年全行业修改开源许可的风向标<sup>◉</sup>。</p>
+            <dl class="tech-dl">
+              <div><dt>已核实 ID 与部署门槛</dt><dd>通用 API 为 <code>kimi-k3.1-pro</code>，Kimi Code 为 <code>k3.1-pro</code>（仅思考模式）；自托管需多卡 Blackwell 集群级显存（约 1.4TB 驻留权重 + KV Cache）<sup>◉</sup></dd></div>
+              <div><dt>数据姿态</dt><dd>中文与长文本深耕 + 多领域联合 RL<sup>◉</sup>；2026-09 遭美三部门及 Anthropic 报告指控工业级蒸馏与中转实时请求（中方商务部反驳美方政治化）<sup>◐</sup></dd></div>
+              <div><dt>安全主张与评测</dt><dd>境内备案合规体系内；独立评测（AA-Omniscience）提示 K3 准确率上升的同时幻觉率由 39% 升至 51%（更倾向作答而非拒答），法律/金融场景须配检索与引文校验<sup>◐</sup></dd></div>
+              <div><dt>商业形态</dt><dd>Kimi 助手 / Kimi Work / Kimi Code + API（$2/$10 百万 token）+ 向超大规模云商谈授权分成<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>Kimi K3 / K3.1-Pro License：收入门槛与分成机制</dt><dd>Hugging Face 明确标注 <code>license:other</code>，<b>绝非标准 MIT</b><sup>◉</sup>：① <b>§2 MaaS 营收闸门</b>——只要被许可方或<b>任何关联方</b>经营“模型即服务（MaaS，即向第三方提供可控制输入/参数/训练数据的推理或微调访问）”，且<b>集团合并总营收在任意连续 12 个月超过 2000 万美元</b>，商用前必须另签商业协议（媒体 2026-08 报道月之暗面向微软/AWS/谷歌商谈最高 <b>30% 收入分成</b><sup>◐</sup>）；② <b>§3 UI 强制署名</b>——商业产品超 <b>1 亿 MAU 或 2000 万美元月营收</b>须在界面显著展示 <code>Kimi K3 / Kimi K3.1-Pro</code>；③ <b>§4 豁免边界</b>——纯内部使用、仅将模型内嵌为特定功能的终端产品（非裸推理转售）、官方及认证推理伙伴豁免<sup>◉</sup>。</dd></div>
+                <div><dt>三大社区与法务争议点</dt><dd>① <b>集团总营收并表陷阱</b>：门槛算的是<b>集团总营收而非 Kimi 业务收入</b>——大型集团内哪怕只有 5 人团队对外开放薄壳 API，第一天即触发违约<sup>◉</sup>；② <b>社区炮轰（HN 1037 赞 / r/LocalLLaMA 1200+ 赞）</b>：开发者批评其“披着改良 MIT 外衣搞商业收租”，1.56TB 权重令个人无法自跑，又用许可卡住大托管商导致第三方 API 缺乏价格竞争<sup>◐</sup>；③ <b>“中转实时用户请求”指控警示</b>：Anthropic 2026-09 报告指其通过代理账户将 2300 万次 Kimi 真实客户对话转发给 Claude，称其涉嫌违背隐私法与自身条款（属 Anthropic 单方情报归因，月之暗面未公开回应）<sup>◐</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>企业纯内网自托管或嵌入自有垂直业务功能可落入 §4 豁免，但<b>严禁大中型集团对外转售推理 API 或做多模型薄壳网关</b>而未签商业分成协议；面向 C 端大流量产品须提前评审 UI 品牌露出义务；使用高敏业务数据走外部 API 时优先核查零留存（ZDR）与认证托管商协议。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://www.kimi.com/en/blog/kimi-k3-1-pro" target="_blank" rel="noopener noreferrer">K3.1 Pro 发布说明 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3.1-Pro" target="_blank" rel="noopener noreferrer">K3.1 Pro 模型卡 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3.1-Pro/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">K3.1 Pro 许可证 ↗</a><a href="https://huggingface.co/moonshotai/Kimi-K3/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">K3 许可证 ↗</a><a href="https://www.digitalapplied.com/blog/kimi-k3-open-weights-shipped-license-restrictions-2026" target="_blank" rel="noopener noreferrer">K3 许可逐条拆解 ↗</a></p>
+          </td></tr>
 
-      <tr class="fam" id="bytedance">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-bytedance"><span class="car" aria-hidden="true">▶</span>字节 · 豆包 / Seed<span class="model-name">Seed2.1 Pro / Turbo</span></button></th>
-        <td>本次发布页未列完整架构</td><td>本次发布页未列完整配方</td><td>推理与多步骤<br>任务执行</td><td>视觉、视频理解<br>支持代码 / 文本任务</td><td class="opn" style="--oc:var(--ink-3)"><span class="ob">托管</span></td><td>豆包 / TRAE<br>火山引擎</td>
-      </tr>
-      <tr class="det" id="detail-bytedance"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 目录核对 2026-11-19</span><br>6 月 23 日发布 Seed2.1 Pro / Turbo，重点是通用智能体、代码工程和多模态理解。豆包是产品入口，Seed 是模型线；产品中的图像或视频生成要另外核对具体模型。</p>
-        <dl><div><dt>本次复核</dt><dd>方舟目录按具体能力和日期后缀列出模型。<code>doubao-seed-2-1-pro-260915</code> 与 <code>doubao-seed-2-1-pro-260628</code> 的窗口规格有别，配置时记录完整 ID。</dd></div>
-<div><dt>多模态边界</dt><dd>Seed2.1 增强视觉、空间推理与长视频理解；这里的“理解”不等于模型原生输出视频。</dd></div>
-<div><dt>获取方式</dt><dd>发布说明列出豆包、TRAE 与火山引擎等入口；本次资料未提供 Seed2.1 的权重发布。</dd></div>
-<div><dt>资料边界</dt><dd>不把字节持有的内容平台直接写成训练数据来源，也不根据其他 Seed 型号推断 2.1 的参数规模。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://seed.bytedance.com/zh/blog/seed2-1-officially-released-advancing-ai-productivity" target="_blank" rel="noopener noreferrer">Seed2.1 官方中文发布 ↗</a><a href="https://seed.bytedance.com/en/seed2_1" target="_blank" rel="noopener noreferrer">Seed2.1 产品页 / 模型卡入口 ↗</a><a href="https://docs.volcengine.com/docs/ark/model-list?lang=zh" target="_blank" rel="noopener noreferrer">火山方舟型号与规格 ↗</a></p>
-      </td></tr>
+          <!-- 9. Zhipu GLM / Z.ai -->
+          <tr class="fam" id="glm" data-region="cn" data-tier="open-gated">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-glm"><span class="car" aria-hidden="true">▶</span>智谱 · GLM<span class="subnote">海外 Z.ai · 港股 2513.HK</span></button></th>
+            <td>GLM-5.4 / 5.3 / 5.3-Flash<sup>◉</sup><span class="subnote">5.4 暂仅订阅 · 5.3/Flash 有权重</span></td>
+            <td>5.3 为 753B MoE；Flash 为 320B/18B 混合稀疏+线性注意力+mHC；5.4 引入 750B Loop Transformer<sup>◉</sup></td>
+            <td>5.3 仅文本；Flash 原生图文；5.4 读图与视频<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--p2)">🔑 L1-B·安全审查</span><span class="ob-sub">5.2/Flash: L2·MIT<br>5.4: 暂未放权重</span></td>
+            <td>中 · 已备案<span class="subnote">美 BIS 实体清单</span></td>
+            <td><div class="rf-list"><span class="rf">美 BIS 实体清单 + 州禁</span><span class="rf">5.3 超 $10B 须安全审查</span><span class="rf">终止后可匿名留存</span></div></td>
+          </tr>
+          <tr class="det" id="detail-glm" data-for="glm"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 旗舰：GLM-5.4（11-23，Loop Transformer，暂仅订阅）· 权重：GLM-5.3 &amp; 5.3-Flash</span><br>清华 KEG 出身，2026 年 1 月 8 日率先登陆港交所（Knowledge Atlas Technology，<code>2513.HK</code>），成为全球首家纯大模型上市公司，海外启用 <b>Z.ai</b> 品牌<sup>◉</sup>。2026-02 的 GLM-5 已实现<b>全栈华为昇腾芯片训练</b><sup>◐</sup>；GLM-5.3 与 5.3-Flash 架构、输入能力与许可证各不相同；11 月 23 日刚发布的 GLM-5.4 将 28 层网络循环执行两遍，暂仅限 Coding Plan 订阅<sup>◉</sup>。</p>
+            <dl class="tech-dl">
+              <div><dt>已核实规格与推理</dt><dd>5.3-Flash 为 320B 总参 / 18B 激活（官方披露 30T-token 多模态语料）；5.3 与 5.3-Flash 均支持 low / high / max 三档 <code>reasoning_effort</code>（默认 max）<sup>◉</sup></dd></div>
+              <div><dt>算力底座</dt><dd>全面转向国产算力（华为昇腾 + 寒武纪/摩尔线程适配），建成全自主芯片训练集群<sup>◐</sup></dd></div>
+              <div><dt>安全与网安能力</dt><dd>境内备案合规体系内；GLM-5.3 主打“Built to Code, Ready for Cyber Defense”，在 CyberGym 等漏洞挖掘评测靠前<sup>◉</sup>；2026-09 亦列美三部门蒸馏警告名单（中方反驳）<sup>◐</sup></dd></div>
+              <div><dt>商业形态</dt><dd>API 营收占比超 86%（2026 H1）+ Coding Plan 订阅 + AutoClaw + ToB 私有化<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>GLM-5.3 脱离纯 MIT：$100 亿安全审查闸门</dt><dd><code>GLM-5.2</code> 与 <code>GLM-5.3-Flash</code> 保持纯 MIT<sup>◉</sup>；但 <b>2026-08-28 发布的 <code>GLM-5.3</code> 改用自订 <code>GLM-5.3 License</code></b>——规定<b>运营 MaaS 且关联主体连续 12 个月总营收超 100 亿美元（$10B）的运营商，在商业托管前必须通过 Z.ai 安全审查</b><sup>◉</sup>。社区普遍认为该 $10B 划线精准瞄准 AWS/Azure/GCP 等超大规模云商，兼具安全合规与商业议价双重意图<sup>◐</sup>。<code>GLM-5.4</code> 权重许可尚未公布<sup>◉</sup>。</dd></div>
+                <div><dt>美 BIS 实体清单与州级禁用（出口管制风险）</dt><dd>智谱自 <b>2025-01-16 列入美国商务部 BIS 实体清单</b>，美国得州等州政府亦将其纳入州机构禁用技术清单<sup>◉</sup>。<b>法务精细区分：</b>BIS 实体清单管制的是向其“出口美源受控物项”，理论上不禁止美国私企从 Hugging Face 免费下载开源权重自用，但<b>向其支付技术合作/反哺代码/采购含美源组件服务，或面向欧美大客户接受供应商合规审计时，极易触发一票否决</b><sup>◉</sup>。</dd></div>
+                <div><dt>开放平台用户协议条款注意</dt><dd>智谱开放平台《用户协议》（2026-09-04 生效）明确要求实名认证，违规上传数据时平台有权立即删除并暂停/终止服务且追责；且约定<b>协议终止后，平台仍享有“在匿名化处理用户信息的前提下继续保存各类留存信息”的权利</b><sup>◉</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>跨国集团或服务美国政企客户的业务须先过制裁与出口管制合规岗审批；无涉美限制的企业可优先选用纯 MIT 的 <code>GLM-5.2 / 5.3-Flash</code>，并关注 <code>GLM-5.4</code> 正式放权重时的许可证变化。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://huggingface.co/zai-org/GLM-5.3" target="_blank" rel="noopener noreferrer">GLM-5.3 模型卡 ↗</a><a href="https://huggingface.co/zai-org/GLM-5.3/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GLM-5.3 许可证 ↗</a><a href="https://huggingface.co/zai-org/GLM-5.3-Flash" target="_blank" rel="noopener noreferrer">GLM-5.3-Flash 模型卡 ↗</a><a href="https://huggingface.co/zai-org/GLM-5.3-Flash/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Flash MIT 许可证 ↗</a><a href="https://www.aipotluck.org/product/glm" target="_blank" rel="noopener noreferrer">GLM 许可核验 ↗</a></p>
+          </td></tr>
 
-      <tr class="fam" id="hunyuan">
-        <th scope="row"><button type="button" class="family-toggle" aria-expanded="true" aria-controls="detail-hunyuan"><span class="car" aria-hidden="true">▶</span>腾讯 · 混元 / Hy<span class="model-name">Hy4 / Hy4 flash</span></button></th>
-        <td>Flash：LatentMoE<br>混合注意力 + Engram</td><td>Flash：模型卡提供微调流程</td><td>Flash 权重：<br>high / no_think</td><td>Flash：文字、图像 → 文字</td><td class="opn" style="--oc:var(--p2)"><span class="ob">分版本</span></td><td>Hy4 API<br>Flash 权重 / API</td>
-      </tr>
-      <tr class="det" id="detail-hunyuan"><td colspan="7">
-        <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-19</span><br>Hy4 正式版于 11 月 4 日发布，Hy4 flash 于 11 月 16 日发布并提供权重。腾讯云 TokenHub 将 <code>hy4</code>、<code>hy4-flash</code> 和即将下线的 <code>hy4-preview</code> 列为不同标识。</p>
-        <dl><div><dt>Flash 可核实规格</dt><dd>模型卡列出混合稀疏与滑动窗口注意力，支持图文输入、文本输出和最高 1M 上下文。提供指令版、FP8 与基础权重。</dd></div>
-<div><dt>许可分开读</dt><dd>Hy4 flash 使用 Tencent Hy License，MaaS 场景有单独授权条件和内部使用例外。旧 Hy4 preview 已发布的权重使用 Apache 2.0。</dd></div>
-<div><dt>正式版边界</dt><dd>本次确认 Hy4 正式版的托管入口。正式版权重发布状态与许可应另查，不沿用 preview 或 flash 的结论。</dd></div></dl>
-        <p class="sources"><b>官方来源</b><a href="https://cloud.tencent.com/document/product/1823/130079" target="_blank" rel="noopener noreferrer">TokenHub 型号与 API ↗</a><a href="https://developer.cloud.tencent.com/article/2777165" target="_blank" rel="noopener noreferrer">Hy4 正式版发布 ↗</a><a href="https://huggingface.co/tencent/Hy4-flash" target="_blank" rel="noopener noreferrer">Hy4 flash 模型卡 ↗</a><a href="https://huggingface.co/tencent/Hy4-flash/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Hy4 flash 许可证 ↗</a><a href="https://huggingface.co/tencent/Hy4-preview/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Hy4 preview Apache 2.0 ↗</a></p>
-      </td></tr>
-    </tbody>
-  </table></div>
-  <p class="rowlink">回看原理：<a href="blueprint.html#mod-moe">Ⅱ·MoE</a> · <a href="blueprint.html#pl1">Ⅰ·后训练与偏好优化</a> · <a href="blueprint.html#mod-ttc">Ⅲ·测试时算力</a> · <a href="blueprint.html#mod-vlm">Ⅴ·视觉理解</a> · <a href="blueprint.html#mod-corpus">Ⅰ·训练语料</a></p>
+          <!-- 10. ByteDance Doubao / Seed -->
+          <tr class="fam" id="bytedance" data-region="cn" data-tier="closed">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-bytedance"><span class="car" aria-hidden="true">▶</span>字节 · 豆包 / Seed</button></th>
+            <td>Seed2.1 Pro / Turbo<sup>◉</sup><span class="subnote">Lite · Evolving · Seedance 2.5</span></td>
+            <td>完整架构未披露；Agentic 多步骤推理 + 1M 窗口（区分日期快照 ID）<sup>◉</sup></td>
+            <td>Seed2.1：视觉/视频理解 → 文；生成侧为独立线（Seedance 2.5 / Seedream）<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--ink-3)">🔒 L0</span><span class="ob-sub">Seed-OSS-36B:<br>L2·Apache</span></td>
+            <td>中 · 已备案<span class="subnote">海外 BytePlus 分离</span></td>
+            <td><div class="rf-list"><span class="rf">精调模型无 IP 且锁平台</span><span class="rf">15 天单方下架免责</span><span class="rf">Seedance 版权/肖像争议</span></div></td>
+          </tr>
+          <tr class="det" id="detail-bytedance" data-for="bytedance"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 旗舰：Doubao Seed2.1 Pro / Turbo / Lite &amp; Seedance 2.5 · 实审方舟条款 2026-11-19 版</span><br>依托抖音系分发稳居国内 C 端与低价 API 头部；豆包是产品入口，Seed 是模型线，海外通过 BytePlus ModelArk 运营<sup>◉</sup>。6 月 23 日发布 Seed2.1 家族强化通用智能体、代码工程与长视频理解（注意：理解不等于原生输出视频，视频生成归属 Seedance 独立模型线）；除 <code>Seed-OSS-36B</code> 等小开源分支外，主力全闭源<sup>◉</sup>。</p>
+            <dl class="tech-dl">
+              <div><dt>已核实 ID 与算力</dt><dd>火山方舟按日期后缀区分版本，<code>doubao-seed-2-1-pro-260915</code> 与 <code>260628</code> 的窗口规格有别，配置须锁定完整 ID<sup>◉</sup>；依托火山引擎自有云基础设施（可选机密计算/安全沙箱高阶方案）<sup>◉</sup></dd></div>
+              <div><dt>数据披露</dt><dd>字节公开的欧盟 Seed 2.0 Pro 训练数据摘要披露：含超 10 万亿文本 token，源自公开数据集、授权数据、Bytespider 爬虫、<b>字节其他产品用户数据</b>及合成数据<sup>◉</sup>（不直接外推 2.1 未披露细节）</dd></div>
+              <div><dt>安全主张与事件</dt><dd>境内备案合规体系内；2026-02 因 Seedance 2.0 仅凭单张人脸照即同时生成肖像与克隆声音引发深伪恐慌，紧急下线该功能<sup>◐</sup></dd></div>
+              <div><dt>商业形态</dt><dd>豆包 App + TRAE + 飞书 8.0 豆包工作 + 火山方舟（企业云/MaaS）+ 即梦/CapCut<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（实审火山方舟专用条款 2026-11-19 版 ◉）</div>
+              <dl>
+                <div><dt>火山方舟四大商业硬坑（原条款直引）</dt><dd>① <b>§3.7.14 精调模型权属剥离 + 平台强锁定</b>：客户用自有数据对基础模型精调后，<b>“不能主张享有衍生模型（‘精调模型’）的知识产权”</b>，且<b>“精调模型应仅部署在火山引擎的大模型服务平台”</b>——极强的供应商锁定<sup>◉</sup>；② <b>§3.1 地域与商用许可限制</b>：默认仅授权在中国大陆使用，<b>直接/间接商业获益须事先书面许可</b>，且禁止向关联方转让/再许可<sup>◉</sup>；③ <b>§3.7.5「一键开通所有模型」</b>自动将未来新模型并入订购项，使用即默示同意其条款计费<sup>◉</sup>；④ <b>§3.7.17 提前 15 天单方下架免责</b>：合作到期或版本迭代可提前 15 天通知终止且免责<sup>◉</sup>。</dd></div>
+                <div><dt>监管责任切分、无 IP 赔偿盾与数据规则</dt><dd>① <b>§3.7.6 监管定性切割</b>：明文声明火山引擎<b>“不是《深度合成规定》中的深度合成服务提供者、深度合成技术支持者”</b>，并将《标识办法》显隐式标识合规责任全数推给客户（§3.7.13）<sup>◉</sup>；② <b>无正向 IP 赔偿盾</b>：相反要求客户就输入与输出引发的 IP 纠纷自行担责并赔偿火山引擎损失（§3.7.14 / AI 规则四·三）<sup>◉</sup>；③ 数据训练方面，平台承诺<b>未经单独同意不用客户数据训练基础模型</b>（主动点踩/点赞反馈及异常告警审计除外，不选高阶沙箱则按三方模型商条款处理）<sup>◉</sup>；AI 规则第八条严禁蒸馏竞品与用于医疗/法律等持牌专业决策<sup>◉</sup>。</dd></div>
+                <div><dt>Seedance 版权与出海风波</dt><dd>2026-02 Seedance 2.0 引爆好莱坞 MPA、华纳、派拉蒙集体抗议（MPA 称侵权为“feature, not a bug”）及日本政府调查动漫角色侵权，迫使字节 3 月暂停海外上线，加装 C2PA/隐式水印、人脸与版权角色拦截器后方恢复<sup>◐</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>在火山方舟上做企业核心数据微调前，务必就 <b>§3.7.14 精调产物权属与可迁移性</b>、<b>§3.1 商业/关联方使用范围</b>谈判补充协议；关闭“一键开通所有模型”；高敏数据勾选“安全沙箱高阶防护”并避免在企业宣传/出海视频中使用含可识别 IP 元素的生成素材。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://seed.bytedance.com/zh/blog/seed2-1-officially-released-advancing-ai-productivity" target="_blank" rel="noopener noreferrer">Seed2.1 官方发布 ↗</a><a href="https://docs.volcengine.com/docs/ark/model-list?lang=zh" target="_blank" rel="noopener noreferrer">火山方舟型号规格 ↗</a><a href="https://www.volcengine.com/docs/ark/volcengine-ark-platform-terms" target="_blank" rel="noopener noreferrer">火山方舟专用条款 ↗</a><a href="https://www.volcengine.com/docs/legal-agreements/volcano-engine-ai-service-rules-and-disclaimer" target="_blank" rel="noopener noreferrer">火山引擎 AI 服务规则 ↗</a></p>
+          </td></tr>
 
-  <div class="seal-note"><div class="sh">⚖ 朱批 · 选型时核对什么</div>
-    <ol>
-      <li><b>锁定交付物</b>：记录具体模型、快照或权重版本；托管 API、产品路由和下载权重的能力可能不同。</li>
-      <li><b>按型号读许可</b>：保留许可原文，核对使用、再分发、署名及商业条件。上表只是摘要，不替代完整条款或法律审校。</li>
-      <li><b>按实际部署核对服务与数据条件</b>：服务地区、数据保留、训练用途、访问资格及适用监管要求，不能由公司国别或“开源”标签推出。</li>
-      <li><b>用任务评测能力</b>：本页未做独立性能测试；参数量、上下文上限和厂商榜单不构成质量或安全保证。</li>
-    </ol>
-  </div>
-  <div class="others"><b>范围说明：</b>保留原有十一家供纵向比较，本页不是全市场榜单。MiniMax、阶跃星辰、文心、星火、MiniCPM 等未列入，不代表其能力或采购可行性判断。<p class="scope-note">各行附资料核对日期，沿用旧规格的条目标明原日期。当前快照基于官方资料整理，未进行独立性能测试。</p></div>
-  <nav class="links" aria-label="相关页面">
-    <a href="index.html">返回首页</a><a href="blueprint.html">工程蓝图（主线）</a><a href="toolchain.html">工业现场</a><a href="progress.html">进度看板</a>
-  </nav>
-  <footer>模型门派谱系 · 活页 v6 · 盘点基准日 2026-11-19 · AI 辅助检索整理。官方来源就近列于各家详情；后续发布、许可变更与服务调整可能使本快照过期。</footer>
+          <!-- 11. Tencent Hunyuan / Hy -->
+          <tr class="fam" id="hunyuan" data-region="cn" data-tier="open-gated">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-hunyuan"><span class="car" aria-hidden="true">▶</span>腾讯 · 混元（Hy）</button></th>
+            <td>Tencent Hy4 / Hy4-flash<sup>◉</sup><span class="subnote">770B/49B · LatentMoE · Hy3</span></td>
+            <td>Hy4 为 MoE（配 DFly2 草稿模型）；Hy4-flash 为 LatentMoE + 混合注意力 + Engram（1M 窗口）<sup>◉</sup>；high / no_think 切换<sup>◉</sup></td>
+            <td>文/图/视频帧 → 文；另有多条视频/图像/3D 开源生成线<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--p2)">🔑 L1-B·Sec.10</span><span class="ob-sub">Hy3/Hy4-prev: L2·Apache<br>视频/3D: L1-A 排欧英韩</span></td>
+            <td>中 · 已备案<span class="subnote">视频/3D 排除欧英韩</span></td>
+            <td><div class="rf-list"><span class="rf">Preview→GA 许可收紧</span><span class="rf">Hy4 Sec.10 $50M MaaS</span><span class="rf">视频/3D 排欧英韩</span></div></td>
+          </tr>
+          <tr class="det" id="detail-hunyuan" data-for="hunyuan"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · Hy4 正式版（11-04 API / 11-20 权重）· Hy4-flash（11-16 权重）· Hy3</span><br>2026 年在许可策略上上演最富戏剧性的「先放后收」教科书：7 月 <code>Hy3</code> 与 8 月 <code>Hy4-preview</code> 一度全面转向<b>纯 Apache 2.0</b>、撤销地域排除；但 11 月 16 日发布的 <code>Hy4-flash</code> 与 11 月 20 日发布的 <b><code>Hy4</code> 正式版权重双双改挂 <code>Tencent Hy License 1.0</code></b>，在 Apache 2.0 上新增 Section 10 商业 MaaS 闸门<sup>◉</sup>。同时，其最受创作者欢迎的 3D 与视频开源线至今仍死守地域排除。</p>
+            <dl class="tech-dl">
+              <div><dt>已核实规格与标识</dt><dd>腾讯云 TokenHub 将 <code>hy4</code>、<code>hy4-flash</code> 与即将下线的 <code>hy4-preview</code> 列为独立标识；Hy4-flash 采用混合稀疏与滑动窗口注意力 + Engram（1M 窗口）；Hy4 FP8 自部署门槛约 8×H200/B200 或 4×B300<sup>◉</sup></dd></div>
+              <div><dt>数据与评测姿态</dt><dd>微信 / QQ / 腾讯内容生态<sup>◐</sup>；Hy4 GA 公告用内部金融/办公评测取代了部分公开榜单，外部独立评测尚在补齐<sup>◐</sup></dd></div>
+              <div><dt>安全主张</dt><dd>境内备案合规体系内；Hy4 在独立网安评测（Artificial Analysis Cyber Index / CWE-Bench）表现突出<sup>◐</sup></dd></div>
+              <div><dt>商业形态</dt><dd>微信/企业微信/腾讯会议生态内嵌 + 腾讯云 TokenHub（极低缓存读价 $0.042/M，但首字延迟较高）<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>「Preview 宽松 → 正式版收紧」陷阱</dt><dd><code>tencent/Hy3</code> 与 <code>tencent/Hy4-preview</code> 确为纯 Apache 2.0<sup>◉</sup>；但 <b>11-16 <code>Hy4-flash</code> 与 11-20 正式版 <code>tencent/Hy4</code> 均采用 <code>Tencent Hy License 1.0</code></b>——其 <b>Section 10</b> 规定：若你经营 MaaS 业务，且<b>任意 12 个月全球总营收超 5000 万美元，或嵌入产品超 1 亿 MAU</b>，使用前必须另获腾讯书面许可（不向第三方暴露模型或输出的纯内部使用豁免）<sup>◉</sup>。</dd></div>
+                <div><dt>多模态线的硬性地域排除（极易触雷）</dt><dd><code>HunyuanVideo / 1.5</code>、<code>Hunyuan3D 2.0 / 2.1</code>、<code>HY-Motion 1.0</code> 至今沿用 <b>Tencent Hunyuan Community License</b>：① 明文宣告<b>「本许可不适用于欧盟、英国和韩国（DOES NOT APPLY IN THE EU, UK AND SOUTH KOREA）」</b>——在三地使用属<b>零授权侵权</b>；② 附加超大用户门槛（视频线 100M MAU，<b>Hunyuan3D 2.0/2.1 低至仅 100 万 MAU！</b>）；③ <b>禁止使用输出训练其他 AI 模型</b><sup>◉</sup>。GitHub Issues 多次爆发欧洲工作室质疑“开源洗白（openwashing）”的争议<sup>◉</sup>。</dd></div>
+                <div><dt>腾讯云平台条款注意</dt><dd>腾讯云 TokenHub / 智能体平台 SLA（2026-04/07 版）载明可用性不低于 99.5%、最高赔偿仅限 <b>20% 月度服务费代金券</b>，且平台明确区分自部署与第三方模型主体责任<sup>◉</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>千万不要因为测过 <code>Hy4-preview</code>（Apache 2.0）就默认 <code>Hy4-flash</code> 或正式版 <code>Hy4</code> 无限制——上线前必审 Section 10；游戏、跨境电商、3D/视频出海项目若涉及欧盟、英国或韩国市场，<b>立即停用 HunyuanVideo / Hunyuan3D 开源权重</b>（改用 Apache 2.0 的阿里 Wan 2.2 等替代方案）。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://cloud.tencent.com/document/product/1823/130079" target="_blank" rel="noopener noreferrer">TokenHub 型号与 API ↗</a><a href="https://developer.cloud.tencent.com/article/2777165" target="_blank" rel="noopener noreferrer">Hy4 正式版发布 ↗</a><a href="https://huggingface.co/tencent/Hy4-flash/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Hy4-flash 许可证 ↗</a><a href="https://huggingface.co/tencent/Hy4-preview/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Hy4-preview Apache 2.0 ↗</a><a href="https://www.orcarouter.ai/blog/tencent-hy4-vs-claude-opus-5-5" target="_blank" rel="noopener noreferrer">Hy4 License 1.0 解析 ↗</a></p>
+          </td></tr>
+
+          <!-- 12. Mistral AI (NEW v7) -->
+          <tr class="fam" id="mistral" data-region="eu" data-tier="open-gated">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-mistral"><span class="car" aria-hidden="true">▶</span>Mistral AI<span class="new-tag">v7 新增</span></button></th>
+            <td>Mistral Large 4<sup>◉</sup><span class="subnote">1.05T/49–52B · Small 4</span></td>
+            <td>MoE（1M 上下文，覆盖全部欧盟官方语言等 160+ 语种）<sup>◉</sup>；推理模式<sup>◉</sup></td>
+            <td>原生图文理解 → 文（Large 4）<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--p2)">🔑 L1-B·禁MaaS</span><span class="ob-sub">Small 4: L2·Apache<br>Med 3.5 / MRL: L1-A</span></td>
+            <td>欧（法国）<span class="subnote">EU AI Act / GDPR 标杆</span></td>
+            <td><div class="rf-list"><span class="rf">Large 4 零门槛限 MaaS</span><span class="rf">Med 3.5 月收$20M即禁</span><span class="rf">MRL/MNPL 禁商用</span></div></td>
+          </tr>
+          <tr class="det" id="detail-mistral" data-for="mistral"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 旗舰：Mistral Large 4（10-29 开放权重，1.05T MoE）· Mistral Small 4（Apache 2.0）</span><br>欧洲主权 AI 的唯一万亿参数独苗，补全本谱系原缺失的<b>欧盟法域参照系</b>。2026-09 以 210 亿欧元估值融资 30 亿欧元，10 月 29 日在欧洲自有数据中心训成并放出 Mistral Large 4 权重<sup>◉</sup>。但 Mistral 也是<b>许可碎片化程度最高</b>的厂商——同一家公司横跨四套性质迥异的许可证。</p>
+            <dl class="tech-dl">
+              <div><dt>算力底座</dt><dd>自有欧洲数据中心（3,800 颗 NVIDIA Grace Blackwell 集群）<sup>◐</sup></dd></div>
+              <div><dt>数据姿态</dt><dd>覆盖 160+ 语种含欧盟全部官方语言；受欧盟 DSM 指令 TDM 例外与 EU AI Act GPAI 透明度义务直接管辖<sup>◉</sup></dd></div>
+              <div><dt>安全主张</dt><dd>欧盟 AI 法案原生合规适配，提供欧盟境内数据驻留选项；小模型含专用护栏型号（Shieldstral）<sup>◉</sup></dd></div>
+              <div><dt>商业形态</dt><dd>开放权重 + Mistral Studio API（亦转售 Z.ai / DeepSeek 等三方开放模型）+ 欧洲政企主权定制<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>一厂四证：最容易踩中的动态失效与非商用陷阱</dt><dd>① <code>Mistral Small 4 / Leanstral / Shieldstral</code>：标准 <b>Apache 2.0</b><sup>◉</sup>；② <b><code>Mistral Large 4</code>（Mistral Ecosystem Open-Weight License）</b>：<b>无营收门槛</b>——凡主体或关联方对外提供第三方 MaaS 托管，任何非内部商用一律须另签商用许可（仅内部自用与产品内嵌功能豁免）<sup>◉</sup>；③ <b><code>Mistral Medium 3.5</code>（改良 MIT，2026-10-31 弃用但旧权重仍在流传）</b>：<b>上月全球月营收超 $20M 即丧失使用权</b>——逐月动态检验，业务增长即突然违约<sup>◉</sup>；④ <b><code>Mistral-Large-2411 / Codestral-22B</code> 等旧型号</b>：挂 <code>MRL</code>（研究许可）或 <code>MNPL</code>（非生产许可），严禁任何生产商用<sup>◉</sup>。</dd></div>
+                <div><dt>API 数据条款与云托管差异</dt><dd>付费 API 默认不训练客户数据并提供欧盟托管；<b>免费 Experiment 层默认可用于模型训练</b><sup>◉</sup>。通过 AWS Bedrock 调用 Mistral 模型附带 Mistral 抗辩条款，经 Google Vertex AI 调用则须核验独立伙伴部署条款<sup>◉</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>对有欧洲数据本地化 / GDPR / EU AI Act 主权合规硬要求的业务，Mistral 是重要备选；但入库前必须逐一核查具体型号标签，严防研发顺手拉取带 <code>mrl/mnpl</code> 或月营收失效条款的旧检查点。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://mistral.ai/legal/terms-of-service" target="_blank" rel="noopener noreferrer">Mistral Terms of Service ↗</a><a href="https://buildmono.com/news/open-weight-model-licences" target="_blank" rel="noopener noreferrer">Mono 许可对照（Large 4 / Med 3.5）↗</a></p>
+          </td></tr>
+
+          <!-- 13. MiniMax (NEW v7) -->
+          <tr class="fam" id="minimax" data-region="cn" data-tier="open-gated">
+            <th scope="row"><button type="button" class="family-toggle" aria-expanded="false" aria-controls="detail-minimax"><span class="car" aria-hidden="true">▶</span>MiniMax<span class="new-tag">v7 新增</span></button></th>
+            <td>MiniMax M3 / M3.1-Flash<sup>◉</sup><span class="subnote">428B/23B MoE · H3 视频</span></td>
+            <td>MoE（原生 MXFP8/NVFP4 量化感知训练）<sup>◉</sup>；高性价比编码与 Agent 推理<sup>◉</sup></td>
+            <td>原生多模态（M3.1）+ H3 视频/图像 + Music3 音乐 + 语音<sup>◉</sup></td>
+            <td class="opn"><span class="ob" style="--oc:var(--p4)">🔑 L1-A·默认非商</span><span class="ob-sub">M3/M3.1: 书面备案+$20M<br>H3 视频: 排美欧英韩</span></td>
+            <td>中 · 已备案<span class="subnote">2026-01 港股上市</span></td>
+            <td><div class="rf-list"><span class="rf">默认仅限非商用</span><span class="rf">$20M 年收须书面授权</span><span class="rf">H3 排除美欧英韩</span></div></td>
+          </tr>
+          <tr class="det" id="detail-minimax" data-for="minimax"><td colspan="7">
+            <p class="bio"><span class="fl">◉ 官方资料 · 核对 2026-11-24 · 旗舰：MiniMax M3 &amp; M3.1-Flash（428B/23B MoE）· H3 视频</span><br>2026 年 1 月紧随智谱登陆港交所<sup>◉</sup>；春节档 M2.5 以极低价格在 Agent 编码榜一战成名，年化经常性收入 2026-08 突破 8 亿美元<sup>◐</sup>。将其增补入谱系 v7 的核心法务价值在于：<b>MiniMax 是 2026 年“从宽松改良 MIT 逆向大幅收紧至默认非商用 + 四法域排除”的最极端教学样本</b>。</p>
+            <dl class="tech-dl">
+              <div><dt>算力底座</dt><dd>多云租用与自建混合算力；M3.1-Flash 需多卡集群部署<sup>◉</sup></dd></div>
+              <div><dt>数据姿态</dt><dd>大规模真实环境 Agent 强化学习；2026-02 / 09 多次被 Anthropic/OpenAI 及美三部门点名涉蒸馏争议（中方商务部反驳）<sup>◐</sup></dd></div>
+              <div><dt>安全主张与评测</dt><dd>境内备案合规体系内；社区独立评测提示 M3.1-Flash 在知识不确定时自信答错率偏高，需配合外部校验<sup>◐</sup></dd></div>
+              <div><dt>商业形态</dt><dd>海螺 AI / 星野（Talkie）多模态 C 端 + 极低价 API + 严格管控的社区开放权重<sup>◉</sup></dd></div>
+            </dl>
+            <div class="legal-box">
+              <div class="lb-h">⚖ 法律与商业条款排雷（基准日 2026-11-24 核实）</div>
+              <dl>
+                <div><dt>MiniMax Community License（默认非商用！）</dt><dd>较 M2 改良 MIT 大幅收紧：① <b>基础授权仅限非商业用途</b>；② 任何商业使用均必须满足三项条件——<b>显著展示 <code>Built with MiniMax M3 / M3.1-Flash</code> 署名</b> + <b>向 MiniMax 发送一次性书面/邮件通知</b> + <b>遵守禁止军事用途条款</b>；③ <b>产品年营收超过 2000 万美元须取得 MiniMax 事先书面授权</b><sup>◉</sup>！</dd></div>
+                <div><dt>H3 视频权重：史无前例的「四大法域全排除」</dt><dd>2026-08-02 发布的 <b>MiniMax H3 Community License Agreement</b> 将“适用地域（Applicable Territory）”界定为全球但<b>明确排除欧盟、英国、韩国及美国</b>（比腾讯混元视频还多排除了美国！），并叠加 $20M 年营收事先书面授权与强制 UI 署名<sup>◉</sup>。业内分析认为这与 2026-08 生效的 EU AI Act 生成媒体透明度义务及美国版权诉讼威慑直接相关<sup>◐</sup>。</dd></div>
+              </dl>
+              <div class="legal-act"><b>法务采购动作：</b>切勿因 M2 时代的印象直接商用部署 M3/M3.1——哪怕营收不足 $20M，未发通知邮件或未挂 UI 署名即构成违约；出海产品面向美、欧、英、韩市场绝对禁止使用 H3 开源权重。</div>
+            </div>
+            <p class="sources"><b>官方与核实来源</b><a href="https://buildmono.com/news/open-weight-model-licences" target="_blank" rel="noopener noreferrer">MiniMax M3 许可实测对照 ↗</a><a href="https://fuser.studio/articles/best-open-source-video-models" target="_blank" rel="noopener noreferrer">视频开源权重地域排除对照（H3/Hunyuan/Wan）↗</a></p>
+          </td></tr>
+
+        </tbody>
+      </table>
+    </div>
+    <p class="rowlink">技术列的蓝图出处：架构 → <a href="blueprint.html#mod-moe">Ⅱ·MoE</a> / <a href="blueprint.html#mod-ssm">Ⅱ·架构地平线</a> · 训练与蒸馏 → <a href="blueprint.html#mod-syn">Ⅰ·合成数据与蒸馏</a> / <a href="blueprint.html#mod-rlvr">Ⅰ·可验证奖励</a> · 慢思考 → <a href="blueprint.html#mod-ttc">Ⅲ·测试时算力</a> · 多模态 → <a href="blueprint.html#mod-vlm">Ⅴ·VLM</a> / <a href="blueprint.html#mod-video">Ⅴ·视频生成</a> · 算力与语料 → <a href="blueprint.html#mod-net">0·互联与集群</a> / <a href="blueprint.html#mod-corpus">Ⅰ·语料池</a> · 护栏与标识 → <a href="blueprint.html#mod-guard">Ⅳ·护栏与标识</a> · 部署引擎见 <a href="toolchain.html">🏗️ 工业现场</a></p>
+  </section>
+
+  <!-- ================= §3 商业与开源条款排雷库 ================= -->
+  <section class="blk" id="sec-clauses">
+    <div class="sec-kicker seal-k">SECTION 03 · LEGAL &amp; COMMERCIAL CLAUSE AUDIT</div>
+    <h2>⚖ 标的厂商条款与社区争议「六大高频雷区」横评</h2>
+    <p class="sec-lead">综合检索十三家厂商的开源 LICENSE 原文、API/企业服务条款、监管公报与 Hacker News / Reddit / GitHub 社区实务反馈，将<b>最易触发法律违约、商业锁死或监管处罚的六大类条款</b>横向归集。点击卡片底部的门派按钮可直达上方对应档案并自动展开。</p>
+
+    <div class="bar" role="region" aria-label="条款雷区分类筛选">
+      <div class="bar-grp" id="clause-filters">
+        <span class="bar-lab">条款类别</span>
+        <button type="button" class="flt seal-flt on" data-c="all" aria-pressed="true">全部六类</button>
+        <button type="button" class="flt seal-flt" data-c="rev" aria-pressed="false">营收/分成闸门</button>
+        <button type="button" class="flt seal-flt" data-c="biz" aria-pressed="false">业务封杀/Harness</button>
+        <button type="button" class="flt seal-flt" data-c="geo" aria-pressed="false">地域/主体禁令</button>
+        <button type="button" class="flt seal-flt" data-c="data" aria-pressed="false">数据留存/平台锁定</button>
+        <button type="button" class="flt seal-flt" data-c="ip" aria-pressed="false">IP 赔偿盾断档</button>
+        <button type="button" class="flt seal-flt" data-c="distill" aria-pressed="false">反蒸馏/衍生传染</button>
+      </div>
+    </div>
+
+    <div class="clause-grid" id="clause-grid">
+      <article class="ccard" data-cat="rev">
+        <div class="cc-top"><span class="cc-cat">雷区 01 · 营收 / 分成闸门</span></div>
+        <h3 class="cc-title">「披着 MIT/Apache 外衣的商业收租」与集团并表陷阱</h3>
+        <p><b>典型条款：</b><code>Kimi K3 / K3.1 Pro</code>（主体及关联方连续 12 个月总营收超 <b>$20M</b> 经营 MaaS 须另签，据报商谈最高 <b>30% 分成</b><sup>◐</sup>）；<code>Meta Muse Spark Open</code>（<b>$20M</b> 集团 12 个月毛收入 MaaS 闸门）；<code>Qwen3.8-2.4T</code>（<b>$50M</b>/12 月另签）；<code>Tencent Hy4 正式版 / flash</code>（Sec.10 <b>$50M</b> MaaS 或 100M MAU）；<code>GLM-5.3</code>（<b>$10B</b> MaaS 须过安全审查）；<code>MiniMax M3</code>（<b>默认非商用</b>，商用须备案，年收超 <b>$20M</b> 须书面授权）；<code>Mistral Medium 3.5</code>（<b>上月全球月收超 $20M 即禁用</b>）<sup>◉</sup>。</p>
+        <p><b>法务暗坑：</b>门槛多数按<b>“主体及全部关联方的集团总营收”</b>而非单一 AI 产品收入计算；大企业内部孵化的小团队一旦对外提供薄壳 API，上线第一天即构成无授权侵权。且多个门槛按“滚动 12 个月”或“上月”动态检测，业务增长即静默触发违约。</p>
+        <div class="cc-comm"><b>社区实务争议：</b>HN（1037+ 赞）与 r/LocalLLaMA 痛批此类许可为「weights-available 而非开源」，指出万亿模型个人跑不动、大云商又因分成壁垒拒绝托管，最终削弱 API 市场价格竞争并抬高企业推理成本<sup>◐</sup>。</div>
+        <div class="cc-jumps">
+          <button type="button" class="jbtn" data-jump="kimi">Kimi ↑</button>
+          <button type="button" class="jbtn" data-jump="meta">Meta Muse ↑</button>
+          <button type="button" class="jbtn" data-jump="qwen">Qwen ↑</button>
+          <button type="button" class="jbtn" data-jump="hunyuan">混元 Hy4 ↑</button>
+          <button type="button" class="jbtn" data-jump="glm">智谱 GLM ↑</button>
+          <button type="button" class="jbtn" data-jump="minimax">MiniMax ↑</button>
+          <button type="button" class="jbtn" data-jump="mistral">Mistral ↑</button>
+        </div>
+      </article>
+
+      <article class="ccard" data-cat="biz">
+        <div class="cc-top"><span class="cc-cat">雷区 02 · 业务封杀 / Harness 围墙</span></div>
+        <h3 class="cc-title">从「限 MaaS」升级到「封杀 AI 办公助手与第三方 Agent 框架」</h3>
+        <p><b>典型条款：</b>① <code>Qwen3.8-Flash-Next</code>（Qwen Community License 1.0）独树一帜，不仅限 MaaS，更直接将<b>面向编码或办公效率的「AI Work Assistant」商业产品</b>列为须另签授权类别（无营收豁免！）<sup>◉</sup>；② <code>Mistral Large 4</code> 无营收门槛一刀切限制第三方 MaaS<sup>◉</sup>；③ <b>闭源端围墙化</b>：Anthropic 于 2026-03/04 封禁 Claude 订阅 OAuth 令牌接入第三方 Agent Harness，强推自家 Claude Code<sup>◉</sup>；OpenAI 于 2026-08 以合同违约为由切断 SpaceX 收购后的 Cursor 模型供应<sup>◐</sup>。</p>
+        <p><b>法务暗坑：</b>创业公司与 SaaS 厂商常误以为“只要不做模型托管、只做垂直应用”就安全，却忽视了 Qwen 对“AI 办公/编码助手”的直接点名，以及闭源厂商随时可借“反转售/反第三方外壳”条款切断关键上游接口。</p>
+        <div class="cc-comm"><b>社区实务争议：</b>HN 与 Reddit 开发者认为“模型厂商下场做第一方 Agent/IDE 后，与下游生态从合作转为直接竞争”，倒逼企业搭建多模型网关与可替换 Harness<sup>◐</sup>。</div>
+        <div class="cc-jumps">
+          <button type="button" class="jbtn" data-jump="qwen">Qwen ↑</button>
+          <button type="button" class="jbtn" data-jump="anthropic">Anthropic ↑</button>
+          <button type="button" class="jbtn" data-jump="openai">OpenAI ↑</button>
+          <button type="button" class="jbtn" data-jump="mistral">Mistral ↑</button>
+        </div>
+      </article>
+
+      <article class="ccard" data-cat="geo">
+        <div class="cc-top"><span class="cc-cat">雷区 03 · 地域排除 / 主体穿透 / 出口管制</span></div>
+        <h3 class="cc-title">「开放权重不再等于全球可用」与双向地缘夹击</h3>
+        <p><b>典型条款与禁令：</b>① <b>许可证硬性地域排除</b>：<code>HunyuanVideo / 3D / HY-Motion</code> 排除<b>欧盟、英国、韩国</b>；<code>MiniMax H3</code> 同时排除<b>美、欧、英、韩</b>；<code>Llama 4</code> 多模态排除欧盟境内主体<sup>◉</sup>；② <b>股权穿透封禁</b>：Anthropic 禁止全球<b>中资控股 &gt;50%</b> 实体及海外子公司使用 Claude<sup>◉</sup>；③ <b>公法制裁与供应链传导</b>：美国 DHS 2026-10-20 <b>FASCSA 排除令</b>将 DeepSeek 及「使用其开发（developed using）」的系统逐出联邦民用系统与采购链；智谱（Z.ai）列<b>美 BIS 实体清单</b>与州禁令<sup>◉</sup>；④ <b>欧美深伪执法与境内双备案</b>：SpaceXSI 面临英 Ofcom / 欧 DSA 调查且无欧盟驻留；中国境内服务须落双备案与《标识办法》双轨标识。</p>
+        <p><b>法务暗坑：</b>中资出海企业面临“用美系怕股权穿透断供 + 数据出境，用国产开源多模态怕欧美地域排除，涉美政府供应链怕 FASCSA 倒查合成数据”的三明治夹击。</p>
+        <div class="cc-comm"><b>社区实务争议：</b>GitHub（如 Tencent HY-Motion #49）涌现大量欧洲开发者抗议“标注开源却在欧盟零授权”，业界解读排除欧英韩系厂商为规避 2026-08 生效的 EU AI Act 生成媒体透明度与版权合规义务<sup>◐</sup>。</div>
+        <div class="cc-jumps">
+          <button type="button" class="jbtn" data-jump="anthropic">Anthropic ↑</button>
+          <button type="button" class="jbtn" data-jump="deepseek">DeepSeek ↑</button>
+          <button type="button" class="jbtn" data-jump="glm">智谱 GLM ↑</button>
+          <button type="button" class="jbtn" data-jump="hunyuan">混元 ↑</button>
+          <button type="button" class="jbtn" data-jump="minimax">MiniMax ↑</button>
+          <button type="button" class="jbtn" data-jump="meta">Meta Llama 4 ↑</button>
+          <button type="button" class="jbtn" data-jump="xai">SpaceXSI / Grok ↑</button>
+        </div>
+      </article>
+
+      <article class="ccard" data-cat="data">
+        <div class="cc-top"><span class="cc-cat">雷区 04 · 数据训练 / 强制留存 / 平台锁定</span></div>
+        <h3 class="cc-title">免费层“数据付费”、司法保全打破删除承诺与微调资产被锁死</h3>
+        <p><b>典型条款：</b>① <b>免费/消费/贡献层默认训练</b>：Google Gemini 免费 API 默认训练且允许<b>人工审阅</b>；Anthropic 消费版默认训练且<b>留存 5 年</b>；Meta 托管 Spark 1.3 Contributor 模式允许训练；Mistral 免费 Experiment 层默认训练；DeepSeek 隐私政策默认训练（提供 opt-out）且 API 条款<b>未写留存期与 DPA</b><sup>◉</sup>；② <b>有状态接口与司法保全</b>：OpenAI Responses API 默认 <code>store: true</code> 存 30 天，且 NYT 诉案法院曾令无限期保全已删对话<sup>◉</sup>；③ <b>微调权属剥离与锁定</b>：<b>火山方舟 §3.7.14</b> 规定客户不得主张精调模型 IP 且仅限部署于火山引擎；§3.7.17 允许提前 15 天单方下架免责<sup>◉</sup>；④ <b>远程控制权</b>：旧版 Gemma Terms of Use 赋予 Google 远程限制使用权<sup>◉</sup>。</p>
+        <p><b>法务暗坑：</b>员工用个人消费账号或免费 API Key 处理合同/代码（「影子 AI」）会静默绕过企业签署的不训练与 ZDR 协议；云上微调不审权属条款，等同于用自有核心数据替云商做不可迁移的沉没资产。</p>
+        <div class="cc-comm"><b>社区实务争议：</b>Reddit r/ChatGPT 与 r/ClaudeAI 长期批评“宣称 30 天删除却因诉讼或政策改口变 5 年/无限期留存”，促使受监管行业加速转向 ZDR 或私有化部署<sup>◐</sup>。</div>
+        <div class="cc-jumps">
+          <button type="button" class="jbtn" data-jump="bytedance">豆包 / 火山方舟 ↑</button>
+          <button type="button" class="jbtn" data-jump="openai">OpenAI ↑</button>
+          <button type="button" class="jbtn" data-jump="google">Google Gemini ↑</button>
+          <button type="button" class="jbtn" data-jump="anthropic">Anthropic ↑</button>
+          <button type="button" class="jbtn" data-jump="deepseek">DeepSeek ↑</button>
+          <button type="button" class="jbtn" data-jump="meta">Meta Spark 1.3 ↑</button>
+        </div>
+      </article>
+
+      <article class="ccard" data-cat="ip">
+        <div class="cc-top"><span class="cc-cat">雷区 05 · IP 赔偿盾空洞与通道断档</span></div>
+        <h3 class="cc-title">「有赔偿盾 ≠ 赔得到」：修改失保、三方云真空与国产反向赔偿</h3>
+        <p><b>典型条款：</b>① <b>免责空洞极窄</b>：OpenAI Copyright Shield 排除修改输出、未启用官方过滤/引用工具及商标侵权；Google 双重赔偿盾限于付费 GA 服务的<b>“未修改输出（unmodified）”</b>；Anthropic 虽覆盖训练与输出，但普通商用协议责任上限仅 6 个月费用或 $100，且自身背负 $15 亿书籍和解与 $31 亿音乐诉讼引发赔付能力讨论<sup>◉</sup>；② <b>调用通道断档</b>：OpenAI 协议排斥第三方受益人（经聚合网关/转售商失保）；AWS Bedrock / Google Vertex AI 上调用第三方模型，云商通常对第三方模型免责（如 Google §19(b)）<sup>◉</sup>；③ <b>国产云/API 反向赔偿</b>：火山方舟、阿里云百炼等标准条款均无正向 IP 赔偿盾，反要求客户就输出侵权自行担责并赔偿平台损失<sup>◉</sup>。</p>
+        <p><b>法务暗坑：</b>采购部门在清单里打勾“供应商有 IP 赔偿”，但在真实工作流中员工几乎一定会编辑 AI 稿件或通过路由网关调用，导致真正出事时赔偿条款形同虚设。</p>
+        <div class="cc-comm"><b>社区实务争议：</b>欧美法务评论（Beri.net / ComputeLaw 等）指出 2026 年企业 AI 合同谈判焦点已从“有没有盾”转向“修改后输出、微调模型、多云路由与赔偿上限豁免”四大细则<sup>◐</sup>。</div>
+        <div class="cc-jumps">
+          <button type="button" class="jbtn" data-jump="openai">OpenAI ↑</button>
+          <button type="button" class="jbtn" data-jump="google">Google ↑</button>
+          <button type="button" class="jbtn" data-jump="anthropic">Anthropic ↑</button>
+          <button type="button" class="jbtn" data-jump="bytedance">火山方舟 ↑</button>
+          <button type="button" class="jbtn" data-jump="qwen">阿里云百炼 ↑</button>
+        </div>
+      </article>
+
+      <article class="ccard" data-cat="distill">
+        <div class="cc-top"><span class="cc-cat">雷区 06 · 反蒸馏 / 输出衍生传染 / 静默中转风险</span></div>
+        <h3 class="cc-title">从合同违约升级为国安警告与客户数据二次外泄危机</h3>
+        <p><b>典型条款与事件：</b>① <b>闭源 ToS 全面反蒸馏</b>：OpenAI、Anthropic、Google、SpaceXSI、火山方舟等均严禁利用输出训练/蒸馏竞品模型<sup>◉</sup>；② <b>开源许可反向传染</b>：<code>Meta Muse Model License</code> 明确将“基于模型输出蒸馏的新模型”界定为衍生品并强制继承署名与限制；<code>HunyuanVideo / 3D</code> 与 <code>Grok 2.5</code> 禁止用输出训练其他 AI 模型<sup>◉</sup>；③ <b>2026-09 蒸馏与中转风暴</b>：美 CISA/NSA/FBI 联合警告点名 6 家中国模型商，随后 Anthropic 发布报告指控阿里、月之暗面、DeepSeek 等通过代理账号大规模提取推理链，并称部分厂商疑似<b>将自身真实客户请求静默转发给 Claude</b>（中方商务部强烈反驳美方将技术商业问题政治化）<sup>◐</sup>。</p>
+        <p><b>法务暗坑：</b>① 企业内部若用闭源旗舰生成合成数据去微调自有小模型，直接构成 ToS 违约与不正当竞争风险；② 调用不明来源的低价“套壳/聚合 API 中转站”，可能发生商密与个人数据被不知情跨境转发甚至截留用于训练的双重泄密。</p>
+        <div class="cc-comm"><b>社区实务争议：</b>法律界普遍指出单纯版权法难以封堵蒸馏，但伪造账号/规避风控触发违约与 CFAA 风险；企业更警惕的是“模型商或中转站悄悄把我的 prompt 转发给了另一家境外厂商”<sup>◐</sup>。</div>
+        <div class="cc-jumps">
+          <button type="button" class="jbtn" data-jump="meta">Meta Muse ↑</button>
+          <button type="button" class="jbtn" data-jump="anthropic">Anthropic ↑</button>
+          <button type="button" class="jbtn" data-jump="kimi">Kimi ↑</button>
+          <button type="button" class="jbtn" data-jump="deepseek">DeepSeek ↑</button>
+          <button type="button" class="jbtn" data-jump="qwen">Qwen ↑</button>
+          <button type="button" class="jbtn" data-jump="hunyuan">混元 ↑</button>
+          <button type="button" class="jbtn" data-jump="xai">SpaceXSI / Grok ↑</button>
+        </div>
+      </article>
+    </div>
+
+    <h3>附表 · 2026 主流「限制性开放权重许可证」门槛横向对照（法务速查）</h3>
+    <div class="subtable-wrap">
+      <table class="compact">
+        <thead>
+          <tr>
+            <th scope="col">模型（版本）</th>
+            <th scope="col">许可证名称</th>
+            <th scope="col">默认商用</th>
+            <th scope="col">营收 / 用户门槛与统计口径</th>
+            <th scope="col">业务 / 地域 / 特殊限制</th>
+            <th scope="col">豁免边界</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Kimi K3 / K3.1 Pro</th>
+            <td><code>Kimi K3 / K3.1-Pro License</code><sup>◉</sup></td>
+            <td>有条件允许</td>
+            <td>MaaS：<b>主体+关联方</b>连续 12 月总营收 &gt; <b>$20M</b> 须另签<sup>◉</sup>（传谈 30% 分成<sup>◐</sup>）；UI 署名：&gt;100M MAU 或 $20M 月收</td>
+            <td>超门槛 UI 须显式展示模型名</td>
+            <td>纯内部自用、功能内嵌非 MaaS、官方及认证伙伴</td>
+          </tr>
+          <tr>
+            <th scope="row">Meta Muse Spark Open</th>
+            <td><code>Muse Model License</code><sup>◉</sup></td>
+            <td>有条件允许</td>
+            <td>MaaS：<b>主体+关联方</b>连续 12 月毛收入 &gt; <b>$20M</b> 须通知并另签<sup>◉</sup></td>
+            <td>全产品须挂 <code>Built with Muse Spark Open</code>；<b>输出蒸馏传染为衍生品</b>；Exhibit A 禁未持牌法/医/金执业与未成年人</td>
+            <td>纯内部自用、研究、产品内嵌功能（非 API 转售）</td>
+          </tr>
+          <tr>
+            <th scope="row">Qwen3.8-2.4T-A95B</th>
+            <td><code>Qwen Max License</code><sup>◉</sup></td>
+            <td>有条件允许</td>
+            <td>任意 12 个月营收 &gt; <b>$50M</b> 须另签许可<sup>◉</sup></td>
+            <td>与 27B（Apache 2.0）及 Image-2.1（非商用）截然不同</td>
+            <td>$50M 以下及内部合规场景（以原文为准）</td>
+          </tr>
+          <tr>
+            <th scope="row">Qwen3.8-Flash-Next</th>
+            <td><code>Qwen Community License 1.0</code><sup>◉</sup></td>
+            <td>有条件允许</td>
+            <td>UI 署名：&gt;100M MAU 或 $20M 月收<sup>◉</sup></td>
+            <td><b>商业 MaaS 或编码/办公「AI Work Assistant」须另签</b>（不设低营收豁免！）<sup>◉</sup></td>
+            <td>纯内部使用（不向第三方提供模型或输出）</td>
+          </tr>
+          <tr>
+            <th scope="row">腾讯 Hy4 / Hy4-flash</th>
+            <td><code>Tencent Hy License 1.0</code><sup>◉</sup></td>
+            <td>有条件允许</td>
+            <td>Sec.10：MaaS 全球 12 月总营收 &gt; <b>$50M</b> 或产品 &gt; <b>100M MAU</b> 须书面许可<sup>◉</sup></td>
+            <td>基于 Apache 2.0 外挂 Sec.10（已取消 EU/UK/KR 地域排除）</td>
+            <td>不向第三方开放模型或输出的纯内部使用</td>
+          </tr>
+          <tr>
+            <th scope="row">腾讯 HunyuanVideo / 3D</th>
+            <td><code>Tencent Hunyuan Community License</code><sup>◉</sup></td>
+            <td>有条件允许</td>
+            <td>视频 &gt;100M MAU；<b>Hunyuan3D 2.0/2.1 &gt;1M MAU</b> 须另签<sup>◉</sup></td>
+            <td><b>明文排除欧盟、英国、韩国</b>；禁止输出训练其他 AI 模型<sup>◉</sup></td>
+            <td>三地之外且低于 MAU 门槛</td>
+          </tr>
+          <tr>
+            <th scope="row">智谱 GLM-5.3</th>
+            <td><code>GLM-5.3 License</code><sup>◉</sup></td>
+            <td>有条件允许</td>
+            <td>MaaS：任意 12 个月总营收 &gt; <b>$10B</b> 须通过 Z.ai 安全审查<sup>◉</sup></td>
+            <td>主体列美 BIS 实体清单（属公法出口管制而非许可证本身）</td>
+            <td>$10B 以下 MaaS 及全部普通企业/个人</td>
+          </tr>
+          <tr>
+            <th scope="row">Mistral Large 4</th>
+            <td><code>Mistral Ecosystem Open-Weight License</code><sup>◉</sup></td>
+            <td>有条件允许</td>
+            <td><b>无营收门槛</b>：凡主体/关联方涉第三方 MaaS 即须另签<sup>◉</sup></td>
+            <td>同厂 <code>Med 3.5</code> 上月全球月收 &gt;$20M 即禁用；<code>MRL/MNPL</code> 禁商用</td>
+            <td>内部使用与模型内嵌型产品功能</td>
+          </tr>
+          <tr>
+            <th scope="row">MiniMax M3 / H3</th>
+            <td><code>MiniMax / H3 Community License</code><sup>◉</sup></td>
+            <td><b>默认非商用</b></td>
+            <td>商用须挂署名并邮件通知；年营收 &gt; <b>$20M</b> 须事先书面授权<sup>◉</sup></td>
+            <td>禁军事用途；<b>H3 视频同时排除美、欧、英、韩四法域</b><sup>◉</sup></td>
+            <td>仅非商业研究（商用必须走署名+通知程序）</td>
+          </tr>
+          <tr>
+            <th scope="row">Meta Llama 4</th>
+            <td><code>Llama 4 Community License</code><sup>◉</sup></td>
+            <td>有条件允许</td>
+            <td>上月月活 &gt; <b>700M MAU</b> 须申请另签<sup>◉</sup></td>
+            <td>须挂 <code>Built with Llama</code>；衍生模型名须以 <code>Llama</code> 开头；<b>多模态排除欧盟境内主体</b><sup>◉</sup></td>
+            <td>欧盟终端用户使用海外合规产品（以原文为准）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= §4 法务合规视角：应新增的条目与尽调清单 ================= -->
+  <section class="blk" id="sec-legal">
+    <div class="sec-kicker seal-k">SECTION 04 · LEGAL COMPLIANCE ARCHITECTURE &amp; CHECKLIST</div>
+    <h2>⚖ 法务合规视角：模型选型页应补齐的六大治理维度与上线快检</h2>
+    <p class="sec-lead">对照早期谱系页（偏重技术架构与四条原则性朱批），从企业法务与合规实务出发，模型选型决策必须补齐以下<b>六项结构性治理条目</b>——因为技术跑分只决定「好不好用」，这六项决定「能不能上线、签不签得下、出事谁赔钱」。</p>
+
+    <div class="gov-grid">
+      <div class="gcard">
+        <div class="gid">ADD-01 · MODEL REGISTER / AI BOM</div>
+        <h3>1. 版本级许可证台账（而非厂商名）</h3>
+        <p>建立精确到 <b>模型 ID + 仓库 Commit + 下载当日 LICENSE 原文存档</b> 的台账，并标注是否存在营收/MAU 动态门槛与复核周期。杜绝把 <code>Hy4-preview</code>（Apache 2.0）当成 <code>Hy4</code> 正式版（Sec.10），或把 <code>Qwen3.8-27B</code> 的评估结论套用到 <code>Flash-Next</code>。</p>
+      </div>
+      <div class="gcard">
+        <div class="gid">ADD-02 · ROUTE-OF-PURCHASE MATRIX</div>
+        <h3>2. 调用路径决定法律后果（六路径映射）</h3>
+        <p><b>同一款模型，换一条调用路径，数据训练、跨境法域、DPA 与 IP 赔偿盾全部改写：</b>① 消费版/免费 API（默认训练/人工审阅，严禁商密）→ ② 厂商直连商用 API（看 ZDR 与赔偿盾细则）→ ③ 一线云商托管闭源模型（Azure/Bedrock/Vertex/百炼/方舟，查三方模型免责与精调锁定）→ ④ 聚合中转站/路由网关（极易断保且存在二次转包泄密风险）→ ⑤ 第三方合规云托管开放权重（受 MaaS 营收闸门与云商 DPA 双重约束）→ ⑥ 本地/私云自托管开放权重（数据主权最高，重心转向权重许可证、安全评估与双备案）。</p>
+      </div>
+      <div class="gcard">
+        <div class="gid">ADD-03 · ENTITY &amp; SANCTIONS SCREENING</div>
+        <h3>3. 主体股权穿透、制裁与双备案映射</h3>
+        <p>把选型页的「辖区」一栏升级为<b>双向准入审查</b>：对内查中国网信双备案、TC260 语料与拒答达标及《标识办法》显隐式双轨标识；对外查股权穿透（Anthropic 中资控股 &gt;50% 禁令）、BIS 实体清单（智谱）、DHS FASCSA「developed using」供应链传导（DeepSeek）及 EU AI Act 地域排除（混元视频/3D、MiniMax H3、Llama 4 多模态）。</p>
+      </div>
+      <div class="gcard">
+        <div class="gid">ADD-04 · DATA LIFECYCLE &amp; LITIGATION HOLD</div>
+        <h3>4. 数据流、工具出圈与「司法保全冲突」</h3>
+        <p>不再只问“是否拿我数据训练”，须追问四层细节：① 默认日志留存期与有状态接口开关（如 <code>store: false</code>）；② 内置联网搜索、代码沙箱、MCP 工具是否把数据带出受控边界；③ <b>供应商涉版权诉讼被法院下令强制保全用户已删日志</b>时（NYT v. OpenAI 先例）是否受 ZDR 豁免；④ 终止合作后“匿名化继续留存”条款边界。</p>
+      </div>
+      <div class="gcard">
+        <div class="gid">ADD-05 · COMMERCIAL EXIT &amp; FALLBACK</div>
+        <h3>5. 商业可持续性、微调权属与兜底预案</h3>
+        <p>合同谈判必锁四点：① 微调权重/LoRA 资产权属与可迁移性（防火山方舟 §3.7.14 式锁定）；② 模型下架通知期（15 天远不足生产迁移，争取 90 天+）；③ 长协价格随官网刊例价下调的联动机制（MFN/阶梯调价）；④ 技术栈内常备至少一个<b>纯 Apache 2.0 / MIT 兜底模型</b>（如 DeepSeek V4、Gemma 4、Qwen3.8-27B、Mistral Small 4），防突然断供或触发营收红线。</p>
+      </div>
+      <div class="gcard">
+        <div class="gid">ADD-06 · HIGH-RISK TIER &amp; AGENT LIABILITY</div>
+        <h3>6. 高危网安档位与 Agent 越权归责</h3>
+        <p>2026 年底前沿模型已普遍分化出受限网安变体（Claude Mythos / GPT-6 Cyber / Gemini 3.8 Flash Cyber），且 Google Cloud 等已将客户反向赔偿扩展至 <b>AI Agent 违规行为</b>。引入自主 Agent 与计算机操控能力时，必须在权限沙箱、人工确认点（HITL）与操作审计日志层面提前留痕（回看 <a href="blueprint.html#mod-agent">蓝图 Ⅳ·Agent</a>）。</p>
+      </div>
+    </div>
+
+    <div class="chk-box" id="checklist">
+      <div class="chk-head">
+        <h3>⚖ 交互式法务采购上线前快检清单（可逐项勾选核验）</h3>
+        <div>
+          <span class="chk-stat" id="chk-stat">0 / 8 已核验</span>
+          <button type="button" class="flt" id="chk-reset" style="margin-left:8px">重置</button>
+        </div>
+      </div>
+      <ul class="chk-list">
+        <li><label><input type="checkbox"><span><b>1. 锁定具体版本 LICENSE 原文：</b>已核对并归档所部署确切模型版本（非同厂其他型号/Preview 版）的 <code>LICENSE</code> 与 <code>AUP</code> 快照，确认未误用 <code>mrl/mnpl</code> 或非商用研究许可。</span></label></li>
+        <li><label><input type="checkbox"><span><b>2. 复核集团并表门槛与业务禁区：</b>若用 L1 开放权重，已按「主体 + 全部关联方」合并口径核算营收与 MAU（如 $20M/$50M/100M），且确认不落入 MaaS、AI 办公/编码助手（Qwen Flash-Next）或未持牌法/医/金执业（Meta Muse）禁区。</span></label></li>
+        <li><label><input type="checkbox"><span><b>3. 排查地域排除与主体适格性：</b>已核查业务覆盖法域是否落入欧盟/英国/韩国/美国排除清单（HunyuanVideo/3D、MiniMax H3、Llama 4 多模态），并完成股权穿透（Anthropic 中资控股禁令）与制裁/FASCSA 供应链筛查。</span></label></li>
+        <li><label><input type="checkbox"><span><b>4. 封堵“影子 AI”与免费层泄密：</b>已从技术与制度上隔离消费版与免费 API Key（防 Google 免费层人工审阅、Anthropic 消费版 5 年训练留存、Meta Contributor 模式），生产调用全部走商用/企业契约通道。</span></label></li>
+        <li><label><input type="checkbox"><span><b>5. 核实数据留存、ZDR 与出圈工具：</b>已确认 API 留存天数、是否签署 ZDR 协议（应对司法保全风险）、是否关闭 <code>store: true</code> 等默认存储参数，以及联网搜索/插件/MCP 的数据出境路径。</span></label></li>
+        <li><label><input type="checkbox"><span><b>6. 验明 IP 赔偿盾真实覆盖面：</b>已确认所走调用通道（直连 vs 云托管 vs 中转站）确实享有 IP 赔偿，核查是否排除“人工修改后输出”“微调产物”“未开护栏”，以及国产无盾场景下的内部内容复核兜底。</span></label></li>
+        <li><label><input type="checkbox"><span><b>7. 锁定微调资产权属与退出条款：</b>如进行 SFT/微调，已书面明确微调权重/LoRA 归属权与导出迁出权（避开平台强锁定条款），并约定合理的模型下架过渡期与纯 Apache/MIT 备选方案。</span></label></li>
+        <li><label><input type="checkbox"><span><b>8. 落地境内备案与显隐式双轨标识：</b>面向中国境内公众提供服务前，已确认基础模型备案号公示、应用侧算法备案/评估义务，并落实《人工智能生成合成内容标识办法》显式与隐式标识且不擅自去除。</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= §5 观察名单与参考来源 ================= -->
+  <section class="blk" id="sec-watch">
+    <div class="sec-kicker">SECTION 05 · WATCHLIST &amp; PRIMARY SOURCES</div>
+    <div class="others">
+      <b>脚注 · 范围说明与观察名单（谱系 v8 视格局动态扩列）：</b>
+      本页非全市场榜单；未列入不代表对其能力或采购可行性的判断。当前重点观察：<b>百度文心</b>（2026-11-24 刚在 Hugging Face 发布 <code>ERNIE 5.5 Flash Preview</code> 纯 Apache 2.0 权重<sup>◉</sup>）、<b>阶跃星辰</b>（<code>Step 5 Preview</code>，亦列 2026-09 美三部门蒸馏警告名单<sup>◐</sup>）、<b>小米 MiMo</b>（<code>MiMo V2.6 Pro / Flash</code><sup>◉</sup>）、<b>讯飞星火</b>、<b>面壁 MiniCPM</b>（端侧）、<b>Thinking Machines</b>（<code>Inkling 2</code> Loop Transformer<sup>◉</sup>）、<b>Liquid AI</b>（<code>LFM3</code>，<code>LFM Open License v1.0</code> 设 $10M 集团年营收付费门槛<sup>◉</sup>）、<b>Cohere</b>（企业私有化/加拿大法域<sup>◉</sup>）。
+    </div>
+
+    <nav class="links" aria-label="相关页面">
+      <a href="index.html"><svg class="ico" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg> 返回首页</a>
+      <a href="blueprint.html"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线）</a>
+      <a href="toolchain.html"><svg class="ico" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> 工业现场（工具链）</a>
+      <a href="index-map.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.4 4.6-4.6 2.4 2.4-4.6z"/></svg> 索引地图（合规挂点）</a>
+      <a href="progress.html"><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 进度看板</a>
+    </nav>
+
+    <footer>
+      <p>模型门派谱系 · 活页 v7 · 盘点基准日 2026-11-24。<span class="sn">按规则 R5：全部技术与法律条款断言均按 ◉/◐/○ 标注来源层级，仅供学习研究参考，不构成法律意见；商业条款与开源许可随时可能变更，采购与上线前请务必直读各厂商最新官方 LICENSE 与服务条款原文并结合专业法律意见判断。</span>本页过期即整页换新，不追补丁。</p>
+      <p class="refs"><b>跨厂商横评与主要法务参考：</b>
+        <a href="https://buildmono.com/news/open-weight-model-licences" target="_blank" rel="noopener noreferrer">Mono 开放权重许可实测对照（2026-11-20）</a> ·
+        <a href="https://www.beri.net/article/ai-copyright-indemnity-openai-microsoft-google-anthropic-terms-compared" target="_blank" rel="noopener noreferrer">四大美系 AI IP 赔偿盾横评</a> ·
+        <a href="https://fuser.studio/articles/best-open-source-video-models" target="_blank" rel="noopener noreferrer">视频开源权重地域排除对照（Wan / Hunyuan / MiniMax H3）</a> ·
+        <a href="https://labs.cloudsecurityalliance.org/research/csa-research-note-dhs-deepseek-fascsa-order-20261021-csa-sty/" target="_blank" rel="noopener noreferrer">CSA DeepSeek FASCSA 排除令解析</a> ·
+        <a href="https://www.volcengine.com/docs/ark/volcengine-ark-platform-terms" target="_blank" rel="noopener noreferrer">火山方舟平台专用条款</a> ·
+        <a href="https://www.digitalapplied.com/blog/kimi-k3-open-weights-shipped-license-restrictions-2026" target="_blank" rel="noopener noreferrer">Kimi K3 许可逐条拆解</a>
+      </p>
+      <div class="build">GENEALOGY SHEET v7 · 盘点基准日 2026-11-24 · 13 FAMILIES · 6 LEGAL CLAUSE AUDITS · 8-ITEM CHECKLIST · STYLE rev2</div>
+    </footer>
+  </section>
+
 </main>
+
 <script>
 (function () {
-  function expand(row, on) {
-    row.classList.toggle('open', on);
-    row.nextElementSibling.classList.toggle('on', on);
-    row.querySelector('.family-toggle').setAttribute('aria-expanded', String(on));
+  /* 1. 门派行 ⇄ 详情行展开（支持整行点击、按钮回车/空格与深链接自动展开） */
+  var famRows = Array.from(document.querySelectorAll('#famtable tr.fam'));
+  function setRowOpen(row, open) {
+    var det = row.nextElementSibling;
+    if (!det || !det.classList.contains('det')) return;
+    det.classList.toggle('on', open);
+    row.classList.toggle('open', open);
+    var btn = row.querySelector('.family-toggle');
+    if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
-  document.querySelectorAll('#famtable tr.fam').forEach(function (row) {
-    expand(row, false);
-    row.addEventListener('click', function (event) {
-      if (event.target.closest('a')) return;
-      expand(row, !row.classList.contains('open'));
+  famRows.forEach(function (row) {
+    var btn = row.querySelector('.family-toggle');
+    function toggle() {
+      setRowOpen(row, !row.classList.contains('open'));
+      syncToggleAllLabel();
+    }
+    row.addEventListener('click', function (e) {
+      if (e.target.closest('a')) return;
+      toggle();
+    });
+    if (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggle();
+      });
+    }
+  });
+
+  /* 2. 矩阵多维筛选（法域 × 开放姿态） */
+  var state = { region: 'all', tier: 'all' };
+  var countEl = document.getElementById('fam-count');
+  var toggleAllBtn = document.getElementById('toggle-all');
+
+  function applyMatrixFilter() {
+    var shown = 0;
+    famRows.forEach(function (row) {
+      var det = row.nextElementSibling;
+      var matchR = state.region === 'all' || row.dataset.region === state.region;
+      var matchT = state.tier === 'all' || row.dataset.tier === state.tier;
+      var hide = !(matchR && matchT);
+      row.classList.toggle('hidden', hide);
+      if (det && det.classList.contains('det')) {
+        det.classList.toggle('hidden', hide);
+      }
+      if (!hide) shown++;
+    });
+    if (countEl) countEl.textContent = '显示 ' + shown + ' / ' + famRows.length + ' 家';
+    syncToggleAllLabel();
+  }
+
+  function resetMatrixFilter() {
+    state.region = 'all';
+    state.tier = 'all';
+    document.querySelectorAll('.bar-grp[data-filter] .flt').forEach(function (b) {
+      var on = b.dataset.val === 'all';
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    applyMatrixFilter();
+  }
+
+  function syncToggleAllLabel() {
+    if (!toggleAllBtn) return;
+    var visible = famRows.filter(function (r) { return !r.classList.contains('hidden'); });
+    var allOpen = visible.length > 0 && visible.every(function (r) { return r.classList.contains('open'); });
+    toggleAllBtn.textContent = allOpen ? '收起全部详情' : '展开全部详情';
+  }
+
+  document.querySelectorAll('.bar-grp[data-filter]').forEach(function (grp) {
+    var key = grp.dataset.filter;
+    grp.querySelectorAll('.flt').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        state[key] = btn.dataset.val;
+        grp.querySelectorAll('.flt').forEach(function (b) {
+          var on = b === btn;
+          b.classList.toggle('on', on);
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        applyMatrixFilter();
+      });
+    });
+  });
+
+  if (toggleAllBtn) {
+    toggleAllBtn.addEventListener('click', function () {
+      var visible = famRows.filter(function (r) { return !r.classList.contains('hidden'); });
+      var openNext = !visible.every(function (r) { return r.classList.contains('open'); });
+      visible.forEach(function (r) { setRowOpen(r, openNext); });
+      syncToggleAllLabel();
+    });
+  }
+
+  /* 3. 深链接与页内跳转（支持 URL #hash、阶梯 chip 与 §3 卡片按钮） */
+  function revealFamily(id, scroll) {
+    var target = document.getElementById(id);
+    if (!target || !target.classList.contains('fam')) return;
+    if (target.classList.contains('hidden')) resetMatrixFilter();
+    setRowOpen(target, true);
+    syncToggleAllLabel();
+    if (scroll) {
+      var rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({ behavior: rm ? 'auto' : 'smooth', block: 'center' });
+    }
+    target.classList.remove('flash');
+    void target.offsetWidth;
+    target.classList.add('flash');
+    setTimeout(function () { target.classList.remove('flash'); }, 1700);
+  }
+
+  document.querySelectorAll('.jbtn[data-jump]').forEach(function (btn) {
+    btn.addEventListener('click', function () { revealFamily(btn.dataset.jump, true); });
+  });
+  document.querySelectorAll('main a[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      var id = link.getAttribute('href').slice(1);
+      var row = document.getElementById(id);
+      if (row && row.classList.contains('fam')) revealFamily(id, false);
     });
   });
   function openLinkedFamily() {
-    var row = document.getElementById(location.hash.slice(1));
-    if (row && row.classList.contains('fam')) expand(row, true);
+    if (!location.hash) return;
+    var id = decodeURIComponent(location.hash.slice(1));
+    var row = document.getElementById(id);
+    if (row && row.classList.contains('fam')) revealFamily(id, false);
   }
   window.addEventListener('hashchange', openLinkedFamily);
-  document.querySelectorAll('main a[href^="#"]').forEach(function (link) {
-    link.addEventListener('click', function () {
-      var row = document.getElementById(link.getAttribute('href').slice(1));
-      if (row && row.classList.contains('fam')) expand(row, true);
+  openLinkedFamily();
+
+  /* 4. 条款排雷卡片分类筛选 */
+  var clauseBtns = document.querySelectorAll('#clause-filters .flt');
+  var clauseCards = document.querySelectorAll('#clause-grid .ccard');
+  clauseBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var cat = btn.dataset.c;
+      clauseBtns.forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      clauseCards.forEach(function (card) {
+        card.classList.toggle('hidden', cat !== 'all' && card.dataset.cat !== cat);
+      });
     });
   });
-  openLinkedFamily();
-  var age = Math.floor((Date.now() - Date.parse(document.querySelector('.lt time').dateTime)) / 86400000);
-  if (age > 30) {
-    var status = document.getElementById('snapshot-status');
-    status.textContent = '快照待复核：距盘点已 ' + age + ' 天，请以详情中的官方最新资料为准。许可与服务条件以官方原文为准。';
-    status.classList.add('stale');
+
+  /* 5. 交互式法务采购快检清单 */
+  var boxes = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]'));
+  var statEl = document.getElementById('chk-stat');
+  var resetBtn = document.getElementById('chk-reset');
+  function updateChecklist() {
+    var done = 0;
+    boxes.forEach(function (cb) {
+      var li = cb.closest('li');
+      if (li) li.classList.toggle('done', cb.checked);
+      if (cb.checked) done++;
+    });
+    if (statEl) statEl.textContent = done + ' / ' + boxes.length + ' 已核验';
   }
-}());
+  boxes.forEach(function (cb) { cb.addEventListener('change', updateChecklist); });
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      boxes.forEach(function (cb) { cb.checked = false; });
+      updateChecklist();
+    });
+  }
+
+  /* 6. 快照超期提醒（沿用 v6 机制：距盘点日超 30 天自动标红提示） */
+  var timeEl = document.querySelector('.lt time');
+  var statusEl = document.getElementById('snapshot-status');
+  if (timeEl && statusEl) {
+    var age = Math.floor((Date.now() - Date.parse(timeEl.dateTime)) / 86400000);
+    if (age > 30) {
+      statusEl.textContent = '快照待复核：距盘点已 ' + age + ' 天，请以各厂商最新官方模型卡、LICENSE 与服务条款原文为准。';
+      statusEl.classList.add('stale');
+    }
+  }
+})();
 </script>
 </body>
 </html>
