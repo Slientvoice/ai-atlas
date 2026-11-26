@@ -1,6 +1,6 @@
 {
-  "version": "0.36.1",
-  "updated": "2026-10-26",
+  "version": "0.37",
+  "updated": "2026-11-26",
   "sources": {
     "token": {
       "title": "Hugging Face · Tokenization pipeline",
@@ -115,6 +115,54 @@
       "url": "https://www.cac.gov.cn/2025-03/14/c_1743654684782215.htm",
       "scope": "仅核对适用主体、显式/隐式定义及场景差异；具体合规方案需结合主体与业务场景判断。",
       "checkedAt": "2026-10-26"
+    },
+    "owaspSupply": {
+      "title": "OWASP · LLM03:2025 Supply Chain",
+      "url": "https://genai.owasp.org/llmrisk/llm032025-supply-chain/",
+      "scope": "预训练权重、LoRA、数据与插件供应链风险，以及 AI BOM 与制品验签实践。",
+      "checkedAt": "2026-11-26"
+    },
+    "modelscan": {
+      "title": "Protect AI · ModelScan",
+      "url": "https://github.com/protectai/modelscan",
+      "scope": "在不执行反序列化的前提下静态扫描 Pickle、H5、Keras 与 SavedModel 权重中的恶意代码。",
+      "checkedAt": "2026-11-26"
+    },
+    "c2pa": {
+      "title": "C2PA 2.4 Specification · Explainer",
+      "url": "https://spec.c2pa.org/specifications/specifications/2.4/explainer/Explainer.html",
+      "scope": "硬绑定（SHA2-256 与 X.509 签名）与软绑定（水印/指纹回查）；不构成 DRM，也不证明内容事实为真。",
+      "checkedAt": "2026-11-26"
+    },
+    "engram": {
+      "title": "DeepSeek · Engram: Conditional Memory via Scalable Lookup",
+      "url": "https://arxiv.org/abs/2601.07372",
+      "scope": "用 O(1) 多头 N-gram 查表卸载静态知识，与 MoE 条件计算互补，并支持主机内存异步预取。",
+      "checkedAt": "2026-11-26"
+    },
+    "deltanet": {
+      "title": "Gated Delta Networks · 原始论文",
+      "url": "https://arxiv.org/abs/2412.06464",
+      "scope": "门控衰减与 delta 规则结合的线性循环状态机制，常与全注意力层按比例混编以压低长上下文显存占用。",
+      "checkedAt": "2026-11-26"
+    },
+    "huginn": {
+      "title": "Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth Approach",
+      "url": "https://arxiv.org/abs/2502.05171",
+      "scope": "Prelude–Core–Coda 循环深度架构在隐空间反复展开核心块，独立于显式 CoT token 扩展测试时算力。",
+      "checkedAt": "2026-11-26"
+    },
+    "owaspAgency": {
+      "title": "OWASP · LLM06:2025 Excessive Agency",
+      "url": "https://genai.owasp.org/llmrisk/llm062025-excessive-agency/",
+      "scope": "过多功能、过高权限与过高自主三类根因，以及最小权限、高危人工批准与下游鉴权原则。",
+      "checkedAt": "2026-11-26"
+    },
+    "firecracker": {
+      "title": "AWS · Firecracker MicroVM",
+      "url": "https://github.com/firecracker-microvm/firecracker",
+      "scope": "基于 KVM 虚拟化、Jailer 与 seccomp 的轻量级微虚拟机隔离机制，用于不可信代码与多租户沙箱。",
+      "checkedAt": "2026-11-26"
     }
   },
   "units": [
@@ -336,6 +384,100 @@
       ],
       "boundary": "实验是小规模规则匹配；技术与条文概念用于学习，不构成安全认证或具体场景的法律意见。",
       "contentHash": "dfdc87908b138751e514295a9d5cefe3373758d60638b2ded3dc9199c94e96eb"
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-supply",
+      "title": "AI 供应链安全与内容溯源",
+      "checkedAt": "2026-11-26",
+      "evidence": [
+        {
+          "claim": "Pickle 反序列化加载存在任意代码执行风险；优先使用 safetensors 并在入库前静态扫描遗留制品与维护版本级 AI BOM。",
+          "sources": [
+            "owaspSupply",
+            "modelscan"
+          ]
+        },
+        {
+          "claim": "C2PA 2.4 通过硬绑定哈希签名与软绑定水印/指纹记录来源历史，不构成 DRM，也不证明内容事实为真。",
+          "sources": [
+            "c2pa",
+            "label"
+          ]
+        }
+      ],
+      "boundary": "制品扫描与传播状态为按规范构造的规则演示，未实际解析二进制文件或执行加密验签；具体合规与采购要求需结合业务场景核对。",
+      "contentHash": "af2fe9a9b09c8475e7165a8294a7ebb84be64eff30f04944ef066b5afd1e986a"
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-cmem",
+      "title": "条件记忆与极长上下文稀疏路由",
+      "checkedAt": "2026-11-26",
+      "evidence": [
+        {
+          "claim": "条件记忆（Engram）以 O(1) 多头 N-gram 查表卸载静态局部知识，并与 MoE 条件计算互补，支持推理期主机内存异步预取。",
+          "sources": [
+            "engram"
+          ]
+        },
+        {
+          "claim": "混合线性/稀疏注意力将部分层压缩为定长状态，与少数全注意力层混编以降低超长上下文 KV 显存占用。",
+          "sources": [
+            "deltanet",
+            "cache"
+          ]
+        }
+      ],
+      "boundary": "实验采用简化的显存与访存解析估算，用于比较全层 GQA、混合线性注意力与外挂条件记忆的量级差异，不代表特定型号的实测吞吐或精度。",
+      "contentHash": "248b3a4e12d683eab2da4f2ea7c3f228557960f502e6f417605b3a36e65df59d"
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-loop",
+      "title": "循环深度与隐式潜空间推理",
+      "checkedAt": "2026-11-26",
+      "evidence": [
+        {
+          "claim": "Prelude–Core–Coda 循环深度架构在隐空间反复展开共享核心块，可在不扩张显式 CoT token 与 KV 窗口的情况下增加测试时计算深度。",
+          "sources": [
+            "huginn"
+          ]
+        },
+        {
+          "claim": "隐式潜空间推理不产生可读思维链文本，基于文本监控 CoT 的安全护栏与人工审计不能直接适用。",
+          "sources": [
+            "huginn",
+            "security"
+          ]
+        }
+      ],
+      "boundary": "算力与 KV 对比基于共享块 r 轮展开的解析估算，假设未将每轮内部隐态并入自回归序列；不代表特定前沿商业模型的内部实现或推理准确率。",
+      "contentHash": "33336435101af8207b79fb2e8cbeffa4dd6fbc5256c7c4c8d853d428d8e55a1e"
+    },
+    {
+      "page": "blueprint.html",
+      "id": "mod-sandbox",
+      "title": "Agent 沙箱、权限隔离与轨迹审计",
+      "checkedAt": "2026-11-26",
+      "evidence": [
+        {
+          "claim": "OWASP LLM06 将过度代理归结为过多功能、过高权限与过高自主权，要求最小权限、高危人工批准与下游确定性鉴权。",
+          "sources": [
+            "owaspAgency",
+            "security"
+          ]
+        },
+        {
+          "claim": "Firecracker 等 MicroVM 通过独立内核、Jailer 与 seccomp 隔离不可信代码与多租户 Agent 执行环境。",
+          "sources": [
+            "firecracker",
+            "agents"
+          ]
+        }
+      ],
+      "boundary": "沙箱拦截与审计日志为本地策略矩阵模拟，未运行真实虚拟机、容器或外部系统调用；生产架构需结合实际威胁模型与权限体系审查。",
+      "contentHash": "4a50b941364390a19de62c2862d961d139150517d251ca9593366d7c5646489d"
     },
     {
       "page": "thread.html",

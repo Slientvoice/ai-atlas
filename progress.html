@@ -64,8 +64,8 @@
   <!-- atlas-review-overview -->
 <!-- atlas-review:overview:start -->
 <section class="atlas-review-dashboard" id="review-status" aria-labelledby="review-heading">
-<h2 id="review-heading">资料来源与阅读说明</h2><p>从具体表述回到原始资料，结合教学边界理解每个实验。下列资料查阅日期为 2026-10-26；模型谱系与工业现场另有各自的盘点日期。</p>
-<details open><summary>工程蓝图 · 原理与实验来源</summary><div class="atlas-review-links"><a href="blueprint.html#mod-tok">分词（运行时）</a><a href="blueprint.html#mod-embed">Embedding 查表</a><a href="blueprint.html#mod-attn">注意力</a><a href="blueprint.html#mod-ff">前馈网络 FFN</a><a href="blueprint.html#mod-pd">Prefill 与 Decode 两阶段</a><a href="blueprint.html#mod-kv">KV 缓存</a><a href="blueprint.html#mod-sample">采样</a><a href="blueprint.html#mod-rag">RAG 供料线</a><a href="blueprint.html#mod-agent">工具调用与 Agent 循环</a><a href="blueprint.html#mod-guard">护栏与标识</a></div></details>
+<h2 id="review-heading">资料来源与阅读说明</h2><p>从具体表述回到原始资料，结合教学边界理解每个实验。下列资料最近更新于 2026-11-26（各条目内标注各自查阅日期）；模型谱系与工业现场另有各自的盘点日期。</p>
+<details open><summary>工程蓝图 · 原理与实验来源</summary><div class="atlas-review-links"><a href="blueprint.html#mod-tok">分词（运行时）</a><a href="blueprint.html#mod-embed">Embedding 查表</a><a href="blueprint.html#mod-attn">注意力</a><a href="blueprint.html#mod-ff">前馈网络 FFN</a><a href="blueprint.html#mod-pd">Prefill 与 Decode 两阶段</a><a href="blueprint.html#mod-kv">KV 缓存</a><a href="blueprint.html#mod-sample">采样</a><a href="blueprint.html#mod-rag">RAG 供料线</a><a href="blueprint.html#mod-agent">工具调用与 Agent 循环</a><a href="blueprint.html#mod-guard">护栏与标识</a><a href="blueprint.html#mod-supply">AI 供应链安全与内容溯源</a><a href="blueprint.html#mod-cmem">条件记忆与极长上下文稀疏路由</a><a href="blueprint.html#mod-loop">循环深度与隐式潜空间推理</a><a href="blueprint.html#mod-sandbox">Agent 沙箱、权限隔离与轨迹审计</a></div></details>
 <details><summary>入门旅程 · 沿请求链路阅读</summary><div class="atlas-review-links"><a href="thread.html#st1">抵达机房</a><a href="thread.html#st2">句子被切碎</a><a href="thread.html#st3">编号变成向量</a><a href="thread.html#st4">走层：词与词互相注视</a><a href="thread.html#st5">开卷考试：去合同里检索</a><a href="thread.html#st6">岔路口：这次不必绕远</a><a href="thread.html#st7">逐个词元生成</a><a href="thread.html#st8">出门前过安检</a><a href="thread.html#st9">回到聊天框</a></div></details>
 <p>来源链接对应所列核心表述；实验中的简化参数、预设动画与真实模型运行结果需分别理解。合规观察用于学习，具体适用需结合业务场景判断。</p>
 <p><a href="assets/content-review.json">公开来源记录（JSON）</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%9D%A5%E6%BA%90%E4%B8%8E%E9%98%85%E8%AF%BB%E8%AF%B4%E6%98%8E&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fprogress.html%23review-status%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p></section>
@@ -74,6 +74,7 @@
   <section aria-labelledby="vlist">
     <h2 id="vlist">版本记录选读</h2>
     <dl class="editions">
+      <div><dt>2026-11-26</dt><dd><a href="blueprint.html">工程蓝图 v0.37</a> 增至 49 个模块与实验，新增供应链安全与内容溯源、条件记忆与稀疏路由、循环深度隐式推理、Agent 沙箱与权限隔离，并逐项补录一手来源。<a href="toolchain.html">工业现场 v4</a> 增至 33 个条目（61 个官方来源链接），补齐供应链扫描 / C2PA、Agent 隔离沙箱、安全红队及常用开源工具许可与维护边界。</dd></div>
       <div><dt>2026-11-24</dt><dd><a href="genealogy.html#matrix-title">模型门派谱系 v7</a> 收录 13 个家族，加入 Mistral AI 和 MiniMax，新增逐型号许可对照与<a href="genealogy.html#selection-notes">选型核对清单</a>。</dd></div>
       <div><dt>2026-11-19</dt><dd>模型门派谱系 v6 按型号区分托管入口、可下载权重和许可。<a href="toolchain.html">工业现场 v3</a> 补入推理压测、Agent 运行环境和任务评测。</dd></div>
       <div><dt>2026-10-26 至 28</dt><dd><a href="thread.html">合同问答九站</a> 和工程蓝图的十个模块增加逐项来源。修订涉及词元嵌入、检索向量、因果注意力和生成回答的依据。</dd></div>

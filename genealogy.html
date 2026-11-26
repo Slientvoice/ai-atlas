@@ -967,7 +967,7 @@
         </tbody>
       </table>
     </div>
-    <p class="rowlink">技术列的蓝图出处：架构 → <a href="blueprint.html#mod-moe">Ⅱ·MoE</a> / <a href="blueprint.html#mod-ssm">Ⅱ·架构地平线</a> · 训练与蒸馏 → <a href="blueprint.html#mod-syn">Ⅰ·合成数据与蒸馏</a> / <a href="blueprint.html#mod-rlvr">Ⅰ·可验证奖励</a> · 慢思考 → <a href="blueprint.html#mod-ttc">Ⅲ·测试时算力</a> · 多模态 → <a href="blueprint.html#mod-vlm">Ⅴ·VLM</a> / <a href="blueprint.html#mod-video">Ⅴ·视频生成</a> · 算力与语料 → <a href="blueprint.html#mod-net">0·互联与集群</a> / <a href="blueprint.html#mod-corpus">Ⅰ·语料池</a> · 护栏与标识 → <a href="blueprint.html#mod-guard">Ⅳ·护栏与标识</a> · 部署引擎见 <a href="toolchain.html">🏗️ 工业现场</a></p>
+    <p class="rowlink">技术列的蓝图出处：架构 → <a href="blueprint.html#mod-moe">Ⅱ·MoE</a> / <a href="blueprint.html#mod-ssm">Ⅱ·架构地平线</a> / <a href="blueprint.html#mod-cmem">Ⅱ·条件记忆与稀疏路由</a> · 训练与供应链 → <a href="blueprint.html#mod-syn">Ⅰ·合成数据与蒸馏</a> / <a href="blueprint.html#mod-rlvr">Ⅰ·可验证奖励</a> / <a href="blueprint.html#mod-supply">Ⅰ·供应链与溯源</a> · 慢思考与循环推理 → <a href="blueprint.html#mod-ttc">Ⅲ·测试时算力</a> / <a href="blueprint.html#mod-loop">Ⅲ·循环深度</a> · 多模态 → <a href="blueprint.html#mod-vlm">Ⅴ·VLM</a> / <a href="blueprint.html#mod-video">Ⅴ·视频生成</a> · 算力与语料 → <a href="blueprint.html#mod-net">0·互联与集群</a> / <a href="blueprint.html#mod-corpus">Ⅰ·语料池</a> · 护栏与沙箱 → <a href="blueprint.html#mod-sandbox">Ⅳ·Agent 沙箱</a> / <a href="blueprint.html#mod-guard">Ⅳ·护栏与标识</a> · 部署与工具链见 <a href="toolchain.html">🏗️ 工业现场</a></p>
   </section>
 
   <!-- ================= §3 商业与开源条款排雷库 ================= -->
@@ -1196,7 +1196,7 @@
       <div class="gcard">
         <div class="gid">MODEL REGISTER / AI BOM</div>
         <h3>1. 版本级许可证台账（而非厂商名）</h3>
-        <p>建立精确到 <b>模型 ID + 仓库 Commit + 下载当日 LICENSE 原文存档</b> 的台账，并标注是否存在营收/MAU 动态门槛与复核周期。杜绝把 <code>Hy4-preview</code>（Apache 2.0）当成 <code>Hy4</code> 正式版（Sec.10），或把 <code>Qwen3.8-27B</code> 的评估结论套用到 <code>Flash-Next</code>。</p>
+        <p>建立精确到 <b>模型 ID + 仓库 Commit + 下载当日 LICENSE 原文存档</b> 的台账，并标注是否存在营收/MAU 动态门槛与复核周期。杜绝把 <code>Hy4-preview</code>（Apache 2.0）当成 <code>Hy4</code> 正式版（Sec.10），或把 <code>Qwen3.8-27B</code> 的评估结论套用到 <code>Flash-Next</code>（供应链验签见 <a href="blueprint.html#mod-supply">蓝图 Ⅰ·供应链与溯源</a> · <a href="toolchain.html#t-supply">工业现场·ModelScan / C2PA</a>）。</p>
       </div>
       <div class="gcard">
         <div class="gid">ROUTE-OF-PURCHASE MATRIX</div>
@@ -1221,7 +1221,7 @@
       <div class="gcard">
         <div class="gid">HIGH-RISK TIER &amp; AGENT LIABILITY</div>
         <h3>6. 高危网安档位与 Agent 越权归责</h3>
-        <p>2026 年底前沿模型已普遍分化出受限网安变体（Claude Mythos / GPT-6 Cyber / Gemini 3.8 Flash Cyber），且 Google Cloud 等已将客户反向赔偿扩展至 <b>AI Agent 违规行为</b>。引入自主 Agent 与计算机操控能力时，必须在权限沙箱、人工确认点（HITL）与操作审计日志层面提前留痕（回看 <a href="blueprint.html#mod-agent">蓝图 Ⅳ·Agent</a>）。</p>
+        <p>2026 年底前沿模型已普遍分化出受限网安变体（Claude Mythos / GPT-6 Cyber / Gemini 3.8 Flash Cyber），且 Google Cloud 等已将客户反向赔偿扩展至 <b>AI Agent 违规行为</b>。引入自主 Agent 与计算机操控能力时，必须在权限沙箱、人工确认点（HITL）与操作审计日志层面提前留痕（回看 <a href="blueprint.html#mod-sandbox">蓝图 Ⅳ·Agent 沙箱与权限隔离</a> · <a href="toolchain.html#t-sandbox">工业现场·Agent 沙箱</a>）。</p>
       </div>
     </div>
 

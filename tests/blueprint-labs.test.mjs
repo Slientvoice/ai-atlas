@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { majorityProbability as vote, inferenceEstimate as infer, mcpExchange } from '../assets/blueprint-lab-models.mjs';
+import { majorityProbability as vote, inferenceEstimate as infer, mcpExchange, conditionalMemoryEstimate, loopDepthCompare } from '../assets/blueprint-lab-models.mjs';
 
 const close = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-10, `${actual} != ${expected}`);
 test('binary majority agrees with enumeration and symmetry', () => {
@@ -42,4 +42,30 @@ test('MCP sample separates host schema and 2026-07-28 wire format', () => {
   assert.equal(messages[4].id, messages[3].id);
   assert.equal(messages[4].result.resultType, 'complete');
   assert.deepEqual(tools[0].input_schema, schema);
+});
+test('hybrid sparse attention + O(1) conditional memory cuts long-context KV growth', () => {
+  const short = conditionalMemoryEstimate(8192, 0.25, 27);
+  const mega = conditionalMemoryEstimate(1048576, 0.25, 27);
+  assert.equal(short.denseKvBytes, 2 ** 30);
+  assert.equal(mega.denseKvBytes / short.denseKvBytes, 128);
+  assert.ok(mega.kvReduction > 0.74 && mega.kvReduction < 0.75);
+  assert.equal(mega.lookupKiBPerToken, short.lookupKiBPerToken);
+  assert.equal(conditionalMemoryEstimate(8192, 1, 0).fixedStateBytes, 0);
+  for (const args of [[512, 0.25, 27], [8192, 0, 27], [8192, 1.5, 27], [8192, 0.25, -1]]) {
+    assert.throws(() => conditionalMemoryEstimate(...args), RangeError);
+  }
+});
+test('recurrent depth scales compute without expanding KV length like explicit CoT', () => {
+  const base = loopDepthCompare(1, 0, 200);
+  close(base.computeRatio, 1);
+  close(base.kvRatio, 1);
+  const cmp = loopDepthCompare(4, 1800, 200);
+  assert.equal(cmp.cotTotalTokens, 2000);
+  assert.equal(cmp.loopTotalTokens, 200);
+  close(cmp.kvRatio, 0.1);
+  close(cmp.loopComputePasses, 200 * (0.25 + 0.75 * 4));
+  close(cmp.exposedThoughtRatio, 0.9);
+  for (const args of [[0, 100, 200], [17, 100, 200], [2, -1, 200], [2, 100, 0]]) {
+    assert.throws(() => loopDepthCompare(...args), RangeError);
+  }
 });

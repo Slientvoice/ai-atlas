@@ -38,7 +38,7 @@ function overview(page) {
 }
 function dashboard() {
   return `<section class="atlas-review-dashboard" id="review-status" aria-labelledby="review-heading">
-<h2 id="review-heading">资料来源与阅读说明</h2><p>从具体表述回到原始资料，结合教学边界理解每个实验。下列资料查阅日期为 ${data.updated}；模型谱系与工业现场另有各自的盘点日期。</p>
+<h2 id="review-heading">资料来源与阅读说明</h2><p>从具体表述回到原始资料，结合教学边界理解每个实验。下列资料最近更新于 ${data.updated}（各条目内标注各自查阅日期）；模型谱系与工业现场另有各自的盘点日期。</p>
 <details open><summary>工程蓝图 · 原理与实验来源</summary><div class="atlas-review-links">${blueprint.map(recordLink).join('')}</div></details>
 <details><summary>入门旅程 · 沿请求链路阅读</summary><div class="atlas-review-links">${journey.map(recordLink).join('')}</div></details>
 <p>来源链接对应所列核心表述；实验中的简化参数、预设动画与真实模型运行结果需分别理解。合规观察用于学习，具体适用需结合业务场景判断。</p>

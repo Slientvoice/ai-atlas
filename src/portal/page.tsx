@@ -61,7 +61,7 @@ export default function Portal() {
       <section className="glass engineering" aria-labelledby="engineering-title">
         <div className="section-head">
           <div><h2 id="engineering-title"><a href={url("blueprint.html")}>工程蓝图</a></h2>
-          <p>用 45 个实验拆开训练、推理和系统组装。</p></div>
+          <p>用 49 个实验拆开训练、推理和系统组装。</p></div>
           <a className="text-action" href={url("blueprint.html")}>进入实验</a>
         </div>
         <details className="engineering-detail">
