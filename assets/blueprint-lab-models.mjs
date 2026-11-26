@@ -42,3 +42,36 @@ export function mcpExchange(tools, call, result) {
     ['结果返回 · 宿主再写入模型上下文', { jsonrpc: '2.0', id: 3, result: { resultType: 'complete', content: [{ type: 'text', text: result }] } }],
   ];
 }
+
+export function conditionalMemoryEstimate(tokens, fullAttnRatio = 0.25, engramBillion = 27) {
+  if (!Number.isInteger(tokens) || tokens < 1024 || !Number.isFinite(fullAttnRatio) || fullAttnRatio <= 0 || fullAttnRatio > 1 || !Number.isFinite(engramBillion) || engramBillion < 0) {
+    throw new RangeError('Use tokens >= 1024, fullAttnRatio in (0, 1], and engramBillion >= 0.');
+  }
+  const bytes = 2;
+  const kvPerTokenFull = 2 * 32 * 8 * 128 * bytes; // 128 KiB/token (same 8B GQA teaching baseline)
+  const denseKvBytes = kvPerTokenFull * tokens;
+  // Recurrent/linear layers (1 - fullAttnRatio) hold a fixed-size state matrix per sequence instead of growing KV.
+  const fixedStateBytes = Math.round((1 - fullAttnRatio) * 32) * 2 * 1024 * 1024;
+  const hybridKvBytes = fullAttnRatio * denseKvBytes + fixedStateBytes;
+  const kvReduction = 1 - hybridKvBytes / denseKvBytes;
+  // Conditional memory (Engram-style) lookup reads O(1) embedding rows per token regardless of context length.
+  const engramHostGiB = engramBillion * bytes; // FP16/BF16 offloaded table size in GiB (~1e9 -> GiB teaching scale)
+  const lookupKiBPerToken = engramBillion > 0 ? 64 : 0; // O(1) constant prefetch per token
+  return { denseKvBytes, hybridKvBytes, kvReduction, fixedStateBytes, engramHostGiB, lookupKiBPerToken };
+}
+
+export function loopDepthCompare(loops, cotTokens, answerTokens = 200) {
+  if (!Number.isInteger(loops) || loops < 1 || loops > 16 || !Number.isInteger(cotTokens) || cotTokens < 0 || !Number.isInteger(answerTokens) || answerTokens < 1) {
+    throw new RangeError('Use integer loops in [1, 16], cotTokens >= 0, and answerTokens >= 1.');
+  }
+  const preludeCodaShare = 0.25;
+  const coreShare = 0.75;
+  const cotTotalTokens = cotTokens + answerTokens;
+  const cotComputePasses = cotTotalTokens;
+  const loopTotalTokens = answerTokens;
+  const loopComputePasses = answerTokens * (preludeCodaShare + coreShare * loops);
+  const kvRatio = loopTotalTokens / cotTotalTokens;
+  const computeRatio = loopComputePasses / cotComputePasses;
+  const exposedThoughtRatio = cotTokens > 0 ? cotTokens / cotTotalTokens : 0;
+  return { cotTotalTokens, cotComputePasses, loopTotalTokens, loopComputePasses, kvRatio, computeRatio, exposedThoughtRatio };
+}

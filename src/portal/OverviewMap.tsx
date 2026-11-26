@@ -7,10 +7,10 @@ import GlassSurface from "./GlassSurface";
 
 const planes = [
   { code: "P0", name: "物理底座", short: "算力 · 显存 · 互联", count: 5, color: "#536579", description: "GPU、显存墙、数值格式与集群互联：理解整个系统的资源边界。" },
-  { code: "P1", name: "训练流水线", short: "语料 · 学习 · 对齐", count: 9, color: "#9b7025", description: "从语料处理、预训练到 SFT、偏好优化与评测，理解模型如何获得能力。" },
-  { code: "P2", name: "模型本体", short: "表示 · 注意力 · 结构", count: 10, color: "#365fd3", description: "走进 Token、Embedding、Attention 与 MoE，拆开模型内部的信息流。" },
-  { code: "P3", name: "推理服务", short: "计算 · 缓存 · 生成", count: 6, color: "#7158ba", description: "从 Prefill、KV Cache 到采样与量化，理解模型如何高效生成答案。" },
-  { code: "P4", name: "系统组装", short: "检索 · 工具 · 编排", count: 7, color: "#148065", description: "用 Context、RAG、Agent 与 MCP 连接模型、知识和工具，形成可用的系统。" },
+  { code: "P1", name: "训练流水线", short: "语料 · 学习 · 供应链", count: 10, color: "#9b7025", description: "从语料处理、预训练、SFT 与偏好优化到评测、供应链安全与内容溯源，理解模型如何获得能力与出处凭证。" },
+  { code: "P2", name: "模型本体", short: "表示 · 注意力 · 稀疏记忆", count: 11, color: "#365fd3", description: "走进 Token、Embedding、Attention、MoE 与条件记忆稀疏路由，拆开模型内部的信息流。" },
+  { code: "P3", name: "推理服务", short: "缓存 · 量化 · 循环深度", count: 7, color: "#7158ba", description: "从 Prefill、KV Cache、采样量化到测试时算力与循环深度推理，理解模型如何高效生成答案。" },
+  { code: "P4", name: "系统组装", short: "检索 · 协议 · 隔离沙箱", count: 8, color: "#148065", description: "用 Context、RAG、Agent、MCP 与隔离沙箱连接模型、知识与工具，形成可控可用的系统。" },
   { code: "P5", name: "多模态", short: "图像 · 视频 · 语音", count: 6, color: "#b5583b", description: "从视觉语言到扩散、视频与语音，理解模型如何跨越文本之外的媒介。" },
   { code: "P6", name: "具身与世界", short: "世界模型 · VLA", count: 2, color: "#9b4f79", description: "从世界模型到视觉—语言—动作，理解预测、行动与环境之间的关系。" },
 ] as const;
@@ -46,7 +46,7 @@ export default function OverviewMap({ base }: { base: string }) {
       <div className="home-overview-content" id="overview-content">
       {view === "model" ? <ModelCutaway base={base} /> : <>
       <div className="home-map-diagram" role="group" aria-label="七个技术平面，点击查看简介和章节入口">
-        <div className="home-map-caption"><span>7 个技术平面 · 45 个交互实验</span><span>点选一个平面，继续深入 <span aria-hidden="true">↓</span></span></div>
+        <div className="home-map-caption"><span>7 个技术平面 · 49 个交互实验</span><span>点选一个平面，继续深入 <span aria-hidden="true">↓</span></span></div>
         <div className="home-main-chain">
           {[1, 2, 3, 4].map((index) => <div className="home-chain-step" key={index}>
             {planeButton(index)}{index < 4 && <span className="home-chain-arrow" aria-hidden="true">→</span>}
