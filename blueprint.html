@@ -261,6 +261,11 @@
   .race-row .bar { height: 12px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
   .race-row .bar i { display: block; height: 100%; background: var(--pc); border-radius: 6px; width: 0; }
   .race-row .tv { font-family: var(--mono); font-size: 11.5px; text-align: right; color: var(--ink-2); }
+  #mod-loop .race-row, #mod-cmem .race-row { grid-template-columns: 9.6em 1fr 6em; }
+  .sb-step { margin: 4px 0; font-size: 12.5px; padding-left: 8px; border-left: 2px solid transparent; animation: sb-in 0.24s ease-out both; }
+  .sb-step.sb-live { border-left-color: var(--pc); }
+  @keyframes sb-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .sb-step { animation: none; } }
   .mem-row { display: grid; grid-template-columns: 7.5em 1fr 9em; gap: 10px; align-items: center; font-size: 13px; margin: 5px 0; }
   .mem-row button { font: inherit; font-size: 12px; cursor: pointer; color: var(--ink); background: var(--surface);
     border: 1px solid var(--hairline); border-radius: 7px; padding: 4px 8px; text-align: left; }
@@ -5244,10 +5249,15 @@ function paintScene(cv, fine) {
     $('cm-hyb-t').textContent = fmtGiB(res.hybridKvBytes);
     $('cm-save').textContent = (res.kvReduction * 100).toFixed(1) + '%';
     $('cm-host').textContent = res.engramHostGiB.toFixed(0) + ' GiB';
-    $('cm-io').textContent = res.lookupKiBPerToken + ' KiB / token（O(1) 恒定）';
-    $('cm-note').textContent = ratio === 1
-      ? '全部层使用全注意力：KV 随上下文线性膨胀至 ' + fmtGiB(res.denseKvBytes) + '，单卡 80 GiB HBM 很快触顶。'
-      : '保留 ' + (ratio * 100).toFixed(1) + '% 全注意力层 + 其余层改为固定线性/Delta 状态，单序列 KV 降至 ' + fmtGiB(res.hybridKvBytes) + '；外挂条件记忆驻留主机内存按 N-gram 哈希 O(1) 预取。';
+    $('cm-io').textContent = engB > 0
+      ? res.lookupKiBPerToken + ' KiB / token（O(1) 恒定）'
+      : '0 KiB / token（未启用外挂表）';
+    const engNote = engB > 0
+      ? '外挂条件记忆表驻留主机内存，按 N-gram 哈希 O(1) 异步预取。'
+      : '未启用外挂条件记忆表，静态知识仍由模型参数层承担。';
+    $('cm-note').textContent = (ratio === 1
+      ? '全部层使用全注意力：KV 随上下文线性膨胀至 ' + fmtGiB(res.denseKvBytes) + '，单卡 80 GiB HBM 很快触顶；'
+      : '保留 ' + (ratio * 100).toFixed(1) + '% 全注意力层 + 其余层改为固定线性/Delta 状态，单序列 KV 降至 ' + fmtGiB(res.hybridKvBytes) + '；') + engNote;
   }
   ['cm-t', 'cm-r', 'cm-e'].forEach(id => $(id).addEventListener('input', update));
   update();
@@ -5343,17 +5353,23 @@ function paintScene(cv, fine) {
       ],
     },
   };
-  let curSc = 'pdf', curLv = 'l0';
-  function run() {
-    const s = scenarios[curSc];
-    const steps = s[curLv];
+  let curSc = 'pdf', curLv = 'l0', timers = [];
+  const runBtn = $('sb-run');
+  function clearTimers() {
+    timers.forEach(t => clearTimeout(t));
+    timers = [];
+    runBtn.classList.remove('on');
+    runBtn.textContent = '▶ 重演';
+  }
+  function spanHtml([span, st, msg], i, live) {
+    const col = st === 'BREACH' || st === 'EXPOSED' ? 'var(--seal)' : st === 'OK' ? 'var(--ink-3)' : 'var(--p1)';
+    return `<div class="sb-step${live ? ' sb-live' : ''}"><code style="color:${col}">[span.${i + 1} · ${span} · ${st}]</code> ${msg}</div>`;
+  }
+  function headHtml(s) {
+    return `<div style="font-size:12.5px;color:var(--ink-2);margin-bottom:6px"><b>正常任务：</b>${s.task}<br><b style="color:var(--seal)">间接注入载荷：</b>${s.inject}<br><b>模型越权意图：</b><code>${s.badTool}</code></div>`;
+  }
+  function setVerdict(steps) {
     const breached = steps.some(x => x[1] === 'BREACH');
-    $('sb-log').innerHTML =
-      `<div style="font-size:12.5px;color:var(--ink-2);margin-bottom:6px"><b>正常任务：</b>${s.task}<br><b style="color:var(--seal)">间接注入载荷：</b>${s.inject}</div>` +
-      steps.map(([span, st, msg], i) => {
-        const col = st === 'BREACH' || st === 'EXPOSED' ? 'var(--seal)' : st === 'OK' ? 'var(--ink-3)' : 'var(--p1)';
-        return `<div style="margin:4px 0;font-size:12.5px"><code style="color:${col}">[span.${i + 1} · ${span} · ${st}]</code> ${msg}</div>`;
-      }).join('');
     $('sb-verdict').textContent = breached
       ? '演练结果：发生越权 / 泄密！仅靠提示词无法阻止不受信任输入劫持工具调用。'
       : (curLv === 'l2'
@@ -5361,17 +5377,48 @@ function paintScene(cv, fine) {
         : '演练结果：攻击在容器与权限边界被拦截；生产高危场景建议升级独立内核沙箱与人工审批。');
     $('sb-verdict').style.color = breached ? 'var(--seal)' : 'var(--p1)';
   }
+  function run(animate = false) {
+    clearTimers();
+    const s = scenarios[curSc];
+    const steps = s[curLv];
+    if (!animate) {
+      $('sb-log').innerHTML = headHtml(s) + steps.map((step, i) => spanHtml(step, i, false)).join('');
+      setVerdict(steps);
+      return;
+    }
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const gap = reduced ? 180 : 440;
+    runBtn.classList.add('on');
+    runBtn.textContent = `重演中… 0/${steps.length}`;
+    $('sb-log').innerHTML = headHtml(s);
+    $('sb-verdict').textContent = '正在按序重演工具调用与拦截链路…';
+    $('sb-verdict').style.color = 'var(--ink-3)';
+    steps.forEach((step, i) => {
+      timers.push(setTimeout(() => {
+        $('sb-log').querySelectorAll('.sb-live').forEach(el => el.classList.remove('sb-live'));
+        $('sb-log').insertAdjacentHTML('beforeend', spanHtml(step, i, true));
+        runBtn.textContent = `重演中… ${i + 1}/${steps.length}`;
+      }, (i + 1) * gap));
+    });
+    timers.push(setTimeout(() => {
+      $('sb-log').querySelectorAll('.sb-live').forEach(el => el.classList.remove('sb-live'));
+      setVerdict(steps);
+      runBtn.classList.remove('on');
+      runBtn.textContent = '▶ 重演';
+      timers = [];
+    }, (steps.length + 1) * gap));
+  }
   document.querySelectorAll('#mod-sandbox [data-sc]').forEach(b => b.addEventListener('click', () => {
     curSc = b.dataset.sc;
     document.querySelectorAll('#mod-sandbox [data-sc]').forEach(x => x.classList.toggle('on', x === b));
-    run();
+    run(false);
   }));
   document.querySelectorAll('#mod-sandbox [data-lv]').forEach(b => b.addEventListener('click', () => {
     curLv = b.dataset.lv;
     document.querySelectorAll('#mod-sandbox [data-lv]').forEach(x => x.classList.toggle('on', x === b));
-    run();
+    run(false);
   }));
-  $('sb-run').addEventListener('click', run);
-  run();
+  runBtn.addEventListener('click', () => run(true));
+  run(false);
 })();
 </script>
