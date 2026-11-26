@@ -132,7 +132,7 @@
         }
       ],
       "boundary": "实验词表手工构造，移除空白、截取前 60 个 JS 码元并逐码元回退，emoji 可能拆开；回退编号取模可能碰撞，不能用于可逆编码或真实服务计费。",
-      "contentHash": "44f50be2b5285e6ed0ad07dc6372ba198679d52a78b9b9c5a7b0981d72da98d4"
+      "contentHash": "6ed7ca9eb1c5a85433665a5dc3f940f46669d02346a57275fd44ec1dd21b6750"
     },
     {
       "page": "blueprint.html",
@@ -156,7 +156,7 @@
         }
       ],
       "boundary": "布局由人工构造，距离与向量算术为本地计算；未运行真实嵌入模型或评测其语义质量。",
-      "contentHash": "09c9b1bb5a97812469f112348cdc67a940df7c1b8a81f55a7234c3a8f9175aa7"
+      "contentHash": "121e2fe4ce8e72c38156fafd905c3fca692275a9b589bb3ce8ddf1224cbca87a"
     },
     {
       "page": "blueprint.html",
@@ -180,7 +180,7 @@
         }
       ],
       "boundary": "本地实验仅计算权重矩阵，未计算 V 汇聚或输出投影；随机投影、按字切分与额外 24 倍分数用于教学。MLA 具体型号参数未重核，不把头图当作因果解释。",
-      "contentHash": "3543038a00d5ed5966fb23c893aee0fbf5c7c94c071228911ad46ed88b207ed3"
+      "contentHash": "f4bb2975ecd3bf531d927a9a4a28bc70e97ead764d484645928e4b6b067ec3ce"
     },
     {
       "page": "blueprint.html",
@@ -204,7 +204,7 @@
         }
       ],
       "boundary": "实验仅演示标量激活和门控；不据此证明知识存储位置或某架构普遍优越。",
-      "contentHash": "d40549b30b087bf8155fa9b484f7d476bc68c7c421fb3af892c57f1f63baf6af"
+      "contentHash": "908cf55430333bc7d349bacd8a6b95dddb8b0a5bc3e635d797f236dfb702a74b"
     },
     {
       "page": "blueprint.html",
@@ -228,7 +228,7 @@
         }
       ],
       "boundary": "忽略注意力 FLOPs、调度、网络与实际利用率；128K 是成本外推，非原版窗口承诺，非实测延迟。",
-      "contentHash": "22e8e82d2c805e8fb89fc26d0ba562e98850c4340cff5aaad2f27de77fec9d1e"
+      "contentHash": "8f16f2544904d502cd03b400d77867ba2f4748b8b0ed0cd833d702ec01d9072c"
     },
     {
       "page": "blueprint.html",
@@ -252,7 +252,7 @@
         }
       ],
       "boundary": "公式仅覆盖标注的缓存配置；量化、滑动窗口、MLA、跨层共享与卸载须另算，现役型号分支未重盘。",
-      "contentHash": "30097abba0ecdc89b589c26787cb3c2f9a56410d96774419bdcd0f0a28545a85"
+      "contentHash": "bb40855067897f86bab05ccad6da5a9eef5786efa85982406a924fa3095e4133"
     },
     {
       "page": "blueprint.html",
@@ -268,7 +268,7 @@
         }
       ],
       "boundary": "候选 logits 人工设置；接口默认值和温度支持范围不作统一断言，未验证任何特定服务的输出保证。",
-      "contentHash": "08616bafeff7162772be1d03f6c4845f05f9548a5f04877ba0b2e15ce30fba59"
+      "contentHash": "56fa20078a9b034a5fdb6585c00e99ff4b0d57907bf35aa3667a45967f02cdc8"
     },
     {
       "page": "blueprint.html",
@@ -291,7 +291,7 @@
         }
       ],
       "boundary": "实验使用字符特征哈希，到提示词拼装为止；未接生成模型、权限服务或生产评测。 二维投影距离不等于原始 64 维检索分数。",
-      "contentHash": "17ba015516bb95c91f3494f0272ecc5ab3027ae797f95a6aeb92466ceed87884"
+      "contentHash": "17988bbd447744ba30c045907e588bb00fddb5af9a8389c61ff00f1aaadecc69"
     },
     {
       "page": "blueprint.html",
@@ -313,7 +313,7 @@
         }
       ],
       "boundary": "沙盘为预写剧本；不表示真实 Agent 运行成功率、成本或法律责任结论。",
-      "contentHash": "8a452024fe70986578b58e05bf055f25b11429ef2f4dcf367f9487407eb0c889"
+      "contentHash": "641d6a8ec6d305ac05f097bfba785f13c17fd0d08c3587cabdac771aeb3560ba"
     },
     {
       "page": "blueprint.html",
@@ -335,7 +335,7 @@
         }
       ],
       "boundary": "实验是小规模规则匹配；技术与条文概念用于学习，不构成安全认证或具体场景的法律意见。",
-      "contentHash": "9cb919c15b7bbe9dc928296bdd15d1171938df86f81af4f13bac4bb0b3044708"
+      "contentHash": "dfdc87908b138751e514295a9d5cefe3373758d60638b2ded3dc9199c94e96eb"
     },
     {
       "page": "thread.html",

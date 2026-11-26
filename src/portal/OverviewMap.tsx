@@ -35,9 +35,9 @@ export default function OverviewMap({ base }: { base: string }) {
   }
 
   return (
-    <GlassSurface className="home-overview" motion="quiet" id="overview" aria-labelledby="overview-title">
+    <GlassSurface className="home-overview" id="engineering-map" aria-labelledby="overview-title">
       <div className="home-map-heading">
-        <div><span className="home-eyebrow">THE BIG PICTURE</span><h2 id="overview-title">AI 系统全景</h2></div>
+        <div><h3 id="overview-title">工程关系图</h3></div>
         <div className="home-map-views" role="group" aria-label="全景图视图">
           <button type="button" aria-pressed={view === "system"} aria-controls="overview-content" onClick={() => setView("system")}>系统关系</button>
           <button type="button" aria-pressed={view === "model"} aria-controls="overview-content" onClick={() => setView("model")}>模型剖面 <span aria-hidden="true">↗</span></button>

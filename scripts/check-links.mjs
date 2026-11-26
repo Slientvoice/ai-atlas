@@ -23,7 +23,9 @@ for (const [file, body] of html) {
       errors.push(`${file}: missing anchor ${href}`);
     }
   }
-  if (file !== 'index.html') {
+  if (file === 'font-fitting.html') {
+    if (!body.includes('content="0; url=./index.html"')) errors.push(file + ': missing redirect to homepage');
+  } else if (file !== 'index.html') {
     if ((body.match(/aria-label="全站导航"/g) || []).length !== 1) errors.push(`${file}: expected exactly one shared navigation`);
     if (!body.includes('class="atlas-nav-home" href="./index.html"')) errors.push(`${file}: missing homepage action`);
   }

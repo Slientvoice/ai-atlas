@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { pages, navigationContents } from '../assets/site-navigation.mjs';
 
 const root = new URL('../', import.meta.url);
-for (const file of [...pages.map(([file]) => file).filter(file => file !== 'index.html'), 'font-fitting.html']) {
+for (const file of pages.map(([file]) => file).filter(file => file !== 'index.html')) {
   const path = new URL(file, root);
   let html = await readFile(path, 'utf8');
   const block = `<!-- atlas-navigation:start -->\n<div id="atlas-top"></div>\n<nav class="atlas-site-nav" aria-label="全站导航" data-atlas-static>\n${navigationContents(file)}\n</nav>\n<!-- atlas-navigation:end -->`;

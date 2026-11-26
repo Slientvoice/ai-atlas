@@ -2,14 +2,14 @@
 <html lang="zh-CN">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>项目进度看板 · AI 合规全景地图</title>
+<title>资料与版本 · AI技术与合规全景</title>
 <style>
   :root {
     --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
     --ink: #16181d; --ink-2: #4b5158; --ink-3: #858b93;
     --hairline: #e1e4e8; --seal: #b0392e;
     --p0: #2a78d6; --p1: #1baf7a; --p2: #eda100; --p3: #4a3aa7; --p4: #eb6834; --p5: #e87ba4; --p6: #008300;
-    --serif: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif; /* 2026-07-09 用户拍板：宋体退役，全站统一现代黑体 */
+    --serif: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
     --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
   }
@@ -33,230 +33,54 @@
   h1 { font-family: var(--serif); font-size: clamp(30px, 5vw, 42px); margin: 8px 0 4px; }
   .sub { color: var(--ink-2); max-width: 44em; }
   h2 { font-family: var(--serif); font-size: 20px; margin: 34px 0 10px; }
-  .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-  .links a { text-decoration: none; font-size: 13px; color: var(--ink-2); background: var(--surface);
-    border: 1px solid var(--hairline); border-radius: 4px; padding: 5px 15px; }
-  .links a:hover, .links a:focus-visible { border-color: var(--ink-2); outline: none; }
-  .ico { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 2px; }
-
-  .hero-bar { margin-top: 26px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; padding: 18px 20px; }
-  .hb-top { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
-  .hb-num { font-family: var(--serif); font-size: 44px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
-  .hb-cap { font-size: 13px; color: var(--ink-3); }
-  .hb-track { height: 14px; background: var(--surface-2); border-radius: 7px; overflow: hidden; margin-top: 12px; display: flex; }
-  .hb-track i { display: block; height: 100%; }
-  .hb-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; font-size: 12.5px; color: var(--ink-2); }
-  .hb-legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
-
-  .bars .row { display: grid; grid-template-columns: 9.5em 1fr 5.5em; gap: 12px; align-items: center; margin: 8px 0; font-size: 13.5px; }
-  .bars .track { height: 10px; background: var(--surface-2); border-radius: 5px; overflow: hidden; }
-  .bars .track i { display: block; height: 100%; border-radius: 5px; }
-  .bars .val { font-family: var(--mono); font-size: 12px; text-align: right; color: var(--ink-2); }
-
-  .plane-row { margin: 14px 0; }
-  .plane-name { font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 6px; }
-  .cells { display: flex; flex-wrap: wrap; gap: 6px; }
-  .cell { font-size: 12px; border-radius: 7px; padding: 4px 11px; border: 1px solid var(--hairline);
-    color: var(--ink-3); background: var(--surface); }
-  .cell.g1 { color: var(--ink-2); border-color: var(--pc); box-shadow: inset 0 0 0 20rem color-mix(in srgb, var(--pc) 9%, transparent); }
-  .cell.g3 { color: var(--ink); border-color: var(--pc); box-shadow: inset 0 0 0 20rem color-mix(in srgb, var(--pc) 26%, transparent); font-weight: 600; }
-  .cell.g0 { border-style: dashed; background: none; }
-  .legend { font-size: 12.5px; color: var(--ink-2); margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 6px 18px; }
-  .legend .cell { pointer-events: none; }
-
-  .vlist { border-left: 2px solid var(--hairline); padding-left: 18px; }
-  .v { margin: 10px 0; position: relative; font-size: 14px; color: var(--ink-2); overflow-wrap: anywhere; }
-  .v::before { content: ""; position: absolute; left: -23px; top: 7px; width: 8px; height: 8px; border-radius: 50%;
-    background: var(--ink-3); }
-  .v.done::before { background: var(--p1); }
-  .v.now::before { background: var(--p2); box-shadow: 0 0 0 3px color-mix(in srgb, var(--p2) 30%, transparent); }
-  .v b { color: var(--ink); font-weight: 600; }
-  .v .vt { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-right: 8px; }
-
-  footer { margin-top: 40px; border-top: 1px solid var(--hairline); padding-top: 16px; font-size: 12.5px; color: var(--ink-3); }
+  .editions { margin: 0; }
+  .editions > div { display: grid; grid-template-columns: 9em 1fr; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--hairline); }
+  .editions dt { color: var(--ink-2); font-family: var(--mono); font-size: 13px; }
+  .editions dd { margin: 0; }
+  .editions a { color: inherit; text-underline-offset: 3px; }
+  @media (max-width: 540px) { .editions > div { grid-template-columns: 1fr; gap: 3px; } }
 </style>
 <link rel="stylesheet" href="./assets/site-navigation.css">
 <link rel="stylesheet" href="./assets/content-review.css">
 <script type="module" src="./assets/site-navigation.mjs"></script>
-
-
+<body>
 <!-- atlas-navigation:start -->
 <div id="atlas-top"></div>
 <nav class="atlas-site-nav" aria-label="全站导航" data-atlas-static>
-<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="./index.html" aria-label="AI Atlas 首页">AI—ATLAS <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">项目进度</span></div>
+<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="./index.html" aria-label="AI技术与合规全景首页">AI技术与合规全景 <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">资料与版本</span></div>
     <div class="atlas-nav-actions" aria-label="浏览历史与首页">
       <button type="button" data-atlas-back disabled title="没有可返回的站内记录"><span aria-hidden="true">←</span> 后退</button>
       <button type="button" data-atlas-forward disabled title="没有可前进的站内记录">前进 <span aria-hidden="true">→</span></button>
       <a class="atlas-nav-home" href="./index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v10h5v-6h4v6h5V10" /></svg>返回首页</a>
     </div>
-    <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu"><a href="./index.html">首页<span aria-hidden="true">→</span></a><a href="./blueprint.html">工程蓝图<span aria-hidden="true">→</span></a><a href="./toolchain.html">工业现场<span aria-hidden="true">→</span></a><a href="./genealogy.html">模型门派谱系<span aria-hidden="true">→</span></a><a href="./thread.html">一句话的旅程<span aria-hidden="true">→</span></a><a href="./index-map.html">索引地图<span aria-hidden="true">→</span></a><a href="./progress.html" aria-current="page">项目进度<span aria-hidden="true">·</span></a><a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>
+    <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu"><a href="./index.html">首页<span aria-hidden="true">→</span></a><a href="./blueprint.html">工程蓝图<span aria-hidden="true">→</span></a><a href="./toolchain.html">工业现场<span aria-hidden="true">→</span></a><a href="./genealogy.html">模型门派谱系<span aria-hidden="true">→</span></a><a href="./thread.html">一句话的旅程<span aria-hidden="true">→</span></a><a href="./index-map.html">技术与合规全景<span aria-hidden="true">→</span></a><a href="./progress.html" aria-current="page">资料与版本<span aria-hidden="true">·</span></a><a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>
 </nav>
 <!-- atlas-navigation:end -->
-<div class="wrap">
-  <div class="eyebrow">AI COMPLIANCE ATLAS · 项目进度看板</div>
-  <h1>哪里亮了，哪里还没亮</h1>
-  <p class="sub">查看已发布内容、资料来源与版本演进。建设比例表示页面、实验与学习入口的覆盖范围。</p>
-  <div class="links">
-    <a href="index.html"><svg class="ico" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg> 返回首页 →</a>
-    <a href="blueprint.html"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线）→</a>
-    <a href="thread.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h7a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h7"/></svg> 叙事版（入门）→</a>
-    <a href="index-map.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.4 4.6-4.6 2.4 2.4-4.6z"/></svg> 索引地图（目录）→</a>
-  </div>
+<main class="wrap">
+  <div class="eyebrow">AI ATLAS</div>
+  <h1>资料与版本</h1>
+  <p class="sub">查找实验所用的原始资料，或确认一次模型选型参考的是哪一天的快照。</p>
 
-  <div class="hero-bar">
-    <h2 style="margin-top:0">既定建设范围 · 完成度</h2>
-    <p>此比例只统计骨架、实验、草稿与扩建入口是否存在；资料来源与阅读说明见下方。</p>
-    <div class="hb-top"><span class="hb-num" id="total">—</span><span class="hb-cap" id="total-cap"></span></div>
-    <div class="hb-track" id="total-track"></div>
-    <div class="hb-legend" id="total-legend"></div>
-  </div>
-
-<!-- atlas-review-overview -->
+  <!-- atlas-review-overview -->
 <!-- atlas-review:overview:start -->
 <section class="atlas-review-dashboard" id="review-status" aria-labelledby="review-heading">
 <h2 id="review-heading">资料来源与阅读说明</h2><p>从具体表述回到原始资料，结合教学边界理解每个实验。下列资料查阅日期为 2026-10-26；模型谱系与工业现场另有各自的盘点日期。</p>
 <details open><summary>工程蓝图 · 原理与实验来源</summary><div class="atlas-review-links"><a href="blueprint.html#mod-tok">分词（运行时）</a><a href="blueprint.html#mod-embed">Embedding 查表</a><a href="blueprint.html#mod-attn">注意力</a><a href="blueprint.html#mod-ff">前馈网络 FFN</a><a href="blueprint.html#mod-pd">Prefill 与 Decode 两阶段</a><a href="blueprint.html#mod-kv">KV 缓存</a><a href="blueprint.html#mod-sample">采样</a><a href="blueprint.html#mod-rag">RAG 供料线</a><a href="blueprint.html#mod-agent">工具调用与 Agent 循环</a><a href="blueprint.html#mod-guard">护栏与标识</a></div></details>
 <details><summary>入门旅程 · 沿请求链路阅读</summary><div class="atlas-review-links"><a href="thread.html#st1">抵达机房</a><a href="thread.html#st2">句子被切碎</a><a href="thread.html#st3">编号变成向量</a><a href="thread.html#st4">走层：词与词互相注视</a><a href="thread.html#st5">开卷考试：去合同里检索</a><a href="thread.html#st6">岔路口：这次不必绕远</a><a href="thread.html#st7">逐个词元生成</a><a href="thread.html#st8">出门前过安检</a><a href="thread.html#st9">回到聊天框</a></div></details>
 <p>来源链接对应所列核心表述；实验中的简化参数、预设动画与真实模型运行结果需分别理解。合规观察用于学习，具体适用需结合业务场景判断。</p>
-<p><a href="docs/content-review.md">来源说明与维护约定</a> · <a href="assets/content-review.json">公开来源记录（JSON）</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%9D%A5%E6%BA%90%E4%B8%8E%E9%98%85%E8%AF%BB%E8%AF%B4%E6%98%8E&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fprogress.html%23review-status%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p></section>
+<p><a href="assets/content-review.json">公开来源记录（JSON）</a> · <a href="https://github.com/Slientvoice/ai-atlas/issues/new?title=%E5%86%85%E5%AE%B9%E7%BA%A0%E9%94%99%EF%BC%9A%E6%9D%A5%E6%BA%90%E4%B8%8E%E9%98%85%E8%AF%BB%E8%AF%B4%E6%98%8E&amp;body=%E9%A1%B5%E9%9D%A2%EF%BC%9Ahttps%3A%2F%2Fslientvoice.github.io%2Fai-atlas%2Fprogress.html%23review-status%0A%E5%8E%9F%E6%96%87%E4%B8%8E%E9%97%AE%E9%A2%98%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E4%B8%8E%E4%BE%9D%E6%8D%AE%EF%BC%9A%0A" target="_blank" rel="noopener noreferrer">反馈内容问题 ↗</a></p></section>
 <!-- atlas-review:overview:end -->
-  <h2>四条分线</h2>
-  <div class="bars" id="bars"></div>
 
-  <h2>蓝图模块深度图 · 主线的每一格</h2>
-  <div id="planes"></div>
-  <div class="legend">
-    <span><span class="cell g0" style="--pc:var(--ink-3)">未建</span> 登记未动工</span>
-    <span><span class="cell g1" style="--pc:var(--p1)">G1</span> 骨架讲解（文字+分叉+形状）</span>
-    <span><span class="cell g3" style="--pc:var(--p1)">G3 🔬</span> 内嵌实验室（真算法可实操）</span>
-  </div>
-
-  <h2>版本时间线</h2>
-  <div class="vlist" id="vlist"></div>
-
-  <footer>
-    看板与蓝图同步更新；口径：建设完成度 = 蓝图骨架 35% + 模块深化 35% + 合规挂点填充 20% + 登记簿扩建 10%（权重为约定值，公开可议）。
-    最后更新见时间线最新条目。
-  </footer>
-</div>
-
-<script>
-/* ======== 唯一数据源：每个版本只改这里 ======== */
-const DATA = {
-  updated: '2026-11-19 · 谱系 v6 / 现场 v3 · 主线 v0.36.2',
-  // depth: 0=登记未建 1=G1骨架 3=G3实验室
-  planes: [
-    { code: '0 物理基座', pc: 'var(--p0)', mods: [['为什么是GPU 🔬', 3], ['存储层级与内存墙 🔬', 3], ['屋顶线模型 🔬', 3], ['数字格式 🔬', 3], ['互联与集群 🔬', 3]] },
-    { code: 'Ⅰ 训练管线', pc: 'var(--p1)', mods: [['语料池与配比 🔬', 3], ['合成数据与蒸馏 🔬', 3], ['清洗·去重·过滤 🔬', 3], ['分词器训练 🔬', 3], ['预训练循环 🔬', 3], ['监督微调 SFT 🔬', 3], ['偏好优化 🔬', 3], ['可验证奖励 🔬', 3], ['评估·红队·发布 🔬', 3]] },
-    { code: 'Ⅱ 模型本体', pc: 'var(--p2)', mods: [['分词（运行时）🔬', 3], ['Embedding 🔬', 3], ['位置信息 🔬', 3], ['Block 总装 🔬', 3], ['注意力 🔬', 3], ['前馈网络 FFN 🔬', 3], ['MoE 🔬', 3], ['LM Head 🔬', 3], ['架构地平线 🔬', 3], ['可解释性 🔬', 3]] },
-    { code: 'Ⅲ 推理服务', pc: 'var(--p3)', mods: [['Prefill / Decode 🔬', 3], ['KV 缓存 🔬', 3], ['采样 🔬', 3], ['量化 🔬', 3], ['吞吐工程 🔬', 3], ['推理模型·测试时算力 🔬', 3]] },
-    { code: 'Ⅳ 系统组装', pc: 'var(--p4)', mods: [['上下文拼装 🔬', 3], ['上下文工程 🔬', 3], ['RAG 🔬', 3], ['工具与 Agent 🔬', 3], ['工具协议 🔬', 3], ['多智能体编排 🔬', 3], ['护栏与标识 🔬', 3]] },
-    { code: 'Ⅴ 多模态', pc: 'var(--p5)', mods: [['视觉理解 VLM 🔬', 3], ['扩散模型 🔬', 3], ['潜空间与 VAE 🔬', 3], ['条件与引导 🔬', 3], ['视频生成 🔬', 3], ['语音栈·声音克隆 🔬', 3]] },
-    { code: 'Ⅵ 具身与世界', pc: 'var(--p6)', mods: [['世界模型 🔬', 3], ['具身智能与 VLA 🔬', 3]] },
-    { code: 'APPENDIX 登记簿（扩建区）', pc: 'var(--ink-3)', mods: [['Agent 系统学 →Ⅳ', 1], ['RL 新范式 →Ⅰ', 1], ['合成数据与蒸馏 →Ⅰ', 1], ['多模态生成栈 →Ⅴ', 1], ['视觉理解 →Ⅴ', 1], ['推理模型 →Ⅲ', 1], ['非 Transformer →Ⅱ', 1], ['评估科学 →Ⅰ', 1], ['可解释性 →Ⅱ', 1], ['具身智能 →Ⅵ', 1], ['世界模型 →Ⅵ', 1]] },
-  ],
-  hooks: { filled: 28, total: 28 },  // 合规挂点（索引地图 28 节点口径，v0.8 补全；内容为合规观察）
-  versions: [
-    ['v0.1', '2026-07-05', '索引地图：七层 28 节点 + 例子库 + 合规接口', 'done'],
-    ['v0.2', '2026-07-06', '叙事长卷《一句话的旅程》→ 归档为入门版', 'done'],
-    ['v0.3', '2026-07-06', '工程蓝图定形：四平面 + 分叉 + 张量形状（主线形态收敛）', 'done'],
-    ['v0.3.5', '2026-07-06', 'PLANE 0 物理基座 + 已知未覆盖登记簿', 'done'],
-    ['v0.4', '2026-07-06', '第一个实验室：RAG 检索（Ⅳ）', 'done'],
-    ['v0.5', '2026-07-06', '第二个实验室：MoE 路由分诊台（Ⅱ）+ 字体 bug 修复', 'done'],
-    ['v0.6', '2026-07-06', '第三个实验室：RLHF 亲手标注（Ⅰ）+ 本看板上线', 'done'],
-    ['v0.7', '2026-07-07', 'PLANE Ⅴ 多模态平面动工：VLM · 扩散 · 潜空间 · 条件引导 · 视频 · 语音克隆（登记簿两项点亮）', 'done'],
-    ['v0.8', '2026-07-07', '三个新实验室（注意力矩阵 · 屋顶线计算器 · 扩散去噪）+ 合规挂点补全 28/28（合规观察）', 'done'],
-    ['v0.9', '2026-07-07', '图景补全：登记簿六领域全部落地（推理模型→Ⅲ · 架构地平线→Ⅱ · 可解释性→Ⅱ · 评估科学→Ⅰ扩建）+ 来源核对与维护约定', 'done'],
-    ['v0.10', '2026-07-07', '迷你训练场（第七实验室·全站之巅：浏览器内真训练带注意力的语言模型）+ LAB-SPECS.md 施工规格书', 'done'],
-    ['v0.11', '2026-07-07', '实验室冲刺 ×4：BPE 现场训练（Ⅰ）· 投机解码模拟器（Ⅲ）· 采样漏斗（Ⅲ）· RoPE 旋转（Ⅱ）——十一实验室', 'done'],
-    ['v0.12', '2026-07-08', '用户点名五模块深化：算珠墙竞速（并行/串行两赛）· 内存墙等待体验 · 并行切积木 · Agent 沙盘（人工确认点）· 语义地图——十六实验室', 'done'],
-    ['v0.13', '2026-07-08', '部署就绪包：🗺️ 统一门户首页上线 + DEPLOY.md 部署手册（含站内链接替换方案与 GitHub Pages 全程网页操作指南）', 'done'],
-    ['v0.14', '2026-07-08', '模型本体平面（Ⅱ）实验室全亮：迷你分词器 · 残差流 32 层对照 · 激活函数与门控 · softmax 零和 · 两种记忆（SSM vs 注意力）· 线性探针——二十二实验室', 'done'],
-    ['v0.15', '2026-07-08', '训练管线平面（Ⅰ）实验室全亮：配方即能力 · 净水厂四道闸（含方言误杀陷阱）· SFT 损失掩码 · 污染检测器（真 8 字连串重合）——二十六实验室', 'done'],
-    ['v0.15.5', '2026-07-08', '正式上线：GitHub 双仓（私有档案 ai-stack-map + 公开站点 ai-atlas）· slientvoice.github.io/ai-atlas · 公开前脱敏', 'done'],
-    ['v0.16', '2026-07-09', '推理服务平面（Ⅲ）实验室全亮：首字延迟计算器 · KV 水位计算器 · 量化（真对称量化）· 测试时算力的二项分布——三十实验室', 'done'],
-    ['v0.17', '2026-07-09', '🏁 实验室大满贯：数字格式 · 上下文解剖台 · 护栏值班台 · VLM 切块 · VAE 压缩代价 · CFG 几何 · 时空块计数 · 声音 token 化（有声）——38 模块 38 实验室，无一例外可上手', 'done'],
-    ['v0.18', '2026-07-09', '用户验收整改：门户三卡+看板降级横幅 · 宋体退役全站统一黑体 · v0.1 旗舰图节改存档 · 登记簿续命（新登记具身智能/世界模型两项）', 'done'],
-    ['v0.19', '2026-07-10', '🗺 系统全景图并入蓝图：左图右文双向联动（点部位直达模块并展开、滚正文镜头跟随、区域虚影+你在这里）——图与实验室合体，机身构想落地；术语全部改用真实词汇（残差流/KV Cache/自回归循环/多模态模型组）', 'done'],
-    ['v0.20', '2026-07-10', '全景图体验修整（用户验收反馈）：图可整体收起/展开 · 镜头跟随做成开关 · 虚影加深至 0.1 根治特写区文字重叠 · Agent 循环图标重排 · 点击部位同时推进镜头', 'done'],
-    ['v0.21', '2026-07-11', '全景图第二轮打磨：自回归回环改走右廊不再横穿全图（重叠根因）· 收起/展开加过渡 · 立体投影与楼层厚度唇边、按钮材质 · 图形/文字双视图切换 · ⛶ 全屏大图 · 跟随关闭时以光晕+失色标注当前区域', 'done'],
-    ['v0.22', '2026-07-11', '左栏默认改文字版（图形版为可切换选项）· Ⅲ 区自回归标签下移根治采样器叠字 · 预训练循环图标重排（∇ 居中+流程注脚外置）· 文字版下隐藏镜头类控件', 'done'],
-    ['v0.23', '2026-07-11', '布局双态定稿：默认回归 v0.18 版式（顶部带连接线的总装配图 + 单栏正文，滚动时装配卡高亮你在这里）；点「切换为图形全景」才进入左右分栏图形态，图形态内可一键返回文字版', 'done'],
-    ['v0.24', '2026-07-11', '🌍 PLANE Ⅵ 具身与世界落成：世界模型（弹球预言家——误差复利可见）· 具身智能 VLA（机械臂追点——频率鸿沟体感）——七平面 40 模块 40 实验室，登记簿八项全落地', 'done'],
-    ['谱系 v1', '2026-07-12', '🧬 活页新页「模型门派谱系」：七家（GPT/Claude/Gemini/Grok/DeepSeek/Llama/Qwen）在蓝图各分叉路口的选择对照矩阵 + 小传 + 选型合规朱批；来源三级标注（◉◐○）+ 盘点基准日 + 独立版本号的活页保鲜机制', 'done'],
-    ['谱系 v2', '2026-07-12', '🧬 谱系扩列（用户拍板行列互换）：开放度五层阶梯图（L0 封闭→L4 全开放，权重/代码/数据三要素拆解）+ 门派矩阵转置为一家一行（新增 Kimi/智谱/豆包/混元共十一家，点行展开小传与四维详情）', 'done'],
-    ['v0.24.2', '2026-07-12', '🎨 全站图标统一：页面身份 emoji（📐🧵🧭🧬🚦🗺）全部换为 Lucide 式单色线稿图标（工程风转向的第一步落地）；门户工程风改版试样稿 v3.4 迭代中（冷白/锐角/mono/朱批印章/单箭头巡演）', 'done'],
-    ['v0.25', '2026-07-12', '🎨 全站换装「克制工程风」（用户拍板采纳）：冷白/冷灰双主题令牌（暖米黄退役）、锐角化（药丸废除）、门户新版转正（示意图卡片+悬停动效+朱批印章+FIG编号）、六页统一——风格规范 v2 正式写入 PROJECT.md §6', 'done'],
-    ['v0.25.1', '2026-07-14', '🔤 字体即语法（用户发现注意力模块 Q 多种字体）：正文变量符号统一等宽——张量名/带下标变量/算式片段（h_q、d_k、Q·Kᵀ、T×T、O(T²) 等约60处）包裹 code 标签；缩写名与产品名（GQA/Llama/token）保持正文体；KV 缓存作为机制名保持正文体、KV 头作为张量合称转等宽', 'done'],
-    ['v0.25.2', '2026-07-15', '🐛 修两个实验室首展空白画布（用户审计发现「激活函数与门控」异常）：折叠 details 内画布 clientWidth=0，init 时画成 0 宽——为「激活函数与门控」(mod-ff) 与「残差流对照」(mod-block) 补 id + toggle 展开重绘，对齐既有 5 个实验室的写法', 'done'],
-    ['v0.25.3', '2026-07-16', '✨ 激活函数与门控实验室·门控可视化（用户发现下半段只有数字、拖 gate/up 曲线无反应）：门 gate 现在以金点落在 SiLU 曲线上随拖动滑行，SiLU(门)×内容 的输出改画成中线为零的双向输出条——把门控数值升级为双向输出条（当时的“负区掐灭”解释已于 v0.36 纠正，负区并非恒零）', 'done'],
-    ['v0.25.4', '2026-07-16', '🐛 修顶部锚点跳转首次整屏闪白（用户报告：第一次点顶部跳转整页变白再恢复才落位）：原生锚点硬瞬移到未光栅化的远处区域→合成器空帧。加 html scroll-behavior:smooth（沿途渐进光栅化）+ 平面/模块 scroll-margin-top；reduced-motion 下回退为 auto', 'done'],
-    ['v0.25.5', '2026-07-16', '🐛 修 Windows 端等宽字体回退难看（用户截图报告）：原 --mono 栈只有 macOS 字体（SF Mono/Menlo），Windows 上全数落空、退到系统默认 Courier New——六页 --mono 变量与蓝图 6 处画布 ctx.font 统一补 Cascadia Mono / Segoe UI Mono / Consolas 回退', 'done'],
-    ['v0.26', '2026-07-18', '🗼 全景导航仪（试样稿 v1–v4.2 用户逐轮拍板后并入蓝图）：全景图重构为竖版 740×1060 按逻辑序构图（地基承载训练→权重灌塔→塔与推理装进外壳→穿护栏通向世界），常驻左栏、宽度自适应、跟读平移；「你在这里」=当前平面标题反白；⇤收起=纯文字单栏（记住偏好）、⛶细看=滚动放大；模型塔试点精工矢量档（渐变材质+投影+残差流辉光）。双态布局、总装配卡与镜头系统废除（净删）；退路=tag v0.25-pre-rail。施工规矩入册：区内必画数据流、连线不压字', 'done'],
-    ['v0.26.1', '2026-07-18', '🎨 标题反白块字位统一（用户报告字体在实心块内靠上）：病根=底块按英文字高估位而中文字形占满字身框。立规则：基线 = 底块中心 + 0.36 字号（中文视觉中心修正），左右内边距统一约 8px——六处标题基线下移 2~2.5px 落位，Ⅴ 卡原本在规则上不动', 'done'],
-    ['v0.27', '2026-07-18', '✨ 精工矢量档全图铺开（用户拍板）：五平面区底换纵向渐变、训练带七站/Ⅳ 三器官/KV 缸/语料缸/批处理盒升渐变材质+分层投影、采样器/权重冻结/护栏闸门加辉光；自回归回环与权重电梯上电（悬停流动，与残差流同规矩）。全图告别平涂对照态，「精工档试样」注记功成身退', 'done'],
-    ['v0.27.1', '2026-07-18', '📋 登记簿新登记三项（用户拍板路线二·新版图）：Agent 系统学（→Ⅳ 扩建：工具协议/上下文工程/多智能体编排）、RL 新范式·可验证奖励与推理模型训练侧（→Ⅰ）、合成数据与蒸馏（→Ⅰ）。按防返工机制先登记锁挂点、再按用户排期扩建', 'done'],
-    ['v0.28', '2026-07-18', '🔧 Agent 系统学 1/3「工具协议」落成（照 LAB-SPECS S10 施工）：接工具的全部真相=四段文本往返（schema 注入→模型生成调用 JSON→宿主执行回填→继续作答）；三分叉（原生 function calling ✓/MCP 标准协议/Computer Use）；报文显微镜实验室——JSON 现场拼装四幕连播、工具数滑杆看 schema 吃预算、原生⇄MCP 报文对照。七平面 41 模块 41 实验室。S10-S12 三份规格书同批入册', 'done'],
-    ['v0.29', '2026-07-18', '🔧 Agent 系统学 2/3+3/3 落成，三模块齐（照 S11/S12 施工）：「上下文工程」——上下文是每次重装的行李箱，三分叉（滑窗/摘要压缩/外部记忆）+预算沙盘实验室（四类内容抢窗口、五条谈判事实三种「忘法」：丢整段/丢细节/丢概率）；「多智能体编排」——三拓扑（单体/流水线/主从）+编排剧场实验室（同任务三演、注错看谁有机会发现、token 账单实算）。登记簿 Agent 项点亮。七平面 43 模块 43 实验室', 'done'],
-    ['v0.29.1', '2026-07-18', '🎨 全景图 Ⅳ 区挂牌三个新模块（用户关切图已紧凑怎么放）：原则=地图是导航不是台账，新模块以小芯片挂在所属器官上——Agent 循环盒加高一档内置「工具协议」「多智能体」双芯片、上下文拼装盒内置「上下文工程」芯片，全部可点直达；RAG/Ⅴ 卡顺移让位。另修自回归循环三行文字居中（与上方盒对齐，用户建议）', 'done'],
-    ['v0.30', '2026-07-19', '🏁 路线二「新版图」收官（/goal 指令）：「合成数据与蒸馏」（Ⅰ，数据墙+三分叉：教材式/思维链蒸馏/自我博弈+近亲繁殖模拟器——真多项式重采样看分布坍缩、熵实算、真人数据混入滑杆看托底）；「可验证奖励与推理训练」（Ⅰ，奖励从品味到判卷+三分叉+判卷机vs品味机实验室——真策略梯度：品味机训出装模作样、判卷机训出真会算）。登记簿十一项全落地；训练带挂两芯片。七平面 45 模块 45 实验室', 'done'],
-    ['现场 v1', '2026-07-29', '🏗️ 活页新页「工业现场」：LLM 开发工具链版图——六工位 22 工具（CUDA/PyTorch/TRL·verl/HF Hub/vLLM/SGLang/LangGraph/MCP/lm-eval…），每个工具回链蓝图讲它原理的模块（23 锚点核验通过）；生产线总览图芯片直达；活页机制同谱系（盘点基准日+独立版本号+过期整页换新）；推理/后训练/Agent 三大格局盘点日联网核实', 'done'],
-    ['v0.31', '2026-07-30', '🖼️ 门户橱窗档转正（试样稿 v1→v2 用户拍板）：门户整页换「工程图纸」门面——图框角规线+坐标纸大字开场+FIG.00 全系统立面图+大数字行+页脚图签栏；补上「工业现场」门户入口（此前该活页无站内入口）；旧门户存档 archive-home-v0.30.html', 'done'],
-    ['v0.32', '2026-08-03', '✨ AI Atlas 新门户转正：保留蓝图、工业现场、模型谱系与学习路线的原有内容结构，统一为流体光场与玻璃工程界面；加入规则网格上的 o → > → _ 字符云，支持鼠标窄轨迹、随机风场衰减、点击扩散与多击叠加；桌面端完整交互，移动端与减少动态模式自动降级', 'done'],
-    ['v0.32.1', '2026-08-03', '✨ 门户环境交互修整：字符场改为逐玻璃模块独立生成，随内容滚动并在模块圆角边界内裁切，不再覆盖模块间背景；全局流体光场速度微调加快', 'done'],
-    ['v0.32.2', '2026-08-04', '✨ 门户动效层级修整：暗色「每个结论，都该说明它凭什么成立」核验模块不再挂载字符场；轨迹与点击扩散仅保留在适合承载氛围动效的浅色玻璃模块', 'done'],
-    ['谱系 v3', '2026-09-17', '🧬 联网核对十一家代表型号：区分托管服务、开放权重与预览状态；以逐型号许可替换公司级开放度排名，更新推理与多模态边界，补充 29 个官方来源链接；移除未经核验的备案与传闻断言，加入键盘展开和快照过期提示；同步门户入口', 'done'],
-    ['现场 v2', '2026-09-18', '🏗️ 联网复查工业现场：六工位与开发工作台共 30 个条目，附 44 个官方来源；补充 ROCm、Agent SDK、SWE-bench / Terminal-Bench，厘清 MCP / A2A、Ollama 本地与云端、TensorRT-LLM 架构及 Arena 评测口径；增加任务入口、原生锚点导航与快照过期提示，同步门户统计并修正静态门户的站内相对链接', 'done'],
-    ['v0.33', '2026-09-19', '门户与全站导航：首屏加入七平面系统概览与三个大入口，增加原创交互模型剖面；定位调整为技术为主、法律合规为辅；全站统一后退、前进、返回首页与页面目录，站内跳转保留在当前标签页，修复蓝图深链接落位；移除索引地图旧旗舰候选存档；首页源码、导航规范与构建发布说明纳入公开仓库', 'done'],
-    ['v0.34 / 谱系 v4', '2026-10-15', '联网更新工程蓝图与十一家模型谱系：新增 GPT-6.1 Sol、Claude 5.5、Gemini 4 Argon、Grok 4.7，明确 DeepSeek 与 Kimi 路由；修正 GRPO/RLVR、混合架构与教学边界；升级推理成本、相关采样和 MCP 2026-07-28 三个实验；保留 45 模块与实验，补充官方来源与发布记录。Meta API 访问状态单列待复核，工业现场沿用 09-18 快照', 'done'],
-    ['v0.35 / 谱系 v5', '2026-10-26', '更新模型门派谱系：DeepSeek V4.1 Flash-1017 权重与 API 别名、Kimi K3.1 Pro 服务与思考路由、Meta Spark Open / Glimmer 两条权重路线；区分已上线、计划发布与逐型号许可，补充 OpenAI 服务和 Claude 思考控制，44 个官方来源。首页与文档同步；蓝图及工业现场保留各自快照', 'done'],
-    ['v0.35.1', '2026-10-26', '首页粒子交互修复：五个浅色内容模块共用 GlassSurface，补齐入口、合规与更新记录的字符效果；图示、导航和深色区保持静态。事件局限于所属模块，减少动态设置即时生效，窗口变化后重新计算网格与画布精度；同步维护记录', 'done'],
-    ['v0.36', '2026-10-26', '首批内容核验：修订九站入门旅程与十个蓝图模块的核心表述，补充 19 个一手来源、教学边界与纠错入口；正文变化触发重新核对检查，索引地图同步概念纠错', 'done'],
-    ['v0.36.1', '2026-10-27', '阅读体验调整：统一来源与教学边界说明，简化公开看板与模块提示，同步维护文档', 'done'],
-    ['v0.36.2', '2026-10-28', '蓝图页首简化：移除架构快照快捷说明，同步页面版本、项目说明与时间线', 'done'],
-    ['谱系 v6 / 现场 v3', '2026-11-19', '更新代表型号、权重许可与 API 获取方式；补充推理服务压测、Agent 自托管边界、轨迹采集和任务评测。主线版本沿用 v0.36.2', 'now'],
-    ['v1.0', '待定', '学习路径扩展：完善入门指引与合规专题，持续补充资料与实验', 'todo'],
-  ],
-  weights: { skeleton: 0.35, labs: 0.35, hooks: 0.20, registry: 0.10 },
-};
-
-/* ======== 以下全部自动计算，勿手改 ======== */
-const blueprintPlanes = DATA.planes.filter(p => !p.code.startsWith('APPENDIX'));
-const registry = DATA.planes.find(p => p.code.startsWith('APPENDIX'));
-const allMods = blueprintPlanes.flatMap(p => p.mods);
-const nMods = allMods.length;
-const nLabs = allMods.filter(m => m[1] === 3).length;
-const sk = 1, labs = nLabs / nMods, hk = DATA.hooks.filled / DATA.hooks.total,
-  rg = registry.mods.filter(m => m[1] > 0).length / registry.mods.length;
-const W = DATA.weights;
-const parts = [
-  ['蓝图骨架', sk, W.skeleton, 'var(--p2)'],
-  ['模块深化（实验室）', labs, W.labs, 'var(--p1)'],
-  ['合规挂点填充', hk, W.hooks, 'var(--seal)'],
-  ['登记簿扩建', rg, W.registry, 'var(--p3)'],
-];
-const total = parts.reduce((s, p) => s + p[1] * p[2], 0);
-
-document.getElementById('total').textContent = (total * 100).toFixed(0) + '%';
-document.getElementById('total-cap').textContent =
-  `骨架 ${nMods}/${nMods} · 实验室 ${nLabs}/${nMods} · 合规草稿 ${DATA.hooks.filled}/${DATA.hooks.total} · 扩建 ${registry.mods.filter(m => m[1] > 0).length}/${registry.mods.length}　（${DATA.updated}）`;
-document.getElementById('total-track').innerHTML = parts.map(p =>
-  `<i style="width:${(p[1] * p[2] * 100).toFixed(1)}%;background:${p[3]}"></i>`).join('');
-document.getElementById('total-legend').innerHTML = parts.map(p =>
-  `<span><span class="sw" style="background:${p[3]}"></span>${p[0]}（权重 ${(p[2] * 100).toFixed(0)}%）</span>`).join('');
-
-document.getElementById('bars').innerHTML = parts.map(p => `
-  <div class="row"><span>${p[0]}</span>
-    <div class="track"><i style="width:${(p[1] * 100).toFixed(0)}%;background:${p[3]}"></i></div>
-    <span class="val">${(p[1] * 100).toFixed(0)}%</span></div>`).join('');
-
-document.getElementById('planes').innerHTML = DATA.planes.map(p => `
-  <div class="plane-row" style="--pc:${p.pc}">
-    <div class="plane-name" style="color:${p.pc}">${p.code}</div>
-    <div class="cells">${p.mods.map(([n, d]) =>
-      `<span class="cell ${d === 3 ? 'g3' : d === 1 ? 'g1' : 'g0'}">${n}</span>`).join('')}</div>
-  </div>`).join('');
-
-document.getElementById('vlist').innerHTML = DATA.versions.map(([v, d, t, s]) =>
-  `<div class="v ${s}"><span class="vt">${v} · ${d}</span><b>${t.split('：')[0]}</b>${t.includes('：') ? '：' + t.split('：').slice(1).join('：') : ''}</div>`).join('');
-</script>
+  <section aria-labelledby="vlist">
+    <h2 id="vlist">版本记录选读</h2>
+    <dl class="editions">
+      <div><dt>2026-11-24</dt><dd><a href="genealogy.html#matrix-title">模型门派谱系 v7</a> 收录 13 个家族，加入 Mistral AI 和 MiniMax，新增逐型号许可对照与<a href="genealogy.html#selection-notes">选型核对清单</a>。</dd></div>
+      <div><dt>2026-11-19</dt><dd>模型门派谱系 v6 按型号区分托管入口、可下载权重和许可。<a href="toolchain.html">工业现场 v3</a> 补入推理压测、Agent 运行环境和任务评测。</dd></div>
+      <div><dt>2026-10-26 至 28</dt><dd><a href="thread.html">合同问答九站</a> 和工程蓝图的十个模块增加逐项来源。修订涉及词元嵌入、检索向量、因果注意力和生成回答的依据。</dd></div>
+      <div><dt>2026-10-15</dt><dd><a href="blueprint.html#review-sources">工程蓝图的计算口径</a> 补充缓存、推理成本与工具协议的适用条件。</dd></div>
+      <div><dt>2026-07</dt><dd><a href="index-map.html#map">七层技术全景</a>串起算力、数据、模型、对齐、部署、应用与产品。与<a href="blueprint.html">工程蓝图</a>对照，可从同一问题分别查技术原理与合规观察。</dd></div>
+    </dl>
+  </section>
+</main>
+</body>
+</html>

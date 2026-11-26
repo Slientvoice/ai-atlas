@@ -1,10 +1,11 @@
+export const siteName = 'AI技术与合规全景';
 export const pages = [
   ['index.html', '首页'], ['blueprint.html', '工程蓝图'],
   ['toolchain.html', '工业现场'], ['genealogy.html', '模型门派谱系'],
-  ['thread.html', '一句话的旅程'], ['index-map.html', '索引地图'],
-  ['progress.html', '项目进度'],
+  ['thread.html', '一句话的旅程'], ['index-map.html', '技术与合规全景'],
+  ['progress.html', '资料与版本'],
 ];
-const knownPages = new Set([...pages.map(([file]) => file), 'font-fitting.html']);
+const knownPages = new Set(pages.map(([file]) => file));
 
 export function isAtlasURL(value, homeURL) {
   try {
@@ -35,9 +36,9 @@ export function historyTargets(env, homeURL) {
 
 const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[char]);
 export function navigationContents(current, base = '.') {
-  const name = pages.find(([file]) => file === current)?.[1] || '字体试衣间';
+  const name = pages.find(([file]) => file === current)?.[1] || siteName;
   const home = `${base}/index.html`;
-  return `<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="${escape(home)}" aria-label="AI Atlas 首页">AI—ATLAS <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">${name}</span></div>
+  return `<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="${escape(home)}" aria-label="${siteName}首页">${siteName} <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">${name}</span></div>
     <div class="atlas-nav-actions" aria-label="浏览历史与首页">
       <button type="button" data-atlas-back disabled title="没有可返回的站内记录"><span aria-hidden="true">←</span> 后退</button>
       <button type="button" data-atlas-forward disabled title="没有可前进的站内记录">前进 <span aria-hidden="true">→</span></button>

@@ -1,4 +1,4 @@
-# 来源说明与维护约定
+# 来源与教学边界
 
 2026-10-27 · v0.36.1。原理说明、交互实验与合规观察均应说明资料出处和适用边界。
 
@@ -10,19 +10,7 @@
 
 ## 公开来源记录
 
-[`assets/content-review.json`](../assets/content-review.json) 仅收录资料出处、对应表述、查阅日期、教学边界及正文指纹。每条 `evidence` 将具体表述对应到若干来源，`checkedAt` 为来源对照日期。它是资料索引，不是整站认证或内部工作台账。
-
-公开文件按字段白名单校验。内部工作记录应保存在发布仓库之外，不通过静态页面、JSON、注释、打包资源或公开维护文档提供。构建无需读取任何内部记录。
-
-## 修改流程
-
-1. 修改正文并阅读支持该表述的一手来源，确认适用条件、反例与教学简化。只有搜索结果标题、无法读取正文的来源，不作为新对照证据。
-2. 更新对应 `evidence`、`boundary` 与 `checkedAt`。暂时不能支持的表述应修订或移除其来源声明，不得自动沿用旧记录。
-3. 对确认后的单元，用 `scripts/content-review-lib.mjs` 的 `unitsIn` 提取 `content`，再用 `digest(content)` 记录 `contentHash`。仅展示文字或格式变化时须检查差异，保留原查阅日期；技术表述变化须重新核对来源，不能只更新指纹。
-4. 运行 `npm run sync:reviews`、`npm run check:reviews`、`npm test`、`npm run typecheck`、`npm run build` 与 `npm run check:links`。
-5. 检查来源展开、纠错入口、深链接和窄屏显示，确认当前发布文件不含内部工作记录，再同步版本记录并发布。
-
-正文指纹覆盖对应模块/站点的 HTML，排除自动生成的来源块；不覆盖页外脚本，也不会自动感知外部资料更新。实验代码和时效性资料仍需分别维护。
+[`assets/content-review.json`](../assets/content-review.json) 仅收录资料出处、对应表述、查阅日期、教学边界及正文指纹。每条 `evidence` 将具体表述对应到若干来源，`checkedAt` 为来源对照日期。其中的日期对应所列资料。
 
 ## 反馈
 

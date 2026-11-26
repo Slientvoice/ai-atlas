@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { digest, statusOf, unitsIn, validateRegistry } from '../scripts/content-review-lib.mjs';
+import { pages } from '../assets/site-navigation.mjs';
 
 test('nested disclosures stay inside their module and generated badges do not change its fingerprint', () => {
   const unit = '<details class="mod" id="example"><summary><span class="m-name">Example</span></summary><details><summary>Math</summary>Formula</details>Boundary</details>';
@@ -47,7 +48,16 @@ test('public source manifest rejects orphaned references and internal workflow f
 
 test('public pages and reading guides contain no internal review status displays', async () => {
   const root = new URL('../', import.meta.url);
-  const files = ['blueprint.html', 'thread.html', 'index-map.html', 'progress.html', 'genealogy.html', 'README.md', 'PROJECT.md', 'docs/content-review.md', 'docs/release-v0.36.md', 'assets/content-review.json'];
+  const home = await readFile(new URL('index.html', root), 'utf8');
+  const bundles = [...home.matchAll(/(?:src|href)="(\.\/assets\/portal-[\w-]+\.(?:js|css))"/g)].map(match => match[1]);
+  assert.ok(bundles.length >= 2, 'check the built homepage as well as the HTML shell');
+  const files = [...pages.map(([file]) => file), 'font-fitting.html', ...bundles,
+    'README.md', 'PROJECT.md', 'docs/content-review.md', 'docs/release-v0.36.md', 'assets/content-review.json'];
   const internalStatus = /待(?:人工技术|人工与法律|法律)?审校|人工(?:技术)?审校[：\s]*\d|尚未经人工核验|atlas-review-metric/;
-  for (const file of files) assert.doesNotMatch(await readFile(new URL(file, root), 'utf8'), internalStatus, file);
+  const editorNotes = /按规则\s*R\d|诚实标注（R\d+）|class="demo-tag">(?:R\d+ · )?G\d|合规层冻结中|用户(?:已授权更新|拍板[：:])|私有档案\s+[\w-]+|约法六章/;
+  for (const file of files) {
+    const body = await readFile(new URL(file, root), 'utf8');
+    assert.doesNotMatch(body, internalStatus, file);
+    assert.doesNotMatch(body, editorNotes, file);
+  }
 });

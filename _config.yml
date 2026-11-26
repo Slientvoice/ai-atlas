@@ -1,0 +1,18 @@
+# GitHub Pages serves the reader pages and their static dependencies.
+exclude:
+  - node_modules
+  - src
+  - scripts
+  - tests
+  - skills
+  - assets/site-navigation.d.mts
+  - docs
+  - portal.html
+  - PROJECT.md
+  - DEPLOY.md
+  - README.md
+  - CHANGELOG.md
+  - package.json
+  - package-lock.json
+  - tsconfig.json
+  - vite.config.ts

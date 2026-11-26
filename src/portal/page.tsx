@@ -1,157 +1,86 @@
-import { CodexAtmosphere } from "./AmbientEffects";
-import GlassSurface from "./GlassSurface";
-import OverviewMap from "./OverviewMap";
+import LayerAtlas from "./LayerAtlas";
+import { AtlasFlowAtmosphere } from "./AmbientEffects";
 import SiteNavigation from "./SiteNavigation";
+import { siteName } from "../../assets/site-navigation.mjs";
+import OverviewMap from "./OverviewMap";
 import "./home.css";
+import "./field-guide.css";
 
-// Static builds share a directory with the Atlas pages. The Next preview uses
-// the published pages so every destination also works outside that directory.
 declare const __ATLAS_STATIC_BASE__: string;
-const liveBase = typeof __ATLAS_STATIC_BASE__ !== "undefined"
-  ? __ATLAS_STATIC_BASE__
-  : "https://slientvoice.github.io/ai-atlas";
+const base = typeof __ATLAS_STATIC_BASE__ === "undefined" ? "https://slientvoice.github.io/ai-atlas" : __ATLAS_STATIC_BASE__;
+const url = (file: string) => base + "/" + file;
 
 export const metadata = {
-  title: "AI Atlas · 看见 AI 如何工作",
-  description: "以技术为主线的交互式 AI 地图：探索工程原理、工业工具与模型谱系，并在关键环节补充法律与合规观察。",
+  title: siteName + " · AI Atlas",
+  description: "沿七个技术层理解 AI 系统，用合同问答和模型选型核对数据使用权限、模型许可与输出依据。",
 };
 
-const entries = [
-  { id: "blueprint", number: "01", lens: "理解原理", title: "工程蓝图", description: "从算力到 Agent，拆开 AI 的工作机制。", stat: "7 个平面 · 45 个实验", action: "进入蓝图", href: "blueprint.html" },
-  { id: "toolchain", number: "02", lens: "走进实践", title: "工业现场", description: "沿六个工位，认识今天的工程工具链。", stat: "6 个工位 · 30 个条目", action: "走进现场", href: "toolchain.html" },
-  { id: "genealogy", number: "03", lens: "比较选择", title: "模型门派谱系", description: "对照模型家族的架构、能力与开放边界。", stat: "11 个家族 · 6 个维度", action: "查看谱系", href: "genealogy.html" },
+const checks = [
+  ["谁能检索这份合同？", "用权限不同的账号发起同一查询，核对各自能读到的合同片段。", "查看合同检索", "thread.html#st5"],
+  ["选定的型号允许怎样使用？", "记下具体版本、交付方式和许可原文，逐项核对商用与再分发条件。", "查看选型核对项", "genealogy.html#selection-notes"],
+  ["用户最后看到了什么？", "留一份最终回答，对照合同原文核实引文，并检查生成标识的呈现。", "查看回答界面", "thread.html#st9"],
 ];
-const journey = ["算力", "分词", "向量", "注意力", "检索", "决策", "生成", "护栏", "界面"];
-
-function EntryIcon({ kind }: { kind: string }) {
-  return (
-    <svg className="home-entry-icon" viewBox="0 0 64 40" fill="none" aria-hidden="true">
-      {kind === "blueprint" ? <>
-        <path d="M6 8h52M6 20h52M6 32h52M17 3v34M32 3v34M47 3v34" opacity=".2" />
-        <path d="M10 28V12h16v16H10Zm28 0V12h16v16H38ZM26 20h12" />
-        <circle cx="18" cy="20" r="2" fill="currentColor" />
-      </> : kind === "toolchain" ? <>
-        <path d="M3 20h58" opacity=".4" />
-        <rect x="6" y="13" width="12" height="14" rx="2" />
-        <rect x="26" y="8" width="12" height="24" rx="2" />
-        <rect x="46" y="13" width="12" height="14" rx="2" />
-        <path d="m29 20 3 3 5-7" />
-      </> : <>
-        <path d="M32 11v9H12v9m20-9h20v9m-20-9v9" />
-        <circle cx="32" cy="7" r="4" /><circle cx="12" cy="32" r="3" />
-        <circle cx="32" cy="32" r="3" /><circle cx="52" cy="32" r="3" />
-      </>}
-    </svg>
-  );
-}
 
 export default function Portal() {
-  return (
-    <main className="portal-page home-v2" id="top">
-      <CodexAtmosphere />
-      <a className="home-skip" href="#overview">跳到系统全景</a>
-      <div className="home-shell">
-        <SiteNavigation base={liveBase} />
-
-        <GlassSurface as="header" className="home-hero">
-          <div className="home-hero-copy">
-            <span className="home-eyebrow">AN INTERACTIVE FIELD GUIDE TO AI</span>
-            <h1>看见 AI <em>如何工作。</em></h1>
-            <p><span>以技术为主线，理解 AI 如何运行。</span><span>沿途补充法律与合规观察。</span></p>
-          </div>
-          <a className="home-start" href={`${liveBase}/thread.html`}>
-            <span>第一次来？从一个日常请求开始</span>
-            <b>跟随一句话的旅程 <span aria-hidden="true">↗</span></b>
-          </a>
-        </GlassSurface>
-
-        <div className="home-dashboard">
-          <OverviewMap base={liveBase} />
-          <GlassSurface className="home-entries" id="explore" aria-labelledby="entries-title">
-            <div className="home-entries-heading">
-              <h2 id="entries-title">三个入口，三种观看角度</h2>
-              <span className="home-eyebrow" aria-hidden="true">EXPLORE ↗</span>
-            </div>
-            {entries.map((entry) => (
-              <a className={`home-entry home-entry-${entry.id}`} href={`${liveBase}/${entry.href}`} key={entry.id}>
-                <div className="home-entry-heading">
-                  <div><span className="home-entry-lens"><span>{entry.number}</span> / {entry.lens}</span><h3>{entry.title}</h3></div>
-                  <EntryIcon kind={entry.id} />
-                </div>
-                <p>{entry.description}</p>
-                <div className="home-entry-bottom"><span>{entry.stat}</span><b>{entry.action} <span aria-hidden="true">↗</span></b></div>
-              </a>
-            ))}
-          </GlassSurface>
+  return <div className="home-v2 field-guide" id="top">
+    <AtlasFlowAtmosphere />
+    <a className="home-skip" href="#routes">跳到正文</a>
+    <SiteNavigation base={base}/>
+    <main className="guide-main" id="routes" tabIndex={-1}>
+      <section className="glass panorama" id="overview" aria-labelledby="panorama-title">
+        <div className="pano-copy">
+          <p className="kicker">七个技术层 · 28 个节点</p>
+          <h1 id="panorama-title"><a href={url("index-map.html")}>{siteName}</a></h1>
+          <p className="lead">从算力到产品，沿七个技术层理解 AI 系统。<br/>每一层都附有合规批注，涵盖数据授权、模型许可和输出责任。</p>
+          <a className="pano-link" href={url("index-map.html#map")}>打开全景地图</a>
         </div>
+        <LayerAtlas base={base}/>
+      </section>
 
-        <GlassSurface className="home-reading" id="routes" aria-labelledby="routes-title">
-          <div className="home-section-heading">
-            <div><span className="home-eyebrow">FIND YOUR WAY IN</span><h2 id="routes-title">从一个问题开始。</h2></div>
-            <p>顺着一个故事理解整体，或带着一个词直接查找。</p>
+      <div className="feature-pair" id="explore">
+        <article className="glass contract-feature">
+          <div className="feature-copy">
+            <p className="kicker">合同问答 · 九站</p>
+            <h2><a href={url("thread.html")}>从一个合同开始</a></h2>
+            <p>“帮我看看这份合同里的解约条款。”跟着这次请求，看系统如何检索原文，以及谁有权读取这些条款。</p>
+            <a className="text-action" href={url("thread.html")}>跟读这次合同问答</a>
           </div>
-          <div className="home-reading-grid">
-            <article className="home-journey">
-              <span className="home-route-label">入门路线 / 09 站</span>
-              <h3>“帮我看看合同里的解约条款。”</h3>
-              <p>跟随这一句请求，看看算力、模型与应用如何接力。</p>
-              <ol className="home-journey-stops" aria-label="一句话的九站旅程">
-                {journey.map((stop, i) => <li key={stop}><span>{String(i + 1).padStart(2, "0")}</span><b>{stop}</b></li>)}
-              </ol>
-              <a className="home-button home-button-blue" href={`${liveBase}/thread.html`}>开始这段旅程 <span aria-hidden="true">↗</span></a>
-            </article>
-            <article className="home-lookup">
-              <span className="home-route-label">按词查找 / 28 个基础节点</span>
-              <h3>已经有想了解的概念？</h3>
-              <p>从一个技术名词，定位它在整个系统中的位置。</p>
-              <div className="home-index-terms" aria-hidden="true"><span>GPU</span><span>Transformer</span><span>RAG</span><span>Agent</span><span>RLHF</span><span>量化</span></div>
-              <a className="home-button" href={`${liveBase}/index-map.html`}>打开索引地图 <span aria-hidden="true">↗</span></a>
-            </article>
-          </div>
-        </GlassSurface>
-
-        <GlassSurface as="aside" className="home-compliance" id="compliance" aria-labelledby="compliance-title">
-          <div className="home-compliance-lead">
-            <span className="home-eyebrow">A COMPLEMENTARY LENS / 合规观察</span>
-            <h2 id="compliance-title">沿着技术链，定位合规问题。</h2>
-            <p>先理解技术如何运行，再讨论使用边界。法律与合规专题将围绕具体环节逐步补充。</p>
-            <span className="home-planned">后续专题 · 逐步建设</span>
-          </div>
-          <div className="home-compliance-topics" aria-label="计划补充的合规观察方向">
-            <div><span>01 / 数据与训练</span><p>数据从哪里来，使用依据是什么？</p></div>
-            <div><span>02 / 模型与许可</span><p>模型、权重和输出各有哪些使用条件？</p></div>
-            <div><span>03 / 应用与部署</span><p>信息如何流转，操作权限与责任如何划分？</p></div>
-          </div>
-        </GlassSurface>
-
-        <GlassSurface className="home-updates" aria-labelledby="updates-title">
-          <div><span className="home-eyebrow">FIELD NOTES</span><h2 id="updates-title">地图持续生长</h2></div>
-          <a href={`${liveBase}/progress.html#review-status`}><span className="home-update-date">2026.10.27 · v0.36.1</span><b>阅读体验更新：资料来源与教学边界 <span aria-hidden="true">↗</span></b></a>
-          <a href={`${liveBase}/genealogy.html`}><span className="home-update-date">2026.10.26 · 谱系 v5</span><b>模型谱系：新权重、思考模式与发布状态 <span aria-hidden="true">↗</span></b></a>
-          <a href={`${liveBase}/blueprint.html`}><span className="home-update-date">2026.10.26 · 蓝图 v0.36</span><b>工程蓝图：校正核心表述，标明依据与边界 <span aria-hidden="true">↗</span></b></a>
-        </GlassSurface>
-
-        <section className="home-method" id="method" aria-labelledby="method-title">
-          <div className="home-method-lead">
-            <span className="home-eyebrow">MECHANISM / EVIDENCE / CONSEQUENCE</span>
-            <h2 id="method-title">理解机制，也追问依据。</h2>
-            <p>技术解释注明机制与来源，动态信息注明盘点日期。后续法律与合规观察将另行标明适用地区、场景和规则版本。</p>
-            <a className="home-button" href={`${liveBase}/progress.html`}>查看来源与阅读说明 <span aria-hidden="true">↗</span></a>
-          </div>
-          <div className="home-method-notes">
-            <article><span>01</span><div><h3>结构可拆</h3><p>把能力放回数据、模型、推理与系统之间。</p></div></article>
-            <article><span>02</span><div><h3>证据可查</h3><p>标明资料来源，保留尚未确定的问题。</p></div></article>
-            <article><span>03</span><div><h3>时效可见</h3><p>动态内容注明盘点日期，按具体版本阅读。</p></div></article>
-          </div>
-        </section>
-
-        <footer className="home-footer">
-          <a className="home-brand" href="#top">AI—ATLAS <span aria-hidden="true">o &gt; _</span></a>
-          <p>技术为主线，合规为补充。</p>
-          <a href={`${liveBase}/progress.html`}>版本记录 ↗</a>
-          <a href="#top">回到顶部 ↑</a>
-        </footer>
+          <figure className="contract-excerpt">
+            <figcaption>合同节选 <span>教学示例</span></figcaption>
+            <p><b>12.2</b> 任一方均可<mark>提前 30 日以书面形式通知</mark>对方解除本合同。</p>
+          </figure>
+        </article>
+        <article className="glass family-feature">
+          <p className="kicker">模型选型 · 13 个家族</p>
+          <h2><a href={url("genealogy.html")}>门派谱系</a></h2>
+          <p>哪些型号提供权重，哪些通过 API 调用？按具体版本查架构、部署方式和许可原文。</p>
+          <a className="text-action" href={url("genealogy.html#matrix-title")}>对照模型家族</a>
+        </article>
       </div>
+
+      <section className="glass engineering" aria-labelledby="engineering-title">
+        <div className="section-head">
+          <div><h2 id="engineering-title"><a href={url("blueprint.html")}>工程蓝图</a></h2>
+          <p>用 45 个实验拆开训练、推理和系统组装。</p></div>
+          <a className="text-action" href={url("blueprint.html")}>进入实验</a>
+        </div>
+        <details className="engineering-detail">
+          <summary>浏览工程关系图与模型剖面</summary>
+          <OverviewMap base={base}/>
+        </details>
+      </section>
+
+      <section className="glass evidence" id="compliance" aria-labelledby="checks-title" tabIndex={-1}>
+        <div className="section-head"><div><h2 id="checks-title">项目合规核对</h2>
+          <p>上线前，可以把这三项写进验收记录。</p></div></div>
+        <div className="check-list">{checks.map(([title, body, label, target]) =>
+          <article key={target}><h3>{title}</h3><p>{body}</p><a className="text-action" href={url(target)}>{label}</a></article>
+        )}</div>
+      </section>
+      <footer id="method" className="guide-footer">
+        <div><strong>{siteName}</strong><span>工具、资料与版本</span></div>
+        <nav aria-label="其他资料"><a href={url("toolchain.html")}>工业现场</a><a href={url("progress.html#review-status")}>来源与核对日期</a><a href={url("progress.html#vlist")}>版本记录</a><a href="https://ai-reg-tracker.jiamaooooo.workers.dev/">AI 监管观察</a></nav>
+      </footer>
     </main>
-  );
+  </div>;
 }

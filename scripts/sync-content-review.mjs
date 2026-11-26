@@ -28,16 +28,21 @@ function reviewBox(r, page, unit) {
 }
 const blueprint = data.units.filter(r => r.page === 'blueprint.html');
 const journey = data.units.filter(r => r.page === 'thread.html');
-const overview = page => `<aside class="atlas-review-overview" aria-label="阅读说明"><b>来源与阅读说明</b>
-<p>${page === 'blueprint.html' ? '原理说明配有来源链接，交互实验就近标注算法、示意数据与简化条件。' : page === 'thread.html' ? '跟随一句请求理解系统链路；动画、合同与数值为教学示意，不能当作真实服务运行结果。' : '按技术环节探索概念、交互范例与合规观察，深入原理可进入对应蓝图模块。'}</p>
-<p>合规观察用于学习，具体适用需结合主体、地区与业务场景判断。<a href="progress.html#review-status">查看资料来源</a> · ${feedback(page, '', page === 'thread.html' ? '入门旅程' : page === 'blueprint.html' ? '工程蓝图' : '索引地图')}</p></aside>`;
+function overview(page) {
+  if (page === 'index-map.html') {
+    return `<p>本地图由 AI 辅助整理。合规观察需结合主体、地区与业务场景理解。 ${feedback(page, '', '七层地图')}</p>`;
+  }
+  return `<aside class="atlas-review-overview" aria-label="阅读说明"><b>来源与阅读说明</b>
+<p>${page === 'blueprint.html' ? '原理说明配有来源链接，交互实验就近标注算法、示意数据与简化条件。' : '跟随一句请求理解系统链路；动画、合同与数值为教学示意，不能当作真实服务运行结果。'}</p>
+<p>合规观察用于学习，具体适用需结合主体、地区与业务场景判断。<a href="progress.html#review-status">查看资料来源</a> · ${feedback(page, '', page === 'thread.html' ? '入门旅程' : '工程蓝图')}</p></aside>`;
+}
 function dashboard() {
   return `<section class="atlas-review-dashboard" id="review-status" aria-labelledby="review-heading">
 <h2 id="review-heading">资料来源与阅读说明</h2><p>从具体表述回到原始资料，结合教学边界理解每个实验。下列资料查阅日期为 ${data.updated}；模型谱系与工业现场另有各自的盘点日期。</p>
 <details open><summary>工程蓝图 · 原理与实验来源</summary><div class="atlas-review-links">${blueprint.map(recordLink).join('')}</div></details>
 <details><summary>入门旅程 · 沿请求链路阅读</summary><div class="atlas-review-links">${journey.map(recordLink).join('')}</div></details>
 <p>来源链接对应所列核心表述；实验中的简化参数、预设动画与真实模型运行结果需分别理解。合规观察用于学习，具体适用需结合业务场景判断。</p>
-<p><a href="docs/content-review.md">来源说明与维护约定</a> · <a href="assets/content-review.json">公开来源记录（JSON）</a> · ${feedback('progress.html', 'review-status', '来源与阅读说明')}</p></section>`;
+<p><a href="assets/content-review.json">公开来源记录（JSON）</a> · ${feedback('progress.html', 'review-status', '来源与阅读说明')}</p></section>`;
 }
 let changed = 0;
 for (const page of files) {

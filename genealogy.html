@@ -4,15 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="十三家主流大模型的技术分叉矩阵、开放度六层阶梯、开源/商业使用条款排雷库与法务合规选型尽调指南（活页 · 谱系 v7 · 基准日 2026-11-24）。">
-<title>模型门派谱系 · 活页 v7 · AI 合规全景地图</title>
+<title>模型门派谱系 · 活页 v7 · AI技术与合规全景</title>
 <style>
-  /* ===== 🧬 模型门派谱系（活页 · 谱系 v7 · 盘点基准日 2026-11-24）=====
-     定位：蓝图讲不变的原理，本页是商业格局与法务合规快照（独立版本号，过期整页换新）。
-     承接 v6（2026-11-19）官方规格与来源链接，扩列至 13 家（新增 Mistral AI、MiniMax），
-     并补齐开放度六层阶梯、每家朱批法务排雷盒、六大条款雷区横评与上线前快检清单。
-     规则遵守：R3 颜色即语法（七平面色表技术/开放层级，朱批红 --seal 专属法务合规提示）；
-     R5 准确性与诚实披露（◉/◐/○ 来源层级 + 利益相关提示 + 非法律意见声明）；
-     R6 静态单页，兼容全站共享导航与亮/暗双色主题。 */
+  /* 门派谱系与许可对照表 */
 
   :root {
     --page: #f8f9fa; --surface: #ffffff; --surface-2: #eef0f3;
@@ -64,7 +58,7 @@
   a { color: inherit; }
   .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
 
-  /* ===== 页头（对齐工业现场 STYLE rev2，位于全站共享导航下方） ===== */
+  /* ===== 页头 ===== */
   header.top {
     padding: 28px 0 24px; border-bottom: 1px solid var(--hairline);
     background-image: radial-gradient(var(--dot) 1px, transparent 1px); background-size: 22px 22px;
@@ -394,13 +388,13 @@
 <!-- atlas-navigation:start -->
 <div id="atlas-top"></div>
 <nav class="atlas-site-nav" aria-label="全站导航" data-atlas-static>
-<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="./index.html" aria-label="AI Atlas 首页">AI—ATLAS <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">模型门派谱系</span></div>
+<div class="atlas-nav-identity"><a class="atlas-nav-brand" href="./index.html" aria-label="AI技术与合规全景首页">AI技术与合规全景 <span aria-hidden="true">o &gt; _</span></a><span class="atlas-nav-current">模型门派谱系</span></div>
     <div class="atlas-nav-actions" aria-label="浏览历史与首页">
       <button type="button" data-atlas-back disabled title="没有可返回的站内记录"><span aria-hidden="true">←</span> 后退</button>
       <button type="button" data-atlas-forward disabled title="没有可前进的站内记录">前进 <span aria-hidden="true">→</span></button>
       <a class="atlas-nav-home" href="./index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v10h5v-6h4v6h5V10" /></svg>返回首页</a>
     </div>
-    <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu"><a href="./index.html">首页<span aria-hidden="true">→</span></a><a href="./blueprint.html">工程蓝图<span aria-hidden="true">→</span></a><a href="./toolchain.html">工业现场<span aria-hidden="true">→</span></a><a href="./genealogy.html" aria-current="page">模型门派谱系<span aria-hidden="true">·</span></a><a href="./thread.html">一句话的旅程<span aria-hidden="true">→</span></a><a href="./index-map.html">索引地图<span aria-hidden="true">→</span></a><a href="./progress.html">项目进度<span aria-hidden="true">→</span></a><a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>
+    <details class="atlas-nav-directory"><summary>全部页面 <span aria-hidden="true">⌄</span></summary><div class="atlas-nav-menu"><a href="./index.html">首页<span aria-hidden="true">→</span></a><a href="./blueprint.html">工程蓝图<span aria-hidden="true">→</span></a><a href="./toolchain.html">工业现场<span aria-hidden="true">→</span></a><a href="./genealogy.html" aria-current="page">模型门派谱系<span aria-hidden="true">·</span></a><a href="./thread.html">一句话的旅程<span aria-hidden="true">→</span></a><a href="./index-map.html">技术与合规全景<span aria-hidden="true">→</span></a><a href="./progress.html">资料与版本<span aria-hidden="true">→</span></a><a class="atlas-nav-top" href="#atlas-top">回到页首 <span aria-hidden="true">↑</span></a></div></details>
 </nav>
 <!-- atlas-navigation:end -->
 
@@ -408,7 +402,7 @@
   <div class="wrap">
     <div class="eyebrow"><b>AI-ATLAS</b> // LOOSE-LEAF · 活页 · 谱系 v7</div>
     <h1>模型门派谱系</h1>
-    <p class="sub">十三家主流大模型的差异，一半在<a href="blueprint.html">工程蓝图</a>里的技术分叉，另一半藏在<b>许可证原文、API 服务条款与地缘监管红线</b>里。谱系 v7 在 v6 官方规格基础上做全面法务合规审计与更新：先看<b>开放度六层阶梯</b>，再查<b>十三家技术×合规全档案</b>，最后用<b>六大条款排雷库</b>与<b>上线前快检清单</b>直接做尽调。</p>
+    <p class="sub">十三家主流大模型的差异，一半在<a href="blueprint.html">工程蓝图</a>里的技术分叉，另一半藏在<b>许可证原文、API 服务条款与地缘监管红线</b>里。本页按三个步骤阅读：先看<b>开放度六层阶梯</b>，再查<b>十三家技术×合规全档案</b>，最后用<b>六大条款排雷库</b>与<b>上线前快检清单</b>直接做尽调。</p>
     <div class="meta">
       <i>谱系 v7</i>
       <i class="hot">盘点基准日 2026-11-24</i>
@@ -420,7 +414,7 @@
       <a href="#sec-ladder">§1 开放度六层阶梯</a>
       <a href="#sec-matrix">§2 十三家门派矩阵</a>
       <a href="#sec-clauses" class="seal-nav">§3 ⚖ 商业与开源条款排雷库</a>
-      <a href="#sec-legal" class="seal-nav">§4 ⚖ 法务尽调新增项与快检清单</a>
+      <a href="#sec-legal" class="seal-nav">§4 ⚖ 选型尽调与上线核对</a>
       <a href="#sec-watch">§5 观察名单与核实来源</a>
     </nav>
   </div>
@@ -429,9 +423,9 @@
 <main class="wrap">
 
   <div class="loose">
-    <span class="lt">📎 活页快照与 R5 诚实声明 · 谱系 v6（2026-11-19）→ v7（<time datetime="2026-11-24">2026-11-24</time>）</span>
-    <p><b>本轮换新摘要：</b>在承接 v6 已核实官方型号（GPT-6.2、Claude Fable 5.2、Gemini 4 Carbon/Neon、Grok 4.7、DeepSeek V4.1 Flash-1017、Meta Muse Spark Open/Glimmer、Qwen4-Max、Kimi K3.1 Pro、GLM-5.3/Flash、Seed2.1、Tencent Hy4/Hy4-flash）基础上，同步补入 11 月下旬最新变化（<b>腾讯 Hy4 正式版 11-20 权重改挂 Hy License 1.0 Sec.10</b>、<b>智谱 GLM-5.4 11-23 发布 Loop Transformer</b>），并将门派由 11 家扩列至 <b>13 家</b>——新增 <b>Mistral AI</b>（欧盟万亿开放权重参照系）与 <b>MiniMax</b>（默认非商用 + 四法域排除极端样本）；更重要的是系统补全<b>全站法务与商业条款审计</b>，逐家拆解开源营收/分成闸门、API 留存与司法保全、IP 赔偿盾断档及地缘管制红线。</p>
-    <p><b>利益相关与核验边界（规则 R5）：</b>本页历次版本由多模型 AI 辅助检索整理（含 Anthropic / Claude 与 Google / Gemini 参与），对相关厂商的描述已力求以官方原文与多方交叉核实为准，读者仍应结合一手材料独立判断。本页资料仅供学习与研究参考，<b>不构成法律意见</b>；采购、合同谈判及合规上线前请直读厂商最新 <code>LICENSE</code> 与服务条款原文并咨询执业律师。</p>
+    <span class="lt">📎 资料版本与阅读说明 · 谱系 v6（2026-11-19）→ v7（<time datetime="2026-11-24">2026-11-24</time>）</span>
+    <p><b>版本变化：</b>在承接 v6 已核实官方型号（GPT-6.2、Claude Fable 5.2、Gemini 4 Carbon/Neon、Grok 4.7、DeepSeek V4.1 Flash-1017、Meta Muse Spark Open/Glimmer、Qwen4-Max、Kimi K3.1 Pro、GLM-5.3/Flash、Seed2.1、Tencent Hy4/Hy4-flash）基础上，同步补入 11 月下旬最新变化（<b>腾讯 Hy4 正式版 11-20 权重改挂 Hy License 1.0 Sec.10</b>、<b>智谱 GLM-5.4 11-23 发布 Loop Transformer</b>），并将门派由 11 家扩列至 <b>13 家</b>——新增 <b>Mistral AI</b>（欧盟万亿开放权重参照系）与 <b>MiniMax</b>（默认非商用 + 四法域排除极端样本）；本页按厂商整理开源营收/分成闸门、API 留存与司法保全、IP 赔偿盾断档及地缘管制红线。</p>
+    <p><b>利益相关与核验边界：</b>本页历次版本由多模型 AI 辅助检索整理（含 Anthropic / Claude 与 Google / Gemini 参与），对相关厂商的描述已力求以官方原文与多方交叉核实为准，读者仍应结合一手材料独立判断。本页资料仅供学习与研究参考，<b>不构成法律意见</b>；采购、合同谈判及合规上线前请直读厂商最新 <code>LICENSE</code> 与服务条款原文并咨询执业律师。</p>
     <div class="legend">
       <b>来源三级标注</b>
       <span><code>◉</code> 官方文档 / 许可证原文 / 监管公报 / 多方一手报道核实</span>
@@ -1192,40 +1186,40 @@
     </div>
   </section>
 
-  <!-- ================= §4 法务合规视角：应新增的条目与尽调清单 ================= -->
+  <!-- ================= §4 选型尽调与上线核对 ================= -->
   <section class="blk" id="sec-legal">
     <div class="sec-kicker seal-k">SECTION 04 · LEGAL COMPLIANCE ARCHITECTURE &amp; CHECKLIST</div>
-    <h2>⚖ 法务合规视角：模型选型页应补齐的六大治理维度与上线快检</h2>
-    <p class="sec-lead">对照早期谱系页（偏重技术架构与四条原则性朱批），从企业法务与合规实务出发，模型选型决策必须补齐以下<b>六项结构性治理条目</b>——因为技术跑分只决定「好不好用」，这六项决定「能不能上线、签不签得下、出事谁赔钱」。</p>
+    <h2 id="selection-notes">模型选型要核对的六件事</h2>
+    <p class="sec-lead">确定候选型号后，沿以下六项核对许可、采购路径和运行条件，再用下方清单记录结果。</p>
 
     <div class="gov-grid">
       <div class="gcard">
-        <div class="gid">ADD-01 · MODEL REGISTER / AI BOM</div>
+        <div class="gid">MODEL REGISTER / AI BOM</div>
         <h3>1. 版本级许可证台账（而非厂商名）</h3>
         <p>建立精确到 <b>模型 ID + 仓库 Commit + 下载当日 LICENSE 原文存档</b> 的台账，并标注是否存在营收/MAU 动态门槛与复核周期。杜绝把 <code>Hy4-preview</code>（Apache 2.0）当成 <code>Hy4</code> 正式版（Sec.10），或把 <code>Qwen3.8-27B</code> 的评估结论套用到 <code>Flash-Next</code>。</p>
       </div>
       <div class="gcard">
-        <div class="gid">ADD-02 · ROUTE-OF-PURCHASE MATRIX</div>
+        <div class="gid">ROUTE-OF-PURCHASE MATRIX</div>
         <h3>2. 调用路径决定法律后果（六路径映射）</h3>
         <p><b>同一款模型，换一条调用路径，数据训练、跨境法域、DPA 与 IP 赔偿盾全部改写：</b>① 消费版/免费 API（默认训练/人工审阅，严禁商密）→ ② 厂商直连商用 API（看 ZDR 与赔偿盾细则）→ ③ 一线云商托管闭源模型（Azure/Bedrock/Vertex/百炼/方舟，查三方模型免责与精调锁定）→ ④ 聚合中转站/路由网关（极易断保且存在二次转包泄密风险）→ ⑤ 第三方合规云托管开放权重（受 MaaS 营收闸门与云商 DPA 双重约束）→ ⑥ 本地/私云自托管开放权重（数据主权最高，重心转向权重许可证、安全评估与双备案）。</p>
       </div>
       <div class="gcard">
-        <div class="gid">ADD-03 · ENTITY &amp; SANCTIONS SCREENING</div>
+        <div class="gid">ENTITY &amp; SANCTIONS SCREENING</div>
         <h3>3. 主体股权穿透、制裁与双备案映射</h3>
-        <p>把选型页的「辖区」一栏升级为<b>双向准入审查</b>：对内查中国网信双备案、TC260 语料与拒答达标及《标识办法》显隐式双轨标识；对外查股权穿透（Anthropic 中资控股 &gt;50% 禁令）、BIS 实体清单（智谱）、DHS FASCSA「developed using」供应链传导（DeepSeek）及 EU AI Act 地域排除（混元视频/3D、MiniMax H3、Llama 4 多模态）。</p>
+        <p>结合服务地区和供应链核查<b>双向准入条件</b>：对内查中国网信双备案、TC260 语料与拒答达标及《标识办法》显隐式双轨标识；对外查股权穿透（Anthropic 中资控股 &gt;50% 禁令）、BIS 实体清单（智谱）、DHS FASCSA「developed using」供应链传导（DeepSeek）及 EU AI Act 地域排除（混元视频/3D、MiniMax H3、Llama 4 多模态）。</p>
       </div>
       <div class="gcard">
-        <div class="gid">ADD-04 · DATA LIFECYCLE &amp; LITIGATION HOLD</div>
+        <div class="gid">DATA LIFECYCLE &amp; LITIGATION HOLD</div>
         <h3>4. 数据流、工具出圈与「司法保全冲突」</h3>
         <p>不再只问“是否拿我数据训练”，须追问四层细节：① 默认日志留存期与有状态接口开关（如 <code>store: false</code>）；② 内置联网搜索、代码沙箱、MCP 工具是否把数据带出受控边界；③ <b>供应商涉版权诉讼被法院下令强制保全用户已删日志</b>时（NYT v. OpenAI 先例）是否受 ZDR 豁免；④ 终止合作后“匿名化继续留存”条款边界。</p>
       </div>
       <div class="gcard">
-        <div class="gid">ADD-05 · COMMERCIAL EXIT &amp; FALLBACK</div>
+        <div class="gid">COMMERCIAL EXIT &amp; FALLBACK</div>
         <h3>5. 商业可持续性、微调权属与兜底预案</h3>
         <p>合同谈判必锁四点：① 微调权重/LoRA 资产权属与可迁移性（防火山方舟 §3.7.14 式锁定）；② 模型下架通知期（15 天远不足生产迁移，争取 90 天+）；③ 长协价格随官网刊例价下调的联动机制（MFN/阶梯调价）；④ 技术栈内常备至少一个<b>纯 Apache 2.0 / MIT 兜底模型</b>（如 DeepSeek V4、Gemma 4、Qwen3.8-27B、Mistral Small 4），防突然断供或触发营收红线。</p>
       </div>
       <div class="gcard">
-        <div class="gid">ADD-06 · HIGH-RISK TIER &amp; AGENT LIABILITY</div>
+        <div class="gid">HIGH-RISK TIER &amp; AGENT LIABILITY</div>
         <h3>6. 高危网安档位与 Agent 越权归责</h3>
         <p>2026 年底前沿模型已普遍分化出受限网安变体（Claude Mythos / GPT-6 Cyber / Gemini 3.8 Flash Cyber），且 Google Cloud 等已将客户反向赔偿扩展至 <b>AI Agent 违规行为</b>。引入自主 Agent 与计算机操控能力时，必须在权限沙箱、人工确认点（HITL）与操作审计日志层面提前留痕（回看 <a href="blueprint.html#mod-agent">蓝图 Ⅳ·Agent</a>）。</p>
       </div>
@@ -1265,11 +1259,11 @@
       <a href="blueprint.html"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18L3 3v18z"/><path d="M8.5 16.5h4.2L8.5 12.3v4.2z"/></svg> 工程蓝图（主线）</a>
       <a href="toolchain.html"><svg class="ico" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> 工业现场（工具链）</a>
       <a href="index-map.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.4 4.6-4.6 2.4 2.4-4.6z"/></svg> 索引地图（合规挂点）</a>
-      <a href="progress.html"><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 进度看板</a>
+      <a href="progress.html"><svg class="ico" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 资料与版本</a>
     </nav>
 
     <footer>
-      <p>模型门派谱系 · 活页 v7 · 盘点基准日 2026-11-24。<span class="sn">按规则 R5：全部技术与法律条款断言均按 ◉/◐/○ 标注来源层级，仅供学习研究参考，不构成法律意见；商业条款与开源许可随时可能变更，采购与上线前请务必直读各厂商最新官方 LICENSE 与服务条款原文并结合专业法律意见判断。</span>本页过期即整页换新，不追补丁。</p>
+      <p>模型门派谱系 · 活页 v7 · 盘点基准日 2026-11-24。<span class="sn">全部技术与法律条款断言均按 ◉/◐/○ 标注来源层级，仅供学习研究参考，不构成法律意见；商业条款与开源许可随时可能变更，采购与上线前请务必直读各厂商最新官方 LICENSE 与服务条款原文并结合专业法律意见判断。</span>本页过期即整页换新，不追补丁。</p>
       <p class="refs"><b>跨厂商横评与主要法务参考：</b>
         <a href="https://buildmono.com/news/open-weight-model-licences" target="_blank" rel="noopener noreferrer">Mono 开放权重许可实测对照（2026-11-20）</a> ·
         <a href="https://www.beri.net/article/ai-copyright-indemnity-openai-microsoft-google-anthropic-terms-compared" target="_blank" rel="noopener noreferrer">四大美系 AI IP 赔偿盾横评</a> ·
@@ -1278,7 +1272,7 @@
         <a href="https://www.volcengine.com/docs/ark/volcengine-ark-platform-terms" target="_blank" rel="noopener noreferrer">火山方舟平台专用条款</a> ·
         <a href="https://www.digitalapplied.com/blog/kimi-k3-open-weights-shipped-license-restrictions-2026" target="_blank" rel="noopener noreferrer">Kimi K3 许可逐条拆解</a>
       </p>
-      <div class="build">GENEALOGY SHEET v7 · 盘点基准日 2026-11-24 · 13 FAMILIES · 6 LEGAL CLAUSE AUDITS · 8-ITEM CHECKLIST · STYLE rev2</div>
+      <div class="build">GENEALOGY SHEET v7 · 盘点基准日 2026-11-24 · 13 FAMILIES · 6 LEGAL CLAUSE AUDITS · 8-ITEM CHECKLIST</div>
     </footer>
   </section>
 
