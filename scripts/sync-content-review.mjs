@@ -16,15 +16,19 @@ const feedback = (page, id, title) => {
 };
 const marker = (id, content) => `\n<!-- atlas-review:${id}:start -->\n${content}\n<!-- atlas-review:${id}:end -->`;
 function reviewBox(r, page, unit) {
-  if (!r) return `<p class="atlas-review">${feedback(page, unit.id, unit.title)}</p>`;
+  const feedbackLink = feedback(page, unit.id, unit.title);
+  const isBlueprint = page === 'blueprint.html';
+  const moduleFeedback = `<p class="atlas-feedback">${feedbackLink}</p>`;
+  if (!r) return isBlueprint ? moduleFeedback : `<p class="atlas-review">${feedbackLink}</p>`;
   const claims = r.evidence.map(e => `<li>${esc(e.claim)}<br>${e.sources.map(id => {
     const source = data.sources[id];
     return `<a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a>`;
   }).join(' · ')}</li>`).join('\n');
-  return `<details class="atlas-review"><summary>来源与教学边界 · ${r.checkedAt}</summary>
+  const review = `<details class="atlas-review"><summary>来源与教学边界 · ${r.checkedAt}</summary>
 <p>以下资料对应所列核心表述，图示与实验的适用条件见下方说明。</p>
 <ul>${claims}</ul><p><b>教学边界：</b>${esc(r.boundary)}</p>
-<p>${feedback(r.page, r.id, r.title)} · <a href="progress.html#review-status">来源与阅读说明</a></p></details>`;
+<p>${isBlueprint ? '' : feedbackLink + ' · '}<a href="progress.html#review-status">来源与阅读说明</a></p></details>`;
+  return isBlueprint ? `<div class="atlas-review-footer">${moduleFeedback}\n${review}</div>` : review;
 }
 const blueprint = data.units.filter(r => r.page === 'blueprint.html');
 const journey = data.units.filter(r => r.page === 'thread.html');
@@ -34,7 +38,7 @@ function overview(page) {
   }
   return `<aside class="atlas-review-overview" aria-label="阅读说明"><b>来源与阅读说明</b>
 <p>${page === 'blueprint.html' ? '原理说明配有来源链接，交互实验就近标注算法、示意数据与简化条件。' : '跟随一句请求理解系统链路；动画、合同与数值为教学示意，不能当作真实服务运行结果。'}</p>
-<p>合规观察用于学习，具体适用需结合主体、地区与业务场景判断。<a href="progress.html#review-status">查看资料来源</a> · ${feedback(page, '', page === 'thread.html' ? '入门旅程' : '工程蓝图')}</p></aside>`;
+<p>合规观察用于学习，具体适用需结合主体、地区与业务场景判断。<a href="progress.html#review-status">查看资料来源</a>${page === 'thread.html' ? ' · ' + feedback(page, '', '入门旅程') : ''}</p></aside>`;
 }
 function dashboard() {
   return `<section class="atlas-review-dashboard" id="review-status" aria-labelledby="review-heading">
@@ -49,12 +53,22 @@ for (const page of files) {
   let html = pages[page];
   if (page === 'blueprint.html' || page === 'thread.html') {
     html = stripReviews(html);
-    const units = unitsIn(html, page === 'blueprint.html' ? 'blueprint' : 'journey');
+    const isBlueprint = page === 'blueprint.html';
+    const units = unitsIn(html, isBlueprint ? 'blueprint' : 'journey');
     for (const unit of units.reverse()) {
       const r = data.units.find(r => r.page === page && r.id === unit.id);
-      const opening = page === 'blueprint.html' ? '<div class="m-body">' : '<div class="st-body">';
-      const content = unit.content.replace(opening, opening + marker(unit.id, reviewBox(r, page, unit)));
+      const block = marker(unit.id, reviewBox(r, page, unit));
+      const endOfBody = /\n[ \t]*<\/div>\s*<\/details>$/;
+      const content = isBlueprint
+        ? unit.content.replace(endOfBody, closing => block + closing)
+        : unit.content.replace('<div class="st-body">', opening => opening + block);
+      if (content === unit.content) throw new Error(`${page}#${unit.id}: review slot missing`);
       html = html.slice(0, unit.start) + content + html.slice(unit.end);
+    }
+    if (isBlueprint) {
+      const footerSlot = '<!-- atlas-blueprint-feedback -->';
+      if (!html.includes(footerSlot)) throw new Error(`${page}: page feedback slot missing`);
+      html = html.replace(footerSlot, footerSlot + marker('page-feedback', `<p class="atlas-feedback">${feedback(page, '', '工程蓝图')}</p>`));
     }
   }
   const block = page === 'progress.html' ? dashboard() : overview(page);
