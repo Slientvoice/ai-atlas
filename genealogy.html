@@ -160,6 +160,7 @@
     background: var(--surface); box-shadow: var(--shadow);
   }
   table { border-collapse: collapse; min-width: 980px; width: 100%; font-size: 13px; }
+  #famtable { table-layout: fixed; }
   th, td { padding: 10px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; text-align: left; }
   thead th {
     font-size: 12.5px; background: var(--surface-2); white-space: nowrap;
@@ -568,6 +569,10 @@
 
     <div class="mtx-scroll" tabindex="0" role="region" aria-labelledby="matrix-title" aria-describedby="matrix-help">
       <table id="famtable">
+        <colgroup>
+          <col style="width: 14%"><col style="width: 14%"><col style="width: 17%">
+          <col style="width: 15%"><col style="width: 15%"><col style="width: 9%"><col style="width: 16%">
+        </colgroup>
         <thead>
           <tr>
             <th scope="col">门派</th>
