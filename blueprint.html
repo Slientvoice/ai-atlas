@@ -517,7 +517,7 @@
       <text x="52" y="186" font-size="12" class="dim3">运行时外壳</text>
       <!-- Agent 循环 -->
       <g class="pt" data-go="ag-log">
-        <g filter="url(#softShadow)"><rect x="48" y="200" width="140" height="84" rx="6" fill="url(#box4)" stroke="var(--p4)" stroke-width="1.2"/></g>
+        <g filter="url(#softShadow)"><rect x="48" y="200" width="140" height="106" rx="6" fill="url(#box4)" stroke="var(--p4)" stroke-width="1.2"/></g>
         <circle cx="80" cy="220" r="12" fill="none" stroke="var(--ink-3)" stroke-width="1.4" stroke-dasharray="3 3"/>
         <polygon points="80,206 76,212 84,212" fill="var(--ink-3)"/>
         <text x="100" y="217" font-size="10" class="dim3">观察·思考</text>
@@ -526,11 +526,14 @@
       </g>
       <g font-size="9.5" class="mono">
         <g class="pt" data-go="pr-view"><rect x="56" y="256" width="60" height="18" rx="4" fill="none" stroke="var(--p4)" stroke-width="1"/><text x="86" y="269" text-anchor="middle" class="dim2">工具协议</text></g>
-        <g class="pt" data-go="oc-log"><rect x="122" y="256" width="60" height="18" rx="4" fill="none" stroke="var(--p4)" stroke-width="1"/><text x="152" y="269" text-anchor="middle" class="dim2">多智能体</text></g>
-        <g class="pt" data-go="sb-log"><rect x="502" y="156" width="112" height="22" rx="4" fill="color-mix(in srgb, var(--p4) 10%, transparent)" stroke="var(--p4)" stroke-width="1"/><text x="558" y="171" font-size="11" text-anchor="middle" class="dim2">沙箱 · 权限</text></g>
+        <g class="pt" data-go="oc-log"><rect x="120" y="256" width="60" height="18" rx="4" fill="none" stroke="var(--p4)" stroke-width="1"/><text x="150" y="269" text-anchor="middle" class="dim2">多智能体</text></g>
+      </g>
+      <g class="pt" data-go="sb-log">
+        <rect x="56" y="279" width="124" height="20" rx="4" fill="color-mix(in srgb, var(--p4) 12%, var(--surface))" stroke="var(--p4)" stroke-width="1"/>
+        <text x="118" y="293" font-size="10.5" text-anchor="middle" class="dim2">沙箱 · 执行权限</text>
       </g>
       <!-- RAG -->
-      <g class="pt" data-go="rag-doc">
+      <g class="pt" data-go="rag-doc" transform="translate(0 20)">
         <g filter="url(#softShadow)"><rect x="48" y="296" width="140" height="58" rx="6" fill="url(#box4)" stroke="var(--p4)" stroke-width="1.2"/></g>
         <line x1="64" y1="314" x2="172" y2="314" stroke="var(--ink-3)" stroke-width="1"/>
         <line x1="64" y1="324" x2="172" y2="324" stroke="var(--ink-3)" stroke-width="1"/>
@@ -544,9 +547,9 @@
         <g class="pt" data-go="ce-bar" font-size="9.5"><rect x="76" y="546" width="84" height="18" rx="4" fill="none" stroke="var(--p4)" stroke-width="1"/><text x="118" y="559" text-anchor="middle" class="mono dim2">上下文工程</text></g>
       </g>
       <!-- 器官总线：Agent/RAG/多模态汇入拼装 -->
-      <line x1="118" y1="284" x2="118" y2="296" stroke="var(--p4)" stroke-width="1" stroke-dasharray="4 3"/>
-      <line x1="118" y1="354" x2="118" y2="366" stroke="var(--p4)" stroke-width="1" stroke-dasharray="4 3"/>
-      <line x1="118" y1="466" x2="118" y2="496" stroke="var(--p4)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr4)"/>
+      <line x1="118" y1="306" x2="118" y2="316" stroke="var(--p4)" stroke-width="1" stroke-dasharray="4 3"/>
+      <line x1="118" y1="374" x2="118" y2="386" stroke="var(--p4)" stroke-width="1" stroke-dasharray="4 3"/>
+      <line x1="118" y1="486" x2="118" y2="496" stroke="var(--p4)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr4)"/>
       <!-- 用户输入 → 拼装 → 塔基 -->
       <line x1="10" y1="536" x2="48" y2="536" stroke="var(--p4)" stroke-width="1.8" marker-end="url(#arr4)"/>
       <text x="12" y="524" font-size="11" class="dim3">用户输入</text>
@@ -554,7 +557,7 @@
     </g>
 
     <!-- ════ Ⅴ 多模态模型组（组装层内的独立模型族卡） ════ -->
-    <g class="rg" id="g-pl5" data-pl="pl5" tabindex="0">
+    <g class="rg" id="g-pl5" data-pl="pl5" tabindex="0" transform="translate(0 20)">
       <g filter="url(#softShadow)"><rect class="zone" x="48" y="366" width="140" height="100" rx="6" fill="url(#face5)" stroke="var(--p5)" stroke-width="1.8"/></g>
       <rect class="tbg" x="50" y="373" width="116" height="20" rx="4" fill="var(--p5)"/>
       <text class="tt" x="56" y="388" font-size="14" font-weight="700" fill="var(--p5)">Ⅴ 多模态模型组</text>
@@ -5013,7 +5016,7 @@ function paintScene(cv, fine) {
   });
 
   /* 文 → 图：滚动侦察。各平面区域纵向中心（SVG 用户坐标）= 跟读平移锚点 */
-  const zoneY = { pl6: 58, pl4: 402, pl2: 400, pl3: 407, pl5: 416, pl1: 811, pl0: 1007 };
+  const zoneY = { pl6: 58, pl4: 402, pl2: 400, pl3: 407, pl5: 436, pl1: 811, pl0: 1007 };
   let active = null;
   const setActive = pl => {
     if (pl === active) return;
